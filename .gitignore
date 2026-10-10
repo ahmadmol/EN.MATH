@@ -7,3 +7,45 @@ local.properties
 *.jks
 *.keystore
 .DS_Store
+dist/
+tools/ktfmt.jar
+
+# Generated packages and local caches
+*.apk
+*.aab
+*.apks
+*.dex
+*.hprof
+*.log
+.cxx/
+.externalNativeBuild/
+__pycache__/
+*.py[cod]
+
+# Signing material, credentials, and local secret configuration
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+secrets/
+credentials/
+secrets.properties
+secrets.json
+credentials.json
+credentials.properties
+key.properties
+keystore.properties
+signing.properties
+api-keys.*
+service-account*.json
+google-services.json
+
+# Local QA evidence and machine-specific audit snapshots
+docs/qa/
+docs/**/screenshots/
+docs/reference/*.txt
+docs/teacher-reference/*.txt
+docs/role-switch/*.txt
+docs/teacher-reference/student-source-*.json

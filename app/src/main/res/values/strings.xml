@@ -1,5 +1,1 @@
-<resources>
-    <string name="app_name">EN.MATH</string>
-    <string name="welcome">Welcome to EN.MATH</string>
-    <string name="subtitle">Your Jetpack Compose project is ready to grow.</string>
-</resources>
+<resources><string name="app_name" translatable="false">EN.MATH</string></resources>

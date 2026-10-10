@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="c_0247df0668" formatted="false">خطوات صغيرة. تقدّم واضح.</string>
+    <string name="c_11927202fd" formatted="false">افهم، لا تكتفِ بالحفظ.</string>
+    <string name="c_3597612c71" formatted="false">اجعل كل خطوة مفهومة.</string>
+    <string name="c_6eaf2a3728" formatted="false">استكشف أمثلة محلولة وتدرّب على كتابة التعبيرات الرياضية.</string>
+    <string name="c_a3958a373d" formatted="false">حافظ على إيقاع يومي، وشاهد ما أنجزته.</string>
+    <string name="c_eced6e5c06" formatted="false">ابنِ أساسًا واضحًا، درسًا بعد درس.</string>
+    <string name="t_002749be01" formatted="false">اقرأ القواعد وبرّر إجابتك قبل التسليم.</string>
+    <string name="t_006ebee366" formatted="false">لم يُرسل بريد. أدخل الرمز التجريبي: 123456</string>
+    <string name="t_00707ce102" formatted="false">مساحتك التعليمية</string>
+    <string name="t_00965319c2" formatted="false">حفظ البحث</string>
+    <string name="t_00cac031ea" formatted="false">إعادة المحاولة</string>
+    <string name="t_00f5382f8b">واجبات فعالة %1$s</string>
+    <string name="t_0101d5fb65" formatted="false">جبر</string>
+    <string name="t_013f0e8043" formatted="false">تدريب مركّز</string>
+    <string name="t_01de1b3053" formatted="false">لا يوجد محرك حل عام متصل. الحلول التجريبية متاحة للأمثلة الثلاثة فقط.</string>
+    <string name="t_01ec0c6e4e" formatted="false">تتطلب المحفوظات والواجبات حساب طالب. تبقى بيانات التجربة محلية على الجهاز.</string>
+    <string name="t_021fc6959d" formatted="false">دالة غير مدعومة. جرّب x^2 أو sin(x).</string>
+    <string name="t_02c7e9b066" formatted="false">أرقام</string>
+    <string name="t_02debd4de3" formatted="false">نتائج الواجب</string>
+    <string name="t_03e1b7049a">الوقت: %1$s ثانية</string>
+    <string name="t_03e25447ec" formatted="false">غير مقروء</string>
+    <string name="t_04afb47288" formatted="false">طالب · حساب تجريبي</string>
+    <string name="t_04e0986fd7" formatted="false">الإيقاع الأسبوعي</string>
+    <string name="t_054b6afa54" formatted="false">التدريب</string>
+    <string name="t_05791afd64" formatted="false">صف جديد</string>
+    <string name="t_05cfbeaf8f" formatted="false">مسح السجل</string>
+    <string name="t_0656950f60" formatted="false">أنشئ حسابًا تجريبيًا لاستخدام هذه الميزة.</string>
+    <string name="t_077e621825">دروس مكتملة %1$s</string>
+    <string name="t_078816e010" formatted="false">تقدّم الكتاب</string>
+    <string name="t_082155007d" formatted="false">إعادة عرض الرمز التجريبي</string>
+    <string name="t_08bd207b10" formatted="false">فكّر خطوة بخطوة</string>
+    <string name="t_094706a820" formatted="false">الدقة</string>
+    <string name="t_0991118449" formatted="false">فتح التدريب</string>
+    <string name="t_0a10baedfc" formatted="false">الإجابة النهائية · تجريبي</string>
+    <string name="t_0a7ea713f4" formatted="false">محاكاة الرفع والقص</string>
+    <string name="t_0aa59cb367" formatted="false">متقن</string>
+    <string name="t_0bbe6c9c93" formatted="false">فتح المسألة</string>
+    <string name="t_0c59f4a1fc" formatted="false">وجّه التدريب التالي.</string>
+    <string name="t_0c7cde1bf8" formatted="false">تحديد كمكتمل</string>
+    <string name="t_0cd1a9054f">%1$s من %2$s درسًا</string>
+    <string name="t_0e8ad197d6" formatted="false">نُشر محليًا. يمكن للطلاب فتح هذا الواجب الآن.</string>
+    <string name="t_0f029af391" formatted="false">احتفظ بالأفكار المفيدة.</string>
+    <string name="t_0f4d747002" formatted="false">امنح الفهم مساحته.</string>
+    <string name="t_0f6bdbd212" formatted="false">محاكاة التصوير</string>
+    <string name="t_0f82bcf371" formatted="false">أنا معلّم</string>
+    <string name="t_0f8f757d87" formatted="false">إنشاء مورد</string>
+    <string name="t_0fa93e6631" formatted="false">الدروس المكتملة</string>
+    <string name="t_104c1f74f2" formatted="false">عرض الحل</string>
+    <string name="t_107d03c5ec" formatted="false">عد إلى الدراسة لاختيار كتاب.</string>
+    <string name="t_10881e833c" formatted="false">مسائل</string>
+    <string name="t_11002dea21" formatted="false">أكمل التدريب أولًا.</string>
+    <string name="t_111b3c1828" formatted="false">العنوان</string>
+    <string name="t_114c6c149d" formatted="false">إعادة العرض</string>
+    <string name="t_115c64b035" formatted="false">إغلاق</string>
+    <string name="t_1198ee5bce" formatted="false">نتيجة تجريبية معدّة مسبقًا · ليست حسابًا من محرك رياضي</string>
+    <string name="t_12412caf31" formatted="false">مسار الدروس</string>
+    <string name="t_12b17f30c3" formatted="false">اكتب تعبيرًا أو اختر مثالًا محلولًا.</string>
+    <string name="t_13321b65ec" formatted="false">تسليم الواجب؟</string>
+    <string name="t_1361fe9c87" formatted="false">عد إلى خطواتك</string>
+    <string name="t_13df32fad2" formatted="false">الخصوصية</string>
+    <string name="t_143f33467e">%1$s أسئلة · %2$s نقطة</string>
+    <string name="t_1486cae7f0" formatted="false">قاعدة مهمة</string>
+    <string name="t_14b88455cb" formatted="false">حل تجريبي منتقى · سبعة أمثلة مدعومة، دون محرك عام</string>
+    <string name="t_1554f4db6b" formatted="false">سنوات الخبرة في التدريس</string>
+    <string name="t_1832fb89d1" formatted="false">اختبار قصير</string>
+    <string name="t_189ecce295" formatted="false">التعبير الرياضي</string>
+    <string name="t_1931081814" formatted="false">استخدام المثال</string>
+    <string name="t_1a25d7806a" formatted="false">جدول القيم</string>
+    <string name="t_1b9e6ceaba" formatted="false">حلّ</string>
+    <string name="t_1ce0bc63cd" formatted="false">اكتملت الجلسة</string>
+    <string name="t_1d32c31329" formatted="false">كل محاولة تعلّمك.</string>
+    <string name="t_1d47a66258" formatted="false">خطوة مركّزة واحدة قد تغيّر يومك.</string>
+    <string name="t_1da6c63fb2" formatted="false">استعادة الحساب</string>
+    <string name="t_1dd6ad45d7" formatted="false">تتبّع سبب النتيجة.</string>
+    <string name="t_1df282cbf8" formatted="false">نتيجة تجريبية وليست محرك حساب عام</string>
+    <string name="t_1e037b60b5" formatted="false">توصية تجريبية: تدرّب على الموضوع الأقل إتقانًا.</string>
+    <string name="t_1e9b65ba66" formatted="false">تدريب الموضوع</string>
+    <string name="t_1fa70d1974" formatted="false">عد إلى الكتاب.</string>
+    <string name="t_2019af0928" formatted="false">نشر محليًا</string>
+    <string name="t_2023d797d3" formatted="false">التمارين · تجريبي</string>
+    <string name="t_20bb2bd37a" formatted="false">اجعلها تناسبك.</string>
+    <string name="t_210473961b" formatted="false">النشاط الأخير</string>
+    <string name="t_2124beb9bd" formatted="false">مساحتك للمسائل.</string>
+    <string name="t_237968f024" formatted="false">أنشئ ملاحظة أو ورقة قوانين أو تدريبًا.</string>
+    <string name="t_2456e13f3d" formatted="false">بدأ</string>
+    <string name="t_2594e8a647" formatted="false">شارك خبرتك التعليمية.</string>
+    <string name="t_25ad5c35f7" formatted="false">توقّف وفكّر</string>
+    <string name="t_2622928a98" formatted="false">مثال محلول</string>
+    <string name="t_262b54dcff" formatted="false">لا توجد موارد</string>
+    <string name="t_26d50e153b" formatted="false">منشئ الواجب</string>
+    <string name="t_273c73d9d4" formatted="false">النقاط (1–1000)</string>
+    <string name="t_2741e5a6bc">%1$s طلاب · إتقان %2$s%%</string>
+    <string name="t_2753fda825" formatted="false">الملف الشخصي</string>
+    <string name="t_28fd8d2a78" formatted="false">حلّ المسائل</string>
+    <string name="t_2948c7a5a8" formatted="false">خروج</string>
+    <string name="t_29c1be7a43" formatted="false">متابعة</string>
+    <string name="t_29f6eb0ab8" formatted="false">الإتقان قاعدة تجريبية: 40% دروس + 40% تدريب + 20% اختبار.</string>
+    <string name="t_2ab0dad2cc" formatted="false">تصفّح الكتب</string>
+    <string name="t_2ade063f4e" formatted="false">الصفوف</string>
+    <string name="t_2afe0c1a6a" formatted="false">لماذا يصحّ ذلك؟</string>
+    <string name="t_2b26d0bebb" formatted="false">مساحتك</string>
+    <string name="t_2ba4b141ce" formatted="false">الوصف</string>
+    <string name="t_2d6ed82df3" formatted="false">أدخل اسمك الكامل.</string>
+    <string name="t_2e3ea6aca1" formatted="false">القليل من الوضوح يصنع الفرق.</string>
+    <string name="t_2f31a36fe9" formatted="false">تابع التعلّم</string>
+    <string name="t_2f4cbc4954" formatted="false">التفضيلات</string>
+    <string name="t_2f5557f305" formatted="false">اختر مثالًا مدعومًا أدناه.</string>
+    <string name="t_30593f37e9" formatted="false">الدراسة</string>
+    <string name="t_306c0f93f4" formatted="false">الواجب التالي</string>
+    <string name="t_307d2cfa2a">الخطوة %1$s</string>
+    <string name="t_31eced6d57" formatted="false">مادة التدريس / التخصص</string>
+    <string name="t_338c877d38" formatted="false">تحديد الكل كمقروء</string>
+    <string name="t_3413fea94b" formatted="false">رحلتك تبدأ هنا</string>
+    <string name="t_344e8ddb55" formatted="false">إنشاء حساب</string>
+    <string name="t_34ebd8f633" formatted="false">تفاصيل الطالب</string>
+    <string name="t_34ec2073de" formatted="false">لم يُسلّم</string>
+    <string name="t_353becf694" formatted="false">تمارين</string>
+    <string name="t_354d5e989e" formatted="false">كلمة مرور جديدة</string>
+    <string name="t_355ef9b130">%1$s / %2$s دروس مكتملة</string>
+    <string name="t_361f0f2133" formatted="false">الأستاذة سارة</string>
+    <string name="t_36df6355b7" formatted="false">جلسة تعلّم</string>
+    <string name="t_377ff08181">الخطوة %1$s</string>
+    <string name="t_387917ebc5" formatted="false">المحاولات (1–5)</string>
+    <string name="t_3992c25ae7">موعد التسليم %1$s</string>
+    <string name="t_39b8bf7830" formatted="false">محفوظ</string>
+    <string name="t_3b273d414e" formatted="false">حاول مجددًا</string>
+    <string name="t_3b34128f7d" formatted="false">أهلًا، الأستاذة سارة</string>
+    <string name="t_3b45300a1e" formatted="false">مجموعة تدريب</string>
+    <string name="t_3b846b6647" formatted="false">طالب</string>
+    <string name="t_3be2255f32" formatted="false">كاميرا ورفع محاكيان. لا تُلتقط أو تُعالج أي صورة.</string>
+    <string name="t_3ce69d513f" formatted="false">خطوات الحل</string>
+    <string name="t_3cf6b002fb" formatted="false">إغلاق المعاينة</string>
+    <string name="t_3d47587da4" formatted="false">انظر إلى ما أنجزته</string>
+    <string name="t_3dc06c8440" formatted="false">ادرس موضوعًا وتدرّب عليه ثم راجع إتقانك. يمكن للمعلّمين إنشاء صفوف وواجبات محلية.</string>
+    <string name="t_3e512eb130" formatted="false">التسليم المتأخر غير متاح لهذا الواجب.</string>
+    <string name="t_3fc2deecf5" formatted="false">احفظ درسًا أو حلًا، أو غيّر المرشحات.</string>
+    <string name="t_3ffdefc981" formatted="false">حذف</string>
+    <string name="t_4064dc24ff" formatted="false">أدخل مادة التدريس وسنوات الخبرة بين 0 و60.</string>
+    <string name="t_40a3a75f0a" formatted="false">تسجيل الخروج</string>
+    <string name="t_40d8dc7f19" formatted="false">الكل</string>
+    <string name="t_41df12babb" formatted="false">معلّم</string>
+    <string name="t_4214608de0" formatted="false">ادعم الفهم.</string>
+    <string name="t_4261644d59" formatted="false">السماح بالتسليم المتأخر</string>
+    <string name="t_44bfd23c2d" formatted="false">يجب تطابق كلمتَي المرور وأن تتضمّنا 8 أحرف على الأقل.</string>
+    <string name="t_44c7ecd060" formatted="false">استكشف الدروس والأمثلة المحلولة.</string>
+    <string name="t_453a44248c" formatted="false">نظرة عامة</string>
+    <string name="t_454af71f08" formatted="false">التقدّم حسب الموضوع</string>
+    <string name="t_455904a5d7" formatted="false">المكتبة</string>
+    <string name="t_46011237a5" formatted="false">الإكمال</string>
+    <string name="t_4605df753a" formatted="false">خطأ</string>
+    <string name="t_465bb41873" formatted="false">الدروس المكتملة</string>
+    <string name="t_473d186ca4" formatted="false">حول التطبيق</string>
+    <string name="t_473f260a04" formatted="false">الجذر والقيمة الصغرى: (0,0)</string>
+    <string name="t_479e114db0" formatted="false">اختر كيف تريد استكشاف EN.MATH.</string>
+    <string name="t_4850f26893" formatted="false">تظهر مستجدات التجربة المحلية هنا.</string>
+    <string name="t_485c964fc7" formatted="false">تخطّي</string>
+    <string name="t_492519ffec" formatted="false">التكامل</string>
+    <string name="t_4a0914c00b">%1$s / %2$s أنشطة دراسية</string>
+    <string name="t_4a5c00c5b2">%1$s / %2$s مكتمل</string>
+    <string name="t_4ae0bbc92c" formatted="false">لا توجد أسئلة</string>
+    <string name="t_4ae85809f8" formatted="false">موارد المعلّم</string>
+    <string name="t_4b3bb23d90" formatted="false">واجبات المعلّم</string>
+    <string name="t_4b58e315cf" formatted="false">نتيجة الواجب</string>
+    <string name="t_4bd9b3fa20" formatted="false">أهلًا بعودتك.</string>
+    <string name="t_4bf19e2243">آخر درس لك · %1$s دقائق</string>
+    <string name="t_4c5461762c" formatted="false">إنشاء واجب</string>
+    <string name="t_4c6c96d9ab" formatted="false">لا توجد واجبات</string>
+    <string name="t_4ca0521704" formatted="false">معادلات</string>
+    <string name="t_4cf108fea1">سلسلة %1$s أيام</string>
+    <string name="t_4d07fefeac" formatted="false">حفظ الملاحظات</string>
+    <string name="t_4d0f4ebd77" formatted="false">يحفظ النموذج ملفًا وتقدّمًا تجريبيًا محليًا على الجهاز، ولا ينشئ حسابًا أو يرسل بريدًا. لا تدخل كلمات مرور حقيقية.</string>
+    <string name="t_4d4f2c0264" formatted="false">إنشاء سؤال</string>
+    <string name="t_4d829a1a74" formatted="false">التقدّم العام</string>
+    <string name="t_4dc29f72b5" formatted="false">الصف غير موجود</string>
+    <string name="t_4f567e1c20" formatted="false">أنا طالب</string>
+    <string name="t_4fb8ba1914" formatted="false">ابحث عن الفكرة التالية.</string>
+    <string name="t_50b6918489" formatted="false">تحقّق من فهمك</string>
+    <string name="t_51189c9009" formatted="false">مورد جديد</string>
+    <string name="t_511d9de5cb" formatted="false">النتيجة</string>
+    <string name="t_516f1fe3b4">%1$s دقائق</string>
+    <string name="t_519b0bc526" formatted="false">موضوعات</string>
+    <string name="t_51d2fe6071" formatted="false">ادرس وتدرّب وابنِ ثقتك.</string>
+    <string name="t_52188cab48" formatted="false">تحتاج متابعة</string>
+    <string name="t_52542da01d" formatted="false">الدرس غير متاح</string>
+    <string name="t_52ae618c18" formatted="false">✓ سلسلة ثلاثة أيام</string>
+    <string name="t_5500aaa704" formatted="false">الطالب غير متاح</string>
+    <string name="t_553359b746" formatted="false">الدرس</string>
+    <string name="t_5558807e14" formatted="false">صحيح</string>
+    <string name="t_557d76d5d1" formatted="false">كل المستجدات مقروءة</string>
+    <string name="t_55998b187e" formatted="false">ستُحفظ الإجابات محليًا وتظهر في نتائج المعلّم.</string>
+    <string name="t_55cee8e73c">مراجعات معلّقة %1$s</string>
+    <string name="t_55d0767369" formatted="false">لوحة المعلّم</string>
+    <string name="t_55da712f4d" formatted="false">مسح التعبير</string>
+    <string name="t_55f61c37c5" formatted="false">بداية جديدة.</string>
+    <string name="t_56f9d36d01" formatted="false">درس تجريبي مختصر · ليس منهجًا كاملًا</string>
+    <string name="t_570d74456a">متوسط العلامة %1$s/%2$s</string>
+    <string name="t_57276af9a8" formatted="false">حل مثالًا أو غيّر المرشح.</string>
+    <string name="t_5771670ed0">%1$s ثانية</string>
+    <string name="t_57cf7f7bed" formatted="false">وضع تجريبي · دون حساب عبر الإنترنت أو بيانات مباشرة</string>
+    <string name="t_584f9760f5" formatted="false">المصفوفات</string>
+    <string name="t_584fa3f349" formatted="false">صحيح</string>
+    <string name="t_58c4794bb0" formatted="false">محرك الحل غير متاح بعد</string>
+    <string name="t_5994568d38" formatted="false">الجذور kπ؛ المدى [−1,1]</string>
+    <string name="t_59e803052e" formatted="false">EN.MATH · تجربة مستقلة لتعليم الرياضيات · 1.0</string>
+    <string name="t_5aef859af5" formatted="false">ضيف</string>
+    <string name="t_5afd491027" formatted="false">يتعلّم</string>
+    <string name="t_5b5743805e" formatted="false">تأكيد كلمة المرور</string>
+    <string name="t_5bb2f73c0f" formatted="false">الاشتقاق</string>
+    <string name="t_5bb34a4d86" formatted="false">هدف اليوم</string>
+    <string name="t_5c0aca2c59">الصفوف %1$s</string>
+    <string name="t_5e8aec3b47" formatted="false">تلميح</string>
+    <string name="t_604824dd52" formatted="false">إنشاء حساب</string>
+    <string name="t_606419751d" formatted="false">معاينة المشاركة</string>
+    <string name="t_60ed61ee92">تذكير الدراسة %1$s</string>
+    <string name="t_61177eddae" formatted="false">لا توجد واجبات هنا</string>
+    <string name="t_6127a49906" formatted="false">الموارد</string>
+    <string name="t_61bbd2bb4c" formatted="false">تأكيد</string>
+    <string name="t_61ec47c295" formatted="false">أمس</string>
+    <string name="t_627d3b1618" formatted="false">البحث في المحتوى</string>
+    <string name="t_628fb25033" formatted="false">مساحة التعرّف المستقبلية</string>
+    <string name="t_62cfa1d22a" formatted="false">مثلثات</string>
+    <string name="t_62e9205126" formatted="false">كتابان. ثمانية موضوعات. مسار واضح للتقدّم.</string>
+    <string name="t_63c7e31c42" formatted="false">أوافق على شروط التجربة</string>
+    <string name="t_6422ef9e47">مشترك مع %1$s صفوف</string>
+    <string name="t_65ead42888" formatted="false">سلسلة التعلّم الحالية · تجريبي</string>
+    <string name="t_665b9023b5" formatted="false">إضافة دالة</string>
+    <string name="t_66ca730c92" formatted="false">واصل التدريب لبناء التمكّن.</string>
+    <string name="t_66df4d3113" formatted="false">تفاصيل الكتاب</string>
+    <string name="t_67b32d1cb9" formatted="false">بحث</string>
+    <string name="t_6841cd8fe8" formatted="false">تجربة المسألة</string>
+    <string name="t_685c4edda1" formatted="false">كاميرا تجريبية</string>
+    <string name="t_686ffa1014" formatted="false">الدروس</string>
+    <string name="t_693fec8aa7" formatted="false">التقدّم</string>
+    <string name="t_6a4eb9f1da" formatted="false">أنشئ صفًا للبدء.</string>
+    <string name="t_6a87ec3397" formatted="false">درس مرتبط</string>
+    <string name="t_6ac26cc029" formatted="false">مصفوفات</string>
+    <string name="t_6b1a0cf76e" formatted="false">إضافة</string>
+    <string name="t_6bd3834813" formatted="false">البحث</string>
+    <string name="t_6bd79c49cf" formatted="false">مجموعاتك التعليمية</string>
+    <string name="t_6be9b96bd7" formatted="false">تبقى البيانات على هذا الجهاز. لا يوجد خادم أو مصادقة حقيقية.</string>
+    <string name="t_6c48dfb4c3" formatted="false">دروس</string>
+    <string name="t_6c721d035d" formatted="false">بدء الواجب</string>
+    <string name="t_6c91f383f6" formatted="false">تحقّق من الإجابة</string>
+    <string name="t_6d7c14d4a9" formatted="false">نسخ الرمز</string>
+    <string name="t_6e6253393d" formatted="false">شارك رمز الدعوة. تسجيل الطلاب ميزة خادم مستقبلية.</string>
+    <string name="t_6e8911a0d6" formatted="false">الحل</string>
+    <string name="t_6eadb04284" formatted="false">المحتوى أو الرابط</string>
+    <string name="t_6f03a69ee9" formatted="false">تحتاج تدريبًا</string>
+    <string name="t_6f119ee864" formatted="false">علّم بوضوح.</string>
+    <string name="t_6f4922a8ad" formatted="false">الدالة y =</string>
+    <string name="t_6f5885c2d7" formatted="false">ملاحظات المعلّم</string>
+    <string name="t_6f798f756c" formatted="false">قادمة</string>
+    <string name="t_704198b924" formatted="false">التالي</string>
+    <string name="t_708dd82b5a" formatted="false">متابعة الدرس</string>
+    <string name="t_711e4aa84e" formatted="false">البريد الإلكتروني</string>
+    <string name="t_71927f007e" formatted="false">الصفوف</string>
+    <string name="t_7207c84ac9" formatted="false">أكمل الحقول بقيم صالحة قبل المتابعة.</string>
+    <string name="t_729df17606" formatted="false">رسم تجريبي: كثيرات حدود حتى الدرجة 8 وsin وcos وtan. اسحب للتحريك واقرص للتكبير.</string>
+    <string name="t_751040dfab" formatted="false">تعذّر التحميل</string>
+    <string name="t_7512420977" formatted="false">الخطوات الصغيرة تصنع الفرق.</string>
+    <string name="t_7625c0de23" formatted="false">الواجب غير متاح</string>
+    <string name="t_771e1a0fee" formatted="false">حل سريع</string>
+    <string name="t_7722c61c7e" formatted="false">ورقة قوانين</string>
+    <string name="t_77aaba9190" formatted="false">أكمل درسًا ليظهر هنا.</string>
+    <string name="t_77c17be0af" formatted="false">الموضوع غير متاح</string>
+    <string name="t_78843a538d" formatted="false">حاول مجددًا وراجع القاعدة.</string>
+    <string name="t_794ab43a2c" formatted="false">رجوع</string>
+    <string name="t_7a0370d97e" formatted="false">لم تُحفظ إجابة بعد.</string>
+    <string name="t_7a0c16fd84" formatted="false">حل منتقى</string>
+    <string name="t_7a5643ef0a" formatted="false">مصدر خارجي</string>
+    <string name="t_7a74be9631" formatted="false">وضوح في كل خطوة</string>
+    <string name="t_7ac13fdc1e" formatted="false">مغادرة هذه الجلسة؟</string>
+    <string name="t_7b1a0e1b9f" formatted="false">نتيجة التدريب</string>
+    <string name="t_7c1f10df3f" formatted="false">استخدم الرمز التجريبي 123456.</string>
+    <string name="t_7c795eb518" formatted="false">مشاركة مع صف</string>
+    <string name="t_7cc2aab854">%1$s أيام</string>
+    <string name="t_7e3305f812" formatted="false">لوحة رياضية</string>
+    <string name="t_7eb98c7118" formatted="false">الموارد</string>
+    <string name="t_7ffa43d992" formatted="false">رمز الدعوة</string>
+    <string name="t_81ed0ddb40" formatted="false">النهايات</string>
+    <string name="t_823a3ad20c" formatted="false">إلغاء</string>
+    <string name="t_82cabe1bde" formatted="false">لم يُنفّذ إرسال الإشعارات بعد. لا يُطلب إذن للإشعارات.</string>
+    <string name="t_834d0bdb63" formatted="false">متأخرة</string>
+    <string name="t_83d85c6a02" formatted="false">ستتوفر في مرحلة قادمة</string>
+    <string name="t_8559a2cbe7" formatted="false">قاعدة الإتقان التجريبية: 40% دروس + 40% تدريب + 20% أفضل اختبار. النشاط الأولي توضيحي.</string>
+    <string name="t_85731572ae" formatted="false">تسليم</string>
+    <string name="t_85c73acada" formatted="false">الاسم الكامل</string>
+    <string name="t_85f6c25c12" formatted="false">معلّم · حساب تجريبي</string>
+    <string name="t_8656fa1998" formatted="false">حُفظت الملاحظات وأُضيفت إلى إشعارات الطالب.</string>
+    <string name="t_8738fe67a6" formatted="false">إنشاء حساب</string>
+    <string name="t_875f805f63" formatted="false">تحقّق</string>
+    <string name="t_8777fe3971" formatted="false">وضوح في كل خطوة · نسخة تجريبية 1.0</string>
+    <string name="t_8804247fd9" formatted="false">لنعد إلى التعلّم.</string>
+    <string name="t_88130f2bb9" formatted="false">حساب</string>
+    <string name="t_8834284075" formatted="false">لا توجد صفوف</string>
+    <string name="t_8891e609f6" formatted="false">مكتملة</string>
+    <string name="t_88fac26dd6" formatted="false">لا يوجد محتوى هنا بعد</string>
+    <string name="t_8930947435" formatted="false">إنشاء صف</string>
+    <string name="t_89c0b50eea" formatted="false">إنهاء تجربة الاستعادة</string>
+    <string name="t_8a4c6a4c13" formatted="false">المسألة الأصلية</string>
+    <string name="t_8a5decc276" formatted="false">وضوح، خطوة بخطوة.</string>
+    <string name="t_8c0c250a9b" formatted="false">عن EN.MATH</string>
+    <string name="t_8c0dfa71a2" formatted="false">الصف</string>
+    <string name="t_8c507ee733" formatted="false">إجابتك</string>
+    <string name="t_8d5c86ae5b">%1$s / %2$s دروس</string>
+    <string name="t_8d680ec8eb" formatted="false">استكشاف</string>
+    <string name="t_8dee86552a" formatted="false">ستظهر هنا التعبيرات التي ترسلها في هذه الجلسة.</string>
+    <string name="t_8e69f4f858" formatted="false">استخدم 8 أحرف على الأقل.</string>
+    <string name="t_8f236c7a72" formatted="false">حساب معلّم</string>
+    <string name="t_8f4e83b5d6">المرحلة %1$s من 4</string>
+    <string name="t_903b5a1bb9" formatted="false">صندوق تجريبي فقط. لا تُرسل إشعارات مجدولة للنظام.</string>
+    <string name="t_90986b28c4" formatted="false">مساحتك للتعلّم</string>
+    <string name="t_90d7e21b2f" formatted="false">متابعة كضيف</string>
+    <string name="t_91067f9a97" formatted="false">التحقق</string>
+    <string name="t_9111cb18d5" formatted="false">كلمة المرور الجديدة</string>
+    <string name="t_9178974d1f" formatted="false">العلامة</string>
+    <string name="t_9305ec4b3f" formatted="false">تجربة صفوف محلية</string>
+    <string name="t_934f76a30f" formatted="false">عرض النتيجة</string>
+    <string name="t_93efc76003" formatted="false">هذه المسألة غير مدعومة في الحل التجريبي بعد.</string>
+    <string name="t_9440b55d06" formatted="false">خطوتك التالية تبدأ هنا.</string>
+    <string name="t_951cf2f627" formatted="false">إجابتك</string>
+    <string name="t_954c01e15f" formatted="false">الثالث الثانوي العلمي · مسار واضح للتقدّم</string>
+    <string name="t_95644465fb" formatted="false">جرّب كلمة أو موضوعًا آخر.</string>
+    <string name="t_95a7630817" formatted="false">إتقان الصف</string>
+    <string name="t_95d012eb32" formatted="false">المكتبة</string>
+    <string name="t_95d4145292" formatted="false">جرّب مثالًا محلولًا</string>
+    <string name="t_9652100ff2" formatted="false">المستجدات</string>
+    <string name="t_96ee0d02e3" formatted="false">حساب طالب</string>
+    <string name="t_96f7bb3115" formatted="false">معاينة كطالب</string>
+    <string name="t_972fd332cf" formatted="false">الجذر −0.5؛ التقاطع الرأسي 1</string>
+    <string name="t_98284dc5c6" formatted="false">صفحة جديدة</string>
+    <string name="t_98340e1f7e" formatted="false">إظهار التلميح التالي</string>
+    <string name="t_98cd0de4fd" formatted="false">محاور</string>
+    <string name="t_996be0fcf0" formatted="false">إظهار</string>
+    <string name="t_9c1fa20a5e" formatted="false">عد إلى الصفوف.</string>
+    <string name="t_9c505baa76" formatted="false">لا توجد نتيجة بعد</string>
+    <string name="t_9d8c72545a" formatted="false">مشاركة</string>
+    <string name="t_9d90e24064" formatted="false">تحليل</string>
+    <string name="t_9db065e98a" formatted="false">المتابعة إلى التحقق</string>
+    <string name="t_9df1de9197" formatted="false">انشر واجبك الأول.</string>
+    <string name="t_9e4e01dc96" formatted="false">تسجيل الخروج؟</string>
+    <string name="t_9e729bd400">الطلاب %1$s</string>
+    <string name="t_9e72a9bde6" formatted="false">إظهار الإجابة</string>
+    <string name="t_9f33bb467e" formatted="false">المدرسة أو المؤسسة (اختياري)</string>
+    <string name="t_9f6792bbf7" formatted="false">متمكّن</string>
+    <string name="t_a0fc50de5a" formatted="false">استكشاف</string>
+    <string name="t_a2d9619261" formatted="false">اللغة</string>
+    <string name="t_a2e41f05a0" formatted="false">تحقق</string>
+    <string name="t_a3060b0d61" formatted="false">المسائل الأخيرة</string>
+    <string name="t_a311f1396c" formatted="false">حل الواجب</string>
+    <string name="t_a33bc556a4" formatted="false">البحث</string>
+    <string name="t_a47bb75a14" formatted="false">إخفاء</string>
+    <string name="t_a56054dc89" formatted="false">كتابك</string>
+    <string name="t_a5ceb9dc53">%1$s دقائق دراسة</string>
+    <string name="t_a71cff4692">متوسط الإتقان %1$s%%</string>
+    <string name="t_a7e385f50a" formatted="false">استكشاف الرسوم</string>
+    <string name="t_a98160205a" formatted="false">كلمة المرور</string>
+    <string name="t_a9a723c334" formatted="false">وقت الدراسة</string>
+    <string name="t_a9ea6ff36b" formatted="false">دروس تجريبية منتقاة · معاينة للتجربة التعليمية</string>
+    <string name="t_aadf42c032" formatted="false">تدرّب على المهارة</string>
+    <string name="t_ab3669edfa" formatted="false">حفظ</string>
+    <string name="t_ac2a1c81dd" formatted="false">سيبقى تقدّم الدروس التجريبي وتفضيلاتك على هذا الجهاز.</string>
+    <string name="t_ac2e05afaf" formatted="false">مكتمل</string>
+    <string name="t_ac68e53c7f" formatted="false">مكتبتك</string>
+    <string name="t_ac75c05199" formatted="false">تحتاج مراجعة</string>
+    <string name="t_acd69bb6a8" formatted="false">يُحتفظ بالتقدّم وبيانات الصف التجريبية محليًا.</string>
+    <string name="t_ad0311fff4" formatted="false">كلمة المرور · 8 أحرف على الأقل</string>
+    <string name="t_ad7db392b8" formatted="false">✓ إكمال أول درس</string>
+    <string name="t_ada94e31a4" formatted="false">الحل</string>
+    <string name="t_ae1c6ca083" formatted="false">سجل المسائل</string>
+    <string name="t_aeaec2c65d" formatted="false">مسح</string>
+    <string name="t_aedcead3b8" formatted="false">كل خطوة لها قيمة.</string>
+    <string name="t_af31379f6f" formatted="false">وافق على شروط التجربة للمتابعة.</string>
+    <string name="t_af36e1e442" formatted="false">مسح تجريبي</string>
+    <string name="t_afb12a0f65" formatted="false">المساعدة</string>
+    <string name="t_b00f71719c" formatted="false">لم يبدأ</string>
+    <string name="t_b067c69b60" formatted="false">الإجابة النهائية</string>
+    <string name="t_b097319490" formatted="false">ستُربط المشاركة في إصدار لاحق.</string>
+    <string name="t_b09e391c65" formatted="false">خطأ شائع</string>
+    <string name="t_b0f2d09240" formatted="false">إظهار التلميحات</string>
+    <string name="t_b16ed530ed">السؤال %1$s من %2$s</string>
+    <string name="t_b1e90dd5fe" formatted="false">استنتاجات تجريبية مشتقة من الإتقان والواجبات المتأخرة.</string>
+    <string name="t_b2b90cdc0d" formatted="false">شبكة</string>
+    <string name="t_b2ea0d8d22" formatted="false">هدف اليوم</string>
+    <string name="t_b33c58583a" formatted="false">افتح حلّ المسائل</string>
+    <string name="t_b384fbdc7e" formatted="false">داكن</string>
+    <string name="t_b48bb99c87" formatted="false">أكمل أول درس</string>
+    <string name="t_b511f62c6c" formatted="false">متابعة التعلّم</string>
+    <string name="t_b5a4c86040" formatted="false">الرئيسية</string>
+    <string name="t_b5e692ba92" formatted="false">تدرّب مجددًا</string>
+    <string name="t_b64f5160ae" formatted="false">متابعة هذا الكتاب</string>
+    <string name="t_b67d86605d" formatted="false">عمليات البحث الأخيرة</string>
+    <string name="t_b70bd0ed57" formatted="false">الإشعارات المحلية</string>
+    <string name="t_b8077ff8ea" formatted="false">افهم كل خطوة.</string>
+    <string name="t_b8132a67be" formatted="false">بانتظار التسليمات</string>
+    <string name="t_b8ee1e0f8c" formatted="false">لا توجد نتائج</string>
+    <string name="t_ba46bc2e8b" formatted="false">المحفوظات</string>
+    <string name="t_bac100df7d" formatted="false">✓ دقة تدريب تتجاوز 80%</string>
+    <string name="t_baef42cd26" formatted="false">سؤال عددي جديد</string>
+    <string name="t_bb0767c28e" formatted="false">استخدام المثال المتعرّف عليه</string>
+    <string name="t_bb13a814b0" formatted="false">المتابعة كضيف</string>
+    <string name="t_bb202e55bd" formatted="false">تجربة فقط · يتم فحص كلمة المرور ثم حذفها دون حفظ.</string>
+    <string name="t_bbaaeb95d0" formatted="false">اختر درسًا آخر.</string>
+    <string name="t_bc14eec819" formatted="false">السابق</string>
+    <string name="t_bc2753a2c0" formatted="false">اللوحة</string>
+    <string name="t_bcc752cc57">%1$s دقائق لبناء الفهم</string>
+    <string name="t_bd4d7a258d" formatted="false">السجل</string>
+    <string name="t_bd767ed1d0" formatted="false">عد إلى الواجبات.</string>
+    <string name="t_bd98530a61" formatted="false">الطلاب</string>
+    <string name="t_bd9e360130" formatted="false">دخول</string>
+    <string name="t_bda3e17468" formatted="false">الإشعارات</string>
+    <string name="t_bdb85c717d" formatted="false">مفاهيم</string>
+    <string name="t_be2a7c624f" formatted="false">تراجع</string>
+    <string name="t_bfdd842d70" formatted="false">دخول تجريبي · استخدم بريدًا صالحًا وكلمة مرور من 8 أحرف. لا يجري التحقق عبر خادم.</string>
+    <string name="t_bff8e80540" formatted="false">الأهداف</string>
+    <string name="t_c01b19362d" formatted="false">اختيار موعد التسليم</string>
+    <string name="t_c0513f0aef" formatted="false">أدخل بريدًا إلكترونيًا صالحًا.</string>
+    <string name="t_c0a8e05970" formatted="false">واجبات المعلّم</string>
+    <string name="t_c185218689" formatted="false">لا يوجد طلاب بعد</string>
+    <string name="t_c2e2baa31f" formatted="false">مساحة لطموحك.</string>
+    <string name="t_c3427ebcc7" formatted="false">جرّب مسار الاستعادة. لن يُرسل بريد ولن تتغيّر كلمة مرور حقيقية.</string>
+    <string name="t_c3a665fd1c" formatted="false">الدرس مكتمل</string>
+    <string name="t_c42ca1990b" formatted="false">الكتاب غير متاح</string>
+    <string name="t_c55bf2e6c2">%1$s صفوف</string>
+    <string name="t_c55ce786b5" formatted="false">لوحة الجهاز</string>
+    <string name="t_c5e1bee1ed" formatted="false">الإتقان حسب الموضوع</string>
+    <string name="t_c75fccb635" formatted="false">لا توجد مسائل</string>
+    <string name="t_c7bd6f097a" formatted="false">عد إلى الصف.</string>
+    <string name="t_c7e19e5294" formatted="false">نظّم رحلتك التعليمية.</string>
+    <string name="t_c8f2f6ffd0" formatted="false">استكشف مثالًا محلولًا</string>
+    <string name="t_c91c031f4f" formatted="false">يتدرّب</string>
+    <string name="t_c9c7136316" formatted="false">تعلّم بهدف.</string>
+    <string name="t_c9f366dc0e" formatted="false">ترتيب حسب الإتقان</string>
+    <string name="t_ca1b37c1d5" formatted="false">إنشاء</string>
+    <string name="t_cb0926a9d0" formatted="false">اسم الصف</string>
+    <string name="t_cb7e56cc66" formatted="false">تفاصيل الطالب</string>
+    <string name="t_cb8c6979b1" formatted="false">الإجابة الصحيحة</string>
+    <string name="t_cc8437d5b9" formatted="false">وصول سريع</string>
+    <string name="t_ccdff60317" formatted="false">شاهد الدالة.</string>
+    <string name="t_cdc7551be2" formatted="false">شروط التجربة</string>
+    <string name="t_cde1f4644a" formatted="false">تقدّمك</string>
+    <string name="t_cee84ba17a" formatted="false">أمثلة مدعومة</string>
+    <string name="t_d04051cfbc">أهلًا، %1$s.</string>
+    <string name="t_d11f531c1e" formatted="false">نموذج مستقل لتعليم الرياضيات. الحسابات والدروس وأمثلة الحل تجريبية. لا يوجد اتصال بخادم أو ذكاء اصطناعي.</string>
+    <string name="t_d154c99a2e" formatted="false">فاتح</string>
+    <string name="t_d1df9e0bcb" formatted="false">المظهر</string>
+    <string name="t_d213f2cca7">%1$s / %2$s درسًا</string>
+    <string name="t_d2b9e51dce">%1$s من %2$s دروس مكتملة</string>
+    <string name="t_d34a495278">%1$s تسليمات</string>
+    <string name="t_d3524ba8c3" formatted="false">حسب الجهاز</string>
+    <string name="t_d3b6dc6e16" formatted="false">تعلّم الفكرة، ثم طبّقها.</string>
+    <string name="t_d43aa2eb48" formatted="false">متوسط الإتقان</string>
+    <string name="t_d475577a1a" formatted="false">العودة للموضوع</string>
+    <string name="t_d4c4a8cb23">%1$s / %2$s خطوات تعليمية</string>
+    <string name="t_d4db0600b7" formatted="false">إجابة الطالب</string>
+    <string name="t_d60458396f" formatted="false">طالب · الثالث الثانوي العلمي</string>
+    <string name="t_d61fdf036d" formatted="false">تمارين محلولة</string>
+    <string name="t_d80f76e3c2">%1$s طلاب مسجّلون</string>
+    <string name="t_d8b77b269d">%1$s دقائق · محتوى تجريبي</string>
+    <string name="t_d8b994addd" formatted="false">اختر مجموعة تدريب أخرى.</string>
+    <string name="t_d9613968c1" formatted="false">ملاحظة درس</string>
+    <string name="t_d9742902f4" formatted="false">كل الأنواع</string>
+    <string name="t_da20e47035" formatted="false">التعبير أو السؤال</string>
+    <string name="t_db640f5b9c" formatted="false">حسابك</string>
+    <string name="t_db7aaa76e0" formatted="false">خطوة واحدة أخيرة.</string>
+    <string name="t_dbce05439f" formatted="false">فصلك القادم</string>
+    <string name="t_dc79b60266" formatted="false">مسح تجريبي</string>
+    <string name="t_dcf57c409e" formatted="false">تسجيل تجريبي · استخدم بيانات نموذجية. لن يُنشأ حساب عبر الإنترنت.</string>
+    <string name="t_dd0a8d9c19" formatted="false">كل الموضوعات</string>
+    <string name="t_dd385d958b" formatted="false">العربية</string>
+    <string name="t_de281d583c" formatted="false">موافق</string>
+    <string name="t_de69ae3b7a" formatted="false">سابقًا</string>
+    <string name="t_df1ef156f3" formatted="false">رمز من 6 أرقام</string>
+    <string name="t_df60f8d791" formatted="false">لنبدأ</string>
+    <string name="t_df6c0f6e87" formatted="false">مساحة الرياضيات</string>
+    <string name="t_e069c044c0" formatted="false">مكتبتي</string>
+    <string name="t_e10c7acb96" formatted="false">تم النسخ</string>
+    <string name="t_e1598e46ee" formatted="false">التسليمات الأخيرة</string>
+    <string name="t_e1af75d936" formatted="false">واجباتك</string>
+    <string name="t_e269f67032" formatted="false">حسابي</string>
+    <string name="t_e2d40d004c" formatted="false">مثال محلول</string>
+    <string name="t_e317f22089">دقة التدريب %1$s%%</string>
+    <string name="t_e43176af35" formatted="false">تجربة دون اتصال · تُحفظ التغييرات على هذا الجهاز</string>
+    <string name="t_e54621f53e" formatted="false">اليوم</string>
+    <string name="t_e5a3201c0e" formatted="false">هل يمكنك شرح القاعدة دون النظر إلى المثال؟ جرّب على الورق قبل المتابعة.</string>
+    <string name="t_e5cfa4402b" formatted="false">ملف المعلّم</string>
+    <string name="t_e5ef7b2777">واجبات فعالة %1$s</string>
+    <string name="t_e6145a851c" formatted="false">معلّم · الرياضيات</string>
+    <string name="t_e61534a23d" formatted="false">ابدأ رحلتك التعليمية.</string>
+    <string name="t_e7bae5277c" formatted="false">يلزم حساب طالب</string>
+    <string name="t_e7e7796656" formatted="false">موضوع مقترح</string>
+    <string name="t_e950f5cb20" formatted="false">الإنجازات</string>
+    <string name="t_e976f9eea1" formatted="false">لا يوجد حل تجريبي لهذا التعبير. عد واختر أحد الأمثلة الثلاثة. لم تُحسب أي نتيجة.</string>
+    <string name="t_ecb768ca7f">%1$s نقطة · %2$s محاولات</string>
+    <string name="t_ecd7a0348c" formatted="false">تدريب مشابه</string>
+    <string name="t_ee22f3ac12" formatted="false">هدف تجريبي لتجربة متابعة التقدّم.</string>
+    <string name="t_eeca8fcbc6" formatted="false">الإنجليزية</string>
+    <string name="t_ef47493ab6" formatted="false">متابعة الدراسة</string>
+    <string name="t_f0102ff57c" formatted="false">إزالة</string>
+    <string name="t_f07af32616" formatted="false">الدرس التالي</string>
+    <string name="t_f0ccbc38a5" formatted="false">نقاط القوة</string>
+    <string name="t_f1c9af17c3" formatted="false">نسيت كلمة المرور؟</string>
+    <string name="t_f29b07fbb1" formatted="false">تفاصيل الصف</string>
+    <string name="t_f3f3f790e0" formatted="false">الإعدادات</string>
+    <string name="t_f4aa837b09">الدرس %1$s</string>
+    <string name="t_f5d0f6e515" formatted="false">بداية تجريبية مع الدروس المكتملة على هذا الجهاز. النشاط الأسبوعي والتمارين والسلسلة بيانات نموذجية.</string>
+    <string name="t_f6202fc5ef" formatted="false">الواجبات</string>
+    <string name="t_f64fd3a47a" formatted="false">مساحة المعلّم</string>
+    <string name="t_f73882a802" formatted="false">الفصول والموضوعات</string>
+    <string name="t_f762e78c7a" formatted="false">الرجوع وتعديل المسألة</string>
+    <string name="t_f7cdc994c6" formatted="false">رمز التحقق</string>
+    <string name="t_f8891afcdc" formatted="false">راجع تبويبًا آخر أو انتظر واجب المعلّم.</string>
+    <string name="t_f9676588a1" formatted="false">النشاط الأسبوعي</string>
+    <string name="t_fa515c7f77" formatted="false">انتهى الموعد</string>
+    <string name="t_fb9232756f" formatted="false">ستبقى بيانات التجربة على الجهاز.</string>
+    <string name="t_fccd2dda9f" formatted="false">أنشئ حسابًا تجريبيًا</string>
+    <string name="t_fd2727cf9d" formatted="false">الرمز التجريبي: 123456 · لم يُرسل شيء.</string>
+    <string name="t_fd7485f963" formatted="false">تقدّمي</string>
+    <string name="t_fff2e85454" formatted="false">نظرة على الصفوف</string>
+</resources>
