@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="c_0247df0668" formatted="false">Small steps. Real progress.</string>
+    <string name="c_11927202fd" formatted="false">Understand. Don\'t just memorize.</string>
+    <string name="c_3597612c71" formatted="false">Make every step make sense.</string>
+    <string name="c_6eaf2a3728" formatted="false">Explore worked examples and practice writing mathematical expressions.</string>
+    <string name="c_a3958a373d" formatted="false">Keep a daily rhythm and see how far you have come.</string>
+    <string name="c_eced6e5c06" formatted="false">Build a clear foundation, one focused lesson at a time.</string>
+    <string name="t_002749be01" formatted="false">Read the rules and justify your answer before submitting.</string>
+    <string name="t_006ebee366" formatted="false">No email was sent. Enter the demo code: 123456</string>
+    <string name="t_00707ce102" formatted="false">YOUR LEARNING SPACE</string>
+    <string name="t_00965319c2" formatted="false">Save search</string>
+    <string name="t_00cac031ea" formatted="false">Retry</string>
+    <string name="t_00f5382f8b">Active assignments %1$s</string>
+    <string name="t_0101d5fb65" formatted="false">Algebra</string>
+    <string name="t_013f0e8043" formatted="false">FOCUS PRACTICE</string>
+    <string name="t_01de1b3053" formatted="false">No general solver is connected. Only the three sample problems have curated demo solutions.</string>
+    <string name="t_01ec0c6e4e" formatted="false">Bookmarks and assignments require a student account. Your local demo data stays on this device.</string>
+    <string name="t_021fc6959d" formatted="false">Unsupported function. Try x^2 or sin(x).</string>
+    <string name="t_02c7e9b066" formatted="false">Numbers</string>
+    <string name="t_02debd4de3" formatted="false">ASSIGNMENT RESULTS</string>
+    <string name="t_03e1b7049a">Time: %1$s seconds</string>
+    <string name="t_03e25447ec" formatted="false">Unread</string>
+    <string name="t_04afb47288" formatted="false">Student · demo account</string>
+    <string name="t_04e0986fd7" formatted="false">Weekly rhythm</string>
+    <string name="t_054b6afa54" formatted="false">Practice</string>
+    <string name="t_05791afd64" formatted="false">New class</string>
+    <string name="t_05cfbeaf8f" formatted="false">Clear history</string>
+    <string name="t_0656950f60" formatted="false">Create a demo account to use this feature.</string>
+    <string name="t_077e621825">Completed lessons %1$s</string>
+    <string name="t_078816e010" formatted="false">Book progress</string>
+    <string name="t_082155007d" formatted="false">Resend demo code</string>
+    <string name="t_08bd207b10" formatted="false">THINK IT THROUGH</string>
+    <string name="t_094706a820" formatted="false">Accuracy</string>
+    <string name="t_0991118449" formatted="false">Open practice</string>
+    <string name="t_0a10baedfc" formatted="false">Final answer · demo</string>
+    <string name="t_0a7ea713f4" formatted="false">Simulate upload and crop</string>
+    <string name="t_0aa59cb367" formatted="false">Mastered</string>
+    <string name="t_0bbe6c9c93" formatted="false">Open problem</string>
+    <string name="t_0c59f4a1fc" formatted="false">Guide the next practice.</string>
+    <string name="t_0c7cde1bf8" formatted="false">Mark as completed</string>
+    <string name="t_0cd1a9054f">%1$s of %2$s lessons</string>
+    <string name="t_0e8ad197d6" formatted="false">Published locally. Students can now open this assignment.</string>
+    <string name="t_0f029af391" formatted="false">Keep useful ideas close.</string>
+    <string name="t_0f4d747002" formatted="false">Make room for understanding.</string>
+    <string name="t_0f6bdbd212" formatted="false">Simulate camera capture</string>
+    <string name="t_0f82bcf371" formatted="false">I\'m a teacher</string>
+    <string name="t_0f8f757d87" formatted="false">Create resource</string>
+    <string name="t_0fa93e6631" formatted="false">Completed lessons</string>
+    <string name="t_104c1f74f2" formatted="false">View solution</string>
+    <string name="t_107d03c5ec" formatted="false">Return to Study to choose a book.</string>
+    <string name="t_10881e833c" formatted="false">Problems</string>
+    <string name="t_11002dea21" formatted="false">Complete the practice first.</string>
+    <string name="t_111b3c1828" formatted="false">Title</string>
+    <string name="t_114c6c149d" formatted="false">Reset view</string>
+    <string name="t_115c64b035" formatted="false">Close</string>
+    <string name="t_1198ee5bce" formatted="false">Curated demo result · not a calculation from a math engine</string>
+    <string name="t_12412caf31" formatted="false">LESSON PATH</string>
+    <string name="t_12b17f30c3" formatted="false">Write an expression or choose a worked example.</string>
+    <string name="t_13321b65ec" formatted="false">Submit assignment?</string>
+    <string name="t_1361fe9c87" formatted="false">Return to your reasoning</string>
+    <string name="t_13df32fad2" formatted="false">Privacy</string>
+    <string name="t_143f33467e">%1$s questions · %2$s points</string>
+    <string name="t_1486cae7f0" formatted="false">Important rule</string>
+    <string name="t_14b88455cb" formatted="false">Curated demo solver · seven supported examples, no general engine</string>
+    <string name="t_1554f4db6b" formatted="false">Years of teaching experience</string>
+    <string name="t_1832fb89d1" formatted="false">Mini quiz</string>
+    <string name="t_189ecce295" formatted="false">Math expression</string>
+    <string name="t_1931081814" formatted="false">Use example</string>
+    <string name="t_1a25d7806a" formatted="false">Table of values</string>
+    <string name="t_1b9e6ceaba" formatted="false">Solve</string>
+    <string name="t_1ce0bc63cd" formatted="false">SESSION COMPLETE</string>
+    <string name="t_1d32c31329" formatted="false">Every attempt teaches you.</string>
+    <string name="t_1d47a66258" formatted="false">One focused step can change your day.</string>
+    <string name="t_1da6c63fb2" formatted="false">ACCOUNT RECOVERY</string>
+    <string name="t_1dd6ad45d7" formatted="false">Reason through the result.</string>
+    <string name="t_1df282cbf8" formatted="false">Demo result, not a general calculation engine</string>
+    <string name="t_1e037b60b5" formatted="false">Demo recommendation: practise the topic with the lowest mastery score.</string>
+    <string name="t_1e9b65ba66" formatted="false">Practice this topic</string>
+    <string name="t_1fa70d1974" formatted="false">Return to the book.</string>
+    <string name="t_2019af0928" formatted="false">Publish locally</string>
+    <string name="t_2023d797d3" formatted="false">Exercises · demo</string>
+    <string name="t_20bb2bd37a" formatted="false">Make it yours.</string>
+    <string name="t_210473961b" formatted="false">Recent activity</string>
+    <string name="t_2124beb9bd" formatted="false">Your math workspace.</string>
+    <string name="t_237968f024" formatted="false">Create a note, formula sheet or practice set.</string>
+    <string name="t_2456e13f3d" formatted="false">Started</string>
+    <string name="t_2594e8a647" formatted="false">Bring your teaching experience.</string>
+    <string name="t_25ad5c35f7" formatted="false">Pause &amp; reflect</string>
+    <string name="t_2622928a98" formatted="false">Worked example</string>
+    <string name="t_262b54dcff" formatted="false">No resources</string>
+    <string name="t_26d50e153b" formatted="false">ASSIGNMENT BUILDER</string>
+    <string name="t_273c73d9d4" formatted="false">Points (1–1000)</string>
+    <string name="t_2741e5a6bc">%1$s students · mastery %2$s%%</string>
+    <string name="t_2753fda825" formatted="false">PROFILE</string>
+    <string name="t_28fd8d2a78" formatted="false">Solver</string>
+    <string name="t_2948c7a5a8" formatted="false">Log out</string>
+    <string name="t_29c1be7a43" formatted="false">Continue</string>
+    <string name="t_29f6eb0ab8" formatted="false">Mastery is a transparent demo rule: 40% lessons + 40% practice + 20% quiz.</string>
+    <string name="t_2ab0dad2cc" formatted="false">Browse books</string>
+    <string name="t_2ade063f4e" formatted="false">Classes</string>
+    <string name="t_2afe0c1a6a" formatted="false">Why it works</string>
+    <string name="t_2b26d0bebb" formatted="false">YOUR SPACE</string>
+    <string name="t_2ba4b141ce" formatted="false">Description</string>
+    <string name="t_2d6ed82df3" formatted="false">Enter your full name.</string>
+    <string name="t_2e3ea6aca1" formatted="false">A little clarity changes everything.</string>
+    <string name="t_2f31a36fe9" formatted="false">CONTINUE LEARNING</string>
+    <string name="t_2f4cbc4954" formatted="false">PREFERENCES</string>
+    <string name="t_2f5557f305" formatted="false">Choose a supported example below.</string>
+    <string name="t_30593f37e9" formatted="false">Study</string>
+    <string name="t_306c0f93f4" formatted="false">Upcoming assignment</string>
+    <string name="t_307d2cfa2a">STEP %1$s</string>
+    <string name="t_31eced6d57" formatted="false">Teaching subject / specialization</string>
+    <string name="t_338c877d38" formatted="false">Mark all read</string>
+    <string name="t_3413fea94b" formatted="false">Your journey starts here</string>
+    <string name="t_344e8ddb55" formatted="false">Create an account</string>
+    <string name="t_34ebd8f633" formatted="false">Student details</string>
+    <string name="t_34ec2073de" formatted="false">Not submitted</string>
+    <string name="t_353becf694" formatted="false">Exercises</string>
+    <string name="t_354d5e989e" formatted="false">NEW PASSWORD</string>
+    <string name="t_355ef9b130">%1$s / %2$s lessons complete</string>
+    <string name="t_361f0f2133" formatted="false">MS. SARA</string>
+    <string name="t_36df6355b7" formatted="false">FOCUS SESSION</string>
+    <string name="t_377ff08181">Step %1$s</string>
+    <string name="t_387917ebc5" formatted="false">Attempts (1–5)</string>
+    <string name="t_3992c25ae7">Due %1$s</string>
+    <string name="t_39b8bf7830" formatted="false">Saved</string>
+    <string name="t_3b273d414e" formatted="false">Try again</string>
+    <string name="t_3b34128f7d" formatted="false">Welcome, Ms. Sara</string>
+    <string name="t_3b45300a1e" formatted="false">Practice set</string>
+    <string name="t_3b846b6647" formatted="false">Student</string>
+    <string name="t_3be2255f32" formatted="false">Simulated camera and upload. No image is captured or processed.</string>
+    <string name="t_3ce69d513f" formatted="false">The reasoning</string>
+    <string name="t_3cf6b002fb" formatted="false">Close preview</string>
+    <string name="t_3d47587da4" formatted="false">LOOK HOW FAR YOU\'VE COME</string>
+    <string name="t_3dc06c8440" formatted="false">Study a topic, practice it, then review your mastery. Teachers can create local classes and assignments.</string>
+    <string name="t_3e512eb130" formatted="false">Late submissions are disabled for this assignment.</string>
+    <string name="t_3fc2deecf5" formatted="false">Save a lesson or solution, or adjust your filters.</string>
+    <string name="t_3ffdefc981" formatted="false">Delete</string>
+    <string name="t_4064dc24ff" formatted="false">Enter your subject and 0–60 years of experience.</string>
+    <string name="t_40a3a75f0a" formatted="false">Log out</string>
+    <string name="t_40d8dc7f19" formatted="false">All</string>
+    <string name="t_41df12babb" formatted="false">Teacher</string>
+    <string name="t_4214608de0" formatted="false">Support understanding.</string>
+    <string name="t_4261644d59" formatted="false">Allow late submission</string>
+    <string name="t_44bfd23c2d" formatted="false">Passwords must match and contain at least 8 characters.</string>
+    <string name="t_44c7ecd060" formatted="false">Explore lessons and worked examples.</string>
+    <string name="t_453a44248c" formatted="false">Overview</string>
+    <string name="t_454af71f08" formatted="false">Progress by topic</string>
+    <string name="t_455904a5d7" formatted="false">Library</string>
+    <string name="t_46011237a5" formatted="false">Completion</string>
+    <string name="t_4605df753a" formatted="false">False</string>
+    <string name="t_465bb41873" formatted="false">Lessons completed</string>
+    <string name="t_473d186ca4" formatted="false">About</string>
+    <string name="t_473f260a04" formatted="false">Root and minimum: (0,0)</string>
+    <string name="t_479e114db0" formatted="false">Choose how you want to explore EN.MATH.</string>
+    <string name="t_4850f26893" formatted="false">New local demo updates appear here.</string>
+    <string name="t_485c964fc7" formatted="false">Skip</string>
+    <string name="t_492519ffec" formatted="false">Integrals</string>
+    <string name="t_4a0914c00b">%1$s / %2$s study actions</string>
+    <string name="t_4a5c00c5b2">%1$s / %2$s complete</string>
+    <string name="t_4ae0bbc92c" formatted="false">No questions</string>
+    <string name="t_4ae85809f8" formatted="false">Teacher resources</string>
+    <string name="t_4b3bb23d90" formatted="false">Teacher assignments</string>
+    <string name="t_4b58e315cf" formatted="false">Assignment result</string>
+    <string name="t_4bd9b3fa20" formatted="false">Welcome back.</string>
+    <string name="t_4bf19e2243">Your last lesson · %1$s minutes</string>
+    <string name="t_4c5461762c" formatted="false">Create assignment</string>
+    <string name="t_4c6c96d9ab" formatted="false">No assignments</string>
+    <string name="t_4ca0521704" formatted="false">Equations</string>
+    <string name="t_4cf108fea1">%1$s day streak</string>
+    <string name="t_4d07fefeac" formatted="false">Save feedback</string>
+    <string name="t_4d0f4ebd77" formatted="false">This prototype stores a local demo profile and progress on this device. It does not create an online account or send email. Do not enter real passwords.</string>
+    <string name="t_4d4f2c0264" formatted="false">Create question</string>
+    <string name="t_4d829a1a74" formatted="false">Overall progress</string>
+    <string name="t_4dc29f72b5" formatted="false">Class not found</string>
+    <string name="t_4f567e1c20" formatted="false">I\'m a student</string>
+    <string name="t_4fb8ba1914" formatted="false">Find the next idea.</string>
+    <string name="t_50b6918489" formatted="false">Checkpoint</string>
+    <string name="t_51189c9009" formatted="false">New resource</string>
+    <string name="t_511d9de5cb" formatted="false">RESULT</string>
+    <string name="t_516f1fe3b4">%1$s minutes</string>
+    <string name="t_519b0bc526" formatted="false">Topics</string>
+    <string name="t_51d2fe6071" formatted="false">Study, practice, and build confidence.</string>
+    <string name="t_52188cab48" formatted="false">Needs attention</string>
+    <string name="t_52542da01d" formatted="false">Lesson unavailable</string>
+    <string name="t_52ae618c18" formatted="false">✓ Three-day streak</string>
+    <string name="t_5500aaa704" formatted="false">Student unavailable</string>
+    <string name="t_553359b746" formatted="false">Lesson</string>
+    <string name="t_5558807e14" formatted="false">True</string>
+    <string name="t_557d76d5d1" formatted="false">You\'re up to date</string>
+    <string name="t_55998b187e" formatted="false">Your answers will be saved locally and visible in the teacher results.</string>
+    <string name="t_55cee8e73c">Pending reviews %1$s</string>
+    <string name="t_55d0767369" formatted="false">Teacher dashboard</string>
+    <string name="t_55da712f4d" formatted="false">Clear expression</string>
+    <string name="t_55f61c37c5" formatted="false">A fresh start.</string>
+    <string name="t_56f9d36d01" formatted="false">Short demo lesson · not a complete curriculum</string>
+    <string name="t_570d74456a">Average score %1$s/%2$s</string>
+    <string name="t_57276af9a8" formatted="false">Solve an example or change the filter.</string>
+    <string name="t_5771670ed0">%1$s seconds</string>
+    <string name="t_57cf7f7bed" formatted="false">Demo mode · no online account or live data</string>
+    <string name="t_584f9760f5" formatted="false">Matrices</string>
+    <string name="t_584fa3f349" formatted="false">Correct</string>
+    <string name="t_58c4794bb0" formatted="false">No solution engine yet</string>
+    <string name="t_5994568d38" formatted="false">Roots kπ; range [−1,1]</string>
+    <string name="t_59e803052e" formatted="false">EN.MATH · Independent math education demo · v1.0</string>
+    <string name="t_5aef859af5" formatted="false">Guest</string>
+    <string name="t_5afd491027" formatted="false">Learning</string>
+    <string name="t_5b5743805e" formatted="false">Confirm password</string>
+    <string name="t_5bb2f73c0f" formatted="false">Derivatives</string>
+    <string name="t_5bb34a4d86" formatted="false">Today\'s goal</string>
+    <string name="t_5c0aca2c59">Classes %1$s</string>
+    <string name="t_5e8aec3b47" formatted="false">Hint</string>
+    <string name="t_604824dd52" formatted="false">Create account</string>
+    <string name="t_606419751d" formatted="false">Share preview</string>
+    <string name="t_60ed61ee92">Study reminder %1$s</string>
+    <string name="t_61177eddae" formatted="false">No assignments here</string>
+    <string name="t_6127a49906" formatted="false">RESOURCES</string>
+    <string name="t_61bbd2bb4c" formatted="false">Confirm</string>
+    <string name="t_61ec47c295" formatted="false">Yesterday</string>
+    <string name="t_627d3b1618" formatted="false">Search learning content</string>
+    <string name="t_628fb25033" formatted="false">Future OCR workspace</string>
+    <string name="t_62cfa1d22a" formatted="false">Trig</string>
+    <string name="t_62e9205126" formatted="false">Two books. Eight topics. A clear path forward.</string>
+    <string name="t_63c7e31c42" formatted="false">I accept the demo terms</string>
+    <string name="t_6422ef9e47">Shared to %1$s classes</string>
+    <string name="t_65ead42888" formatted="false">Current streak · demo</string>
+    <string name="t_665b9023b5" formatted="false">Add function</string>
+    <string name="t_66ca730c92" formatted="false">Keep practicing to build proficiency.</string>
+    <string name="t_66df4d3113" formatted="false">Book details</string>
+    <string name="t_67b32d1cb9" formatted="false">Search</string>
+    <string name="t_6841cd8fe8" formatted="false">Try problem</string>
+    <string name="t_685c4edda1" formatted="false">Camera demo</string>
+    <string name="t_686ffa1014" formatted="false">Lessons</string>
+    <string name="t_693fec8aa7" formatted="false">Progress</string>
+    <string name="t_6a4eb9f1da" formatted="false">Create a class to begin.</string>
+    <string name="t_6a87ec3397" formatted="false">Related lesson</string>
+    <string name="t_6ac26cc029" formatted="false">Matrices</string>
+    <string name="t_6b1a0cf76e" formatted="false">Add</string>
+    <string name="t_6bd3834813" formatted="false">Search</string>
+    <string name="t_6bd79c49cf" formatted="false">Your teaching groups</string>
+    <string name="t_6be9b96bd7" formatted="false">Data stays on this device. There is no backend or real authentication.</string>
+    <string name="t_6c48dfb4c3" formatted="false">Lessons</string>
+    <string name="t_6c721d035d" formatted="false">Start assignment</string>
+    <string name="t_6c91f383f6" formatted="false">Check answer</string>
+    <string name="t_6d7c14d4a9" formatted="false">Copy code</string>
+    <string name="t_6e6253393d" formatted="false">Share the invite code. Enrollment is a future backend feature.</string>
+    <string name="t_6e8911a0d6" formatted="false">Solver</string>
+    <string name="t_6eadb04284" formatted="false">Content or URL</string>
+    <string name="t_6f03a69ee9" formatted="false">Needs practice</string>
+    <string name="t_6f119ee864" formatted="false">Teach with clarity.</string>
+    <string name="t_6f4922a8ad" formatted="false">Function y =</string>
+    <string name="t_6f5885c2d7" formatted="false">Teacher feedback</string>
+    <string name="t_6f798f756c" formatted="false">Upcoming</string>
+    <string name="t_704198b924" formatted="false">Next</string>
+    <string name="t_708dd82b5a" formatted="false">Continue lesson</string>
+    <string name="t_711e4aa84e" formatted="false">Email</string>
+    <string name="t_71927f007e" formatted="false">CLASSROOMS</string>
+    <string name="t_7207c84ac9" formatted="false">Please complete valid fields before continuing.</string>
+    <string name="t_729df17606" formatted="false">Demo graph: polynomials up to degree 8, sin, cos and tan. Drag to pan, pinch to zoom.</string>
+    <string name="t_751040dfab" formatted="false">Unable to load</string>
+    <string name="t_7512420977" formatted="false">Small steps add up.</string>
+    <string name="t_7625c0de23" formatted="false">Assignment unavailable</string>
+    <string name="t_771e1a0fee" formatted="false">Quick solver</string>
+    <string name="t_7722c61c7e" formatted="false">Formula sheet</string>
+    <string name="t_77aaba9190" formatted="false">Complete a lesson to see it here.</string>
+    <string name="t_77c17be0af" formatted="false">Topic unavailable</string>
+    <string name="t_78843a538d" formatted="false">Try again. Review the rule.</string>
+    <string name="t_794ab43a2c" formatted="false">Back</string>
+    <string name="t_7a0370d97e" formatted="false">No response has been saved yet.</string>
+    <string name="t_7a0c16fd84" formatted="false">CURATED SOLUTION</string>
+    <string name="t_7a5643ef0a" formatted="false">External resource</string>
+    <string name="t_7a74be9631" formatted="false">Clarity in every step</string>
+    <string name="t_7ac13fdc1e" formatted="false">Leave this session?</string>
+    <string name="t_7b1a0e1b9f" formatted="false">Practice result</string>
+    <string name="t_7c1f10df3f" formatted="false">Use the demo code 123456.</string>
+    <string name="t_7c795eb518" formatted="false">Share to class</string>
+    <string name="t_7cc2aab854">%1$s days</string>
+    <string name="t_7e3305f812" formatted="false">Math pad</string>
+    <string name="t_7eb98c7118" formatted="false">Resources</string>
+    <string name="t_7ffa43d992" formatted="false">Invite code</string>
+    <string name="t_81ed0ddb40" formatted="false">Limits</string>
+    <string name="t_823a3ad20c" formatted="false">Cancel</string>
+    <string name="t_82cabe1bde" formatted="false">Notification delivery is not implemented. No permission is requested.</string>
+    <string name="t_834d0bdb63" formatted="false">Overdue</string>
+    <string name="t_83d85c6a02" formatted="false">Coming in a future release</string>
+    <string name="t_8559a2cbe7" formatted="false">Mastery demo rule: 40% lessons + 40% practice + 20% best quiz. Seed activity is illustrative.</string>
+    <string name="t_85731572ae" formatted="false">Submit</string>
+    <string name="t_85c73acada" formatted="false">Full name</string>
+    <string name="t_85f6c25c12" formatted="false">Teacher · demo account</string>
+    <string name="t_8656fa1998" formatted="false">Feedback saved and added to the student inbox.</string>
+    <string name="t_8738fe67a6" formatted="false">CREATE ACCOUNT</string>
+    <string name="t_875f805f63" formatted="false">Check</string>
+    <string name="t_8777fe3971" formatted="false">Clarity in every step · v1.0 demo</string>
+    <string name="t_8804247fd9" formatted="false">Let\'s get you back in.</string>
+    <string name="t_88130f2bb9" formatted="false">Arithmetic</string>
+    <string name="t_8834284075" formatted="false">No classes</string>
+    <string name="t_8891e609f6" formatted="false">Completed</string>
+    <string name="t_88fac26dd6" formatted="false">Nothing here yet</string>
+    <string name="t_8930947435" formatted="false">Create class</string>
+    <string name="t_89c0b50eea" formatted="false">Finish demo recovery</string>
+    <string name="t_8a4c6a4c13" formatted="false">Original problem</string>
+    <string name="t_8a5decc276" formatted="false">Clarity, step by step.</string>
+    <string name="t_8c0c250a9b" formatted="false">About EN.MATH</string>
+    <string name="t_8c0dfa71a2" formatted="false">CLASSROOM</string>
+    <string name="t_8c507ee733" formatted="false">Your answer</string>
+    <string name="t_8d5c86ae5b">%1$s / %2$s lessons</string>
+    <string name="t_8d680ec8eb" formatted="false">EXPLORE</string>
+    <string name="t_8dee86552a" formatted="false">Expressions you submit in this session appear here.</string>
+    <string name="t_8e69f4f858" formatted="false">Use at least 8 characters.</string>
+    <string name="t_8f236c7a72" formatted="false">Teacher account</string>
+    <string name="t_8f4e83b5d6">Step %1$s of 4</string>
+    <string name="t_903b5a1bb9" formatted="false">Inbox demo only. No scheduled system notifications are sent.</string>
+    <string name="t_90986b28c4" formatted="false">YOUR LEARNING SPACE</string>
+    <string name="t_90d7e21b2f" formatted="false">Continue as guest</string>
+    <string name="t_91067f9a97" formatted="false">VERIFICATION</string>
+    <string name="t_9111cb18d5" formatted="false">New password</string>
+    <string name="t_9178974d1f" formatted="false">Score</string>
+    <string name="t_9305ec4b3f" formatted="false">Local classroom demo</string>
+    <string name="t_934f76a30f" formatted="false">View result</string>
+    <string name="t_93efc76003" formatted="false">This problem is not supported in the demo solver yet.</string>
+    <string name="t_9440b55d06" formatted="false">Your next step starts here.</string>
+    <string name="t_951cf2f627" formatted="false">Your response</string>
+    <string name="t_954c01e15f" formatted="false">Science Baccalaureate · a clear path forward</string>
+    <string name="t_95644465fb" formatted="false">Try another word or topic.</string>
+    <string name="t_95a7630817" formatted="false">Class mastery</string>
+    <string name="t_95d012eb32" formatted="false">THE LIBRARY</string>
+    <string name="t_95d4145292" formatted="false">Try a worked example</string>
+    <string name="t_9652100ff2" formatted="false">UPDATES</string>
+    <string name="t_96ee0d02e3" formatted="false">Student account</string>
+    <string name="t_96f7bb3115" formatted="false">Preview as student</string>
+    <string name="t_972fd332cf" formatted="false">Root −0.5; intercept 1</string>
+    <string name="t_98284dc5c6" formatted="false">A fresh page</string>
+    <string name="t_98340e1f7e" formatted="false">Reveal next hint</string>
+    <string name="t_98cd0de4fd" formatted="false">Axes</string>
+    <string name="t_996be0fcf0" formatted="false">Show</string>
+    <string name="t_9c1fa20a5e" formatted="false">Return to classes.</string>
+    <string name="t_9c505baa76" formatted="false">No result yet</string>
+    <string name="t_9d8c72545a" formatted="false">Share</string>
+    <string name="t_9d90e24064" formatted="false">Calculus</string>
+    <string name="t_9db065e98a" formatted="false">Continue to verification</string>
+    <string name="t_9df1de9197" formatted="false">Publish your first assignment.</string>
+    <string name="t_9e4e01dc96" formatted="false">Log out?</string>
+    <string name="t_9e729bd400">Students %1$s</string>
+    <string name="t_9e72a9bde6" formatted="false">Reveal answer</string>
+    <string name="t_9f33bb467e" formatted="false">School or institution (optional)</string>
+    <string name="t_9f6792bbf7" formatted="false">Proficient</string>
+    <string name="t_a0fc50de5a" formatted="false">Explore</string>
+    <string name="t_a2d9619261" formatted="false">Language</string>
+    <string name="t_a2e41f05a0" formatted="false">Verify</string>
+    <string name="t_a3060b0d61" formatted="false">Recent problems</string>
+    <string name="t_a311f1396c" formatted="false">Assignment work</string>
+    <string name="t_a33bc556a4" formatted="false">SEARCH</string>
+    <string name="t_a47bb75a14" formatted="false">Hide</string>
+    <string name="t_a56054dc89" formatted="false">YOUR BOOK</string>
+    <string name="t_a5ceb9dc53">%1$s study minutes</string>
+    <string name="t_a71cff4692">Average mastery %1$s%%</string>
+    <string name="t_a7e385f50a" formatted="false">Explore graphs</string>
+    <string name="t_a98160205a" formatted="false">Password</string>
+    <string name="t_a9a723c334" formatted="false">Study time</string>
+    <string name="t_a9ea6ff36b" formatted="false">Curated demo lessons · a preview of the learning experience</string>
+    <string name="t_aadf42c032" formatted="false">Practice this skill</string>
+    <string name="t_ab3669edfa" formatted="false">Save</string>
+    <string name="t_ac2a1c81dd" formatted="false">Your demo lesson progress and preferences stay on this device.</string>
+    <string name="t_ac2e05afaf" formatted="false">Completed</string>
+    <string name="t_ac68e53c7f" formatted="false">YOUR LIBRARY</string>
+    <string name="t_ac75c05199" formatted="false">Needs review</string>
+    <string name="t_acd69bb6a8" formatted="false">Local progress and demo classroom data are kept.</string>
+    <string name="t_ad0311fff4" formatted="false">Password · 8+ characters</string>
+    <string name="t_ad7db392b8" formatted="false">✓ First lesson completed</string>
+    <string name="t_ada94e31a4" formatted="false">Solution</string>
+    <string name="t_ae1c6ca083" formatted="false">Solver history</string>
+    <string name="t_aeaec2c65d" formatted="false">Clear</string>
+    <string name="t_aedcead3b8" formatted="false">Every step counts.</string>
+    <string name="t_af31379f6f" formatted="false">Accept the demo terms to continue.</string>
+    <string name="t_af36e1e442" formatted="false">Scan demo</string>
+    <string name="t_afb12a0f65" formatted="false">Help</string>
+    <string name="t_b00f71719c" formatted="false">Not started</string>
+    <string name="t_b067c69b60" formatted="false">Final answer</string>
+    <string name="t_b097319490" formatted="false">Sharing will be connected in a later release.</string>
+    <string name="t_b09e391c65" formatted="false">Common mistake</string>
+    <string name="t_b0f2d09240" formatted="false">Show hints</string>
+    <string name="t_b16ed530ed">Question %1$s of %2$s</string>
+    <string name="t_b1e90dd5fe" formatted="false">Demo insights derived from mastery and overdue work.</string>
+    <string name="t_b2b90cdc0d" formatted="false">Grid</string>
+    <string name="t_b2ea0d8d22" formatted="false">Today\'s intention</string>
+    <string name="t_b33c58583a" formatted="false">Open math solver</string>
+    <string name="t_b384fbdc7e" formatted="false">Dark</string>
+    <string name="t_b48bb99c87" formatted="false">Complete your first lesson</string>
+    <string name="t_b511f62c6c" formatted="false">Continue learning</string>
+    <string name="t_b5a4c86040" formatted="false">Home</string>
+    <string name="t_b5e692ba92" formatted="false">Practice again</string>
+    <string name="t_b64f5160ae" formatted="false">Continue this book</string>
+    <string name="t_b67d86605d" formatted="false">Recent searches</string>
+    <string name="t_b70bd0ed57" formatted="false">Local notifications</string>
+    <string name="t_b8077ff8ea" formatted="false">Understand each step.</string>
+    <string name="t_b8132a67be" formatted="false">Awaiting submissions</string>
+    <string name="t_b8ee1e0f8c" formatted="false">No results</string>
+    <string name="t_ba46bc2e8b" formatted="false">Library</string>
+    <string name="t_bac100df7d" formatted="false">✓ Practice accuracy above 80%</string>
+    <string name="t_baef42cd26" formatted="false">New numeric question</string>
+    <string name="t_bb0767c28e" formatted="false">Use recognised sample</string>
+    <string name="t_bb13a814b0" formatted="false">Continue as guest</string>
+    <string name="t_bb202e55bd" formatted="false">Demo only · the password is validated then discarded, not saved.</string>
+    <string name="t_bbaaeb95d0" formatted="false">Choose another lesson.</string>
+    <string name="t_bc14eec819" formatted="false">Previous</string>
+    <string name="t_bc2753a2c0" formatted="false">Dashboard</string>
+    <string name="t_bcc752cc57">%1$s minutes to build clarity</string>
+    <string name="t_bd4d7a258d" formatted="false">HISTORY</string>
+    <string name="t_bd767ed1d0" formatted="false">Return to assignments.</string>
+    <string name="t_bd98530a61" formatted="false">Students</string>
+    <string name="t_bd9e360130" formatted="false">Log in</string>
+    <string name="t_bda3e17468" formatted="false">Notifications</string>
+    <string name="t_bdb85c717d" formatted="false">Concepts</string>
+    <string name="t_be2a7c624f" formatted="false">Undo</string>
+    <string name="t_bfdd842d70" formatted="false">Demo login · use any valid email and 8+ character password. No server verifies these credentials.</string>
+    <string name="t_bff8e80540" formatted="false">Objectives</string>
+    <string name="t_c01b19362d" formatted="false">Choose due date</string>
+    <string name="t_c0513f0aef" formatted="false">Enter a valid email address.</string>
+    <string name="t_c0a8e05970" formatted="false">TEACHER ASSIGNMENTS</string>
+    <string name="t_c185218689" formatted="false">No students yet</string>
+    <string name="t_c2e2baa31f" formatted="false">A space for your ambition.</string>
+    <string name="t_c3427ebcc7" formatted="false">Preview the recovery flow. No email is sent and no real password is changed.</string>
+    <string name="t_c3a665fd1c" formatted="false">Lesson completed</string>
+    <string name="t_c42ca1990b" formatted="false">Book unavailable</string>
+    <string name="t_c55bf2e6c2">%1$s classes</string>
+    <string name="t_c55ce786b5" formatted="false">Keyboard</string>
+    <string name="t_c5e1bee1ed" formatted="false">Mastery by topic</string>
+    <string name="t_c75fccb635" formatted="false">No problems found</string>
+    <string name="t_c7bd6f097a" formatted="false">Return to the class.</string>
+    <string name="t_c7e19e5294" formatted="false">Organize your learning journey.</string>
+    <string name="t_c8f2f6ffd0" formatted="false">Explore a worked example</string>
+    <string name="t_c91c031f4f" formatted="false">Practicing</string>
+    <string name="t_c9c7136316" formatted="false">Learn with intention.</string>
+    <string name="t_c9f366dc0e" formatted="false">Sort by mastery</string>
+    <string name="t_ca1b37c1d5" formatted="false">Create</string>
+    <string name="t_cb0926a9d0" formatted="false">Class name</string>
+    <string name="t_cb7e56cc66" formatted="false">STUDENT DETAILS</string>
+    <string name="t_cb8c6979b1" formatted="false">Correct answer</string>
+    <string name="t_cc8437d5b9" formatted="false">Quick actions</string>
+    <string name="t_ccdff60317" formatted="false">See the function.</string>
+    <string name="t_cdc7551be2" formatted="false">Demo terms</string>
+    <string name="t_cde1f4644a" formatted="false">YOUR PROGRESS</string>
+    <string name="t_cee84ba17a" formatted="false">Supported examples</string>
+    <string name="t_d04051cfbc">Welcome, %1$s.</string>
+    <string name="t_d11f531c1e" formatted="false">An independent math education prototype. Accounts, lessons and solver examples are demos. There is no backend or AI connection.</string>
+    <string name="t_d154c99a2e" formatted="false">Light</string>
+    <string name="t_d1df9e0bcb" formatted="false">Appearance</string>
+    <string name="t_d213f2cca7">%1$s / %2$s lessons</string>
+    <string name="t_d2b9e51dce">%1$s of %2$s lessons completed</string>
+    <string name="t_d34a495278">%1$s submissions</string>
+    <string name="t_d3524ba8c3" formatted="false">Follow device</string>
+    <string name="t_d3b6dc6e16" formatted="false">Learn the idea, then put it into practice.</string>
+    <string name="t_d43aa2eb48" formatted="false">Average mastery</string>
+    <string name="t_d475577a1a" formatted="false">Back to topic</string>
+    <string name="t_d4c4a8cb23">%1$s / %2$s learning steps</string>
+    <string name="t_d4db0600b7" formatted="false">Student response</string>
+    <string name="t_d60458396f" formatted="false">Student · Science Baccalaureate</string>
+    <string name="t_d61fdf036d" formatted="false">Exercises solved</string>
+    <string name="t_d80f76e3c2">%1$s enrolled students</string>
+    <string name="t_d8b77b269d">%1$s minutes · demo content</string>
+    <string name="t_d8b994addd" formatted="false">Choose another practice set.</string>
+    <string name="t_d9613968c1" formatted="false">Lesson note</string>
+    <string name="t_d9742902f4" formatted="false">All types</string>
+    <string name="t_da20e47035" formatted="false">Expression or prompt</string>
+    <string name="t_db640f5b9c" formatted="false">YOUR ACCOUNT</string>
+    <string name="t_db7aaa76e0" formatted="false">One more step.</string>
+    <string name="t_dbce05439f" formatted="false">YOUR NEXT CHAPTER</string>
+    <string name="t_dc79b60266" formatted="false">SCAN DEMO</string>
+    <string name="t_dcf57c409e" formatted="false">Demo registration · use sample details. No account is created online.</string>
+    <string name="t_dd0a8d9c19" formatted="false">All topics</string>
+    <string name="t_dd385d958b" formatted="false">Arabic</string>
+    <string name="t_de281d583c" formatted="false">Accept</string>
+    <string name="t_de69ae3b7a" formatted="false">Earlier</string>
+    <string name="t_df1ef156f3" formatted="false">6-digit code</string>
+    <string name="t_df60f8d791" formatted="false">Get started</string>
+    <string name="t_df6c0f6e87" formatted="false">MATH WORKSPACE</string>
+    <string name="t_e069c044c0" formatted="false">My library</string>
+    <string name="t_e10c7acb96" formatted="false">Copied</string>
+    <string name="t_e1598e46ee" formatted="false">Recent submissions</string>
+    <string name="t_e1af75d936" formatted="false">Your assignments</string>
+    <string name="t_e269f67032" formatted="false">Profile</string>
+    <string name="t_e2d40d004c" formatted="false">WORKED EXAMPLE</string>
+    <string name="t_e317f22089">Practice accuracy %1$s%%</string>
+    <string name="t_e43176af35" formatted="false">Offline demo · changes are saved on this device</string>
+    <string name="t_e54621f53e" formatted="false">Today</string>
+    <string name="t_e5a3201c0e" formatted="false">Can you explain the rule without looking at the example? Try it on paper before continuing.</string>
+    <string name="t_e5cfa4402b" formatted="false">Teacher profile</string>
+    <string name="t_e5ef7b2777">Active assignments %1$s</string>
+    <string name="t_e6145a851c" formatted="false">Teacher · Mathematics</string>
+    <string name="t_e61534a23d" formatted="false">Start your learning journey.</string>
+    <string name="t_e7bae5277c" formatted="false">Student account required</string>
+    <string name="t_e7e7796656" formatted="false">Recommended topic</string>
+    <string name="t_e950f5cb20" formatted="false">Achievements</string>
+    <string name="t_e976f9eea1" formatted="false">This expression has no demo result. Go back and select one of the three worked examples. No answer has been calculated.</string>
+    <string name="t_ecb768ca7f">%1$s points · %2$s attempts</string>
+    <string name="t_ecd7a0348c" formatted="false">Similar practice</string>
+    <string name="t_ee22f3ac12" formatted="false">A demo goal to help you try the experience.</string>
+    <string name="t_eeca8fcbc6" formatted="false">English</string>
+    <string name="t_ef47493ab6" formatted="false">Continue studying</string>
+    <string name="t_f0102ff57c" formatted="false">Remove</string>
+    <string name="t_f07af32616" formatted="false">Next lesson</string>
+    <string name="t_f0ccbc38a5" formatted="false">Strengths</string>
+    <string name="t_f1c9af17c3" formatted="false">Forgot password?</string>
+    <string name="t_f29b07fbb1" formatted="false">CLASS DETAILS</string>
+    <string name="t_f3f3f790e0" formatted="false">Settings</string>
+    <string name="t_f4aa837b09">LESSON %1$s</string>
+    <string name="t_f5d0f6e515" formatted="false">Demo baseline + lessons completed on this device. Weekly activity, exercises and streak are sample data.</string>
+    <string name="t_f6202fc5ef" formatted="false">Assignments</string>
+    <string name="t_f64fd3a47a" formatted="false">TEACHER SPACE</string>
+    <string name="t_f73882a802" formatted="false">Chapters &amp; topics</string>
+    <string name="t_f762e78c7a" formatted="false">Back &amp; edit problem</string>
+    <string name="t_f7cdc994c6" formatted="false">Verification code</string>
+    <string name="t_f8891afcdc" formatted="false">Check another tab or wait for a teacher assignment.</string>
+    <string name="t_f9676588a1" formatted="false">Weekly activity</string>
+    <string name="t_fa515c7f77" formatted="false">Deadline passed</string>
+    <string name="t_fb9232756f" formatted="false">Your demo data will remain on this device.</string>
+    <string name="t_fccd2dda9f" formatted="false">Create a demo account</string>
+    <string name="t_fd2727cf9d" formatted="false">Demo code: 123456 · nothing was sent.</string>
+    <string name="t_fd7485f963" formatted="false">My progress</string>
+    <string name="t_fff2e85454" formatted="false">Class overview</string>
+</resources>
