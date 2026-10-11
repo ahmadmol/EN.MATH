@@ -16,6 +16,7 @@ fun TeacherResourcesScreen(
     state: LearningState,
     onCreate: (String, String, String, ResourceKind) -> Unit,
     onShare: (String, String) -> Unit,
+    open: (String) -> Unit,
 ) {
     var create by remember { mutableStateOf(false) }
     var share by remember { mutableStateOf("") }
@@ -26,6 +27,23 @@ fun TeacherResourcesScreen(
     val topics = state.books.flatMap { it.topics }
     ScreenPage(Modifier.testTag("screen-resources")) {
         PageHeading(label(TextKey.t_6127a49906), label(TextKey.t_4214608de0))
+        AppCard {
+            SecondaryButton(
+                tr("Curriculum & lessons", "المنهاج والدروس"),
+                { open(TeacherReferenceRoutes.Study) },
+                Modifier.testTag("teacher-resource-study"),
+            )
+            SecondaryButton(
+                tr("Detailed solver", "الحل المفصل"),
+                { open(TeacherReferenceRoutes.Solver) },
+                Modifier.testTag("teacher-resource-solver"),
+            )
+            SecondaryButton(
+                tr("Function lab", "مختبر الدوال"),
+                { open(TeacherReferenceRoutes.Lab) },
+                Modifier.testTag("teacher-resource-lab"),
+            )
+        }
         PrimaryButton(label(TextKey.t_0f8f757d87), { create = true })
         if (state.product.resources.isEmpty())
             EmptyState(label(TextKey.t_262b54dcff), label(TextKey.t_237968f024))

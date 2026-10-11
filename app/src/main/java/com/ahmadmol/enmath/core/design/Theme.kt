@@ -50,16 +50,16 @@ val LightColorScheme =
     )
 val DarkColorScheme =
     darkColorScheme(
-        primary = Color(0xFFBFBAFF),
-        onPrimary = Color(0xFF242065),
+        primary = Color(0xFF8F87FF),
+        onPrimary = Color(0xFF151136),
         primaryContainer = Color(0xFF36317C),
         onPrimaryContainer = Color(0xFFE6E4FF),
         secondary = Color(0xFF83D6B8),
         secondaryContainer = Color(0xFF004D40),
         onSecondaryContainer = Color(0xFFD8F5E9),
-        background = Color(0xFF111421),
-        surface = Color(0xFF191D2E),
-        surfaceVariant = Color(0xFF252B40),
+        background = Color(0xFF0B0F19),
+        surface = Color(0xFF0E1527),
+        surfaceVariant = Color(0xFF182235),
         onSurface = Color(0xFFEBECF6),
         onSurfaceVariant = Color(0xFFB7BCD2),
         outline = Color(0xFF969CB3),

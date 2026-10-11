@@ -1,127 +1,109 @@
 package com.ahmadmol.enmath.features.teacher
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.MenuBook
-import androidx.compose.material.icons.automirrored.outlined.ShowChart
+import androidx.compose.material.icons.automirrored.outlined.Assignment
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.*
+import androidx.compose.runtime.Composable
 import com.ahmadmol.enmath.core.data.LearningState
+import com.ahmadmol.enmath.core.design.text
 import com.ahmadmol.enmath.core.navigation.Routes
 import com.ahmadmol.enmath.features.reference.*
 
-/** Teacher-only destinations; student routing and screens are unchanged. */
 object TeacherReferenceRoutes {
     const val Home = "teacher/reference/home"
     const val Study = "teacher/reference/study"
-    val screens = listOf(Routes.TeacherHome, Home, Study)
+    const val Solver = "teacher/reference/solver"
+    const val Lab = "teacher/reference/lab"
+    const val Lesson = "teacher/reference/lesson/{id}"
+    val screens = listOf(Routes.TeacherHome, Home, Study, Solver, Lab, Lesson)
 }
 
 @Composable
 fun TeacherReferenceHome(state: LearningState, open: (String) -> Unit) {
-    var preview by rememberSaveable { mutableStateOf<String?>(null) }
     ReferenceHome(state) { path ->
-        when (path) {
-            Routes.Study -> open(TeacherReferenceRoutes.Study)
-            else -> preview = if (path.startsWith("lesson/")) "متابعة الدرس" else "أدوات الرياضيات"
-        }
-    }
-    preview?.let { title ->
-        TeacherPreviewDialog(
-            title,
-            "تجريبي: تفاصيل هذه الواجهة غير مشمولة في الصور المرفقة. لم يتم فتح شاشة إضافية.",
-        ) {
-            preview = null
-        }
-    }
-}
-
-@Composable
-fun TeacherReferenceStudy() {
-    var preview by rememberSaveable { mutableStateOf(false) }
-    ReferenceStudy { preview = true }
-    if (preview)
-        TeacherPreviewDialog(
-            "معاينة الدرس",
-            "تجريبي: تم اختيار الدرس. محتوى الدرس التفصيلي خارج نطاق التصاميم المرفقة.",
-        ) {
-            preview = false
-        }
-}
-
-@Composable
-fun TeacherReferenceBottomNav(route: String?, open: (String) -> Unit) {
-    var preview by rememberSaveable { mutableStateOf<String?>(null) }
-    BoxWithConstraints(Modifier.fillMaxWidth().background(Color(0xFF030717))) {
-        val density = LocalDensity.current
-        val scale = (maxWidth.value.coerceAtMost(416f) / 277f).coerceAtLeast(.85f)
-        CompositionLocalProvider(
-            LocalDensity provides Density(density.density * scale, density.fontScale)
-        ) {
-            Row(
-                Modifier.fillMaxWidth()
-                    .border(.6.dp, RefPalette.border)
-                    .navigationBarsPadding()
-                    .padding(top = 7.dp, bottom = 5.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                val tabs =
-                    listOf(
-                        Triple(TeacherReferenceRoutes.Home, "الرئيسية", Icons.Outlined.Home),
-                        Triple(
-                            TeacherReferenceRoutes.Study,
-                            "المنهج",
-                            Icons.AutoMirrored.Outlined.MenuBook,
-                        ),
-                        Triple("teacher/reference/solver", "الحل المفصل", Icons.Outlined.Calculate),
-                        Triple(
-                            "teacher/reference/lab",
-                            "المختبر",
-                            Icons.AutoMirrored.Outlined.ShowChart,
-                        ),
-                        Triple(Routes.TeacherHome, "المعلم", Icons.Outlined.School),
-                    )
-                tabs.forEach { (path, title, icon) ->
-                    val selected = path == route
-                    val color = if (selected) RefPalette.violet else RefPalette.muted
-                    Column(
-                        Modifier.weight(1f)
-                            .clickable {
-                                if (path in TeacherReferenceRoutes.screens) open(path)
-                                else preview = title
-                            }
-                            .testTag("teacher-nav-$path")
-                            .padding(horizontal = 1.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        RefIcon(icon, color, 12)
-                        Text(
-                            title,
-                            color = color,
-                            fontSize = 7.sp,
-                            lineHeight = 11.sp,
-                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                        )
-                    }
-                }
+        open(
+            when (path) {
+                Routes.Study -> TeacherReferenceRoutes.Study
+                Routes.Solver -> TeacherReferenceRoutes.Solver
+                "explore" -> TeacherReferenceRoutes.Lab
+                else -> "teacher/reference/$path"
             }
-        }
+        )
     }
-    preview?.let { title ->
-        TeacherPreviewDialog(title, "تجريبي: هذا التبويب خارج نطاق الصور المرفقة لدور المعلم.") {
-            preview = null
+}
+
+@Composable
+fun TeacherReferenceStudy(open: (String) -> Unit) {
+    ReferenceStudy { open("teacher/reference/$it") }
+}
+
+@Composable
+fun TeacherReferenceLesson(id: String, state: LearningState, open: (String) -> Unit) {
+    ReferencePage("screen-teacher-lesson") {
+        val lesson = state.lesson(id)
+        if (lesson == null) {
+            RefHeading(refText("الدرس غير متاح", "Lesson unavailable"))
+            return@ReferencePage
         }
+        RefHeading(
+            lesson.title.text(),
+            refText("معاينة المحتوى التعليمي للمعلم", "Teacher curriculum preview"),
+        )
+        RefCard {
+            RefLabel(refText("أهداف الدرس", "Learning objectives"), RefPalette.white, 11, true)
+            RefLabel(lesson.objectives.text(), size = 10)
+        }
+        RefCard {
+            RefLabel(refText("شرح المفهوم", "Concept overview"), RefPalette.white, 11, true)
+            RefLabel(lesson.introduction.text(), size = 10)
+        }
+        RefButton(
+            refText("فتح الحل المفصل", "Open detailed solver"),
+            { open(TeacherReferenceRoutes.Solver) },
+        )
+        RefButton(
+            refText("إنشاء واجب للطلاب", "Create a class assignment"),
+            { open("teacher/assignments/new") },
+            selected = false,
+        )
     }
+}
+
+@Composable
+fun TeacherReferenceBottomNav(route: String?, open: (String) -> Unit, dark: Boolean = true) {
+    val selected =
+        when {
+            route?.startsWith("teacher/classes") == true -> Routes.TeacherClasses
+            route?.startsWith("teacher/assignments") == true -> Routes.TeacherAssignments
+            route in listOf(Routes.TeacherProfile, "teacher/settings", "teacher/notifications") ->
+                Routes.TeacherProfile
+            route in TeacherReferenceRoutes.screens && route != Routes.TeacherHome ->
+                Routes.TeacherResources
+            else -> route
+        }
+    CleanBottomBar(
+        listOf(
+            CleanNavItem(Routes.TeacherHome, refText("الرئيسية", "Home"), Icons.Outlined.Dashboard),
+            CleanNavItem(Routes.TeacherClasses, refText("الشعب", "Classes"), Icons.Outlined.Groups),
+            CleanNavItem(
+                Routes.TeacherAssignments,
+                refText("الواجبات", "Assignments"),
+                Icons.AutoMirrored.Outlined.Assignment,
+            ),
+            CleanNavItem(
+                Routes.TeacherResources,
+                refText("الموارد", "Resources"),
+                Icons.Outlined.FolderOpen,
+            ),
+            CleanNavItem(
+                Routes.TeacherProfile,
+                refText("حسابي", "Profile"),
+                Icons.Outlined.PersonOutline,
+            ),
+        ),
+        selected,
+        "teacher-nav-",
+        dark,
+        open,
+    )
 }

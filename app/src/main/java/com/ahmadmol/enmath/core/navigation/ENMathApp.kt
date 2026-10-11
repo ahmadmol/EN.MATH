@@ -28,8 +28,8 @@ import com.ahmadmol.enmath.features.courses.*
 import com.ahmadmol.enmath.features.onboarding.*
 import com.ahmadmol.enmath.features.reference.*
 import com.ahmadmol.enmath.features.solver.*
-import com.ahmadmol.enmath.features.teacher.TeacherReferenceRoutes
 import com.ahmadmol.enmath.features.teacher.TeacherReferenceBottomNav
+import com.ahmadmol.enmath.features.teacher.TeacherReferenceRoutes
 
 @Composable
 fun ENMathApp() {
@@ -48,9 +48,11 @@ fun ENMathApp() {
         val tabs = if (teacher) Routes.teacherTabs else Routes.tabs
         val inMain = selectedTab in tabs && route !in Routes.focus
         val teacherReference = teacher && route in TeacherReferenceRoutes.screens
-        val reference = teacherReference ||
-            !teacher &&
-                route in listOf(Routes.Home, Routes.Study, Routes.Solver, Routes.Profile, "explore")
+        val reference =
+            teacherReference ||
+                !teacher &&
+                    route in
+                        listOf(Routes.Home, Routes.Study, Routes.Solver, Routes.Profile, "explore")
         if (reference) {
             val activity = androidx.activity.compose.LocalActivity.current
             SideEffect {
@@ -134,7 +136,8 @@ fun ENMathApp() {
         fun open(path: String) {
             if (
                 path in
-                    (if (app.state.value.user?.type == AccountType.Teacher) Routes.teacherTabs + TeacherReferenceRoutes.screens
+                    (if (app.state.value.user?.type == AccountType.Teacher)
+                        Routes.teacherTabs + TeacherReferenceRoutes.screens
                     else Routes.tabs)
             )
                 tab(path)
@@ -148,7 +151,9 @@ fun ENMathApp() {
         }
         fun switchDemoRole() {
             val current = app.state.value.user ?: return
-            val next = if (current.type == AccountType.Teacher) AccountType.Student else AccountType.Teacher
+            val next =
+                if (current.type == AccountType.Teacher) AccountType.Student
+                else AccountType.Teacher
             app.signIn(current.copy(type = next))
             auth.chooseRole(next)
             clearNavigate(if (next == AccountType.Teacher) Routes.TeacherMain else Routes.Main)
@@ -207,18 +212,14 @@ fun ENMathApp() {
                 bottomBar = {
                     if (teacherReference) TeacherReferenceBottomNav(route, ::open)
                     else if (reference) RefBottomNav(route, ::open)
+                    else if (teacher && inMain && !wide)
+                        TeacherReferenceBottomNav(route, ::open, dark = false)
                     else if (inMain && !wide)
-                        NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
-                            tabs.forEach { destination ->
-                                NavigationBarItem(
-                                    selected = selectedTab == destination,
-                                    onClick = { tab(destination) },
-                                    icon = { Icon(tabIcon(destination), null) },
-                                    label = { Text(tabLabel(destination)) },
-                                    modifier = Modifier.testTag("nav-$destination"),
-                                )
-                            }
-                        }
+                        RefBottomNav(
+                            if (selectedTab == Routes.Progress) Routes.Profile else selectedTab,
+                            ::open,
+                            dark = false,
+                        )
                 },
             ) { padding ->
                 Row(Modifier.fillMaxSize().padding(padding).imePadding()) {
@@ -325,7 +326,15 @@ fun ENMathApp() {
                             }
                         }
                         navigation(startDestination = Routes.Home, route = Routes.Main) {
-                            studentGraph(nav, app, solver, ::open, ::logout, ::guarded, ::switchDemoRole)
+                            studentGraph(
+                                nav,
+                                app,
+                                solver,
+                                ::open,
+                                ::logout,
+                                ::guarded,
+                                ::switchDemoRole,
+                            )
                         }
                         navigation(
                             startDestination = Routes.TeacherHome,

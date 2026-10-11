@@ -21,6 +21,12 @@ fun ReferenceStudy(open: (String) -> Unit) {
                 "According to the Syrian Ministry of Education curriculum",
             ),
         )
+        RefButton(
+            refText("استعراض جميع الدروس", "Browse all lessons"),
+            { open("study/catalog") },
+            Modifier.testTag("browse-all-lessons"),
+            false,
+        )
         RefCard(
             Modifier,
             padding = 3.dp,

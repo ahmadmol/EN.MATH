@@ -59,6 +59,10 @@ fun NavGraphBuilder.studentGraph(
             ::lesson,
         )
     }
+    composable("study/catalog") {
+        val state by app.state.collectAsStateWithLifecycle()
+        StudyScreen(state, { route("book/$it") }, ::lesson, ::route)
+    }
     composable(Routes.Topic) { e ->
         val state by app.state.collectAsStateWithLifecycle()
         TopicLessonsScreen(
@@ -244,7 +248,7 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Profile) {
         val state by app.state.collectAsStateWithLifecycle()
-        ReferenceProfile(state, app::language, switchRole)
+        ReferenceProfile(state, app::language, switchRole, open, logout)
     }
     composable("settings") {
         val state by app.state.collectAsStateWithLifecycle()
@@ -282,14 +286,59 @@ fun NavGraphBuilder.teacherGraph(
     switchRole: () -> Unit,
 ) {
     composable(Routes.TeacherHome) {
-        TeacherReferenceDashboard(switchRole)
+        val state by app.state.collectAsStateWithLifecycle()
+        TeacherWorkspace(state, open, switchRole)
     }
     composable(TeacherReferenceRoutes.Home) {
         val state by app.state.collectAsStateWithLifecycle()
         TeacherReferenceHome(state, open)
     }
-    composable(TeacherReferenceRoutes.Study) {
-        TeacherReferenceStudy()
+    composable(TeacherReferenceRoutes.Study) { TeacherReferenceStudy(open) }
+    composable(TeacherReferenceRoutes.Solver) { ReferenceSolver() }
+    composable(TeacherReferenceRoutes.Lab) { ReferenceGraph() }
+    composable("teacher/reference/study/catalog") {
+        val state by app.state.collectAsStateWithLifecycle()
+        StudyScreen(
+            state,
+            { open("teacher/reference/book/$it") },
+            { open("teacher/reference/lesson/$it") },
+            { path ->
+                open(
+                    when (path) {
+                        "assignments" -> Routes.TeacherAssignments
+                        "explore" -> TeacherReferenceRoutes.Lab
+                        else -> Routes.TeacherResources
+                    }
+                )
+            },
+        )
+    }
+    composable("teacher/reference/book/{id}") { e ->
+        val state by app.state.collectAsStateWithLifecycle()
+        BookDetailsScreen(
+            e.arguments?.getString("id").orEmpty(),
+            state,
+            { open("teacher/reference/topic/$it") },
+            { open("teacher/reference/lesson/$it") },
+        )
+    }
+    composable("teacher/reference/topic/{id}") { e ->
+        val state by app.state.collectAsStateWithLifecycle()
+        ReferencePage("screen-teacher-topic") {
+            val topic = state.topic(e.arguments?.getString("id").orEmpty())
+            RefHeading(topic?.title?.text().orEmpty())
+            topic?.lessons?.forEach { lesson ->
+                RefButton(
+                    lesson.title.text(),
+                    { open("teacher/reference/lesson/${lesson.id}") },
+                    selected = false,
+                )
+            }
+        }
+    }
+    composable(TeacherReferenceRoutes.Lesson) { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        TeacherReferenceLesson(entry.arguments?.getString("id").orEmpty(), state, open)
     }
     composable(Routes.TeacherClasses) {
         val state by app.state.collectAsStateWithLifecycle()
@@ -365,11 +414,11 @@ fun NavGraphBuilder.teacherGraph(
     }
     composable(Routes.TeacherResources) {
         val state by app.state.collectAsStateWithLifecycle()
-        TeacherResourcesScreen(state, app::createResource, app::shareResource)
+        TeacherResourcesScreen(state, app::createResource, app::shareResource, open)
     }
     composable(Routes.TeacherProfile) {
         val state by app.state.collectAsStateWithLifecycle()
-        ProductProfileScreen(state, true, open, logout)
+        TeacherAccount(state, open, switchRole, logout)
     }
     composable("teacher/settings") {
         val state by app.state.collectAsStateWithLifecycle()

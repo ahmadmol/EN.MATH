@@ -144,8 +144,8 @@ class AppFlowTest {
         click("registration-submit")
         input("auth-code", "123456")
         click("verify-submit")
-        ui.onNodeWithTag("screen-teacher").assertExists()
-        click("nav-teacher/profile")
+        ui.onNodeWithTag("screen-teacher-reference").assertExists()
+        click("teacher-nav-teacher/profile")
         click("logout")
         click("dialog-confirm")
         click("role-student")
@@ -164,6 +164,7 @@ class AppFlowTest {
     fun studyPracticeResultAndPersistence() {
         login()
         click("nav-study")
+        click("browse-all-lessons")
         click("book-book-1")
         click("topic-limits")
         click("lesson-limits-practice")
@@ -249,13 +250,13 @@ class AppFlowTest {
     fun teacherCreatesClassAndAssignment() {
         login(true)
         shot("teacher-ar-light")
-        click("nav-teacher/classes")
+        click("teacher-nav-teacher/classes")
         click("create-class")
         input("class-name", "صف تجريبي جديد")
         click("class-save")
         ui.onNodeWithText("صف تجريبي جديد").assertExists()
         click("back")
-        click("nav-teacher/assignments")
+        click("teacher-nav-teacher/assignments")
         click("create-assignment")
         input("builder-title", "اختبار مشتقات جديد")
         input("builder-description", "تدرّب ثم تحقق من النتيجة")
@@ -339,7 +340,7 @@ class AppFlowTest {
     @Test
     fun teacherResourceSharingReachesStudentLibrary() {
         login(true)
-        click("nav-teacher/resources")
+        click("teacher-nav-teacher/resources")
         text("إنشاء مورد")
         input("resource-title", "ملاحظة نهايات جديدة")
         input("resource-body", "تحقق من النهايات من الجهتين.")
@@ -351,7 +352,7 @@ class AppFlowTest {
             "class-a" in
                 LocalDemoRepository(ui.activity).state.value.product.resources.last().classIds
         )
-        click("nav-teacher/profile")
+        click("teacher-nav-teacher/profile")
         click("logout")
         click("dialog-confirm")
         click("role-student")
@@ -385,7 +386,7 @@ class AppFlowTest {
         input("auth-email", "sara@example.com")
         input("auth-password", "demo-pass-123")
         click("login-submit")
-        click("nav-teacher/assignments")
+        click("teacher-nav-teacher/assignments")
         text("أساسيات الاحتمالات")
         text("أحمد محمد")
         input("teacher-feedback", "أحسنت، تابع التدريب.")

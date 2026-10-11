@@ -10,8 +10,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.ahmadmol.enmath.core.data.LocalDemoRepository
 import com.ahmadmol.enmath.core.model.*
 import java.io.File
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExternalResource
@@ -45,7 +45,9 @@ class TeacherReferenceScreensTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val before = LocalDemoRepository(context).state.value
         ui.onNodeWithTag("demo-switch-role").performScrollTo().performClick()
-        ui.waitUntil(15_000) { ui.onAllNodesWithTag("screen-home").fetchSemanticsNodes().isNotEmpty() }
+        ui.waitUntil(15_000) {
+            ui.onAllNodesWithTag("screen-home").fetchSemanticsNodes().isNotEmpty()
+        }
         assertEquals(AccountType.Student, LocalDemoRepository(context).state.value.user?.type)
         click("nav-profile")
         ui.onNodeWithTag("demo-switch-role").performScrollTo().performClick()
@@ -96,58 +98,49 @@ class TeacherReferenceScreensTest {
     fun referenceNavigationAndCurriculum() {
         waitDashboard()
         shot("teacher-dashboard")
-        ui.onNodeWithText("54 طالباً").assertExists()
         ui.runOnIdle { assertNative(ui.activity.window.decorView) }
-        click("teacher-nav-teacher/reference/home")
-        ui.onNodeWithTag("screen-home").assertExists()
-        shot("teacher-home")
-        ui.onNodeWithText("عرض المنهج").performScrollTo().performClick()
+        ui.onNodeWithTag("teacher-open-study").performScrollTo().performClick()
         ui.waitForIdle()
         shot("teacher-study-1")
-        click("reference-book-2")
+        ui.onNodeWithTag("reference-book-2").performScrollTo().performClick()
         shot("teacher-study-2")
-        ui.onNodeWithText("حساب محدد ومقلوب مصفوفة من المرتبة الثانية والثالثة").performClick()
-        ui.onNodeWithText("معاينة الدرس").assertExists()
-        click("teacher-preview-dismiss")
-        ui.onNodeWithText("العمليات على المصفوفات وحساب المقلوب").performClick()
         ui.onNodeWithText("حساب محدد ومقلوب مصفوفة من المرتبة الثانية والثالثة")
-            .assertDoesNotExist()
-        ui.onNodeWithText("العمليات على المصفوفات وحساب المقلوب").performClick()
-        click("teacher-nav-teacher")
-        click("teacher-nav-teacher/reference/study")
-        ui.onNodeWithText("الجزء الثاني: الجبر والهندسة الفضائية والاحتمالات").assertExists()
-        click("teacher-nav-teacher/reference/solver")
-        ui.onAllNodesWithText("الحل المفصل").onFirst().assertExists()
-        click("teacher-preview-dismiss")
-        click("teacher-nav-teacher/reference/lab")
-        click("teacher-preview-dismiss")
+            .performScrollTo()
+            .performClick()
+        ui.waitForIdle()
+        ui.onNodeWithTag("screen-teacher-lesson").assertExists()
+        ui.runOnIdle { assertNative(ui.activity.window.decorView) }
+        click("teacher-nav-teacher/resources")
+        ui.onNodeWithTag("screen-resources").assertExists()
+        ui.onNodeWithTag("teacher-resource-solver").performScrollTo().performClick()
+        ui.onNodeWithTag("screen-solver").assertExists()
+        click("teacher-nav-teacher/resources")
+        ui.onNodeWithTag("teacher-resource-lab").performScrollTo().performClick()
+        ui.onNodeWithTag("graph-function-0").assertExists()
         click("teacher-nav-teacher")
         ui.onNodeWithTag("screen-teacher-reference").assertExists()
+        click("teacher-nav-teacher/profile")
+        ui.onNodeWithText("سارة الأحمد").assertExists()
+        shot("teacher-account")
     }
 
     @Test
     fun localClassAndAssignmentInteractions() {
         waitDashboard()
-        click("teacher-class-0")
-        ui.onNodeWithText(
-                "معاينة تجريبية: 28 طالباً · الإتقان 84%\nالتكامل بالتجزئة وحساب المساحات"
-            )
-            .assertExists()
-        click("teacher-preview-dismiss")
-        ui.onNodeWithTag("teacher-support").performScrollTo().performClick()
-        click("teacher-preview-dismiss")
-        ui.onNodeWithTag("teacher-create-assignment").performScrollTo().performClick()
-        ui.onNodeWithTag("teacher-assignment-preview").assertIsNotEnabled()
-        ui.onNodeWithTag("teacher-assignment-title").performTextInput("واجب النهايات")
-        click("teacher-assignment-class-1")
-        click("teacher-assignment-preview")
-        ui.onNodeWithTag("teacher-assignments-preview").assertExists()
-        ui.onNodeWithText("معاينة تجريبية: واجب النهايات · BAC-SCI-2026B (لم تُنشر)").assertExists()
-        shot("teacher-assignment-preview")
-        ui.activityRule.scenario.recreate()
-        waitDashboard()
-        ui.onNodeWithText("معاينة تجريبية: واجب النهايات · BAC-SCI-2026B (لم تُنشر)").assertExists()
-        click("teacher-tab-classes")
-        ui.onNodeWithTag("teacher-class-1").assertExists()
+        click("teacher-nav-teacher/classes")
+        click("create-class")
+        ui.onNodeWithTag("class-name").performTextInput("شعبة اختبار التنقل")
+        click("class-save")
+        ui.onNodeWithText("شعبة اختبار التنقل").assertExists()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertFalse(
+            LocalDemoRepository(context).state.value.product.classes.none {
+                it.name.ar == "شعبة اختبار التنقل"
+            }
+        )
+        click("teacher-nav-teacher/assignments")
+        ui.onNodeWithTag("screen-teacher-assignments").assertExists()
+        click("create-assignment")
+        ui.onNodeWithTag("screen-builder").assertExists()
     }
 }

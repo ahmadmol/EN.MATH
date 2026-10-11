@@ -48,4 +48,6 @@ docs/**/screenshots/
 docs/reference/*.txt
 docs/teacher-reference/*.txt
 docs/role-switch/*.txt
+docs/clean-ui/*.txt
+docs/clean-ui/*.png
 docs/teacher-reference/student-source-*.json
