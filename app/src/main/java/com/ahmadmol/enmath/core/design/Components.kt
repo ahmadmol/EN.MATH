@@ -1,5 +1,6 @@
 package com.ahmadmol.enmath.core.design
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
 import com.ahmadmol.enmath.core.model.*
 
@@ -121,6 +123,17 @@ fun AppTextField(
         modifier = modifier.fillMaxWidth(),
         singleLine = singleLine,
         maxLines = if (singleLine) 1 else 5,
+        textStyle =
+            MaterialTheme.typography.bodyLarge.copy(
+                textDirection =
+                    if (
+                        password ||
+                            keyboardType == KeyboardType.Email ||
+                            keyboardType == KeyboardType.Number
+                    )
+                        TextDirection.Ltr
+                    else TextDirection.Content
+            ),
         shape = MaterialTheme.shapes.medium,
         keyboardOptions =
             KeyboardOptions(keyboardType = if (password) KeyboardType.Password else keyboardType),
@@ -158,10 +171,15 @@ fun AppCard(
             onClick = onClick,
             modifier = modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large,
+            border =
+                BorderStroke(
+                    androidx.compose.ui.unit.Dp(1f),
+                    MaterialTheme.colorScheme.outlineVariant,
+                ),
             colors = colors,
         ) {
             Column(
-                Modifier.padding(Space.xl),
+                Modifier.padding(Space.lg),
                 verticalArrangement = Arrangement.spacedBy(Space.md),
                 content = content,
             )
@@ -170,10 +188,15 @@ fun AppCard(
         Card(
             modifier = modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large,
+            border =
+                BorderStroke(
+                    androidx.compose.ui.unit.Dp(1f),
+                    MaterialTheme.colorScheme.outlineVariant,
+                ),
             colors = colors,
         ) {
             Column(
-                Modifier.padding(Space.xl),
+                Modifier.padding(Space.lg),
                 verticalArrangement = Arrangement.spacedBy(Space.md),
                 content = content,
             )

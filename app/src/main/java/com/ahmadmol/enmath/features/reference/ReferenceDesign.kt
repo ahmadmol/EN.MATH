@@ -115,8 +115,8 @@ fun RefCard(
     Column(
         modifier
             .fillMaxWidth()
-            .background(background ?: SolidColor(RefPalette.card), RoundedCornerShape(10.dp))
-            .border(.7.dp, accent, RoundedCornerShape(10.dp))
+            .background(background ?: SolidColor(RefPalette.card), RoundedCornerShape(12.dp))
+            .border(.7.dp, accent, RoundedCornerShape(12.dp))
             .padding(padding),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         content = content,
@@ -135,9 +135,9 @@ fun RefLabel(
         text,
         modifier,
         color = color,
-        fontSize = size.sp,
-        lineHeight = (size + 4).sp,
-        fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
+        fontSize = (size + 1).sp,
+        lineHeight = (size + 6).sp,
+        fontWeight = if (bold) FontWeight.SemiBold else FontWeight.Normal,
         textAlign = TextAlign.Start,
     )
 }
@@ -168,15 +168,15 @@ fun RefButton(
     Box(
         modifier
             .fillMaxWidth()
-            .heightIn(min = 24.dp)
+            .heightIn(min = 36.dp)
             .background(
                 if (selected) RefPalette.purple else RefPalette.equation,
-                RoundedCornerShape(6.dp),
+                RoundedCornerShape(9.dp),
             )
             .border(
                 .7.dp,
                 if (selected) RefPalette.purple else RefPalette.border,
-                RoundedCornerShape(6.dp),
+                RoundedCornerShape(9.dp),
             )
             .clickable(onClick = onClick)
             .padding(horizontal = 6.dp, vertical = 5.dp),
@@ -194,48 +194,30 @@ fun RefIcon(icon: ImageVector, color: Color = RefPalette.violet, size: Int = 14)
 }
 
 @Composable
-fun RefBottomNav(route: String?, open: (String) -> Unit) {
-    BoxWithConstraints(Modifier.fillMaxWidth().background(Color(0xFF030717))) {
-        val d = LocalDensity.current
-        val scale = (maxWidth.value.coerceAtMost(416f) / 277f).coerceAtLeast(.85f)
-        CompositionLocalProvider(LocalDensity provides Density(d.density * scale, d.fontScale)) {
-            Row(
-                Modifier.fillMaxWidth()
-                    .border(.6.dp, RefPalette.border)
-                    .navigationBarsPadding()
-                    .padding(top = 7.dp, bottom = 5.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                val tabs =
-                    listOf(
-                        Triple(Routes.Home, "الرئيسية", Icons.Outlined.Home),
-                        Triple(Routes.Study, "المنهج", Icons.AutoMirrored.Outlined.MenuBook),
-                        Triple(Routes.Solver, "الحل المفصل", Icons.Outlined.Calculate),
-                        Triple("explore", "المختبر", Icons.AutoMirrored.Outlined.ShowChart),
-                        Triple(Routes.Profile, "حسابي", Icons.Outlined.PersonOutline),
-                    )
-                val english = listOf("Home", "Study", "Solution", "Lab", "Profile")
-                tabs.forEachIndexed { i, t ->
-                    val selected = route == t.first
-                    val color = if (selected) RefPalette.violet else RefPalette.muted
-                    Column(
-                        Modifier.weight(1f)
-                            .clickable { open(t.first) }
-                            .testTag("nav-${t.first}")
-                            .padding(horizontal = 1.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        RefIcon(t.third, color, 12)
-                        Text(
-                            refText(t.second, english[i]),
-                            color = color,
-                            fontSize = 7.sp,
-                            lineHeight = 11.sp,
-                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                        )
-                    }
-                }
-            }
-        }
-    }
+fun RefBottomNav(route: String?, open: (String) -> Unit, dark: Boolean = true) {
+    CleanBottomBar(
+        listOf(
+            CleanNavItem(Routes.Home, refText("الرئيسية", "Home"), Icons.Outlined.Home),
+            CleanNavItem(
+                Routes.Study,
+                refText("المنهج", "Study"),
+                Icons.AutoMirrored.Outlined.MenuBook,
+            ),
+            CleanNavItem(
+                Routes.Solver,
+                refText("الحل المفصل", "Solution"),
+                Icons.Outlined.Calculate,
+            ),
+            CleanNavItem(
+                "explore",
+                refText("المختبر", "Lab"),
+                Icons.AutoMirrored.Outlined.ShowChart,
+            ),
+            CleanNavItem(Routes.Profile, refText("حسابي", "Profile"), Icons.Outlined.PersonOutline),
+        ),
+        route,
+        "nav-",
+        dark = dark,
+        open = open,
+    )
 }

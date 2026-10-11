@@ -9,12 +9,19 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.*
 import com.ahmadmol.enmath.core.data.LearningState
 import com.ahmadmol.enmath.core.model.Language
 
 @Composable
-fun ReferenceProfile(state: LearningState, onLanguage: (Language) -> Unit, onSwitchRole: () -> Unit) {
+fun ReferenceProfile(
+    state: LearningState,
+    onLanguage: (Language) -> Unit,
+    onSwitchRole: () -> Unit,
+    open: (String) -> Unit,
+    logout: () -> Unit,
+) {
     ReferencePage("screen-profile") {
         RefCard {
             Row(
@@ -33,7 +40,7 @@ fun ReferenceProfile(state: LearningState, onLanguage: (Language) -> Unit, onSwi
                     RefLabel("AM", Color.White, 12, true)
                 }
                 Column(Modifier.weight(1f)) {
-                    RefLabel(refText("أحمد محمد", "Ahmed Mohammad"), RefPalette.white, 12, true)
+                    RefLabel(state.user?.name.orEmpty(), RefPalette.white, 12, true)
                     RefLabel(
                         refText(
                             "الثالث الثانوي العلمي | دمشق، سوريا",
@@ -138,6 +145,31 @@ fun ReferenceProfile(state: LearningState, onLanguage: (Language) -> Unit, onSwi
             }
         }
         DemoRoleSwitch(teacher = false, onSwitch = onSwitchRole)
+        RefCard {
+            RefButton(
+                refText("واجباتي", "My assignments"),
+                { open("assignments") },
+                Modifier.testTag("student-assignments"),
+                false,
+            )
+            RefButton(
+                refText("التقدم الدراسي", "Learning progress"),
+                { open("progress") },
+                selected = false,
+            )
+            RefButton(
+                refText("المكتبة والمحفوظات", "Library & bookmarks"),
+                { open("library") },
+                selected = false,
+            )
+            RefButton(
+                refText("إعدادات التطبيق", "App settings"),
+                { open("settings") },
+                Modifier.testTag("open-settings"),
+                false,
+            )
+        }
+        SessionExit(logout)
         RefCard {
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 RefLabel("EN.MATH v1.0.0 (Native Android)", RefPalette.violet, 9, true)

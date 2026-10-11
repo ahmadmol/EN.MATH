@@ -17,6 +17,7 @@ import com.ahmadmol.enmath.core.navigation.Routes
 
 @Composable
 fun ReferenceHome(state: LearningState, open: (String) -> Unit) {
+    val progress = state.progress
     ReferencePage("screen-home", top = 19.dp) {
         RefCard(
             accent = Color(0xFF302665),
@@ -35,7 +36,7 @@ fun ReferenceHome(state: LearningState, open: (String) -> Unit) {
                         ),
                         RefPalette.violet,
                     )
-                    RefLabel(refText("أحمد محمد", "Ahmed Mohammad"), RefPalette.white, 12, true)
+                    RefLabel(state.user?.name.orEmpty(), RefPalette.white, 12, true)
                 }
                 Box(
                     Modifier.size(29.dp)
@@ -60,7 +61,12 @@ fun ReferenceHome(state: LearningState, open: (String) -> Unit) {
                         RefIcon(Icons.Outlined.LocalFireDepartment, Color(0xFFFFAA00))
                         Column {
                             RefLabel(refText("أيام متتالية", "Daily streak"), size = 7)
-                            RefLabel(refText("14 يوماً", "14 days"), RefPalette.white, 11, true)
+                            RefLabel(
+                                refText("${progress.streak} أيام", "${progress.streak} days"),
+                                RefPalette.white,
+                                11,
+                                true,
+                            )
                         }
                     }
                 }
@@ -71,8 +77,16 @@ fun ReferenceHome(state: LearningState, open: (String) -> Unit) {
                     ) {
                         RefIcon(Icons.Outlined.WorkspacePremium, RefPalette.green)
                         Column {
-                            RefLabel(refText("نقاط الخبرة", "Experience"), size = 7)
-                            RefLabel("XP 1,850", RefPalette.white, 11, true)
+                            RefLabel(refText("دروس مكتملة", "Lessons completed"), size = 7)
+                            RefLabel(
+                                refText(
+                                    "${state.completed.size} من ${state.lessons.size}",
+                                    "${state.completed.size} of ${state.lessons.size}",
+                                ),
+                                RefPalette.white,
+                                11,
+                                true,
+                            )
                         }
                     }
                 }
@@ -84,13 +98,26 @@ fun ReferenceHome(state: LearningState, open: (String) -> Unit) {
                     refText("متابعة التعلم من حيث توقفت...", "Continue where you left off…"),
                     RefPalette.violet,
                 )
-                RefLabel("70%", RefPalette.violet, 9, true)
+                RefLabel(
+                    "${state.completed.size * 100 / state.lessons.size.coerceAtLeast(1)}%",
+                    RefPalette.violet,
+                    9,
+                    true,
+                )
             }
             RefLabel(
-                refText(
-                    "إزالة حالات عدم التعيين 0/0 و ∞/∞",
-                    "Removing indeterminate forms 0/0 and ∞/∞",
-                ),
+                state
+                    .lesson(state.lastLessonId)
+                    ?.title
+                    ?.let {
+                        if (
+                            androidx.compose.ui.platform.LocalLayoutDirection.current ==
+                                LayoutDirection.Rtl
+                        )
+                            it.ar
+                        else it.en
+                    }
+                    .orEmpty(),
                 RefPalette.white,
                 10,
                 true,
@@ -103,7 +130,7 @@ fun ReferenceHome(state: LearningState, open: (String) -> Unit) {
             )
             RefButton(
                 refText("متابعة الدرس وحل التمارين ←", "Continue lesson and exercises →"),
-                { open("lesson/limits-practice") },
+                { open("lesson/${state.lastLessonId}") },
             )
         }
         Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -139,8 +166,17 @@ fun ReferenceHome(state: LearningState, open: (String) -> Unit) {
                     modifier = Modifier.clickable { open(Routes.Study) },
                 )
             }
-            BookPreview(0, 67, 16, 24) { open(Routes.Study) }
-            BookPreview(1, 45, 10, 22) { open(Routes.Study) }
+            state.books.forEachIndexed { index, book ->
+                val done = book.lessons.count { it.id in state.completed }
+                BookPreview(
+                    index,
+                    done * 100 / book.lessons.size.coerceAtLeast(1),
+                    done,
+                    book.lessons.size,
+                ) {
+                    open(Routes.Study)
+                }
+            }
         }
     }
 }

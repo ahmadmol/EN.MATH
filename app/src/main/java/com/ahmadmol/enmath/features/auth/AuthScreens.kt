@@ -11,7 +11,7 @@ import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.model.*
 
 @Composable
-private fun AuthError(vm: AuthViewModel) {
+fun AuthError(vm: AuthViewModel) {
     val error by vm.error.collectAsStateWithLifecycle()
     val message =
         when (error) {
@@ -58,43 +58,7 @@ fun LoginScreen(
     onRegister: () -> Unit,
     onForgot: () -> Unit,
 ) {
-    val email by vm.email.collectAsStateWithLifecycle()
-    val password by vm.password.collectAsStateWithLifecycle()
-    val role by vm.role.collectAsStateWithLifecycle()
-    ScreenPage(Modifier.testTag("screen-login"), true) {
-        PageHeading("EN.MATH", label(TextKey.t_4bd9b3fa20), label(TextKey.t_9440b55d06))
-        DemoNotice(label(TextKey.t_bfdd842d70))
-        RoleSelector(AccountType.valueOf(role), vm::chooseRole)
-        AppTextField(
-            email,
-            { vm.set("email", it) },
-            label(TextKey.t_711e4aa84e),
-            Modifier.testTag("auth-email"),
-            keyboardType = KeyboardType.Email,
-        )
-        AppTextField(
-            password,
-            { vm.set("password", it) },
-            label(TextKey.t_a98160205a),
-            Modifier.testTag("auth-password"),
-            password = true,
-        )
-        AuthError(vm)
-        PrimaryButton(
-            label(TextKey.t_bd9e360130),
-            { if (vm.validate(false)) onLogin() },
-            Modifier.testTag("login-submit"),
-        )
-        TextButton(onClick = onForgot, modifier = Modifier.testTag("forgot")) {
-            Text(label(TextKey.t_f1c9af17c3))
-        }
-        OutlinedButton(
-            onClick = onRegister,
-            modifier = Modifier.fillMaxWidth().testTag("register"),
-        ) {
-            Text(label(TextKey.t_344e8ddb55))
-        }
-    }
+    CleanLoginScreen(vm, onLogin, onRegister, onForgot)
 }
 
 @Composable

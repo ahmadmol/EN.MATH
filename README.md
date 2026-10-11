@@ -21,7 +21,7 @@ adb -s DEVICE_SERIAL shell am start -n com.ahmadmol.enmath/.MainActivity
 ## Demo walkthrough
 
 - Login accepts a valid email and an eight-character password. OTP is **123456**. Registration/recovery validate input but do not create real accounts or send mail.
-- Student: Home, Study, Solver, Progress, Profile. Study opens books, topics, lessons, six-question practice sets and four-question mini quizzes.
+- Student main tabs: Home, Study, Solver, Function Lab, Profile. Profile opens progress, assignments, library and settings. The curriculum's “Browse all lessons” action opens the complete local catalog, lessons, practice and mini quizzes.
 - Practice supports choice, numeric, expression and true/false answers, hints, retry, explanation and results. Mastery is a transparent demo calculation: 40% completed lessons + 40% practice accuracy + 20% best quiz.
 - Solver has cursor insertion, undo/delete/clear, six math-key groups, live offline KaTeX preview, seven curated examples, step explanations, methods, bookmarks and persisted history. Unrecognized problems explicitly remain unsupported.
 - Explore graphs safe polynomials and basic trigonometric functions, including x^2, sin(x) and 2x+1; axes, grid, pan, zoom, visibility, known intercepts and a value table are available.
@@ -29,6 +29,12 @@ adb -s DEVICE_SERIAL shell am start -n com.ahmadmol.enmath/.MainActivity
 - Teacher: Dashboard, Classes, Assignments, Resources, Profile. Create a class/invite code, inspect students, publish assignments through four steps, inspect responses, add feedback, and create/share resources to a class.
 - Sign out and switch demo roles to see Ahmed's latest progress, submissions and teacher-shared resources reflected consistently across both roles.
 - Search, library, inbox, reminder preferences, language, theme and local data persist on the device.
+
+## Clean UI update
+
+Student and teacher main tabs share a native Material 3 bottom bar with selected states and standard touch targets. Login adapts to the selected role; registration, verification and password recovery remain local demo workflows. Teacher dashboard statistics read the local classes and student progress, and its actions open class management, assignment publishing, curriculum, solver and function lab. Both profiles offer role switching and confirmed sign out without clearing learning data.
+
+See [Clean UI validation report](docs/clean-ui/REPORT.md) for the exact checks and remaining prototype limitations. This update does not introduce a backend or change Gradle/Kotlin/AGP versions.
 
 ## Architecture
 
@@ -65,4 +71,4 @@ This is a functional prototype with simulated accounts and a shared local person
 - [Audit](docs/AUDIT.md), [routes](docs/ROUTES.md), [backend plan](docs/BACKEND.md), [implementation report](docs/IMPLEMENTATION-REPORT.md).
 - Build/UI logs and screenshots: docs/qa and docs/screenshots.
 
-No commit or push is part of this delivery.
+Generated packages, local configuration, signing material and local QA evidence are excluded from Git.
