@@ -12,6 +12,7 @@ import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.model.*
 import com.ahmadmol.enmath.features.assignments.*
 import com.ahmadmol.enmath.features.courses.*
+import com.ahmadmol.enmath.features.courses.interactive.*
 import com.ahmadmol.enmath.features.explore.*
 import com.ahmadmol.enmath.features.home.*
 import com.ahmadmol.enmath.features.library.*
@@ -22,6 +23,7 @@ import com.ahmadmol.enmath.features.progress.*
 import com.ahmadmol.enmath.features.reference.*
 import com.ahmadmol.enmath.features.search.*
 import com.ahmadmol.enmath.features.solver.*
+import com.ahmadmol.enmath.features.student.*
 import com.ahmadmol.enmath.features.teacher.*
 
 fun NavGraphBuilder.studentGraph(
@@ -33,9 +35,11 @@ fun NavGraphBuilder.studentGraph(
     guarded: (() -> Unit) -> Unit,
     switchRole: () -> Unit,
 ) {
-    fun route(path: String) = open(path)
+    fun route(path: String) {
+        if (path.startsWith("lesson/")) app.openLesson(path.substringAfter("lesson/"))
+        open(path)
+    }
     fun lesson(id: String) {
-        app.openLesson(id)
         route("lesson/$id")
     }
     fun solve(expression: String, topic: String) {
@@ -44,11 +48,11 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Home) {
         val state by app.state.collectAsStateWithLifecycle()
-        ReferenceHome(state, ::route)
+        StudentLearningHome(state, ::route)
     }
     composable(Routes.Study) {
         val state by app.state.collectAsStateWithLifecycle()
-        ReferenceStudy(::route)
+        StudentStudy(state, ::route)
     }
     composable(Routes.Book) { e ->
         val state by app.state.collectAsStateWithLifecycle()
@@ -65,53 +69,84 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Topic) { e ->
         val state by app.state.collectAsStateWithLifecycle()
-        TopicLessonsScreen(
-            e.arguments?.getString("id").orEmpty(),
-            state,
-            ::lesson,
-            { route("practice/$it") },
-        )
+        if (e.arguments?.getString("id") == "limits")
+            StudentLimitsTopic(
+                state,
+                ::lesson,
+                { route("practice/${LimitsLessonSequence.practiceId}") },
+            )
+        else
+            TopicLessonsScreen(
+                e.arguments?.getString("id").orEmpty(),
+                state,
+                ::lesson,
+                { route("practice/$it") },
+            )
     }
     composable(Routes.Lesson) { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val id = e.arguments?.getString("id").orEmpty()
-        LessonScreen(
-            id,
-            state,
-            { app.complete(id) },
-            { route("practice/$it") },
-            ::lesson,
-            { guarded { app.bookmark(id) } },
-        )
+        if (id == LimitsLessonSequence.lessonId) {
+            val vm: InteractiveLessonViewModel = viewModel(e)
+            InteractiveLimitsScreen(
+                state,
+                vm,
+                { app.complete(id) },
+                { route("practice/${LimitsLessonSequence.practiceId}") },
+            )
+        } else
+            LessonScreen(
+                id,
+                state,
+                { app.complete(id) },
+                { route("practice/$it") },
+                ::lesson,
+                { guarded { app.bookmark(id) } },
+            )
     }
     composable("practice/{id}") { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val id = e.arguments?.getString("id").orEmpty()
         val set = ProductSeed.sets.find { it.id == id }
         val vm: QuizViewModel = viewModel(e)
-        PracticeScreen(
-            set?.questionIds.orEmpty(),
-            set?.title?.text().orEmpty(),
-            vm,
-            product = state.product,
-        ) { answers, seconds ->
+        val finish: (Map<String, String>, Int) -> Unit = { answers, seconds ->
             app.recordPractice(id, answers, seconds)
             nav.navigate("practice/$id/result") { popUpTo("practice/{id}") { inclusive = true } }
         }
+        if (id == LimitsLessonSequence.practiceId) LimitsPracticeScreen(state, vm, finish)
+        else
+            PracticeScreen(
+                set?.questionIds.orEmpty(),
+                set?.title?.text().orEmpty(),
+                vm,
+                product = state.product,
+                onFinish = finish,
+            )
     }
     composable("practice/{id}/result") { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val id = e.arguments?.getString("id").orEmpty()
-        PracticeResultScreen(
-            id,
-            state,
-            {
-                nav.navigate("practice/$id") {
-                    popUpTo("practice/{id}/result") { inclusive = true }
-                }
-            },
-            { route("topic/${ProductSeed.sets.find {it.id==id}?.topicId}") },
-        )
+        if (id == LimitsLessonSequence.practiceId)
+            LimitsPracticeResult(
+                state,
+                {
+                    nav.navigate("practice/$id") {
+                        popUpTo("practice/{id}/result") { inclusive = true }
+                    }
+                },
+                { route("topic/limits") },
+            )
+        else
+            PracticeResultScreen(
+                id,
+                state,
+                {
+                    nav.navigate("practice/$id") {
+                        popUpTo("practice/{id}/result") { inclusive = true }
+                    }
+                },
+                { route("topic/${ProductSeed.sets.find {it.id==id}?.topicId}") },
+            )
     }
     composable(Routes.Solver) {
         val state by app.state.collectAsStateWithLifecycle()
@@ -287,7 +322,7 @@ fun NavGraphBuilder.teacherGraph(
 ) {
     composable(Routes.TeacherHome) {
         val state by app.state.collectAsStateWithLifecycle()
-        TeacherWorkspace(state, open, switchRole)
+        TeacherHome(state, open, switchRole)
     }
     composable(TeacherReferenceRoutes.Home) {
         val state by app.state.collectAsStateWithLifecycle()
@@ -354,7 +389,7 @@ fun NavGraphBuilder.teacherGraph(
     composable("teacher/classes/{id}") { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val id = e.arguments?.getString("id").orEmpty()
-        ClassDetailsScreen(
+        TeacherClassDetails(
             id,
             state,
             { open("teacher/classes/$id/students/$it") },
@@ -363,7 +398,8 @@ fun NavGraphBuilder.teacherGraph(
     }
     composable("teacher/classes/{id}/students/{student}") { e ->
         val state by app.state.collectAsStateWithLifecycle()
-        StudentDetailsScreen(
+        TeacherStudentDetails(
+            e.arguments?.getString("id").orEmpty(),
             e.arguments?.getString("student").orEmpty(),
             state,
             { open("teacher/assignments/$it/responses/${e.arguments?.getString("student")}") },

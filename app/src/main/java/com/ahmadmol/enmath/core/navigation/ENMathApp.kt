@@ -47,12 +47,11 @@ fun ENMathApp() {
         val teacher = state.user?.type == AccountType.Teacher
         val tabs = if (teacher) Routes.teacherTabs else Routes.tabs
         val inMain = selectedTab in tabs && route !in Routes.focus
-        val teacherReference = teacher && route in TeacherReferenceRoutes.screens
+        val teacherReference =
+            teacher && route != Routes.TeacherHome && route in TeacherReferenceRoutes.screens
         val reference =
             teacherReference ||
-                !teacher &&
-                    route in
-                        listOf(Routes.Home, Routes.Study, Routes.Solver, Routes.Profile, "explore")
+                !teacher && route in listOf(Routes.Solver, Routes.Profile, "explore")
         if (reference) {
             val activity = androidx.activity.compose.LocalActivity.current
             SideEffect {
@@ -120,7 +119,7 @@ fun ENMathApp() {
                     saveState = true
                 }
                 launchSingleTop = true
-                restoreState = true
+                restoreState = destination != Routes.Home && destination != Routes.TeacherHome
             }
         }
         fun openLesson(id: String) {
@@ -232,7 +231,16 @@ fun ENMathApp() {
                                     onClick = { tab(destination) },
                                     icon = { Icon(tabIcon(destination), null) },
                                     label = { Text(tabLabel(destination)) },
-                                    modifier = Modifier.testTag("nav-$destination"),
+                                    colors =
+                                        NavigationRailItemDefaults.colors(
+                                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                                            indicatorColor =
+                                                MaterialTheme.colorScheme.primaryContainer,
+                                        ),
+                                    modifier =
+                                        Modifier.testTag(
+                                            "${if (teacher) "teacher-nav-" else "nav-"}$destination"
+                                        ),
                                 )
                             }
                         }
