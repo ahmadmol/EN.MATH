@@ -144,7 +144,7 @@ class AppFlowTest {
         click("registration-submit")
         input("auth-code", "123456")
         click("verify-submit")
-        ui.onNodeWithTag("screen-teacher-reference").assertExists()
+        ui.onNodeWithTag("screen-teacher-home").assertExists()
         click("teacher-nav-teacher/profile")
         click("logout")
         click("dialog-confirm")

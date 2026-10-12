@@ -98,7 +98,7 @@ class CleanExperienceTest {
         input("auth-email", "sara@example.com")
         input("auth-password", "demo-pass-123")
         scrollClick("login-submit")
-        waitTag("screen-teacher-reference")
+        waitTag("screen-teacher-home")
         ui.onNodeWithTag("teacher-nav-teacher").assertIsSelected()
         shot("teacher-dashboard")
         click("teacher-nav-teacher/profile")

@@ -38,6 +38,10 @@ See [Clean UI validation report](docs/clean-ui/REPORT.md) for the exact checks a
 
 ## Architecture
 
+### Role UX pilot
+
+The current Home/Study flow pilots a Learn → Interact → Answer → Feedback → Understand sequence for the guided limits lesson and practice/result. Teacher Home/Class/Student Details pilot a separate See → Understand → Act presentation. Both reuse the existing theme, repositories, curriculum and learning rules. Other features and reference screens are retained; the pilot is not generalized across the app yet. See [role experience audit and validation](docs/role-experience/REPORT.md).
+
 Source: `app/src/main/java/com/ahmadmol/enmath/`.
 
 | Area | Responsibility |
