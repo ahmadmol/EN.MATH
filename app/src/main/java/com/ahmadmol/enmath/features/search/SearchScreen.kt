@@ -3,6 +3,7 @@ package com.ahmadmol.enmath.features.search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
 
@@ -10,7 +11,7 @@ import com.ahmadmol.enmath.core.design.*
 fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (String) -> Unit) {
     var query by rememberSaveable { mutableStateOf("") }
     val term = LearningRules.search(query)
-    ScreenPage {
+    ScreenPage(androidx.compose.ui.Modifier.testTag("screen-search")) {
         PageHeading(label(TextKey.t_a33bc556a4), label(TextKey.t_4fb8ba1914))
         SearchField(query, { query = it })
         SecondaryButton(label(TextKey.t_00965319c2), { onSearch(query) })

@@ -17,21 +17,39 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
-import com.ahmadmol.enmath.R
 import com.ahmadmol.enmath.core.model.*
 import com.ahmadmol.enmath.core.navigation.Routes
 
 object RefPalette {
-    val background = Color(0xFF0B0F19)
-    val card = Color(0xFF0E1527)
-    val equation = Color(0xFF020618)
-    val border = Color(0xFF213047)
-    val purple = Color(0xFF4F39F6)
-    val violet = Color(0xFF615FFF)
-    val cyan = Color(0xFF06B6D4)
-    val green = Color(0xFF00D19A)
-    val muted = Color(0xFF8092AF)
-    val white = Color(0xFFE5E7EB)
+    val background: Color
+        @Composable get() = MaterialTheme.colorScheme.background
+
+    val card: Color
+        @Composable get() = MaterialTheme.colorScheme.surface
+
+    val equation: Color
+        @Composable get() = MaterialTheme.colorScheme.surfaceContainerLow
+
+    val border: Color
+        @Composable get() = MaterialTheme.colorScheme.outlineVariant
+
+    val purple: Color
+        @Composable get() = MaterialTheme.colorScheme.primary
+
+    val violet: Color
+        @Composable get() = MaterialTheme.colorScheme.primary
+
+    val cyan: Color
+        @Composable get() = MaterialTheme.colorScheme.secondary
+
+    val green: Color
+        @Composable get() = MaterialTheme.colorScheme.secondary
+
+    val muted: Color
+        @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
+
+    val white: Color
+        @Composable get() = MaterialTheme.colorScheme.onSurface
 }
 
 @Composable
@@ -41,50 +59,14 @@ fun refText(ar: String, en: String) =
 /** Dimensions taken from the 277px references, uniformly fitted to the available phone width. */
 @Composable
 fun ReferenceFrame(content: @Composable () -> Unit) {
-    BoxWithConstraints(
-        Modifier.fillMaxSize().background(RefPalette.background),
+    Box(
+        Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.TopCenter,
     ) {
-        val density = LocalDensity.current
-        val scale = (maxWidth.value.coerceAtMost(416f) / 277f).coerceAtLeast(.85f)
-        val font = FontFamily(Font(R.font.ibm_plex_arabic))
-        CompositionLocalProvider(
-            LocalDensity provides Density(density.density * scale, density.fontScale)
+        Box(
+            Modifier.widthIn(max = com.ahmadmol.enmath.core.design.Space.contentMax).fillMaxWidth()
         ) {
-            MaterialTheme(
-                colorScheme =
-                    darkColorScheme(
-                        background = RefPalette.background,
-                        surface = RefPalette.card,
-                        onSurface = RefPalette.white,
-                        primary = RefPalette.violet,
-                        outline = RefPalette.border,
-                    ),
-                typography =
-                    Typography(
-                        bodyMedium =
-                            androidx.compose.ui.text.TextStyle(
-                                fontFamily = font,
-                                fontSize = 9.sp,
-                                lineHeight = 14.sp,
-                            ),
-                        bodySmall =
-                            androidx.compose.ui.text.TextStyle(
-                                fontFamily = font,
-                                fontSize = 8.sp,
-                                lineHeight = 12.sp,
-                            ),
-                        titleMedium =
-                            androidx.compose.ui.text.TextStyle(
-                                fontFamily = font,
-                                fontSize = 12.sp,
-                                lineHeight = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                            ),
-                    ),
-            ) {
-                Box(Modifier.widthIn(max = 277.dp).fillMaxWidth()) { content() }
-            }
+            content()
         }
     }
 }
@@ -95,7 +77,7 @@ fun ReferencePage(tag: String, top: Dp = 14.dp, content: @Composable ColumnScope
         Column(
             Modifier.fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
                 .padding(top = top, bottom = 14.dp)
                 .testTag(tag),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -135,8 +117,8 @@ fun RefLabel(
         text,
         modifier,
         color = color,
-        fontSize = (size + 1).sp,
-        lineHeight = (size + 6).sp,
+        fontSize = (size + 2).coerceAtLeast(12).sp,
+        lineHeight = (size + 10).coerceAtLeast(20).sp,
         fontWeight = if (bold) FontWeight.SemiBold else FontWeight.Normal,
         textAlign = TextAlign.Start,
     )
@@ -168,7 +150,7 @@ fun RefButton(
     Box(
         modifier
             .fillMaxWidth()
-            .heightIn(min = 36.dp)
+            .heightIn(min = 48.dp)
             .background(
                 if (selected) RefPalette.purple else RefPalette.equation,
                 RoundedCornerShape(9.dp),

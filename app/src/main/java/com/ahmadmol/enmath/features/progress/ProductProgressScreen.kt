@@ -16,11 +16,21 @@ fun ProductProgressScreen(state: LearningState) {
     ScreenPage(Modifier.testTag("screen-progress")) {
         PageHeading(label(TextKey.t_cde1f4644a), label(TextKey.t_7512420977))
         StreakBadge(stats.streak)
-        ProgressCard(
-            label(TextKey.t_465bb41873),
-            "${state.completed.size}/${topics.sumOf {it.lessons.size}}",
-            stats.lessonFraction,
-        )
+        AppCard {
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.lg),
+            ) {
+                ProgressRing(stats.lessonFraction)
+                Column(Modifier.weight(1f)) {
+                    Text(label(TextKey.t_465bb41873), style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        "${state.completed.size}/${topics.sumOf { it.lessons.size }}",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
         AdaptivePair(
             first = {
                 AppCard {

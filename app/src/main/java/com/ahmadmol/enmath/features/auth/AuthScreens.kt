@@ -97,6 +97,7 @@ fun RegistrationScreen(vm: AuthViewModel, teacher: Boolean, onContinue: () -> Un
     val accepted by vm.accepted.collectAsStateWithLifecycle()
     var showTerms by remember { mutableStateOf(false) }
     ScreenPage(Modifier.testTag("screen-registration"), true) {
+        BookLogo()
         PageHeading(
             label(TextKey.t_db640f5b9c),
             if (teacher) label(TextKey.t_6f119ee864) else label(TextKey.t_e61534a23d),
@@ -208,6 +209,7 @@ fun VerificationScreen(vm: AuthViewModel, onVerify: () -> Unit) {
 fun ForgotPasswordScreen(vm: AuthViewModel, onContinue: () -> Unit) {
     val email by vm.email.collectAsStateWithLifecycle()
     ScreenPage(Modifier.testTag("screen-forgot"), true) {
+        SymbolBadge("↻")
         PageHeading(label(TextKey.t_1da6c63fb2), label(TextKey.t_8804247fd9))
         DemoNotice(label(TextKey.t_c3427ebcc7))
         AppTextField(
@@ -231,6 +233,7 @@ fun NewPasswordScreen(vm: AuthViewModel, onDone: () -> Unit) {
     val password by vm.password.collectAsStateWithLifecycle()
     val confirmation by vm.confirmation.collectAsStateWithLifecycle()
     ScreenPage(Modifier.testTag("screen-new-password"), true) {
+        SymbolBadge("✓")
         PageHeading(label(TextKey.t_354d5e989e), label(TextKey.t_55f61c37c5))
         DemoNotice(label(TextKey.t_bb202e55bd))
         AppTextField(

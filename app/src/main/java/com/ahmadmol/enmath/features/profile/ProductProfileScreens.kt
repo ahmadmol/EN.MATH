@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.model.*
+import com.ahmadmol.enmath.features.reference.DemoRoleSwitch
 
 @Composable
 fun ProductProfileScreen(
@@ -17,20 +18,32 @@ fun ProductProfileScreen(
     teacher: Boolean,
     onRoute: (String) -> Unit,
     onLogout: () -> Unit,
+    onSwitchRole: (() -> Unit)? = null,
+    onLanguage: ((Language) -> Unit)? = null,
 ) {
     var confirm by remember { mutableStateOf(false) }
     ScreenPage(Modifier.testTag("screen-profile")) {
         PageHeading(
             label(TextKey.t_2753fda825),
             if (state.user?.type == AccountType.Guest) label(TextKey.t_5aef859af5)
-            else state.user?.name.orEmpty(),
+            else label(TextKey.t_e269f67032),
         )
-        AppCard(tonal = true) {
-            Avatar(state.user?.name.orEmpty())
-            Text(if (teacher) label(TextKey.t_e6145a851c) else label(TextKey.t_d60458396f))
-            Text(state.user?.email.orEmpty())
-            if (teacher) Text(label(TextKey.t_c55bf2e6c2, state.product.classes.size))
-            else ProgressRing(LearningRules.stats(state).lessonFraction)
+        AppCard {
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(Space.md),
+            ) {
+                Avatar(state.user?.name.orEmpty())
+                Text(state.user?.name.orEmpty(), style = MaterialTheme.typography.titleLarge)
+                Text(
+                    if (teacher) label(TextKey.t_e6145a851c) else label(TextKey.t_d60458396f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(state.user?.email.orEmpty(), style = MaterialTheme.typography.bodySmall)
+                if (teacher) Text(label(TextKey.t_c55bf2e6c2, state.product.classes.size))
+                else ProgressRing(LearningRules.stats(state).lessonFraction)
+            }
         }
         val prefix = if (teacher) "teacher/" else ""
         SecondaryButton(
@@ -40,6 +53,21 @@ fun ProductProfileScreen(
         )
         SecondaryButton(label(TextKey.t_bda3e17468), { onRoute(prefix + "notifications") })
         if (!teacher) SecondaryButton(label(TextKey.t_455904a5d7), { onRoute("library") })
+        if (!teacher) {
+            SecondaryButton(label(TextKey.t_f6202fc5ef), { onRoute("assignments") })
+            SecondaryButton(label(TextKey.t_693fec8aa7), { onRoute("progress") })
+        }
+        if (onLanguage != null)
+            SecondaryButton(
+                if (state.language == Language.Arabic) "English" else "العربية",
+                {
+                    onLanguage(
+                        if (state.language == Language.Arabic) Language.English else Language.Arabic
+                    )
+                },
+                Modifier.testTag("language-toggle"),
+            )
+        if (onSwitchRole != null) DemoRoleSwitch(teacher, onSwitchRole)
         SecondaryButton(label(TextKey.t_40a3a75f0a), { confirm = true }, Modifier.testTag("logout"))
     }
     if (confirm)

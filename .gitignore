@@ -52,3 +52,13 @@ docs/clean-ui/*.txt
 docs/clean-ui/*.png
 docs/role-experience/*.txt
 docs/teacher-reference/student-source-*.json
+
+# Local UI handoff archive and review evidence
+docs/ui-resource-pack/
+docs/s01-v2/*.txt
+
+docs/approved-references-2026-10-13/resources/
+docs/approved-references-2026-10-13/*.txt
+
+docs/full-ui/*.txt
+docs/s01-v2/run-home-qa.ps1

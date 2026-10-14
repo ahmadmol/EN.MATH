@@ -32,6 +32,8 @@ fun ReferenceGraph() {
             refText("تابع تربيعي", "Quadratic"),
             refText("مماس عند x=2", "Tangent at x=2"),
         )
+    val axisColor = RefPalette.muted
+    val rootColor = RefPalette.green
     ReferencePage("screen-explore") {
         Column {
             RefHeading(
@@ -86,13 +88,13 @@ fun ReferenceGraph() {
                         )
                 }
                 drawLine(
-                    RefPalette.muted.copy(alpha = .7f),
+                    axisColor.copy(alpha = .7f),
                     Offset(origin.x, 0f),
                     Offset(origin.x, size.height),
                     strokeWidth = .6.dp.toPx(),
                 )
                 drawLine(
-                    RefPalette.muted.copy(alpha = .7f),
+                    axisColor.copy(alpha = .7f),
                     Offset(0f, origin.y),
                     Offset(size.width, origin.y),
                     strokeWidth = .6.dp.toPx(),
@@ -136,15 +138,11 @@ fun ReferenceGraph() {
                 roots.distinct().forEach { r ->
                     val x = origin.x + r * unit
                     if (x in 0f..size.width && origin.y in 0f..size.height)
-                        drawCircle(
-                            RefPalette.green,
-                            radius = 2.5.dp.toPx(),
-                            center = Offset(x, origin.y),
-                        )
+                        drawCircle(rootColor, radius = 2.5.dp.toPx(), center = Offset(x, origin.y))
                 }
                 val paint =
                     android.graphics.Paint().apply {
-                        color = RefPalette.muted.copy(alpha = .65f).toArgb()
+                        color = axisColor.copy(alpha = .65f).toArgb()
                         textSize = 6.dp.toPx()
                         isAntiAlias = true
                     }

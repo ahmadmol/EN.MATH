@@ -3,6 +3,7 @@ package com.ahmadmol.enmath.features.library
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
 
@@ -14,7 +15,7 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
     var resourceType by rememberSaveable { mutableIntStateOf(0) }
     val topics = state.books.flatMap { it.topics }
     val normalized = LearningRules.search(query)
-    ScreenPage {
+    ScreenPage(androidx.compose.ui.Modifier.testTag("screen-library")) {
         PageHeading(label(TextKey.t_ac68e53c7f), label(TextKey.t_0f029af391))
         SearchField(query, { query = it })
         ChipRow(

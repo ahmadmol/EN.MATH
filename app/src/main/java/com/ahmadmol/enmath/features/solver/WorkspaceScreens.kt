@@ -79,7 +79,7 @@ fun SolverWorkspace(
             field = TextFieldValue(expression, TextRange(expression.length))
     }
     var group by rememberSaveable { mutableIntStateOf(0) }
-    var mode by rememberSaveable { mutableIntStateOf(1) }
+    var mode by rememberSaveable { mutableIntStateOf(0) }
     fun insert(raw: String) {
         val key = if (raw == "a/b") "/" else raw
         val start = field.selection.min
@@ -275,7 +275,7 @@ fun SolverHistoryScreen(
     var query by rememberSaveable { mutableStateOf("") }
     var filter by rememberSaveable { mutableIntStateOf(0) }
     val topics = listOf("all", "limits", "derivatives", "integrals", "matrices", "probability")
-    ScreenPage {
+    ScreenPage(Modifier.testTag("screen-history")) {
         PageHeading(label(TextKey.t_bd4d7a258d), label(TextKey.t_1361fe9c87))
         SearchField(query, { query = it })
         ChipRow(

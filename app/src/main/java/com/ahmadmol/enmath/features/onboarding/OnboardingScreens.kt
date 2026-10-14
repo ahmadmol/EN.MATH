@@ -39,7 +39,12 @@ fun SplashScreen(onReady: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Space.xl),
         ) {
-            BrandMark()
+            BookLogo(Modifier.size(Space.chart))
+            Text("EN.MATH", style = MaterialTheme.typography.displaySmall)
+            LinearProgressIndicator(
+                modifier = Modifier.width(Space.chart),
+                color = MaterialTheme.colorScheme.secondary,
+            )
             Text(label(TextKey.t_2e3ea6aca1), color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
@@ -66,21 +71,7 @@ fun OnboardingScreen(onDone: () -> Unit) {
         HorizontalPager(state = pager, modifier = Modifier.weight(1f)) { index ->
             val page = pages[index]
             ScreenPage(narrow = true) {
-                AppCard(tonal = true) {
-                    Spacer(Modifier.height(Space.xl))
-                    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Text(
-                            page.symbol,
-                            style = MaterialTheme.typography.displaySmall,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                    HorizontalDivider(color = MaterialTheme.colorScheme.primary.copy(alpha = .15f))
-                    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        MathText(page.formula)
-                    }
-                    Spacer(Modifier.height(Space.xl))
-                }
+                LearningArtwork(page.symbol)
                 Text(page.title.text(), style = MaterialTheme.typography.headlineLarge)
                 Text(page.body.text(), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
