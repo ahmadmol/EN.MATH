@@ -17,11 +17,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import androidx.navigation.navigation
 import com.ahmadmol.enmath.core.AppViewModel
 import com.ahmadmol.enmath.core.data.LocalDemoRepository
 import com.ahmadmol.enmath.core.design.*
+import com.ahmadmol.enmath.core.design.tokens.ResourcePackPresentation
 import com.ahmadmol.enmath.core.model.*
 import com.ahmadmol.enmath.features.auth.*
 import com.ahmadmol.enmath.features.courses.*
@@ -32,7 +34,7 @@ import com.ahmadmol.enmath.features.teacher.TeacherReferenceBottomNav
 import com.ahmadmol.enmath.features.teacher.TeacherReferenceRoutes
 
 @Composable
-fun ENMathApp() {
+fun ENMathApp(nav: NavHostController = rememberNavController()) {
     val context = LocalContext.current.applicationContext
     val repository = remember { LocalDemoRepository(context) }
     val app: AppViewModel = viewModel(factory = AppViewModel.factory(repository))
@@ -40,7 +42,6 @@ fun ENMathApp() {
     val solver: SolverViewModel = viewModel()
     val state by app.state.collectAsStateWithLifecycle()
     ENMathTheme(state.theme, state.language) {
-        val nav = rememberNavController()
         val backStack by nav.currentBackStackEntryAsState()
         val route = backStack?.destination?.route
         val selectedTab = Routes.selectedTab(route)
@@ -49,9 +50,7 @@ fun ENMathApp() {
         val inMain = selectedTab in tabs && route !in Routes.focus
         val teacherReference =
             teacher && route != Routes.TeacherHome && route in TeacherReferenceRoutes.screens
-        val reference =
-            teacherReference ||
-                !teacher && route in listOf(Routes.Solver, Routes.Profile, "explore")
+        val reference = false // All existing destinations share the approved app theme.
         if (reference) {
             val activity = androidx.activity.compose.LocalActivity.current
             SideEffect {
@@ -181,174 +180,182 @@ fun ENMathApp() {
                 else if (!teacher && route.startsWith("teacher")) clearNavigate(Routes.Main)
             }
         }
-        BoxWithConstraints {
-            val wide = maxWidth >= 768.dp
-            Scaffold(
-                containerColor =
-                    if (reference) RefPalette.background else MaterialTheme.colorScheme.background,
-                topBar = {
-                    if (
-                        !reference &&
-                            route != Routes.Splash &&
-                            route != Routes.Onboarding &&
-                            route != Routes.Started
-                    ) {
-                        AppTopBar(
-                            topTitle,
-                            if (route !in tabs) ({ nav.popBackStack() }) else null,
-                            if (selectedTab in tabs && !teacher) ({ open("search") }) else null,
-                            if (selectedTab in tabs)
-                                ({
-                                    open(if (teacher) "teacher/notifications" else "notifications")
-                                })
-                            else null,
-                            state.product.notifications.count {
-                                it.teacher == teacher && it.id !in state.product.readNotifications
-                            },
-                        )
-                    }
-                },
-                bottomBar = {
-                    if (teacherReference) TeacherReferenceBottomNav(route, ::open)
-                    else if (reference) RefBottomNav(route, ::open)
-                    else if (teacher && inMain && !wide)
-                        TeacherReferenceBottomNav(route, ::open, dark = false)
-                    else if (inMain && !wide)
-                        RefBottomNav(
-                            if (selectedTab == Routes.Progress) Routes.Profile else selectedTab,
-                            ::open,
-                            dark = false,
-                        )
-                },
-            ) { padding ->
-                Row(Modifier.fillMaxSize().padding(padding).imePadding()) {
-                    if (inMain && wide && !reference)
-                        NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
-                            Spacer(Modifier.height(Space.xl))
-                            tabs.forEach { destination ->
-                                NavigationRailItem(
-                                    selected = selectedTab == destination,
-                                    onClick = { tab(destination) },
-                                    icon = { Icon(tabIcon(destination), null) },
-                                    label = { Text(tabLabel(destination)) },
-                                    colors =
-                                        NavigationRailItemDefaults.colors(
-                                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                                            indicatorColor =
-                                                MaterialTheme.colorScheme.primaryContainer,
-                                        ),
-                                    modifier =
-                                        Modifier.testTag(
-                                            "${if (teacher) "teacher-nav-" else "nav-"}$destination"
-                                        ),
-                                )
-                            }
-                        }
-                    NavHost(
-                        navController = nav,
-                        startDestination = Routes.Splash,
-                        modifier = Modifier.weight(1f),
-                        enterTransition = { fadeIn(tween(180)) },
-                        exitTransition = { fadeOut(tween(120)) },
-                    ) {
-                        composable(Routes.Splash) {
-                            SplashScreen {
-                                clearNavigate(
-                                    when {
-                                        teacher -> Routes.TeacherMain
-                                        state.user != null -> Routes.Main
-                                        state.onboarded -> Routes.Started
-                                        else -> Routes.Onboarding
-                                    }
-                                )
-                            }
-                        }
-                        composable(Routes.Onboarding) {
-                            OnboardingScreen {
-                                repository.finishOnboarding()
-                                clearNavigate(Routes.Started)
-                            }
-                        }
-                        composable(Routes.Started) {
-                            GetStartedScreen(
-                                onRole = {
-                                    auth.chooseRole(it)
-                                    nav.navigate(Routes.Login)
-                                },
-                                onGuest = {
-                                    app.signIn(
-                                        User(
-                                            if (state.language == Language.Arabic) "ضيف"
-                                            else "Guest",
-                                            "",
-                                            AccountType.Guest,
+        ResourcePackPresentation(enabled = true) {
+            BoxWithConstraints {
+                val wide = maxWidth >= 768.dp
+                Scaffold(
+                    containerColor =
+                        if (reference) RefPalette.background
+                        else MaterialTheme.colorScheme.background,
+                    topBar = {
+                        if (
+                            !reference &&
+                                route != Routes.Splash &&
+                                route != Routes.Onboarding &&
+                                route != Routes.Started
+                        ) {
+                            AppTopBar(
+                                topTitle,
+                                if (route !in tabs) ({ nav.popBackStack() }) else null,
+                                if (selectedTab in tabs && !teacher) ({ open("search") }) else null,
+                                if (selectedTab in tabs)
+                                    ({
+                                        open(
+                                            if (teacher) "teacher/notifications"
+                                            else "notifications"
                                         )
+                                    })
+                                else null,
+                                state.product.notifications.count {
+                                    it.teacher == teacher &&
+                                        it.id !in state.product.readNotifications
+                                },
+                            )
+                        }
+                    },
+                    bottomBar = {
+                        if (teacherReference) TeacherReferenceBottomNav(route, ::open)
+                        else if (reference) RefBottomNav(route, ::open)
+                        else if (teacher && inMain && !wide)
+                            TeacherReferenceBottomNav(route, ::open, dark = false)
+                        else if (inMain && !wide)
+                            RefBottomNav(
+                                if (selectedTab == Routes.Progress) Routes.Profile else selectedTab,
+                                ::open,
+                                dark = false,
+                            )
+                    },
+                ) { padding ->
+                    Row(Modifier.fillMaxSize().padding(padding).imePadding()) {
+                        if (inMain && wide && !reference)
+                            NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
+                                Spacer(Modifier.height(Space.xl))
+                                tabs.forEach { destination ->
+                                    NavigationRailItem(
+                                        selected = selectedTab == destination,
+                                        onClick = { tab(destination) },
+                                        icon = { Icon(tabIcon(destination), null) },
+                                        label = { Text(tabLabel(destination)) },
+                                        colors =
+                                            NavigationRailItemDefaults.colors(
+                                                selectedIconColor =
+                                                    MaterialTheme.colorScheme.primary,
+                                                indicatorColor =
+                                                    MaterialTheme.colorScheme.primaryContainer,
+                                            ),
+                                        modifier =
+                                            Modifier.testTag(
+                                                "${if (teacher) "teacher-nav-" else "nav-"}$destination"
+                                            ),
                                     )
-                                    clearNavigate(Routes.Main)
-                                },
-                            )
-                        }
-                        composable(Routes.Login) {
-                            LoginScreen(
-                                auth,
-                                ::signIn,
-                                { nav.navigate(Routes.AccountChoice) },
-                                {
-                                    auth.clearSecrets()
-                                    nav.navigate(Routes.Forgot)
-                                },
-                            )
-                        }
-                        composable(Routes.AccountChoice) {
-                            AccountChoiceScreen { role ->
-                                auth.chooseRole(role)
-                                nav.navigate(
-                                    if (role == AccountType.Teacher) Routes.RegisterTeacher
-                                    else Routes.RegisterStudent
-                                )
-                            }
-                        }
-                        composable(Routes.RegisterStudent) {
-                            RegistrationScreen(auth, false) { nav.navigate(Routes.Verify) }
-                        }
-                        composable(Routes.RegisterTeacher) {
-                            RegistrationScreen(auth, true) { nav.navigate(Routes.Verify) }
-                        }
-                        composable(Routes.Verify) {
-                            VerificationScreen(auth) {
-                                if (auth.resetFlow.value) {
-                                    auth.clearSecrets()
-                                    nav.navigate(Routes.NewPassword)
-                                } else signIn()
-                            }
-                        }
-                        composable(Routes.Forgot) {
-                            ForgotPasswordScreen(auth) { nav.navigate(Routes.Verify) }
-                        }
-                        composable(Routes.NewPassword) {
-                            NewPasswordScreen(auth) {
-                                nav.navigate(Routes.Login) {
-                                    popUpTo(Routes.Login)
-                                    launchSingleTop = true
                                 }
                             }
-                        }
-                        navigation(startDestination = Routes.Home, route = Routes.Main) {
-                            studentGraph(
-                                nav,
-                                app,
-                                solver,
-                                ::open,
-                                ::logout,
-                                ::guarded,
-                                ::switchDemoRole,
-                            )
-                        }
-                        navigation(
-                            startDestination = Routes.TeacherHome,
-                            route = Routes.TeacherMain,
+                        NavHost(
+                            navController = nav,
+                            startDestination = Routes.Splash,
+                            modifier = Modifier.weight(1f),
+                            enterTransition = { fadeIn(tween(180)) },
+                            exitTransition = { fadeOut(tween(120)) },
                         ) {
-                            teacherGraph(nav, app, ::open, ::logout, ::switchDemoRole)
+                            composable(Routes.Splash) {
+                                SplashScreen {
+                                    clearNavigate(
+                                        when {
+                                            teacher -> Routes.TeacherMain
+                                            state.user != null -> Routes.Main
+                                            state.onboarded -> Routes.Started
+                                            else -> Routes.Onboarding
+                                        }
+                                    )
+                                }
+                            }
+                            composable(Routes.Onboarding) {
+                                OnboardingScreen {
+                                    repository.finishOnboarding()
+                                    clearNavigate(Routes.Started)
+                                }
+                            }
+                            composable(Routes.Started) {
+                                GetStartedScreen(
+                                    onRole = {
+                                        auth.chooseRole(it)
+                                        nav.navigate(Routes.Login)
+                                    },
+                                    onGuest = {
+                                        app.signIn(
+                                            User(
+                                                if (state.language == Language.Arabic) "ضيف"
+                                                else "Guest",
+                                                "",
+                                                AccountType.Guest,
+                                            )
+                                        )
+                                        clearNavigate(Routes.Main)
+                                    },
+                                )
+                            }
+                            composable(Routes.Login) {
+                                LoginScreen(
+                                    auth,
+                                    ::signIn,
+                                    { nav.navigate(Routes.AccountChoice) },
+                                    {
+                                        auth.clearSecrets()
+                                        nav.navigate(Routes.Forgot)
+                                    },
+                                )
+                            }
+                            composable(Routes.AccountChoice) {
+                                AccountChoiceScreen { role ->
+                                    auth.chooseRole(role)
+                                    nav.navigate(
+                                        if (role == AccountType.Teacher) Routes.RegisterTeacher
+                                        else Routes.RegisterStudent
+                                    )
+                                }
+                            }
+                            composable(Routes.RegisterStudent) {
+                                RegistrationScreen(auth, false) { nav.navigate(Routes.Verify) }
+                            }
+                            composable(Routes.RegisterTeacher) {
+                                RegistrationScreen(auth, true) { nav.navigate(Routes.Verify) }
+                            }
+                            composable(Routes.Verify) {
+                                VerificationScreen(auth) {
+                                    if (auth.resetFlow.value) {
+                                        auth.clearSecrets()
+                                        nav.navigate(Routes.NewPassword)
+                                    } else signIn()
+                                }
+                            }
+                            composable(Routes.Forgot) {
+                                ForgotPasswordScreen(auth) { nav.navigate(Routes.Verify) }
+                            }
+                            composable(Routes.NewPassword) {
+                                NewPasswordScreen(auth) {
+                                    nav.navigate(Routes.Login) {
+                                        popUpTo(Routes.Login)
+                                        launchSingleTop = true
+                                    }
+                                }
+                            }
+                            navigation(startDestination = Routes.Home, route = Routes.Main) {
+                                studentGraph(
+                                    nav,
+                                    app,
+                                    solver,
+                                    ::open,
+                                    ::logout,
+                                    ::guarded,
+                                    ::switchDemoRole,
+                                )
+                            }
+                            navigation(
+                                startDestination = Routes.TeacherHome,
+                                route = Routes.TeacherMain,
+                            ) {
+                                teacherGraph(nav, app, ::open, ::logout, ::switchDemoRole)
+                            }
                         }
                     }
                 }

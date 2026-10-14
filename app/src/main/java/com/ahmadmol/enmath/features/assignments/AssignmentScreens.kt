@@ -61,7 +61,7 @@ fun AssignmentDetailsScreen(
     onResult: () -> Unit,
 ) {
     val a = state.product.assignments.find { it.id == id }
-    ScreenPage {
+    ScreenPage(Modifier.testTag("screen-assignment-details")) {
         if (a == null) {
             EmptyState(label(TextKey.t_7625c0de23), label(TextKey.t_bd767ed1d0))
             return@ScreenPage

@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ahmadmol.enmath.core.design.tokens.LocalResourceBaseline
 
 data class CleanNavItem(val route: String, val title: String, val icon: ImageVector)
 
@@ -24,8 +25,9 @@ fun CleanBottomBar(
     dark: Boolean = true,
     open: (String) -> Unit,
 ) {
+    val homeBaseline = LocalResourceBaseline.current
     val scheme =
-        if (dark) {
+        if (dark && !homeBaseline) {
             darkColorScheme(
                 surface = RefPalette.card,
                 primary = RefPalette.violet,
@@ -71,8 +73,8 @@ fun CleanBottomBar(
                             Text(
                                 item.title,
                                 fontSize = 11.sp,
-                                lineHeight = 15.sp,
-                                maxLines = 1,
+                                lineHeight = if (homeBaseline) 16.sp else 15.sp,
+                                maxLines = if (homeBaseline) 2 else 1,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight =
                                     if (selected == item.route) FontWeight.SemiBold

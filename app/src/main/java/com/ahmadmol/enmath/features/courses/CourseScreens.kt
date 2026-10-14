@@ -48,7 +48,10 @@ fun BookDetailsScreen(
             EmptyState(label(TextKey.t_c42ca1990b), label(TextKey.t_107d03c5ec))
             return@ScreenPage
         }
-        PageHeading(label(TextKey.t_a56054dc89), book.title.text(), book.subtitle.text())
+        AppCard(tonal = true) {
+            LearningArtwork(if (book.id == "book-1") "∫" else "π")
+            PageHeading(label(TextKey.t_a56054dc89), book.title.text(), book.subtitle.text())
+        }
         val count = book.lessons.count { it.id in state.completed }
         ProgressCard(
             label(TextKey.t_078816e010),
@@ -58,9 +61,7 @@ fun BookDetailsScreen(
         val next = book.lessons.firstOrNull { it.id !in state.completed } ?: book.lessons.first()
         PrimaryButton(label(TextKey.t_b64f5160ae), { onLesson(next.id) })
         SectionTitle(label(TextKey.t_f73882a802))
-        AdaptiveGrid(book.topics) { topic ->
-            TopicCard(topic, state.completed) { onTopic(topic.id) }
-        }
+        book.topics.forEach { topic -> TopicCard(topic, state.completed) { onTopic(topic.id) } }
     }
 }
 

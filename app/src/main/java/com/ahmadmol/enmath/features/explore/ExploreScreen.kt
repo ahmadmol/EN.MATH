@@ -7,11 +7,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.dp
 import com.ahmadmol.enmath.core.design.*
 import kotlin.math.abs
 
@@ -38,7 +38,7 @@ fun ExploreScreen() {
         PageHeading(label(TextKey.t_8d680ec8eb), label(TextKey.t_ccdff60317))
         DemoNotice(label(TextKey.t_729df17606))
         AdaptivePair(
-            first = {
+            second = {
                 AppTextField(
                     input,
                     {
@@ -93,9 +93,9 @@ fun ExploreScreen() {
                     Text(label(TextKey.t_98cd0de4fd))
                 }
             },
-            second = {
+            first = {
                 Canvas(
-                    Modifier.fillMaxWidth().height(360.dp).testTag("graph-canvas").pointerInput(
+                    Modifier.fillMaxWidth().aspectRatio(1.33f).clipToBounds().testTag("graph-canvas").pointerInput(
                         Unit
                     ) {
                         detectTransformGestures { _, delta, factor, _ ->

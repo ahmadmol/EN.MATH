@@ -13,6 +13,7 @@ import com.ahmadmol.enmath.core.model.*
 
 @Composable
 fun ClassesScreen(state: LearningState, onCreate: (String) -> Unit, onOpen: (String) -> Unit) {
+    var query by rememberSaveable { mutableStateOf("") }
     var modal by remember { mutableStateOf(false) }
     var name by rememberSaveable { mutableStateOf("") }
     ScreenPage(Modifier.testTag("screen-classes")) {
@@ -24,20 +25,25 @@ fun ClassesScreen(state: LearningState, onCreate: (String) -> Unit, onOpen: (Str
         )
         if (state.product.classes.isEmpty())
             EmptyState(label(TextKey.t_8834284075), label(TextKey.t_6a4eb9f1da))
-        state.product.classes.forEach { c ->
-            AppCard(onClick = { onOpen(c.id) }) {
-                Text(c.name.text(), style = MaterialTheme.typography.titleLarge)
-                Text(label(TextKey.t_2741e5a6bc, c.studentIds.size, classAverage(state, c)))
-                Text(
-                    label(
-                        TextKey.t_e5ef7b2777,
-                        state.product.assignments.count {
-                            it.classId == c.id && it.due >= System.currentTimeMillis()
-                        },
-                    )
-                )
+        SearchField(query, { query = it })
+        state.product.classes
+            .filter {
+                LearningRules.search(it.name.en + it.name.ar).contains(LearningRules.search(query))
             }
-        }
+            .forEach { c ->
+                AppCard(onClick = { onOpen(c.id) }) {
+                    Text(c.name.text(), style = MaterialTheme.typography.titleLarge)
+                    Text(label(TextKey.t_2741e5a6bc, c.studentIds.size, classAverage(state, c)))
+                    Text(
+                        label(
+                            TextKey.t_e5ef7b2777,
+                            state.product.assignments.count {
+                                it.classId == c.id && it.due >= System.currentTimeMillis()
+                            },
+                        )
+                    )
+                }
+            }
     }
     if (modal)
         AlertDialog(

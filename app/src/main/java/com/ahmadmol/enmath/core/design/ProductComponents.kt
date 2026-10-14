@@ -21,7 +21,13 @@ object Elevation {
 
 @Composable
 fun SecondaryButton(label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    OutlinedButton(onClick, modifier.fillMaxWidth().heightIn(min = Space.touch)) { Text(label) }
+    OutlinedButton(
+        onClick,
+        modifier.fillMaxWidth().heightIn(min = Space.touch),
+        shape = MaterialTheme.shapes.small,
+    ) {
+        Text(label)
+    }
 }
 
 @Composable
@@ -52,13 +58,18 @@ fun EquationCard(value: String) {
 
 @Composable
 fun ProgressRing(progress: Float) {
-    Box {
+    Box(
+        Modifier.size(com.ahmadmol.enmath.core.design.tokens.ResourceDimensions.goalRing),
+        contentAlignment = androidx.compose.ui.Alignment.Center,
+    ) {
         CircularProgressIndicator(
-            progress = { progress },
-            modifier = Modifier.size(Space.symbol),
-            strokeWidth = Space.xs,
+            progress = { progress.coerceIn(0f, 1f) },
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            strokeWidth = Space.sm,
         )
-        Text("${(progress*100).toInt()}%", modifier = Modifier.padding(Space.md))
+        Text("${(progress * 100).toInt()}%", style = MaterialTheme.typography.headlineSmall)
     }
 }
 
@@ -148,7 +159,23 @@ fun LessonCard(lesson: Lesson, done: Boolean, onClick: () -> Unit) {
 @Composable
 fun AssignmentCard(a: Assignment, className: String, status: String, onClick: () -> Unit) {
     AppCard(onClick = onClick, modifier = Modifier.testTag("assignment-${a.id}")) {
-        Text(a.title.text(), style = MaterialTheme.typography.titleLarge)
+        Row(
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Space.md),
+        ) {
+            Surface(
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.tertiaryContainer,
+            ) {
+                Icon(
+                    Icons.Outlined.Assignment,
+                    null,
+                    Modifier.padding(Space.md),
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                )
+            }
+            Text(a.title.text(), Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
+        }
         Text(className)
         Text(status)
         Text(label(TextKey.t_143f33467e, a.questionIds.size, a.points))
@@ -174,7 +201,27 @@ fun TeacherInsightCard(title: String, description: String, onClick: () -> Unit) 
 @Composable
 fun NotificationItem(note: AppNotification, read: Boolean, onClick: () -> Unit) {
     AppCard(onClick = onClick, tonal = !read) {
-        Text(note.title.text(), style = MaterialTheme.typography.titleMedium)
+        Row(
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Space.md),
+        ) {
+            Surface(
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.primaryContainer,
+            ) {
+                Icon(
+                    Icons.Outlined.Notifications,
+                    null,
+                    Modifier.padding(Space.md),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
+            Text(
+                note.title.text(),
+                Modifier.weight(1f),
+                style = MaterialTheme.typography.titleMedium,
+            )
+        }
         Text(note.body.text())
         if (!read) Text(label(TextKey.t_03e25447ec), color = MaterialTheme.colorScheme.primary)
     }
@@ -198,7 +245,12 @@ fun ChipRow(labels: List<String>, selected: Int, onSelect: (Int) -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(Space.sm),
     ) {
         labels.forEachIndexed { i, label ->
-            FilterChip(selected == i, { onSelect(i) }, label = { Text(label) })
+            FilterChip(
+                selected == i,
+                { onSelect(i) },
+                label = { Text(label) },
+                modifier = Modifier.heightIn(min = Space.touch),
+            )
         }
     }
 }

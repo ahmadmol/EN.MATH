@@ -18,6 +18,8 @@ fun TeacherResourcesScreen(
     onShare: (String, String) -> Unit,
     open: (String) -> Unit,
 ) {
+    var query by rememberSaveable { mutableStateOf("") }
+    var filter by rememberSaveable { mutableIntStateOf(0) }
     var create by remember { mutableStateOf(false) }
     var share by remember { mutableStateOf("") }
     var title by rememberSaveable { mutableStateOf("") }
@@ -47,7 +49,24 @@ fun TeacherResourcesScreen(
         PrimaryButton(label(TextKey.t_0f8f757d87), { create = true })
         if (state.product.resources.isEmpty())
             EmptyState(label(TextKey.t_262b54dcff), label(TextKey.t_237968f024))
-        state.product.resources.forEach { r ->
+        SearchField(query, { query = it })
+        ChipRow(
+            listOf(tr("All", "الكل")) + ResourceKind.entries.map { resourceKindLabel(it) },
+            filter,
+            { filter = it },
+        )
+        val resources =
+            state.product.resources.filter {
+                LearningRules.search(it.title.en + it.title.ar)
+                    .contains(LearningRules.search(query)) &&
+                    (filter == 0 || it.kind == ResourceKind.entries[filter - 1])
+            }
+        if (resources.isEmpty() && state.product.resources.isNotEmpty())
+            EmptyState(
+                tr("No results", "لا توجد نتائج"),
+                tr("Try another filter or search term.", "جرّب تصنيفاً أو كلمة بحث أخرى."),
+            )
+        resources.forEach { r ->
             AppCard {
                 Text(r.title.text(), style = MaterialTheme.typography.titleLarge)
                 Text(resourceKindLabel(r.kind))

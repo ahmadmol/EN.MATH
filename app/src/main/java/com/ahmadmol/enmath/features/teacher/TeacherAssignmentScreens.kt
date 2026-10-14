@@ -3,6 +3,7 @@ package com.ahmadmol.enmath.features.teacher
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.*
@@ -15,12 +16,25 @@ fun TeacherAssignmentsScreen(
     onCreate: () -> Unit,
     onResult: (String) -> Unit,
 ) {
+    var query by rememberSaveable { mutableStateOf("") }
+    var status by rememberSaveable { mutableIntStateOf(0) }
+    val assignments =
+        state.product.assignments.filter {
+            LearningRules.search(it.title.en + it.title.ar).contains(LearningRules.search(query)) &&
+                (status == 0 || (it.due >= System.currentTimeMillis()) == (status == 1))
+        }
     ScreenPage(Modifier.testTag("screen-teacher-assignments")) {
         PageHeading(label(TextKey.t_c0a8e05970), label(TextKey.t_0c59f4a1fc))
         PrimaryButton(label(TextKey.t_4c5461762c), onCreate, Modifier.testTag("create-assignment"))
-        if (state.product.assignments.isEmpty())
+        SearchField(query, { query = it })
+        ChipRow(
+            listOf(tr("All", "الكل"), tr("Active", "نشطة"), tr("Closed", "منتهية")),
+            status,
+            { status = it },
+        )
+        if (assignments.isEmpty())
             EmptyState(label(TextKey.t_4c6c96d9ab), label(TextKey.t_9df1de9197))
-        state.product.assignments.forEach { a ->
+        assignments.forEach { a ->
             AssignmentCard(
                 a,
                 state.product.classes.find { it.id == a.classId }?.name?.text().orEmpty(),

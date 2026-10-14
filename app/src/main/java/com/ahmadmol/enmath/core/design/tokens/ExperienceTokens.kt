@@ -6,8 +6,8 @@ import com.ahmadmol.enmath.core.design.Space
 /** Role presentations share the existing theme, fonts and spacing; these are layout tokens only. */
 object ExperienceTokens {
     val gap = Space.lg
-    val inset = Space.xl
-    val studentMax = 640.dp
+    val inset = ResourceDimensions.phoneInset
+    val studentMax = ResourceDimensions.contentMax
     val teacherMax = 960.dp
     val visualHeight = 168.dp
 }

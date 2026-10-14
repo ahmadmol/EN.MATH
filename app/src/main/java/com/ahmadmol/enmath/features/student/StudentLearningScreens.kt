@@ -12,7 +12,7 @@ import com.ahmadmol.enmath.core.design.components.student.*
 import com.ahmadmol.enmath.features.courses.interactive.LimitsLessonSequence
 
 @Composable
-fun StudentLearningHome(state: LearningState, open: (String) -> Unit) {
+fun LegacyStudentLearningHome(state: LearningState, open: (String) -> Unit) {
     val next = state.lesson(state.lastLessonId) ?: state.lesson(LimitsLessonSequence.lessonId)
     val assignment =
         state.product.assignments
@@ -142,8 +142,8 @@ fun StudentStudy(state: LearningState, open: (String) -> Unit) {
         ExperienceSection(
             tr("Books and other topics", "الكتب والموضوعات الأخرى"),
             tr(
-                "The rest of the curriculum keeps its existing experience during this trial.",
-                "تحتفظ بقية موضوعات المنهج بتجربتها الحالية خلال هذه المراجعة.",
+                "Choose a book and build your understanding one idea at a time.",
+                "اختر كتاباً وابنِ فهمك خطوة بخطوة.",
             ),
         )
         AdaptiveGrid(state.books) { book ->

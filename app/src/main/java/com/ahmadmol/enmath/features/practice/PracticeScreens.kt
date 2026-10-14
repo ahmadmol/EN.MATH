@@ -22,7 +22,8 @@ fun QuizQuestion(q: Question, value: String, onAnswer: (String) -> Unit) {
         q.options.forEach { option ->
             OutlinedButton(
                 { onAnswer(option) },
-                Modifier.fillMaxWidth().testTag("answer-$option"),
+                Modifier.fillMaxWidth().heightIn(min = Space.touch).testTag("answer-$option"),
+                shape = MaterialTheme.shapes.small,
                 colors =
                     ButtonDefaults.outlinedButtonColors(
                         containerColor =

@@ -36,7 +36,7 @@ fun ScreenPage(
                 .widthIn(max = if (narrow) Space.formMax else Space.contentMax)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(Space.xl),
+                .padding(horizontal = if (narrow) Space.xl else Space.lg, vertical = Space.lg),
             verticalArrangement = Arrangement.spacedBy(Space.lg),
             content = content,
         )
@@ -63,19 +63,7 @@ fun BrandMark() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Space.md),
     ) {
-        Surface(
-            shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(Space.symbol),
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Text(
-                    "∑",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
-        }
+        BookLogo(Modifier.size(Space.symbol))
         Column {
             Text("EN.MATH", style = MaterialTheme.typography.titleLarge)
             Text(
@@ -97,9 +85,14 @@ fun PrimaryButton(
     Button(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier.fillMaxWidth().heightIn(min = Space.touch),
-        shape = MaterialTheme.shapes.medium,
-        contentPadding = PaddingValues(Space.lg),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .heightIn(
+                    min = com.ahmadmol.enmath.core.design.tokens.ResourceDimensions.prominentButton
+                ),
+        shape = MaterialTheme.shapes.small,
+        contentPadding = PaddingValues(horizontal = Space.lg, vertical = Space.md),
     ) {
         Text(text)
     }
@@ -170,7 +163,7 @@ fun AppCard(
         Card(
             onClick = onClick,
             modifier = modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.large,
+            shape = MaterialTheme.shapes.medium,
             border =
                 BorderStroke(
                     androidx.compose.ui.unit.Dp(1f),
@@ -187,7 +180,7 @@ fun AppCard(
     else
         Card(
             modifier = modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.large,
+            shape = MaterialTheme.shapes.medium,
             border =
                 BorderStroke(
                     androidx.compose.ui.unit.Dp(1f),
@@ -320,8 +313,24 @@ fun DemoNotice(text: String = label(TextKey.t_57cf7f7bed)) {
 @Composable
 fun EmptyState(title: String, detail: String) {
     AppCard {
-        Text(title, style = MaterialTheme.typography.titleMedium)
-        Text(detail)
+        Column(
+            Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Space.md),
+        ) {
+            Icon(
+                Icons.Outlined.Search,
+                null,
+                Modifier.size(Space.symbol),
+                tint = MaterialTheme.colorScheme.primary,
+            )
+            Text(title, style = MaterialTheme.typography.titleMedium)
+            Text(
+                detail,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 

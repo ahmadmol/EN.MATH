@@ -1,6 +1,7 @@
 package com.ahmadmol.enmath.features.notifications
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.LearningState
 import com.ahmadmol.enmath.core.design.*
 
@@ -13,7 +14,7 @@ fun NotificationsScreen(
     onRoute: (String) -> Unit,
 ) {
     val notes = state.product.notifications.filter { it.teacher == teacher }
-    ScreenPage {
+    ScreenPage(androidx.compose.ui.Modifier.testTag("screen-notifications")) {
         PageHeading(label(TextKey.t_9652100ff2), label(TextKey.t_bda3e17468))
         SecondaryButton(label(TextKey.t_338c877d38), onAll)
         OfflineState()
