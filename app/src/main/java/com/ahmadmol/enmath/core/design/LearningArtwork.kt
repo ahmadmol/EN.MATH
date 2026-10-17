@@ -2,13 +2,36 @@ package com.ahmadmol.enmath.core.design
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
+
+@Composable
+fun OutcomeMedallion(success: Boolean) {
+    Box(Modifier.fillMaxWidth(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+        Surface(
+            shape = androidx.compose.foundation.shape.CircleShape,
+            color =
+                if (success) MaterialTheme.colorScheme.secondaryContainer
+                else MaterialTheme.colorScheme.primaryContainer,
+        ) {
+            Icon(
+                if (success) Icons.Outlined.CheckCircle else Icons.Outlined.Refresh,
+                null,
+                Modifier.padding(20.dp).size(64.dp),
+                tint =
+                    if (success) MaterialTheme.colorScheme.onSecondaryContainer
+                    else MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        }
+    }
+}
 
 /** Native vector artwork: no screen images, remote assets, or mathematical data. */
 @Composable
@@ -51,48 +74,121 @@ fun BookLogo(modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * Book, pages and geometry are decorative native paths; no generated equations are used as data.
+ */
 @Composable
 fun LearningArtwork(symbol: String, modifier: Modifier = Modifier) {
     val primary = MaterialTheme.colorScheme.primary
     val secondary = MaterialTheme.colorScheme.secondary
-    val outline = MaterialTheme.colorScheme.outlineVariant
+    val tertiary = MaterialTheme.colorScheme.tertiary
+    val paper = MaterialTheme.colorScheme.surfaceContainerLowest
+    val onPrimary = MaterialTheme.colorScheme.onPrimary
     Box(
         modifier.fillMaxWidth().height(144.dp),
         contentAlignment = androidx.compose.ui.Alignment.Center,
     ) {
         Canvas(Modifier.fillMaxSize()) {
-            val left = size.width * .15f
-            val right = size.width * .85f
-            val mid = size.height * .58f
-            repeat(7) { i ->
-                val x = left + (right - left) * i / 6
-                drawLine(outline.copy(alpha = .5f), Offset(x, 20f), Offset(x, size.height - 20f))
-            }
-            drawLine(primary.copy(alpha = .5f), Offset(left, mid), Offset(right, mid), 2.dp.toPx())
-            val path =
+            val w = size.width
+            val h = size.height
+            fun face(vararg points: Pair<Float, Float>): Path =
                 Path().apply {
-                    moveTo(left, mid + 20.dp.toPx())
-                    cubicTo(
-                        size.width * .34f,
-                        -10f,
-                        size.width * .44f,
-                        size.height + 30f,
-                        right,
-                        mid - 35.dp.toPx(),
-                    )
+                    points.forEachIndexed { i, p ->
+                        if (i == 0) moveTo(w * p.first, h * p.second)
+                        else lineTo(w * p.first, h * p.second)
+                    }
+                    close()
                 }
-            drawPath(path, secondary, style = Stroke(3.dp.toPx()))
-        }
-        Surface(
-            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = .9f),
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Text(
-                symbol,
-                Modifier.padding(24.dp),
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            drawOval(
+                primary.copy(alpha = .08f),
+                topLeft = Offset(w * .13f, h * .78f),
+                size = androidx.compose.ui.geometry.Size(w * .73f, h * .15f),
+            )
+            drawPath(face(.29f to .2f, .63f to .08f, .72f to .15f, .37f to .28f), paper)
+            drawPath(
+                face(.29f to .2f, .37f to .28f, .37f to .85f, .29f to .77f),
+                primary.copy(alpha = .6f),
+            )
+            drawPath(
+                face(.37f to .28f, .72f to .15f, .72f to .73f, .37f to .85f),
+                Brush.linearGradient(
+                    listOf(primary, tertiary),
+                    Offset(w * .4f, h * .2f),
+                    Offset(w * .7f, h * .8f),
+                ),
+            )
+            drawLine(
+                paper.copy(alpha = .5f),
+                Offset(w * .4f, h * .3f),
+                Offset(w * .4f, h * .78f),
+                1.dp.toPx(),
+            )
+            drawPath(
+                face(.15f to .65f, .26f to .6f, .33f to .67f, .22f to .73f),
+                secondary.copy(alpha = .7f),
+            )
+            drawPath(
+                face(.15f to .65f, .22f to .73f, .22f to .86f, .15f to .78f),
+                secondary.copy(alpha = .5f),
+            )
+            drawPath(face(.22f to .73f, .33f to .67f, .33f to .8f, .22f to .86f), secondary)
+            drawCircle(
+                Brush.radialGradient(
+                    listOf(paper, tertiary),
+                    center = Offset(w * .82f, h * .64f),
+                    radius = h * .15f,
+                ),
+                radius = h * .12f,
+                center = Offset(w * .8f, h * .67f),
             )
         }
+        Text(
+            symbol,
+            Modifier.padding(start = Space.lg),
+            style =
+                MaterialTheme.typography.headlineLarge.copy(
+                    fontFamily = androidx.compose.ui.text.font.FontFamily.Serif
+                ),
+            color = onPrimary,
+        )
+    }
+}
+
+/** Shared native emblem for entry/recovery screens; no bitmap or remote resource. */
+@Composable
+fun FeatureEmblem(icon: androidx.compose.ui.graphics.vector.ImageVector) {
+    Box(Modifier.fillMaxWidth(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+        Surface(
+            shape = androidx.compose.foundation.shape.CircleShape,
+            color = MaterialTheme.colorScheme.primaryContainer,
+        ) {
+            Icon(
+                icon,
+                null,
+                Modifier.padding(Space.lg).size(Space.hero),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        }
+    }
+}
+
+@Composable
+fun EntryWaves(modifier: Modifier = Modifier) {
+    val primary = MaterialTheme.colorScheme.primary
+    Canvas(modifier) {
+        val w = size.width
+        val h = size.height
+        val path =
+            Path().apply {
+                moveTo(0f, h * .08f)
+                cubicTo(w * .3f, h * .3f, w * .65f, -h * .1f, w, h * .04f)
+                lineTo(w, h * .3f)
+                cubicTo(w * .7f, h * .18f, w * .3f, h * .6f, 0f, h * .38f)
+                close()
+            }
+        drawPath(
+            path,
+            Brush.verticalGradient(listOf(primary.copy(alpha = .10f), primary.copy(alpha = .02f))),
+        )
     }
 }

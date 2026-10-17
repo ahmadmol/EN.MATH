@@ -125,13 +125,17 @@ fun StudentStudy(state: LearningState, open: (String) -> Unit) {
             tr("Your curriculum", "منهجك"),
         )
         ExperiencePanel(emphasized = true) {
-            ExperienceSection(
-                limits?.title?.text().orEmpty(),
-                tr(
-                    "Understand approaching a value before memorizing the rules.",
-                    "افهم الاقتراب من قيمة قبل حفظ القواعد.",
-                ),
-            )
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.md),
+            ) {
+                SymbolBadge(limits?.symbol.orEmpty())
+                Text(
+                    limits?.title?.text().orEmpty(),
+                    Modifier.weight(1f),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
             ProgressFeedback(tr("My progress", "تقدمي"), "${mastery.score}%", mastery.score / 100f)
             PrimaryButton(
                 tr("Explore limits", "استكشاف النهايات"),

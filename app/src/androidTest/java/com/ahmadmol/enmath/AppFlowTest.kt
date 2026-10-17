@@ -21,6 +21,12 @@ class AppFlowTest {
     val clean =
         object : ExternalResource() {
             override fun before() {
+                check(
+                    android.os.Build.MODEL.contains("sdk") ||
+                        android.os.Build.FINGERPRINT.contains("generic")
+                ) {
+                    "Run only on the dedicated emulator."
+                }
                 InstrumentationRegistry.getInstrumentation()
                     .targetContext
                     .getSharedPreferences("enmath_demo", 0)
@@ -99,7 +105,7 @@ class AppFlowTest {
         val file = File(ctx.getExternalFilesDir("product-screenshots"), "$name.png")
         file.parentFile?.mkdirs()
         ui.waitForIdle()
-        android.os.SystemClock.sleep(300) // Include the asynchronous WebView math surface.
+        android.os.SystemClock.sleep(300) // Allow the screen transition to finish before capture.
         val bitmap =
             requireNotNull(
                 InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
@@ -167,7 +173,17 @@ class AppFlowTest {
         click("browse-all-lessons")
         click("book-book-1")
         click("topic-limits")
-        click("lesson-limits-practice")
+        // The interactive limits lesson is exercised fully by RoleExperienceTest.
+        // This test retains coverage of the generic lesson presenter and its persistence.
+        val lessonId =
+            LocalDemoRepository(ui.activity)
+                .state
+                .value
+                .books
+                .flatMap { it.lessons }
+                .first { it.id.startsWith("limits-") && it.id != "limits-practice" }
+                .id
+        click("lesson-$lessonId")
         shot("lesson-ar-light")
         click("complete-lesson")
         ui.onNodeWithTag("complete-lesson").assertIsNotEnabled()
@@ -194,7 +210,7 @@ class AppFlowTest {
         shot("practice-result")
         val repo = LocalDemoRepository(ui.activity)
         assertTrue(repo.state.value.product.attempts.isNotEmpty())
-        assertTrue("limits-practice" in repo.state.value.completed)
+        assertTrue(lessonId in repo.state.value.completed)
     }
 
     @Test
@@ -235,12 +251,13 @@ class AppFlowTest {
         intro()
         click("guest")
         shot("adaptive-home")
-        listOf("study", "solver", "progress", "profile", "home").forEach {
+        listOf("study", "solver", "explore", "profile", "home").forEach {
             click("nav-$it")
             ui.onNodeWithTag("screen-$it").assertExists()
             if (it == "study" || it == "solver") shot("adaptive-$it")
         }
-        text("مكتبتي")
+        click("nav-profile")
+        click("profile-library")
         text("إنشاء حساب")
         ui.onNodeWithText("أنشئ حسابًا تجريبيًا").assertExists()
         text("متابعة كضيف")
@@ -359,7 +376,8 @@ class AppFlowTest {
         input("auth-email", "ahmed@example.com")
         input("auth-password", "demo-pass-123")
         click("login-submit")
-        text("مكتبتي")
+        click("nav-profile")
+        click("profile-library")
         text("موارد المعلّم")
         ui.onNodeWithText("ملاحظة نهايات جديدة").assertExists()
         shot("student-library")

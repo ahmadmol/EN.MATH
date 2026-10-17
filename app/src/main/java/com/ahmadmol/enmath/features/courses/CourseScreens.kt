@@ -48,16 +48,46 @@ fun BookDetailsScreen(
             EmptyState(label(TextKey.t_c42ca1990b), label(TextKey.t_107d03c5ec))
             return@ScreenPage
         }
-        AppCard(tonal = true) {
-            LearningArtwork(if (book.id == "book-1") "∫" else "π")
-            PageHeading(label(TextKey.t_a56054dc89), book.title.text(), book.subtitle.text())
-        }
         val count = book.lessons.count { it.id in state.completed }
-        ProgressCard(
-            label(TextKey.t_078816e010),
-            label(TextKey.t_355ef9b130, count, book.lessons.size),
-            count.toFloat() / book.lessons.size,
-        )
+        AppCard(tonal = true) {
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.md),
+            ) {
+                Column(Modifier.weight(1f)) {
+                    PageHeading(
+                        label(TextKey.t_a56054dc89),
+                        book.title.text(),
+                        book.subtitle.text(),
+                    )
+                }
+                LearningArtwork(
+                    if (book.id == "book-1") "∫" else "π",
+                    Modifier.width(
+                            com.ahmadmol.enmath.core.design.tokens.ResourceDimensions.bookArtwork
+                        )
+                        .height(
+                            com.ahmadmol.enmath.core.design.tokens.ResourceDimensions.bookArtwork
+                        ),
+                )
+            }
+            Row(Modifier.fillMaxWidth()) {
+                Text(
+                    label(TextKey.t_078816e010),
+                    Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Text(
+                    label(TextKey.t_355ef9b130, count, book.lessons.size),
+                    style = MaterialTheme.typography.labelSmall,
+                )
+            }
+            LinearProgressIndicator(
+                progress = { count.toFloat() / book.lessons.size },
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
         val next = book.lessons.firstOrNull { it.id !in state.completed } ?: book.lessons.first()
         PrimaryButton(label(TextKey.t_b64f5160ae), { onLesson(next.id) })
         SectionTitle(label(TextKey.t_f73882a802))

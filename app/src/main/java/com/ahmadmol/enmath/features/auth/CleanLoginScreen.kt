@@ -26,8 +26,14 @@ fun CleanLoginScreen(
     val role by vm.role.collectAsStateWithLifecycle()
     val teacher = role == AccountType.Teacher.name
     ScreenPage(Modifier.testTag("screen-login"), narrow = true) {
-        BrandMark()
-        Spacer(Modifier.height(8.dp))
+        Column(
+            Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Space.sm),
+        ) {
+            BookLogo(Modifier.size(Space.hero + Space.xl))
+            Text("EN.MATH", style = MaterialTheme.typography.headlineSmall)
+        }
         PageHeading(
             tr("Welcome back", "أهلاً بعودتك"),
             if (teacher) tr("Teacher sign in", "تسجيل دخول المعلم")
@@ -44,7 +50,7 @@ fun CleanLoginScreen(
                 ),
         )
         RoleSelector(AccountType.valueOf(role), vm::chooseRole)
-        AppCard {
+        Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
             AppTextField(
                 email,
                 { vm.set("email", it) },

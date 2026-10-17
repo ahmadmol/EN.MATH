@@ -62,3 +62,9 @@ docs/approved-references-2026-10-13/*.txt
 
 docs/full-ui/*.txt
 docs/s01-v2/run-home-qa.ps1
+
+# Generated visual review evidence remains local; source and QA summaries are versioned.
+docs/visual-polish/evidence/
+docs/visual-polish/DELIVERY.json
+docs/visual-polish/SCREENSHOT_SHA256.csv
+docs/visual-polish/review.html

@@ -3,12 +3,16 @@ package com.ahmadmol.enmath.features.onboarding
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
 import com.ahmadmol.enmath.core.design.*
+import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions
 import com.ahmadmol.enmath.core.model.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -35,6 +39,7 @@ fun SplashScreen(onReady: () -> Unit) {
         callback()
     }
     Box(Modifier.fillMaxSize().testTag("screen-splash"), contentAlignment = Alignment.Center) {
+        EntryWaves(Modifier.fillMaxSize())
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Space.xl),
@@ -71,9 +76,20 @@ fun OnboardingScreen(onDone: () -> Unit) {
         HorizontalPager(state = pager, modifier = Modifier.weight(1f)) { index ->
             val page = pages[index]
             ScreenPage(narrow = true) {
-                LearningArtwork(page.symbol)
-                Text(page.title.text(), style = MaterialTheme.typography.headlineLarge)
-                Text(page.body.text(), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                LearningArtwork(page.symbol, Modifier.height(ResourceDimensions.entryArtwork))
+                Text(
+                    page.title.text(),
+                    Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    page.body.text(),
+                    Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
         Column(
@@ -127,15 +143,49 @@ fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
             tonal = true,
             modifier = Modifier.testTag("role-student"),
         ) {
-            Text(label(TextKey.t_4f567e1c20), style = MaterialTheme.typography.titleLarge)
-            Text(label(TextKey.t_51d2fe6071))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.lg),
+            ) {
+                Icon(
+                    Icons.Outlined.School,
+                    null,
+                    Modifier.size(Space.hero),
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Column(Modifier.weight(1f)) {
+                    Text(label(TextKey.t_4f567e1c20), style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        label(TextKey.t_51d2fe6071),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
         }
         AppCard(
             onClick = { onRole(AccountType.Teacher) },
             modifier = Modifier.testTag("role-teacher"),
         ) {
-            Text(label(TextKey.t_0f82bcf371), style = MaterialTheme.typography.titleLarge)
-            Text(label(TextKey.t_44c7ecd060))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Space.lg),
+            ) {
+                Icon(
+                    Icons.Outlined.CoPresent,
+                    null,
+                    Modifier.size(Space.hero),
+                    tint = MaterialTheme.colorScheme.tertiary,
+                )
+                Column(Modifier.weight(1f)) {
+                    Text(label(TextKey.t_0f82bcf371), style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        label(TextKey.t_44c7ecd060),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
         }
         OutlinedButton(
             onClick = onGuest,

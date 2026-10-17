@@ -1,9 +1,12 @@
 package com.ahmadmol.enmath.features.teacher
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.*
@@ -30,18 +33,21 @@ fun TeacherResourcesScreen(
     ScreenPage(Modifier.testTag("screen-resources")) {
         PageHeading(label(TextKey.t_6127a49906), label(TextKey.t_4214608de0))
         AppCard {
-            SecondaryButton(
+            DestinationRow(
                 tr("Curriculum & lessons", "المنهاج والدروس"),
+                Icons.Outlined.MenuBook,
                 { open(TeacherReferenceRoutes.Study) },
                 Modifier.testTag("teacher-resource-study"),
             )
-            SecondaryButton(
+            DestinationRow(
                 tr("Detailed solver", "الحل المفصل"),
+                Icons.Outlined.Calculate,
                 { open(TeacherReferenceRoutes.Solver) },
                 Modifier.testTag("teacher-resource-solver"),
             )
-            SecondaryButton(
+            DestinationRow(
                 tr("Function lab", "مختبر الدوال"),
+                Icons.Outlined.Science,
                 { open(TeacherReferenceRoutes.Lab) },
                 Modifier.testTag("teacher-resource-lab"),
             )
@@ -68,8 +74,20 @@ fun TeacherResourcesScreen(
             )
         resources.forEach { r ->
             AppCard {
-                Text(r.title.text(), style = MaterialTheme.typography.titleLarge)
-                Text(resourceKindLabel(r.kind))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Space.md),
+                ) {
+                    Icon(Icons.Outlined.Description, null, tint = MaterialTheme.colorScheme.primary)
+                    Column(Modifier.weight(1f)) {
+                        Text(r.title.text(), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            resourceKindLabel(r.kind),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
                 Text(r.body.text())
                 Text(label(TextKey.t_6422ef9e47, r.classIds.size))
                 SecondaryButton(

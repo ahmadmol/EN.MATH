@@ -2,9 +2,11 @@ package com.ahmadmol.enmath.features.teacher
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -45,6 +47,40 @@ fun AssignmentBuilderScreen(
     }
     ScreenPage(Modifier.testTag("screen-builder")) {
         PageHeading(label(TextKey.t_26d50e153b), label(TextKey.t_8f4e83b5d6, step + 1))
+        Row(
+            Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        ) {
+            listOf(
+                    tr("Details", "المعلومات"),
+                    tr("Questions", "الأسئلة"),
+                    tr("Settings", "الإعدادات"),
+                    tr("Review", "المراجعة"),
+                )
+                .forEachIndexed { index, title ->
+                    Column(
+                        Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(Space.xs),
+                    ) {
+                        Surface(
+                            shape = CircleShape,
+                            color =
+                                if (index <= step) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.surfaceContainer,
+                        ) {
+                            Box(Modifier.size(Space.touch), contentAlignment = Alignment.Center) {
+                                Text("${index + 1}", style = MaterialTheme.typography.labelLarge)
+                            }
+                        }
+                        Text(
+                            title,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+        }
         LinearProgressIndicator(progress = { (step + 1) / 4f }, modifier = Modifier.fillMaxWidth())
         when (step) {
             0 -> {

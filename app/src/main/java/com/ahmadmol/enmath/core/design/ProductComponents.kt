@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.ahmadmol.enmath.core.model.*
@@ -27,6 +28,36 @@ fun SecondaryButton(label: String, onClick: () -> Unit, modifier: Modifier = Mod
         shape = MaterialTheme.shapes.small,
     ) {
         Text(label)
+    }
+}
+
+/** A destination row, distinct from form actions and secondary buttons. */
+@Composable
+fun DestinationRow(
+    label: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth().heightIn(min = Space.touch),
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surface,
+    ) {
+        Row(
+            Modifier.padding(Space.md),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Space.md),
+        ) {
+            Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
+            Text(label, Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+            Icon(
+                Icons.Outlined.ChevronRight,
+                null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 
@@ -53,7 +84,7 @@ fun OtpInput(value: String, onChange: (String) -> Unit) =
 
 @Composable
 fun EquationCard(value: String) {
-    AppCard(tonal = true) { MathText(value) }
+    MathText(value)
 }
 
 @Composable
@@ -150,9 +181,40 @@ fun Avatar(name: String) {
 @Composable
 fun LessonCard(lesson: Lesson, done: Boolean, onClick: () -> Unit) {
     AppCard(onClick = onClick, modifier = Modifier.testTag("lesson-${lesson.id}")) {
-        Text(lesson.title.text(), style = MaterialTheme.typography.titleMedium)
-        Text(label(TextKey.t_516f1fe3b4, lesson.minutes))
-        if (done) CompletedLabel()
+        Row(
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Space.md),
+        ) {
+            Surface(
+                shape = androidx.compose.foundation.shape.CircleShape,
+                color =
+                    if (done) MaterialTheme.colorScheme.secondaryContainer
+                    else MaterialTheme.colorScheme.surfaceContainer,
+            ) {
+                Icon(
+                    if (done) Icons.Outlined.CheckCircle else Icons.Outlined.PlayArrow,
+                    null,
+                    Modifier.padding(Space.md),
+                    tint =
+                        if (done) MaterialTheme.colorScheme.onSecondaryContainer
+                        else MaterialTheme.colorScheme.primary,
+                )
+            }
+            Column(Modifier.weight(1f)) {
+                Text(lesson.title.text(), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    label(TextKey.t_516f1fe3b4, lesson.minutes),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            if (done)
+                Text(
+                    label(TextKey.t_ac2e05afaf),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+        }
     }
 }
 
@@ -174,11 +236,26 @@ fun AssignmentCard(a: Assignment, className: String, status: String, onClick: ()
                     tint = MaterialTheme.colorScheme.onTertiaryContainer,
                 )
             }
-            Text(a.title.text(), Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                Text(a.title.text(), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    className,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
-        Text(className)
-        Text(status)
-        Text(label(TextKey.t_143f33467e, a.questionIds.size, a.points))
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        Text(
+            status,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Text(
+            label(TextKey.t_143f33467e, a.questionIds.size, a.points),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
 
@@ -216,13 +293,16 @@ fun NotificationItem(note: AppNotification, read: Boolean, onClick: () -> Unit) 
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
-            Text(
-                note.title.text(),
-                Modifier.weight(1f),
-                style = MaterialTheme.typography.titleMedium,
-            )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                Text(note.title.text(), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    note.body.text(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            if (!read) Badge()
         }
-        Text(note.body.text())
         if (!read) Text(label(TextKey.t_03e25447ec), color = MaterialTheme.colorScheme.primary)
     }
 }

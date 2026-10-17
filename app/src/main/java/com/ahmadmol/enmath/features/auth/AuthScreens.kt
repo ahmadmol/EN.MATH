@@ -1,11 +1,19 @@
 package com.ahmadmol.enmath.features.auth
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.model.*
@@ -70,6 +78,13 @@ fun AccountChoiceScreen(onSelect: (AccountType) -> Unit) {
                 onClick = { onSelect(role) },
                 modifier = Modifier.testTag("register-${role.name}"),
             ) {
+                Icon(
+                    if (role == AccountType.Student) Icons.Outlined.School
+                    else Icons.Outlined.CoPresent,
+                    null,
+                    Modifier.size(Space.hero),
+                    tint = MaterialTheme.colorScheme.primary,
+                )
                 Text(
                     if (role == AccountType.Student) label(TextKey.t_96ee0d02e3)
                     else label(TextKey.t_8f236c7a72),
@@ -102,7 +117,6 @@ fun RegistrationScreen(vm: AuthViewModel, teacher: Boolean, onContinue: () -> Un
             label(TextKey.t_db640f5b9c),
             if (teacher) label(TextKey.t_6f119ee864) else label(TextKey.t_e61534a23d),
         )
-        DemoNotice(label(TextKey.t_dcf57c409e))
         AppTextField(
             name,
             { vm.set("name", it) },
@@ -160,6 +174,7 @@ fun RegistrationScreen(vm: AuthViewModel, teacher: Boolean, onContinue: () -> Un
             { if (vm.validate(true)) onContinue() },
             Modifier.testTag("registration-submit"),
         )
+        DemoNotice(label(TextKey.t_dcf57c409e))
     }
     if (showTerms)
         AlertDialog(
@@ -185,15 +200,31 @@ fun VerificationScreen(vm: AuthViewModel, onVerify: () -> Unit) {
     val email by vm.email.collectAsStateWithLifecycle()
     var resent by remember { mutableStateOf(false) }
     ScreenPage(Modifier.testTag("screen-verification"), true) {
+        FeatureEmblem(Icons.Outlined.MarkEmailRead)
         PageHeading(label(TextKey.t_91067f9a97), label(TextKey.t_db7aaa76e0), email)
         DemoNotice(label(TextKey.t_006ebee366))
-        AppTextField(
-            code,
-            { vm.set("code", it.filter(Char::isDigit).take(6)) },
-            label(TextKey.t_df1ef156f3),
-            Modifier.testTag("auth-code"),
-            keyboardType = KeyboardType.Number,
-        )
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            OutlinedTextField(
+                code,
+                { vm.set("code", it.filter(Char::isDigit).take(6)) },
+                Modifier.fillMaxWidth().heightIn(min = Space.symbol).testTag("auth-code"),
+                singleLine = true,
+                label = {
+                    Text(label(TextKey.t_df1ef156f3), style = MaterialTheme.typography.bodySmall)
+                },
+                textStyle =
+                    MaterialTheme.typography.headlineSmall.copy(
+                        fontFamily = FontFamily.Monospace,
+                        textAlign = TextAlign.Center,
+                        textDirection = TextDirection.Ltr,
+                        letterSpacing =
+                            com.ahmadmol.enmath.core.design.tokens.ResourceDimensions
+                                .verificationTracking,
+                    ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                shape = MaterialTheme.shapes.small,
+            )
+        }
         AuthError(vm)
         PrimaryButton(
             label(TextKey.t_a2e41f05a0),
@@ -209,7 +240,7 @@ fun VerificationScreen(vm: AuthViewModel, onVerify: () -> Unit) {
 fun ForgotPasswordScreen(vm: AuthViewModel, onContinue: () -> Unit) {
     val email by vm.email.collectAsStateWithLifecycle()
     ScreenPage(Modifier.testTag("screen-forgot"), true) {
-        SymbolBadge("↻")
+        FeatureEmblem(Icons.Outlined.LockReset)
         PageHeading(label(TextKey.t_1da6c63fb2), label(TextKey.t_8804247fd9))
         DemoNotice(label(TextKey.t_c3427ebcc7))
         AppTextField(
@@ -233,7 +264,7 @@ fun NewPasswordScreen(vm: AuthViewModel, onDone: () -> Unit) {
     val password by vm.password.collectAsStateWithLifecycle()
     val confirmation by vm.confirmation.collectAsStateWithLifecycle()
     ScreenPage(Modifier.testTag("screen-new-password"), true) {
-        SymbolBadge("✓")
+        FeatureEmblem(Icons.Outlined.Lock)
         PageHeading(label(TextKey.t_354d5e989e), label(TextKey.t_55f61c37c5))
         DemoNotice(label(TextKey.t_bb202e55bd))
         AppTextField(

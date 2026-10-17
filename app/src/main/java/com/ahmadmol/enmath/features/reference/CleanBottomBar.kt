@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ahmadmol.enmath.core.design.tokens.LocalResourceBaseline
+import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions as D
 
 data class CleanNavItem(val route: String, val title: String, val icon: ImageVector)
 
@@ -45,15 +46,15 @@ fun CleanBottomBar(
                     .navigationBarsPadding()
                     .padding(horizontal = 12.dp, vertical = 8.dp),
             color = scheme.surface,
-            shape = RoundedCornerShape(22.dp),
+            shape = RoundedCornerShape(D.navRadius),
             border = BorderStroke(1.dp, scheme.outlineVariant),
-            shadowElevation = 4.dp,
+            shadowElevation = D.navElevation,
         ) {
             NavigationBar(
                 containerColor = scheme.surface,
                 tonalElevation = 0.dp,
                 windowInsets = WindowInsets(0, 0, 0, 0),
-                modifier = Modifier.heightIn(min = 76.dp),
+                modifier = Modifier.heightIn(min = D.navHeight),
             ) {
                 items.forEach { item ->
                     NavigationBarItem(

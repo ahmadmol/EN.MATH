@@ -1,8 +1,13 @@
 package com.ahmadmol.enmath.features.library
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
@@ -83,9 +88,25 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
                 .forEach { r ->
                     count++
                     AppCard {
-                        Text(r.title.text(), style = MaterialTheme.typography.titleLarge)
-                        Text(resourceKindLabel(r.kind))
-                        Text(r.body.text())
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(Space.md),
+                        ) {
+                            Icon(
+                                Icons.Outlined.Description,
+                                null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Column(Modifier.weight(1f)) {
+                                Text(r.title.text(), style = MaterialTheme.typography.titleMedium)
+                                Text(
+                                    resourceKindLabel(r.kind),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                        Text(r.body.text(), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
         }

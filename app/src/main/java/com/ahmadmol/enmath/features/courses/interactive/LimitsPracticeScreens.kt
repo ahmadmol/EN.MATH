@@ -117,6 +117,7 @@ fun LimitsPracticeResult(state: LearningState, retry: () -> Unit, topic: () -> U
             )
             return@ExperiencePage
         }
+        OutcomeMedallion(attempt.accuracy >= .8f)
         ExperiencePanel(emphasized = true) {
             Text(
                 tr(

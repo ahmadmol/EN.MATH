@@ -7,11 +7,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.design.tokens.ExperienceTokens
@@ -48,7 +45,7 @@ fun ExperiencePanel(
 @Composable
 fun ExperienceSection(title: String, subtitle: String = "") {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(title, style = MaterialTheme.typography.titleLarge)
+        Text(title, style = MaterialTheme.typography.titleMedium)
         if (subtitle.isNotEmpty())
             Text(
                 subtitle,
@@ -61,21 +58,11 @@ fun ExperienceSection(title: String, subtitle: String = "") {
 /** Native short equations; bidi direction is isolated from surrounding Arabic. */
 @Composable
 fun MathLine(value: String, modifier: Modifier = Modifier, large: Boolean = true) {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-        Surface(
-            modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.surfaceVariant,
-        ) {
-            Text(
-                value,
-                Modifier.padding(16.dp),
-                style =
-                    (if (large) MaterialTheme.typography.titleLarge
-                        else MaterialTheme.typography.bodyLarge)
-                        .copy(textDirection = TextDirection.Ltr),
-            )
-        }
+    Box(modifier.fillMaxWidth()) {
+        MathText(
+            value,
+            if (large) MaterialTheme.typography.titleLarge else MaterialTheme.typography.bodyLarge,
+        )
     }
 }
 

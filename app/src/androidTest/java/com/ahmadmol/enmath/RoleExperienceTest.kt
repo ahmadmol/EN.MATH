@@ -41,7 +41,7 @@ class RoleExperienceTest {
                     setTheme(mode)
                     setLanguage(Language.Arabic)
                     signIn(
-                        if (testName.methodName == "teacherProductivityFiltersAndEvidence")
+                        if (testName.methodName.startsWith("teacher"))
                             User("سارة الأحمد", "sara@example.com", AccountType.Teacher)
                         else User("أحمد محمد", "ahmed@example.com", AccountType.Student)
                     )
@@ -250,5 +250,33 @@ class RoleExperienceTest {
         click("teacher-student-student-12")
         waitTag("screen-student-details")
         ui.onNodeWithText("مراجعة آخر تسليم").assertIsNotEnabled()
+    }
+
+    @Test
+    fun teacherToolsHistoryAndGraphStayInTeacherSession() {
+        waitTag("screen-teacher-home")
+        click("teacher-nav-teacher/resources")
+        click("teacher-resource-solver")
+        waitTag("screen-solver")
+        input("solver-input", "2x+4=10")
+        click("solve")
+        waitTag("screen-solution")
+        ui.onAllNodesWithText("x = 3").onFirst().assertExists()
+        ui.runOnIdle { ui.activity.onBackPressedDispatcher.onBackPressed() }
+        waitTag("screen-solver")
+        ui.onNodeWithText("سجل المسائل").performScrollTo().performClick()
+        waitTag("screen-history")
+        ui.onAllNodesWithText("2x+4=10").onFirst().assertExists()
+        ui.runOnIdle { ui.activity.onBackPressedDispatcher.onBackPressed() }
+        waitTag("screen-solver")
+        ui.onNodeWithText("استكشاف الرسوم").performScrollTo().performClick()
+        waitTag("screen-explore")
+        input("graph-input", "cos(x)")
+        ui.onNodeWithText("إضافة دالة").performScrollTo().performClick()
+        ui.onAllNodesWithText("y = cos(x)").onFirst().assertExists()
+        click("graph-values-toggle")
+        ui.onAllNodesWithText("y=cos(x)").onFirst().assertExists()
+        shot("teacher-graph-values")
+        assertEquals(AccountType.Teacher, LocalDemoRepository(ui.activity).state.value.user?.type)
     }
 }

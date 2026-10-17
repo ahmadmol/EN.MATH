@@ -157,6 +157,7 @@ fun PracticeResultScreen(
             EmptyState(label(TextKey.t_9c505baa76), label(TextKey.t_11002dea21))
             return@ScreenPage
         }
+        OutcomeMedallion(attempt.accuracy >= .8f)
         ProgressCard(
             label(TextKey.t_094706a820),
             "${attempt.correct}/${attempt.total}",

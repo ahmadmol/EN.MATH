@@ -362,14 +362,16 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
             }
         }
         if (accountPrompt)
-            AccountPrompt(
-                { accountPrompt = false },
-                {
-                    accountPrompt = false
-                    auth.chooseRole(AccountType.Student)
-                    clearNavigate(Routes.RegisterStudent)
-                },
-            )
+            ResourcePackPresentation(enabled = true) {
+                AccountPrompt(
+                    { accountPrompt = false },
+                    {
+                        accountPrompt = false
+                        auth.chooseRole(AccountType.Student)
+                        clearNavigate(Routes.RegisterStudent)
+                    },
+                )
+            }
     }
 }
 

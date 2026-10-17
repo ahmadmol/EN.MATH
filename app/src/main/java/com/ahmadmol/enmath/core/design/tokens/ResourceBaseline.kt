@@ -92,8 +92,8 @@ val LocalResourceBaseline = staticCompositionLocalOf { false }
 /** Presentation colors reconciled to L06/D06, with readable gradient foregrounds. */
 object ApprovedHomeVisuals {
     val compactGoal = 48.dp
-    val lightHeader = Color(0xFFE1EEFF)
-    val darkHeader = Color(0xFF0B2847)
+    val lightHeader = Color(0xFFF0F6FF)
+    val darkHeader = Color(0xFF0C1C30)
     val lightContinueStart = Color(0xFF245B98)
     val lightContinueEnd = Color(0xFF145763)
     val darkContinueStart = Color(0xFF005BD4)
@@ -103,10 +103,18 @@ object ApprovedHomeVisuals {
     val darkSurface = Color(0xFF0D2235)
     val darkOutline = Color(0xFF205374)
     val darkPrimary = Color(0xFF56B4FF)
-    val darkSecondary = Color(0xFF20DBC2)
+    val darkSecondary = Color(0xFF61D7BB)
 }
 
 object ResourceDimensions {
+    val verificationTracking = 4.sp
+    val entryArtwork = 200.dp
+    val compactBadge = 48.dp
+    val inputHeight = 56.dp
+    val noticeIcon = 18.dp
+    val navRadius = 24.dp
+    val navElevation = 3.dp
+    val bookArtwork = 112.dp
     val phoneInset = 16.dp
     val tabletInset = 24.dp
     val gutter = 12.dp
@@ -232,12 +240,14 @@ fun ResourcePackPresentation(enabled: Boolean, content: @Composable () -> Unit) 
         MaterialTheme(
             colorScheme =
                 if (!enabled) MaterialTheme.colorScheme
-                else if (dark) ResourceDarkColorScheme.copy(
-                    primary = ApprovedHomeVisuals.darkPrimary,
-                    secondary = ApprovedHomeVisuals.darkSecondary,
-                    surface = ApprovedHomeVisuals.darkSurface,
-                    outlineVariant = ApprovedHomeVisuals.darkOutline,
-                ) else ResourceLightColorScheme,
+                else if (dark)
+                    ResourceDarkColorScheme.copy(
+                        primary = ApprovedHomeVisuals.darkPrimary,
+                        secondary = ApprovedHomeVisuals.darkSecondary,
+                        surface = ApprovedHomeVisuals.darkSurface,
+                        outlineVariant = ApprovedHomeVisuals.darkOutline,
+                    )
+                else ResourceLightColorScheme,
             typography = if (enabled) type else MaterialTheme.typography,
             shapes =
                 if (enabled)
