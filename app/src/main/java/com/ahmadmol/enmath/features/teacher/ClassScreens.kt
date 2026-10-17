@@ -1,9 +1,12 @@
 package com.ahmadmol.enmath.features.teacher
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -32,8 +35,38 @@ fun ClassesScreen(state: LearningState, onCreate: (String) -> Unit, onOpen: (Str
             }
             .forEach { c ->
                 AppCard(onClick = { onOpen(c.id) }) {
-                    Text(c.name.text(), style = MaterialTheme.typography.titleLarge)
-                    Text(label(TextKey.t_2741e5a6bc, c.studentIds.size, classAverage(state, c)))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Space.md),
+                    ) {
+                        Surface(
+                            shape = MaterialTheme.shapes.small,
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                        ) {
+                            Icon(
+                                Icons.Outlined.Groups,
+                                null,
+                                Modifier.padding(Space.md),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            )
+                        }
+                        Column(Modifier.weight(1f)) {
+                            Text(c.name.text(), style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                label(
+                                    TextKey.t_2741e5a6bc,
+                                    c.studentIds.size,
+                                    classAverage(state, c),
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                    LinearProgressIndicator(
+                        progress = { classAverage(state, c) / 100f },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                     Text(
                         label(
                             TextKey.t_e5ef7b2777,

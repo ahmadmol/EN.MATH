@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
@@ -22,6 +23,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
+import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions as D
 import com.ahmadmol.enmath.core.model.*
 
 @Composable
@@ -37,7 +39,7 @@ fun ScreenPage(
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = if (narrow) Space.xl else Space.lg, vertical = Space.lg),
-            verticalArrangement = Arrangement.spacedBy(Space.lg),
+            verticalArrangement = Arrangement.spacedBy(D.gutter),
             content = content,
         )
     }
@@ -45,15 +47,19 @@ fun ScreenPage(
 
 @Composable
 fun PageHeading(eyebrow: String, title: String, subtitle: String = "") {
-    Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
+    Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
         Text(
             eyebrow,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Text(title, style = MaterialTheme.typography.headlineMedium)
+        Text(title, style = MaterialTheme.typography.headlineSmall)
         if (subtitle.isNotEmpty())
-            Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                subtitle,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
     }
 }
 
@@ -112,8 +118,19 @@ fun AppTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onChange,
-        label = { Text(label) },
-        modifier = modifier.fillMaxWidth(),
+        label = { Text(label, style = MaterialTheme.typography.bodySmall) },
+        modifier = modifier.fillMaxWidth().heightIn(min = D.inputHeight),
+        colors =
+            OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+            ),
+        leadingIcon =
+            if (password) ({ Icon(Icons.Outlined.Lock, null) })
+            else if (keyboardType == KeyboardType.Email)
+                ({ Icon(Icons.Outlined.MailOutline, null) })
+            else null,
         singleLine = singleLine,
         maxLines = if (singleLine) 1 else 5,
         textStyle =
@@ -135,10 +152,12 @@ fun AppTextField(
         trailingIcon =
             if (password)
                 ({
-                    TextButton(onClick = { visible = !visible }) {
-                        Text(
+                    IconButton(onClick = { visible = !visible }) {
+                        Icon(
+                            if (visible) Icons.Outlined.VisibilityOff
+                            else Icons.Outlined.Visibility,
                             if (visible) label(TextKey.t_a47bb75a14)
-                            else label(TextKey.t_996be0fcf0)
+                            else label(TextKey.t_996be0fcf0),
                         )
                     }
                 })
@@ -156,7 +175,7 @@ fun AppCard(
     val colors =
         CardDefaults.cardColors(
             containerColor =
-                if (tonal) MaterialTheme.colorScheme.primaryContainer
+                if (tonal) MaterialTheme.colorScheme.surfaceContainer
                 else MaterialTheme.colorScheme.surface
         )
     if (onClick != null)
@@ -199,7 +218,7 @@ fun AppCard(
 @Composable
 fun SectionTitle(title: String, action: String? = null, onAction: () -> Unit = {}) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(title, style = MaterialTheme.typography.titleLarge, modifier = Modifier.weight(1f))
+        Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
         if (action != null) TextButton(onClick = onAction) { Text(action) }
     }
 }
@@ -230,21 +249,35 @@ fun ProgressCard(title: String, subtitle: String, fraction: Float, modifier: Mod
 fun CourseCard(book: Book, completed: Set<String>, onClick: () -> Unit) {
     val count = book.lessons.count { it.id in completed }
     AppCard(onClick = onClick, modifier = Modifier.testTag("book-${book.id}")) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Space.md),
+        ) {
             SymbolBadge(if (book.id == "book-1") "∫" else "π")
-            Column(Modifier.weight(1f).padding(horizontal = Space.lg)) {
-                Text(book.title.text(), style = MaterialTheme.typography.titleLarge)
-                Text(book.subtitle.text(), style = MaterialTheme.typography.bodyMedium)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                Text(book.title.text(), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    book.subtitle.text(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    label(TextKey.t_d2b9e51dce, count, book.lessons.size),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
-            Icon(Icons.AutoMirrored.Outlined.ArrowForward, contentDescription = null)
+            Icon(
+                Icons.AutoMirrored.Outlined.ArrowForward,
+                null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
-        Text(
-            label(TextKey.t_d2b9e51dce, count, book.lessons.size),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
         LinearProgressIndicator(
             progress = { count.toFloat() / book.lessons.size },
             modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         )
     }
 }
@@ -254,7 +287,7 @@ fun TopicCard(topic: Topic, completed: Set<String>, onClick: () -> Unit) {
     AppCard(onClick = onClick, modifier = Modifier.testTag("topic-${topic.id}")) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Space.lg),
+            horizontalArrangement = Arrangement.spacedBy(Space.md),
         ) {
             SymbolBadge(topic.symbol)
             Column(Modifier.weight(1f)) {
@@ -264,10 +297,16 @@ fun TopicCard(topic: Topic, completed: Set<String>, onClick: () -> Unit) {
                         TextKey.t_4a5c00c5b2,
                         topic.lessons.count { it.id in completed },
                         topic.lessons.size,
-                    )
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            Icon(Icons.AutoMirrored.Outlined.ArrowForward, null)
+            Icon(
+                Icons.AutoMirrored.Outlined.ArrowForward,
+                null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
@@ -276,11 +315,15 @@ fun TopicCard(topic: Topic, completed: Set<String>, onClick: () -> Unit) {
 fun SymbolBadge(symbol: String) {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
-        shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.size(Space.symbol),
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier.size(D.compactBadge),
     ) {
         Box(contentAlignment = Alignment.Center) {
-            Text(symbol, style = MaterialTheme.typography.titleLarge)
+            Text(
+                symbol,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
         }
     }
 }
@@ -298,15 +341,27 @@ fun MathText(
 @Composable
 fun DemoNotice(text: String = label(TextKey.t_57cf7f7bed)) {
     Surface(
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        shape = MaterialTheme.shapes.small,
     ) {
-        Text(
-            text,
+        Row(
             Modifier.fillMaxWidth().padding(Space.md),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSecondaryContainer,
-        )
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            verticalAlignment = Alignment.Top,
+        ) {
+            Icon(
+                Icons.Outlined.Info,
+                null,
+                Modifier.size(D.noticeIcon),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text,
+                Modifier.weight(1f),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 

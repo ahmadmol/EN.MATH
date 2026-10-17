@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.*
@@ -82,10 +83,28 @@ fun TeacherResultsScreen(id: String, state: LearningState, onStudent: (String) -
             EmptyState(label(TextKey.t_b8132a67be), label(TextKey.t_0e8ad197d6))
         students.forEach { idStudent ->
             AppCard(onClick = { onStudent(idStudent) }) {
-                Text(state.students.find { it.id == idStudent }?.name?.text().orEmpty())
+                val name = state.students.find { it.id == idStudent }?.name?.text().orEmpty()
                 val s = submissions.find { it.studentId == idStudent }
-                Text(if (s == null) label(TextKey.t_34ec2073de) else "${s.score}/${a.points}")
-                if (s != null) Text(label(TextKey.t_5771670ed0, s.seconds))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Space.md),
+                ) {
+                    Avatar(name)
+                    Column(Modifier.weight(1f)) {
+                        Text(name, style = MaterialTheme.typography.titleMedium)
+                        if (s != null)
+                            Text(
+                                label(TextKey.t_5771670ed0, s.seconds),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                    }
+                    Text(
+                        if (s == null) label(TextKey.t_34ec2073de) else "${s.score}/${a.points}",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
             }
         }
     }

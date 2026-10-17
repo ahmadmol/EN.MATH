@@ -3,8 +3,8 @@ package com.ahmadmol.enmath
 import android.graphics.Bitmap
 import android.os.ParcelFileDescriptor
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
@@ -34,11 +34,22 @@ class FullApplicationUiTest {
     private lateinit var auth: AuthViewModel
     private lateinit var nav: NavHostController
     private val splash = mutableStateOf(true)
+    private val stage = InstrumentationRegistry.getArguments().getString("stage") ?: "all"
+
+    private fun selected(screen: Screen): Boolean =
+        when (stage) {
+            "student" -> screen.id.startsWith("S") && screen.id.substring(1).toInt() <= 12
+            "supporting" -> screen.id.startsWith("S") && screen.id.substring(1).toInt() >= 13
+            "teacher" -> screen.id.startsWith("T")
+            "shared" -> screen.id.startsWith("E")
+            else -> true
+        }
+
     private val context
         get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     private val output
-        get() = File(context.getExternalFilesDir("full-ui"), "")
+        get() = File(context.getExternalFilesDir("visual-polish-$stage"), "")
 
     private data class Screen(val id: String, val route: String, val tag: String)
 
@@ -65,6 +76,7 @@ class FullApplicationUiTest {
                 signIn(User("أحمد محمد", "ahmed@example.com", AccountType.Student))
             }
         ui.runOnUiThread {
+            ui.activity.enableEdgeToEdge()
             app =
                 ViewModelProvider(ui.activity, AppViewModel.factory(repo))[AppViewModel::class.java]
             auth = ViewModelProvider(ui.activity)[AuthViewModel::class.java]
@@ -82,7 +94,9 @@ class FullApplicationUiTest {
             if (splash.value) {
                 val state by app.state.collectAsState()
                 ENMathTheme(state.theme, state.language) {
-                    ResourcePackPresentation(true) { SplashScreen {} }
+                    ResourcePackPresentation(true) {
+                        androidx.compose.material3.Surface { SplashScreen {} }
+                    }
                 }
             } else ENMathApp(nav)
         }
@@ -95,15 +109,20 @@ class FullApplicationUiTest {
     private fun route(screen: Screen) {
         ui.runOnIdle { nav.navigate(screen.route) { launchSingleTop = true } }
         waitTag(screen.tag)
+        ui.mainClock.advanceTimeBy(1000)
         ui.waitForIdle()
     }
 
     private fun shot(name: String) {
         ui.waitForIdle()
+        // A full-display screenshot must wait for RenderThread/SurfaceFlinger presentation,
+        // not only the Compose semantics update (otherwise an outgoing frame can be captured).
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        android.os.SystemClock.sleep(1000)
         File(output, "$name.png").outputStream().use {
-            ui.onRoot()
-                .captureToImage()
-                .asAndroidBitmap()
+            InstrumentationRegistry.getInstrumentation()
+                .uiAutomation
+                .takeScreenshot()
                 .compress(Bitmap.CompressFormat.PNG, 100, it)
         }
     }
@@ -198,25 +217,29 @@ class FullApplicationUiTest {
             route(screen)
             val name = "${screen.id}-${mode.name}-$viewport-${language.name}-$scale"
             shot(name)
+            val issues = layoutIssues()
             rows +=
-                "${screen.id},${mode.name},$viewport,${language.name},$scale,PASS,${layoutIssues().joinToString(" | ")},$name.png"
+                "${screen.id},${mode.name},$viewport,${language.name},$scale,PASS,${issues.joinToString(" | ")},$name.png"
             File(output, "coverage.csv").writeText(rows.joinToString("\n"))
+            assertTrue("Text clipping in $name: $issues", issues.isEmpty())
         }
         for (mode in listOf(ThemeMode.Light, ThemeMode.Dark)) {
             ui.runOnIdle {
                 app.theme(mode)
                 splash.value = true
             }
-            waitTag("screen-splash")
-            shot("E01-${mode.name}-393x865-Arabic-1.0")
-            rows +=
-                "E01,${mode.name},393x865,Arabic,1.0,PASS,,E01-${mode.name}-393x865-Arabic-1.0.png"
+            if (stage == "all" || stage == "shared") {
+                waitTag("screen-splash")
+                shot("E01-${mode.name}-393x865-Arabic-1.0")
+                rows +=
+                    "E01,${mode.name},393x865,Arabic,1.0,PASS,,E01-${mode.name}-393x865-Arabic-1.0.png"
+            }
             ui.runOnIdle {
                 splash.value = false
                 app.signIn(User("أحمد محمد", "ahmed@example.com", AccountType.Student))
             }
             waitTag("screen-home")
-            for (screen in screens().filterNot { it.id.startsWith("T") }) {
+            for (screen in screens().filter { !it.id.startsWith("T") && selected(it) }) {
                 ui.runOnIdle {
                     auth.chooseRole(
                         if (screen.id == "E07") AccountType.Teacher else AccountType.Student
@@ -240,21 +263,30 @@ class FullApplicationUiTest {
             }
             waitTag("screen-teacher-home")
             screens()
-                .filter { it.id.startsWith("T") }
+                .filter { it.id.startsWith("T") && selected(it) }
                 .forEach { evidence(it, mode, "393x865", Language.Arabic, 1f) }
         }
         val risky =
             screens().filter {
-                it.id in listOf("E07", "S03", "S06", "S08", "S11", "S20", "T03", "T06")
+                selected(it) &&
+                    it.id in listOf("E07", "S03", "S06", "S08", "S11", "S20", "T03", "T06")
             }
         try {
-            for (viewport in listOf("320x720", "360x800", "412x915", "800x1280")) {
-                val scale = if (viewport == "320x720") 1.3f else 1f
+            for ((viewport, scale) in
+                listOf(
+                    "320x720" to 1.3f,
+                    "360x800" to 1f,
+                    "393x865" to 1.3f,
+                    "412x915" to 1f,
+                    "800x1280" to 1f,
+                )) {
                 shell("wm size $viewport")
                 shell("settings put system font_scale $scale")
                 ui.waitUntil(30_000) {
                     ui.activity.resources.configuration.screenWidthDp ==
-                        viewport.substringBefore('x').toInt()
+                        viewport.substringBefore('x').toInt() &&
+                        kotlin.math.abs(ui.activity.resources.configuration.fontScale - scale) <
+                            .01f
                 }
                 for (lang in Language.entries) for (mode in
                     listOf(ThemeMode.Light, ThemeMode.Dark)) {
@@ -287,6 +319,11 @@ class FullApplicationUiTest {
             shell("wm size 393x865")
             shell("settings put system font_scale 1.0")
         }
-        assertEquals(78, rows.count { it.contains(",393x865,Arabic,1.0,") })
+        assertEquals(
+            2 *
+                (screens().count { selected(it) } +
+                    if (stage == "all" || stage == "shared") 1 else 0),
+            rows.count { it.contains(",393x865,Arabic,1.0,") },
+        )
     }
 }

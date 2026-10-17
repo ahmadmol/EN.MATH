@@ -31,21 +31,35 @@ fun ProductProgressScreen(state: LearningState) {
                 }
             }
         }
-        AdaptivePair(
-            first = {
-                AppCard {
-                    Text(label(TextKey.t_d61fdf036d))
-                    Text("${stats.exercises}", style = MaterialTheme.typography.headlineMedium)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
+            Surface(
+                Modifier.weight(1f),
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.surface,
+            ) {
+                Column(Modifier.padding(Space.md)) {
+                    Text("${stats.exercises}", style = MaterialTheme.typography.titleLarge)
+                    Text(label(TextKey.t_d61fdf036d), style = MaterialTheme.typography.bodySmall)
                 }
-            },
-            second = {
-                AppCard {
-                    Text(label(TextKey.t_a9a723c334))
-                    Text(label(TextKey.t_516f1fe3b4, stats.minutes))
-                    Text(label(TextKey.t_e317f22089, (stats.accuracy * 100).toInt()))
+            }
+            Surface(
+                Modifier.weight(1f),
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.surface,
+            ) {
+                Column(Modifier.padding(Space.md)) {
+                    Text(
+                        label(TextKey.t_516f1fe3b4, stats.minutes),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Text(label(TextKey.t_a9a723c334), style = MaterialTheme.typography.bodySmall)
+                    Text(
+                        label(TextKey.t_e317f22089, (stats.accuracy * 100).toInt()),
+                        style = MaterialTheme.typography.labelSmall,
+                    )
                 }
-            },
-        )
+            }
+        }
         SectionTitle(label(TextKey.t_f9676588a1))
         val max = stats.week.maxOrNull()?.coerceAtLeast(1) ?: 1
         Row(

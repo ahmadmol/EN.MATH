@@ -17,6 +17,9 @@ fun TeacherSolverWorkspace(app: AppViewModel, state: LearningState, open: (Strin
     var history by rememberSaveable { mutableStateOf(false) }
     var unavailable by remember { mutableStateOf(false) }
     val submitted by vm.submitted.collectAsStateWithLifecycle()
+    androidx.activity.compose.BackHandler(history || historyId.isNotEmpty()) {
+        if (historyId.isNotEmpty()) historyId = "" else history = false
+    }
     if (history && historyId.isEmpty()) {
         SolverHistoryScreen(
             state,
@@ -31,6 +34,7 @@ fun TeacherSolverWorkspace(app: AppViewModel, state: LearningState, open: (Strin
             },
             { id -> app.product { it.copy(history = it.history.filterNot { h -> h.id == id }) } },
             { app.product { it.copy(history = emptyList()) } },
+            { history = false },
         )
     } else if (historyId.isEmpty()) {
         SolverWorkspace(

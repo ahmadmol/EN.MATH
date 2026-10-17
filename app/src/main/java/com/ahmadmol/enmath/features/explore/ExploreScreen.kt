@@ -3,6 +3,8 @@ package com.ahmadmol.enmath.features.explore
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -12,6 +14,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextDirection
 import com.ahmadmol.enmath.core.design.*
 import kotlin.math.abs
 
@@ -26,6 +30,7 @@ fun ExploreScreen() {
     var pan by remember { mutableStateOf(Offset.Zero) }
     var grid by rememberSaveable { mutableStateOf(true) }
     var axes by rememberSaveable { mutableStateOf(true) }
+    var valuesExpanded by rememberSaveable { mutableStateOf(false) }
     val colors =
         listOf(
             MaterialTheme.colorScheme.primary,
@@ -36,44 +41,78 @@ fun ExploreScreen() {
     val axisColor = MaterialTheme.colorScheme.onSurfaceVariant
     ScreenPage(Modifier.testTag("screen-explore")) {
         PageHeading(label(TextKey.t_8d680ec8eb), label(TextKey.t_ccdff60317))
-        DemoNotice(label(TextKey.t_729df17606))
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+        ) {
+            AppTextField(
+                input,
+                {
+                    input = it
+                    error = false
+                },
+                label(TextKey.t_6f4922a8ad),
+                Modifier.weight(1f).testTag("graph-input"),
+            )
+            PrimaryButton(
+                label(TextKey.t_665b9023b5),
+                {
+                    if (engine.evaluate(input, 0.0) != null) {
+                        functions = (functions + input).distinct().take(6)
+                        input = ""
+                    } else error = true
+                },
+                Modifier.width(Space.chart),
+            )
+        }
         AdaptivePair(
             second = {
-                AppTextField(
-                    input,
-                    {
-                        input = it
-                        error = false
-                    },
-                    label(TextKey.t_6f4922a8ad),
-                    Modifier.testTag("graph-input"),
-                )
-                SecondaryButton(
-                    label(TextKey.t_665b9023b5),
-                    {
-                        if (engine.evaluate(input, 0.0) != null) {
-                            functions = (functions + input).distinct().take(6)
-                            input = ""
-                        } else error = true
-                    },
-                )
                 if (error)
                     Text(label(TextKey.t_021fc6959d), color = MaterialTheme.colorScheme.error)
                 functions.forEachIndexed { i, f ->
                     AppCard {
-                        Row {
+                        Row(
+                            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                        ) {
                             Checkbox(f !in hidden, { hidden = if (it) hidden - f else hidden + f })
-                            MathText("y = $f")
+                            Column(Modifier.weight(1f)) {
+                                Text(
+                                    "y = $f",
+                                    style =
+                                        MaterialTheme.typography.titleMedium.copy(
+                                            fontFamily = FontFamily.Serif,
+                                            textDirection = TextDirection.Ltr,
+                                        ),
+                                    color = colors[i % 3],
+                                )
+                                when (f) {
+                                    "x^2" ->
+                                        Text(
+                                            label(TextKey.t_473f260a04),
+                                            style = MaterialTheme.typography.bodySmall,
+                                        )
+                                    "sin(x)" ->
+                                        Text(
+                                            label(TextKey.t_5994568d38),
+                                            style = MaterialTheme.typography.bodySmall,
+                                        )
+                                    "2x+1" ->
+                                        Text(
+                                            label(TextKey.t_972fd332cf),
+                                            style = MaterialTheme.typography.bodySmall,
+                                        )
+                                }
+                            }
+                            IconButton({ functions = functions - f }) {
+                                Icon(
+                                    Icons.Outlined.DeleteOutline,
+                                    label(TextKey.t_f0102ff57c),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
                         }
-                        TextButton({ functions = functions - f }) {
-                            Text(label(TextKey.t_f0102ff57c))
-                        }
-                        when (f) {
-                            "x^2" -> Text(label(TextKey.t_473f260a04))
-                            "sin(x)" -> Text(label(TextKey.t_5994568d38))
-                            "2x+1" -> Text(label(TextKey.t_972fd332cf))
-                        }
-                        Text("●", color = colors[i % 3])
                     }
                 }
                 Row {
@@ -95,14 +134,16 @@ fun ExploreScreen() {
             },
             first = {
                 Canvas(
-                    Modifier.fillMaxWidth().aspectRatio(1.33f).clipToBounds().testTag("graph-canvas").pointerInput(
-                        Unit
-                    ) {
-                        detectTransformGestures { _, delta, factor, _ ->
-                            pan += delta
-                            zoom = (zoom * factor).coerceIn(.25f, 8f)
+                    Modifier.fillMaxWidth()
+                        .aspectRatio(1.33f)
+                        .clipToBounds()
+                        .testTag("graph-canvas")
+                        .pointerInput(Unit) {
+                            detectTransformGestures { _, delta, factor, _ ->
+                                pan += delta
+                                zoom = (zoom * factor).coerceIn(.25f, 8f)
+                            }
                         }
-                    }
                 ) {
                     val scale = 35f * zoom
                     val origin = Offset(size.width / 2 + pan.x, size.height / 2 + pan.y)
@@ -151,20 +192,29 @@ fun ExploreScreen() {
                             )
                         }
                 }
-                SectionTitle(label(TextKey.t_1a25d7806a))
-                functions
-                    .filter { it !in hidden }
-                    .forEach { f ->
-                        AppCard {
-                            MathText("y=$f")
-                            (-2..2).forEach { x ->
-                                MathText(
-                                    "x=$x → y=${engine.evaluate(f,x.toDouble())?.let {"%.3f".format(java.util.Locale.US,it)}?:"—"}"
-                                )
-                            }
-                        }
-                    }
             },
         )
+        DemoNotice(label(TextKey.t_729df17606))
+        TextButton({ valuesExpanded = !valuesExpanded }, Modifier.testTag("graph-values-toggle")) {
+            Text(
+                if (valuesExpanded) tr("Hide value tables", "إخفاء جداول القيم")
+                else tr("Show value tables", "عرض جداول القيم")
+            )
+        }
+        if (valuesExpanded) {
+            SectionTitle(label(TextKey.t_1a25d7806a))
+            functions
+                .filter { it !in hidden }
+                .forEach { f ->
+                    AppCard {
+                        MathText("y=$f")
+                        (-2..2).forEach { x ->
+                            MathText(
+                                "x=$x → y=${engine.evaluate(f,x.toDouble())?.let {"%.3f".format(java.util.Locale.US,it)}?:"—"}"
+                            )
+                        }
+                    }
+                }
+        }
     }
 }

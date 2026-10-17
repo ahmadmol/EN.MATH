@@ -30,40 +30,42 @@ fun MathRender(value: String, style: TextStyle = MaterialTheme.typography.titleL
                     stateDescription = "math-ready"
                 },
         ) {
-            Row(
-                Modifier.horizontalScroll(rememberScrollState()).padding(Space.lg),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Space.sm),
-            ) {
-                val equation = remember(value) { nativeEquationParts(value) }
-                val mathStyle =
-                    style.copy(textDirection = TextDirection.Ltr, fontFamily = FontFamily.Serif)
-                if (equation.limit != null)
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("lim", style = mathStyle)
-                        Text(
-                            equation.limit,
-                            style =
-                                MaterialTheme.typography.labelMedium.copy(
-                                    textDirection = TextDirection.Ltr
-                                ),
-                        )
-                    }
-                if (equation.denominator == null)
-                    Text(equation.numerator, style = mathStyle, softWrap = false)
-                else
-                    Column(
-                        Modifier.width(IntrinsicSize.Max),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
+            Box(Modifier.fillMaxWidth().padding(Space.lg), contentAlignment = Alignment.Center) {
+                Row(
+                    Modifier.horizontalScroll(rememberScrollState()),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                ) {
+                    val equation = remember(value) { nativeEquationParts(value) }
+                    val mathStyle =
+                        style.copy(textDirection = TextDirection.Ltr, fontFamily = FontFamily.Serif)
+                    if (equation.limit != null)
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("lim", style = mathStyle)
+                            Text(
+                                equation.limit,
+                                style =
+                                    MaterialTheme.typography.labelMedium.copy(
+                                        textDirection = TextDirection.Ltr
+                                    ),
+                            )
+                        }
+                    if (equation.denominator == null)
                         Text(equation.numerator, style = mathStyle, softWrap = false)
-                        Box(
-                            Modifier.fillMaxWidth()
-                                .height(1.dp)
-                                .background(MaterialTheme.colorScheme.onSurface)
-                        )
-                        Text(equation.denominator, style = mathStyle, softWrap = false)
-                    }
+                    else
+                        Column(
+                            Modifier.width(IntrinsicSize.Max),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text(equation.numerator, style = mathStyle, softWrap = false)
+                            Box(
+                                Modifier.fillMaxWidth()
+                                    .height(1.dp)
+                                    .background(MaterialTheme.colorScheme.onSurface)
+                            )
+                            Text(equation.denominator, style = mathStyle, softWrap = false)
+                        }
+                }
             }
         }
     }

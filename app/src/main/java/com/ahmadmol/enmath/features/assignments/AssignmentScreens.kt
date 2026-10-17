@@ -1,5 +1,6 @@
 package com.ahmadmol.enmath.features.assignments
 
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -70,9 +71,6 @@ fun AssignmentDetailsScreen(
         Text(dueLabel(a))
         Text(label(TextKey.t_ecb768ca7f, a.points, a.attempts))
         DemoNotice(label(TextKey.t_002749be01))
-        a.questionIds.forEach { q ->
-            state.product.question(q)?.let { EquationCard(it.expression) }
-        }
         val submissions =
             state.product.submissions.count { it.assignmentId == id && it.studentId == "ahmed" }
         if (submissions > 0) PrimaryButton(label(TextKey.t_934f76a30f), onResult)
@@ -80,6 +78,10 @@ fun AssignmentDetailsScreen(
             PrimaryButton(label(TextKey.t_6c721d035d), onWork, Modifier.testTag("assignment-work"))
         else if (submissions == 0)
             EmptyState(label(TextKey.t_fa515c7f77), label(TextKey.t_3e512eb130))
+        SectionTitle(tr("Questions", "الأسئلة"))
+        a.questionIds.forEach { q ->
+            state.product.question(q)?.let { EquationCard(it.expression) }
+        }
     }
 }
 
@@ -104,8 +106,14 @@ fun AssignmentResultScreen(
             "${s.score}/${a.points}",
             s.score.toFloat() / a.points,
         )
-        Text(s.feedback.text())
-        Text(label(TextKey.t_03e1b7049a, s.seconds))
+        AppCard {
+            Text(s.feedback.text(), style = MaterialTheme.typography.bodyMedium)
+            Text(
+                label(TextKey.t_03e1b7049a, s.seconds),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         if (onFeedback != null) {
             var body by rememberSaveable(id, studentId) { mutableStateOf("") }
             var success by remember { mutableStateOf(false) }

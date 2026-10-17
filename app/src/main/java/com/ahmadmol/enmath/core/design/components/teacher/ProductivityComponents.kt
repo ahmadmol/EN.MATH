@@ -3,6 +3,8 @@ package com.ahmadmol.enmath.core.design.components.teacher
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,26 +16,56 @@ import com.ahmadmol.enmath.core.design.components.common.*
 
 @Composable
 fun TeacherSummary(name: String, students: Int, classes: Int, average: Int) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        PageHeading(
-            tr("Teacher workspace", "مساحة المعلم"),
-            name,
-            tr("See clearly. Choose your next action.", "رؤية واضحة، ثم إجراء مناسب."),
-        )
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(Space.md)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Space.md),
+        ) {
+            Avatar(name)
+            Column(Modifier.weight(1f)) {
+                Text(
+                    tr("Teacher workspace", "مساحة المعلم"),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(name, style = MaterialTheme.typography.headlineSmall)
+                Text(
+                    tr("See clearly. Choose your next action.", "رؤية واضحة، ثم إجراء مناسب."),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        Row(
+            Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+            horizontalArrangement = Arrangement.spacedBy(Space.sm),
+        ) {
             listOf(
                     students to tr("students", "طالباً"),
                     classes to tr("classes", "شعب"),
                     average to tr("mastery %", "إتقان %"),
                 )
                 .forEach { (value, title) ->
-                    Column(Modifier.weight(1f)) {
-                        Text("$value", style = MaterialTheme.typography.headlineMedium)
-                        Text(
-                            title,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                    Surface(
+                        Modifier.weight(1f).fillMaxHeight(),
+                        shape = MaterialTheme.shapes.medium,
+                        color = MaterialTheme.colorScheme.surface,
+                    ) {
+                        Column(
+                            Modifier.padding(Space.md),
+                            verticalArrangement = Arrangement.spacedBy(Space.xs),
+                        ) {
+                            Text(
+                                "$value",
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                            Text(
+                                title,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
                 }
         }
@@ -50,8 +82,20 @@ fun TeacherInsightPanel(
     actionEnabled: Boolean = true,
 ) {
     ExperiencePanel(Modifier.testTag(tag)) {
-        Text(title, style = MaterialTheme.typography.titleMedium)
-        Text(description, style = MaterialTheme.typography.bodyMedium)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(Space.md),
+            verticalAlignment = Alignment.Top,
+        ) {
+            Icon(Icons.Outlined.Lightbulb, null, tint = MaterialTheme.colorScheme.primary)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                Text(title, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
         TextButton(onAction, enabled = actionEnabled) { Text(action) }
     }
 }
@@ -63,7 +107,18 @@ fun ClassRow(name: String, description: String, score: Int, onOpen: () -> Unit, 
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Surface(
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.primaryContainer,
+            ) {
+                Icon(
+                    Icons.Outlined.Groups,
+                    null,
+                    Modifier.padding(Space.md),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                 Text(name, style = MaterialTheme.typography.titleMedium)
                 Text(
                     description,
@@ -73,7 +128,7 @@ fun ClassRow(name: String, description: String, score: Int, onOpen: () -> Unit, 
             }
             Text(
                 "$score%",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
             )
         }
@@ -115,6 +170,7 @@ fun StudentPerformanceRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            Avatar(name)
             Column(Modifier.weight(1f)) {
                 Text(name, style = MaterialTheme.typography.titleMedium)
                 Text(

@@ -90,22 +90,8 @@ fun SolverWorkspace(
     }
     ScreenPage(Modifier.testTag("screen-solver")) {
         PageHeading(label(TextKey.t_df6c0f6e87), label(TextKey.t_b8077ff8ea))
-        DemoNotice(label(TextKey.t_14b88455cb))
         AdaptivePair(
             first = {
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    OutlinedTextField(
-                        field,
-                        {
-                            field = it
-                            vm.edit(it.text)
-                        },
-                        label = { Text(label(TextKey.t_189ecce295)) },
-                        modifier = Modifier.fillMaxWidth().testTag("solver-input"),
-                        shape = MaterialTheme.shapes.medium,
-                    )
-                }
-                if (expression.isNotBlank()) EquationCard(expression)
                 ChipRow(
                     listOf(
                         label(TextKey.t_c55ce786b5),
@@ -118,6 +104,32 @@ fun SolverWorkspace(
                         if (it == 2) onRoute("solver/scan")
                     },
                 )
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                    OutlinedTextField(
+                        field,
+                        {
+                            field = it
+                            vm.edit(it.text)
+                        },
+                        label = { Text(label(TextKey.t_189ecce295)) },
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .heightIn(min = Space.chart)
+                                .testTag("solver-input"),
+                        textStyle =
+                            MaterialTheme.typography.titleLarge.copy(
+                                textDirection = androidx.compose.ui.text.style.TextDirection.Ltr,
+                                fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
+                            ),
+                        colors =
+                            OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            ),
+                        shape = MaterialTheme.shapes.medium,
+                    )
+                }
+                if (expression.isNotBlank()) EquationCard(expression)
                 if (mode == 1) MathKeyboard(group, { group = it }, ::insert)
                 Row {
                     TextButton({ vm.edit("") }, Modifier.testTag("solver-clear")) {
@@ -143,6 +155,7 @@ fun SolverWorkspace(
                 )
             },
             second = {
+                DemoNotice(label(TextKey.t_14b88455cb))
                 SectionTitle(label(TextKey.t_cee84ba17a))
                 state.examples.forEachIndexed { i, e ->
                     AppCard(
@@ -206,8 +219,39 @@ fun ProductSolutionScreen(
                 var expand by
                     rememberSaveable(solution.expression, method, i) { mutableStateOf(true) }
                 AppCard(onClick = { expand = !expand }) {
-                    Text(label(TextKey.t_377ff08181, i + 1))
-                    Text(step.title.text(), style = MaterialTheme.typography.titleMedium)
+                    Row(
+                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Space.md),
+                    ) {
+                        Surface(
+                            shape = androidx.compose.foundation.shape.CircleShape,
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                        ) {
+                            Box(
+                                Modifier.size(Space.touch),
+                                contentAlignment = androidx.compose.ui.Alignment.Center,
+                            ) {
+                                Text(
+                                    "${i + 1}",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                )
+                            }
+                        }
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                label(TextKey.t_377ff08181, i + 1),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            Text(step.title.text(), style = MaterialTheme.typography.titleMedium)
+                        }
+                        Text(
+                            if (expand) "−" else "+",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
                     MathText(step.expression)
                     if (expand) {
                         Text(step.explanation.text())
@@ -271,11 +315,13 @@ fun SolverHistoryScreen(
     onOpen: (String) -> Unit,
     onDelete: (String) -> Unit,
     onClear: () -> Unit,
+    onBack: (() -> Unit)? = null,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     var filter by rememberSaveable { mutableIntStateOf(0) }
     val topics = listOf("all", "limits", "derivatives", "integrals", "matrices", "probability")
     ScreenPage(Modifier.testTag("screen-history")) {
+        if (onBack != null) SecondaryButton(label(TextKey.t_794ab43a2c), onBack)
         PageHeading(label(TextKey.t_bd4d7a258d), label(TextKey.t_1361fe9c87))
         SearchField(query, { query = it })
         ChipRow(

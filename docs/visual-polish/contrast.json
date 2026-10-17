@@ -1,0 +1,86 @@
+[
+  {
+    "theme": "Light",
+    "foreground": "onSurface",
+    "background": "surface",
+    "ratio": 16.49
+  },
+  {
+    "theme": "Light",
+    "foreground": "onSurfaceVariant",
+    "background": "surface",
+    "ratio": 6.29
+  },
+  {
+    "theme": "Light",
+    "foreground": "onPrimary",
+    "background": "primary",
+    "ratio": 5.99
+  },
+  {
+    "theme": "Light",
+    "foreground": "onPrimaryContainer",
+    "background": "primaryContainer",
+    "ratio": 10.22
+  },
+  {
+    "theme": "Light",
+    "foreground": "onSecondaryContainer",
+    "background": "secondaryContainer",
+    "ratio": 8.51
+  },
+  {
+    "theme": "Light",
+    "foreground": "FFFFFF",
+    "background": "lightContinueStart",
+    "ratio": 6.94
+  },
+  {
+    "theme": "Light",
+    "foreground": "FFFFFF",
+    "background": "lightContinueEnd",
+    "ratio": 8.16
+  },
+  {
+    "theme": "Dark",
+    "foreground": "onSurface",
+    "background": "surface",
+    "ratio": 14.96
+  },
+  {
+    "theme": "Dark",
+    "foreground": "onSurfaceVariant",
+    "background": "surface",
+    "ratio": 8.22
+  },
+  {
+    "theme": "Dark",
+    "foreground": "onPrimary",
+    "background": "primary",
+    "ratio": 7.19
+  },
+  {
+    "theme": "Dark",
+    "foreground": "onPrimaryContainer",
+    "background": "primaryContainer",
+    "ratio": 8.86
+  },
+  {
+    "theme": "Dark",
+    "foreground": "onSecondaryContainer",
+    "background": "secondaryContainer",
+    "ratio": 8.79
+  },
+  {
+    "theme": "Dark",
+    "foreground": "FFFFFF",
+    "background": "darkContinueStart",
+    "ratio": 6.09
+  },
+  {
+    "theme": "Dark",
+    "foreground": "FFFFFF",
+    "background": "darkContinueEnd",
+    "ratio": 7.28
+  }
+]
