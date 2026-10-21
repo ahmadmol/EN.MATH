@@ -1,6 +1,8 @@
 package com.ahmadmol.enmath.core.navigation
 
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.ahmadmol.enmath.core.localgems.LocalGemsPolicy
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
@@ -16,6 +18,8 @@ import com.ahmadmol.enmath.features.courses.interactive.*
 import com.ahmadmol.enmath.features.explore.*
 import com.ahmadmol.enmath.features.home.*
 import com.ahmadmol.enmath.features.library.*
+import com.ahmadmol.enmath.features.localgems.*
+import com.ahmadmol.enmath.core.localgems.LocalGemsUiState
 import com.ahmadmol.enmath.features.notifications.*
 import com.ahmadmol.enmath.features.practice.*
 import com.ahmadmol.enmath.features.profile.*
@@ -33,7 +37,7 @@ fun NavGraphBuilder.studentGraph(
     open: (String) -> Unit,
     logout: () -> Unit,
     guarded: (() -> Unit) -> Unit,
-    switchRole: () -> Unit,
+    switchRole: (() -> Unit)?,
 ) {
     fun route(path: String) {
         if (path.startsWith("lesson/")) app.openLesson(path.substringAfter("lesson/"))
@@ -48,7 +52,8 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Home) {
         val state by app.state.collectAsStateWithLifecycle()
-        StudentLearningHome(state, ::route)
+        val gems = app.gems?.ui?.collectAsStateWithLifecycle()?.value ?: LocalGemsUiState()
+        StudentLearningHome(state, ::route, gems)
     }
     composable(Routes.Study) {
         val state by app.state.collectAsStateWithLifecycle()
@@ -86,22 +91,25 @@ fun NavGraphBuilder.studentGraph(
     composable(Routes.Lesson) { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val id = e.arguments?.getString("id").orEmpty()
+        val lessonOwner by rememberSaveable(id, "gems-lesson-owner") { mutableStateOf(LocalGemsPolicy.owner(state.user)) }
         if (id == LimitsLessonSequence.lessonId) {
             val vm: InteractiveLessonViewModel = viewModel(e)
+            val interactiveOwner = vm.gemsOwner(LocalGemsPolicy.owner(state.user))
             InteractiveLimitsScreen(
                 state,
                 vm,
-                { app.complete(id) },
+                { app.completeInteractive(id, vm.answers.value, interactiveOwner) },
                 { route("practice/${LimitsLessonSequence.practiceId}") },
             )
         } else
             LessonScreen(
                 id,
                 state,
-                { app.complete(id) },
+                { app.complete(id, lessonOwner) },
                 { route("practice/$it") },
                 ::lesson,
                 { guarded { app.bookmark(id) } },
+                onVerified = { answer, owner -> app.verifyLesson(id, answer, owner) },
             )
     }
     composable("practice/{id}") { e ->
@@ -109,8 +117,9 @@ fun NavGraphBuilder.studentGraph(
         val id = e.arguments?.getString("id").orEmpty()
         val set = ProductSeed.sets.find { it.id == id }
         val vm: QuizViewModel = viewModel(e)
+        val practiceOwner = vm.gemsOwner(LocalGemsPolicy.owner(state.user))
         val finish: (Map<String, String>, Int) -> Unit = { answers, seconds ->
-            app.recordPractice(id, answers, seconds)
+            app.recordPractice(id, answers, seconds, practiceOwner)
             nav.navigate("practice/$id/result") { popUpTo("practice/{id}") { inclusive = true } }
         }
         if (id == LimitsLessonSequence.practiceId) LimitsPracticeScreen(state, vm, finish)
@@ -231,6 +240,7 @@ fun NavGraphBuilder.studentGraph(
         val id = e.arguments?.getString("id").orEmpty()
         val a = state.product.assignments.find { it.id == id }
         val vm: QuizViewModel = viewModel(e)
+        val assignmentOwner = vm.gemsOwner(LocalGemsPolicy.owner(state.user))
         ProtectedContent(state, guarded) {
             PracticeScreen(
                 a?.questionIds.orEmpty(),
@@ -240,7 +250,7 @@ fun NavGraphBuilder.studentGraph(
                 assignment = true,
                 product = state.product,
             ) { answers, seconds ->
-                app.submitAssignment(id, answers, seconds)
+                app.submitAssignment(id, answers, seconds, assignmentOwner)
                 nav.navigate("assignments/$id/result") {
                     popUpTo("assignments/{id}/work") { inclusive = true }
                 }
@@ -283,7 +293,8 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Profile) {
         val state by app.state.collectAsStateWithLifecycle()
-        ProductProfileScreen(state, false, open, logout, switchRole, app::language)
+        val gems = app.gems?.ui?.collectAsStateWithLifecycle()?.value ?: LocalGemsUiState()
+        ProductProfileScreen(state, false, open, logout, switchRole, app::language, gems)
     }
     composable("settings") {
         val state by app.state.collectAsStateWithLifecycle()
@@ -318,7 +329,7 @@ fun NavGraphBuilder.teacherGraph(
     app: AppViewModel,
     open: (String) -> Unit,
     logout: () -> Unit,
-    switchRole: () -> Unit,
+    switchRole: (() -> Unit)?,
 ) {
     composable(Routes.TeacherHome) {
         val state by app.state.collectAsStateWithLifecycle()

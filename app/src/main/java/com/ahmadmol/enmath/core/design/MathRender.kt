@@ -12,7 +12,14 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -28,6 +35,7 @@ fun MathRender(value: String, style: TextStyle = MaterialTheme.typography.titleL
             modifier =
                 Modifier.fillMaxWidth().testTag("math-render").semantics {
                     stateDescription = "math-ready"
+                    contentDescription = value
                 },
         ) {
             Box(Modifier.fillMaxWidth().padding(Space.lg), contentAlignment = Alignment.Center) {
@@ -43,7 +51,7 @@ fun MathRender(value: String, style: TextStyle = MaterialTheme.typography.titleL
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text("lim", style = mathStyle)
                             Text(
-                                equation.limit,
+                                nativeMathAnnotated(equation.limit),
                                 style =
                                     MaterialTheme.typography.labelMedium.copy(
                                         textDirection = TextDirection.Ltr
@@ -51,19 +59,19 @@ fun MathRender(value: String, style: TextStyle = MaterialTheme.typography.titleL
                             )
                         }
                     if (equation.denominator == null)
-                        Text(equation.numerator, style = mathStyle, softWrap = false)
+                        Text(nativeMathAnnotated(equation.numerator), style = mathStyle, softWrap = false)
                     else
                         Column(
                             Modifier.width(IntrinsicSize.Max),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            Text(equation.numerator, style = mathStyle, softWrap = false)
+                            Text(nativeMathAnnotated(equation.numerator), style = mathStyle, softWrap = false)
                             Box(
                                 Modifier.fillMaxWidth()
                                     .height(1.dp)
                                     .background(MaterialTheme.colorScheme.onSurface)
                             )
-                            Text(equation.denominator, style = mathStyle, softWrap = false)
+                            Text(nativeMathAnnotated(equation.denominator), style = mathStyle, softWrap = false)
                         }
                 }
             }
@@ -150,4 +158,41 @@ fun mathTex(value: String): String {
         .replace("det ", "\\det ")
         .replace("even on fair die", "\\text{even on fair die}")
         .replace("head on fair coin", "\\text{head on fair coin}")
+}
+
+
+/** Presentation only: restricted caret exponents become raised text; complex/ambiguous input stays literal. */
+internal fun nativeMathAnnotated(value: String): AnnotatedString {
+    if (Regex("""\^[^\s=,;]+\^""").containsMatchIn(value)) return AnnotatedString(value)
+    val exponent=Regex("""\^(?:\(([A-Za-z0-9+−-]+)\)|([+−-]?\d+|[A-Za-z]))(?![A-Za-z0-9])""")
+    return buildAnnotatedString {
+        var cursor=0
+        exponent.findAll(value).forEach { match ->
+            append(value.substring(cursor,match.range.first))
+            val power=match.groupValues[1].ifEmpty {match.groupValues[2]}
+            withStyle(SpanStyle(baselineShift=BaselineShift.Superscript,fontSize=0.7.em)) {append(power)}
+            cursor=match.range.last+1
+        }
+        append(value.substring(cursor))
+    }
+}
+
+/** Keep Latin/math runs (including interval brackets) ordered inside Arabic prose. */
+internal fun isolateMathInArabic(value: String): String {
+    if (!Regex("""[\u0600-\u06FF]""").containsMatchIn(value)) return value
+    val run=Regex("""[A-Za-z0-9²³ⁿ⁻¹₀₁₂ₙˣ′ℝℤℕπ∞√∫∑∈∉≤≥≠→×÷+−=<>^*/%_.,:;(){}\[\]| \t-]+""")
+    return run.replace(value) { match ->
+        val text=match.value
+        if (!Regex("""[A-Za-zℝℤℕπ∞√∫∑∈∉≤≥≠→×÷=<>^]""").containsMatchIn(text)) text
+        else {
+            val start=text.indexOfFirst { !it.isWhitespace() };val end=text.indexOfLast { !it.isWhitespace() }
+            text.substring(0,start)+"\u2066"+text.substring(start,end+1)+"\u2069"+text.substring(end+1)
+        }
+    }
+}
+
+@Composable
+fun MathProse(value: String, style: TextStyle = MaterialTheme.typography.bodyLarge) {
+    Text(remember(value) {nativeMathAnnotated(isolateMathInArabic(value))},style=style,
+        modifier=Modifier.semantics { contentDescription=value })
 }
