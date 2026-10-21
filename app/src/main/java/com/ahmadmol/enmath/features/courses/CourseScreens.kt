@@ -8,6 +8,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.ahmadmol.enmath.core.data.*
+import com.ahmadmol.enmath.core.localgems.LocalGemsPolicy
 import com.ahmadmol.enmath.core.design.*
 
 @Composable
@@ -144,6 +145,7 @@ fun LessonScreen(
     onPractice: (String) -> Unit = {},
     onNext: (String) -> Unit = {},
     onBookmark: () -> Unit = {},
+    onVerified: (String, String?) -> Unit = { _, _ -> },
 ) {
     val lesson = state.lesson(id)
     ScreenPage(Modifier.testTag("screen-lesson")) {
@@ -162,24 +164,27 @@ fun LessonScreen(
         BookmarkButton(id in state.product.savedLessons, onBookmark)
         SectionTitle(label(TextKey.t_bff8e80540))
         Text(lesson.objectives.text())
-        Text(lesson.introduction.text(), style = MaterialTheme.typography.bodyLarge)
+        MathProse(lesson.introduction.text(), style = MaterialTheme.typography.bodyLarge)
         AppCard(tonal = true) {
             Text(label(TextKey.t_2622928a98), style = MaterialTheme.typography.titleMedium)
             MathText(lesson.example)
         }
         AppCard {
             Text(label(TextKey.t_2afe0c1a6a), style = MaterialTheme.typography.titleLarge)
-            Text(lesson.explanation.text())
+            MathProse(lesson.explanation.text())
         }
         AppCard {
             Text(label(TextKey.t_1486cae7f0), style = MaterialTheme.typography.titleMedium)
-            Text(lesson.rule.text())
+            MathProse(lesson.rule.text())
             Text(label(TextKey.t_b09e391c65), color = MaterialTheme.colorScheme.error)
-            Text(lesson.mistake.text())
+            MathProse(lesson.mistake.text())
         }
         if (lesson.checkpoint.isNotBlank()) {
             var answer by rememberSaveable(id) { mutableStateOf("") }
             var checked by rememberSaveable(id) { mutableStateOf(false) }
+            val checkpointOwner by rememberSaveable(id, "gems-checkpoint-owner") {
+                mutableStateOf(if (answer.isBlank()) LocalGemsPolicy.owner(state.user) else null)
+            }
             AppCard {
                 Text(label(TextKey.t_50b6918489))
                 MathText(lesson.checkpoint)
@@ -191,7 +196,10 @@ fun LessonScreen(
                     },
                     label(TextKey.t_8c507ee733),
                 )
-                SecondaryButton(label(TextKey.t_875f805f63), { checked = true })
+                SecondaryButton(label(TextKey.t_875f805f63), {
+                    checked = true
+                    if (answer.trim() == lesson.checkpointAnswer) onVerified(answer, checkpointOwner)
+                })
                 if (checked)
                     Text(
                         if (answer.trim() == lesson.checkpointAnswer) label(TextKey.t_584fa3f349)

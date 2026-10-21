@@ -16,6 +16,8 @@ import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.model.*
 import com.ahmadmol.enmath.features.reference.DemoRoleSwitch
+import com.ahmadmol.enmath.core.localgems.*
+import com.ahmadmol.enmath.features.localgems.GemCounter
 
 @Composable
 fun ProductProfileScreen(
@@ -25,6 +27,7 @@ fun ProductProfileScreen(
     onLogout: () -> Unit,
     onSwitchRole: (() -> Unit)? = null,
     onLanguage: ((Language) -> Unit)? = null,
+    gems: LocalGemsUiState = LocalGemsUiState(),
 ) {
     var confirm by remember { mutableStateOf(false) }
     ScreenPage(Modifier.testTag("screen-profile")) {
@@ -62,6 +65,8 @@ fun ProductProfileScreen(
             }
         }
         val prefix = if (teacher) "teacher/" else ""
+        if (!teacher)
+            GemCounter(gems, state.language, { onRoute("gems/wallet") }, "profile-gems")
         DestinationRow(
             label(TextKey.t_f3f3f790e0),
             Icons.Outlined.Settings,

@@ -254,8 +254,8 @@ fun ProductSolutionScreen(
                     }
                     MathText(step.expression)
                     if (expand) {
-                        Text(step.explanation.text())
-                        Text(step.reason.text(), style = MaterialTheme.typography.labelMedium)
+                        MathProse(step.explanation.text())
+                        MathProse(step.reason.text(), style = MaterialTheme.typography.labelMedium)
                     }
                 }
             }

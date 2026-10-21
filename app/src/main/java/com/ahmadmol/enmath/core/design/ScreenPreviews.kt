@@ -5,14 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.ahmadmol.enmath.core.data.LearningState
 import com.ahmadmol.enmath.core.model.*
-import com.ahmadmol.enmath.features.home.StudentHomeScreen
+import com.ahmadmol.enmath.features.student.StudentLearningHome
 
 @Preview(name = "Arabic · Light", widthDp = 390, heightDp = 844)
 @Composable
 private fun ArabicHomePreview() {
     ENMathTheme(ThemeMode.Light, Language.Arabic) {
         Surface {
-            StudentHomeScreen(LearningState(user = User("أحمد محمد", "", AccountType.Student)), {})
+            StudentLearningHome(LearningState(user = User("أحمد محمد", "", AccountType.Student)), {})
         }
     }
 }
@@ -22,7 +22,7 @@ private fun ArabicHomePreview() {
 private fun EnglishHomePreview() {
     ENMathTheme(ThemeMode.Dark, Language.English) {
         Surface {
-            StudentHomeScreen(
+            StudentLearningHome(
                 LearningState(user = User("Ahmed Mohammad", "", AccountType.Student)),
                 {},
             )

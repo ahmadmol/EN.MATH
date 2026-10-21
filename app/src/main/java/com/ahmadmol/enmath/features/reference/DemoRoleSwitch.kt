@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import android.content.pm.ApplicationInfo
 import androidx.compose.runtime.Composable
 
 /** Local demo role selection; this does not grant server permissions or create an account. */
 @Composable
 fun DemoRoleSwitch(teacher: Boolean, onSwitch: () -> Unit) {
+    if (LocalContext.current.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE == 0) return
     RefCard {
         RefLabel(refText("تبديل الدور — تجريبي", "Switch role — demo"), RefPalette.white, 10, true)
         RefLabel(
@@ -19,7 +22,7 @@ fun DemoRoleSwitch(teacher: Boolean, onSwitch: () -> Unit) {
             if (teacher) refText("الانتقال إلى الطالب", "Switch to Student")
             else refText("الانتقال إلى المعلم", "Switch to Teacher"),
             onSwitch,
-            Modifier.heightIn(min = 36.dp).testTag("demo-switch-role"),
+            Modifier.heightIn(min = 48.dp).testTag("demo-switch-role"),
         )
     }
 }
