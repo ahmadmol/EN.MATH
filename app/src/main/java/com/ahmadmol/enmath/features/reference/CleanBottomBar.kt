@@ -1,13 +1,12 @@
 package com.ahmadmol.enmath.features.reference
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -15,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -27,6 +27,9 @@ data class CleanNavItem(val route: String, val title: String, val icon: ImageVec
  * - Full-width rectangular bar, non-floating.
  * - Dark Navy (#111221) in dark mode, clean surface in light mode.
  * - Subtle hairline top border.
+ * - Accessible selectable semantics (Role.Tab, selected state, TalkBack support).
+ * - Ripple visual interaction feedback on press/touch.
+ * - System navigation bar padding and flexible min height for font scale x2.
  * - 5 evenly distributed items with Home in the exact center inside an elevated blue circle (#0084FF).
  */
 @Composable
@@ -65,7 +68,8 @@ fun CleanBottomBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(72.dp),
+                    .heightIn(min = 72.dp)
+                    .selectableGroup(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items.forEachIndexed { index, item ->
@@ -76,10 +80,10 @@ fun CleanBottomBar(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = { open(item.route) }
+                            .selectable(
+                                selected = isSelected,
+                                onClick = { open(item.route) },
+                                role = Role.Tab
                             )
                             .testTag("$tagPrefix${item.route}"),
                         contentAlignment = Alignment.Center
@@ -88,11 +92,13 @@ fun CleanBottomBar(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxHeight()
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .padding(vertical = 4.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .offset(y = (-8).dp)
+                                        .offset(y = (-6).dp)
                                         .size(48.dp)
                                         .shadow(
                                             elevation = 6.dp,
@@ -105,7 +111,7 @@ fun CleanBottomBar(
                                 ) {
                                     Icon(
                                         imageVector = item.icon,
-                                        contentDescription = item.title,
+                                        contentDescription = null,
                                         tint = Color.White,
                                         modifier = Modifier.size(24.dp)
                                     )
@@ -123,11 +129,13 @@ fun CleanBottomBar(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxHeight()
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .padding(vertical = 4.dp)
                             ) {
                                 Icon(
                                     imageVector = item.icon,
-                                    contentDescription = item.title,
+                                    contentDescription = null,
                                     tint = if (isSelected) activeColor else inactiveColor,
                                     modifier = Modifier.size(22.dp)
                                 )
@@ -148,3 +156,4 @@ fun CleanBottomBar(
         }
     }
 }
+
