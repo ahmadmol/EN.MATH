@@ -1,23 +1,34 @@
 package com.ahmadmol.enmath.features.reference
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ahmadmol.enmath.core.design.tokens.LocalResourceBaseline
-import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions as D
 
 data class CleanNavItem(val route: String, val title: String, val icon: ImageVector)
 
-/** Native Material 3 touch targets and selection semantics, with no density/font scaling. */
+/**
+ * Pixel-perfect custom Bottom Navigation Bar matching the reference image specification:
+ * - Full-width rectangular bar, non-floating.
+ * - Dark Navy (#111221) in dark mode, clean surface in light mode.
+ * - Subtle hairline top border.
+ * - 5 evenly distributed items with Home in the exact center inside an elevated blue circle (#0084FF).
+ */
 @Composable
 fun CleanBottomBar(
     items: List<CleanNavItem>,
@@ -26,63 +37,112 @@ fun CleanBottomBar(
     dark: Boolean = true,
     open: (String) -> Unit,
 ) {
-    val homeBaseline = LocalResourceBaseline.current
-    val scheme =
-        if (dark && !homeBaseline) {
-            darkColorScheme(
-                surface = RefPalette.card,
-                primary = RefPalette.violet,
-                onSurface = RefPalette.white,
-                onSurfaceVariant = RefPalette.muted,
-                secondaryContainer = RefPalette.purple.copy(alpha = .22f),
-                onSecondaryContainer = RefPalette.violet,
-                outlineVariant = RefPalette.border,
-            )
-        } else MaterialTheme.colorScheme
-    MaterialTheme(colorScheme = scheme) {
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val navBgColor = if (isDark) Color(0xFF111221) else Color(0xFFFFFFFF)
+    val dividerColor = if (isDark) Color(0xFF1E2038) else Color(0xFFE0E3EF)
+    val activeColor = Color(0xFF0084FF)
+    val inactiveColor = if (isDark) Color(0xFF8A8F9E) else Color(0xFF6C727F)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(navBgColor)
+    ) {
+        HorizontalDivider(
+            modifier = Modifier.align(Alignment.TopCenter),
+            thickness = 1.dp,
+            color = dividerColor
+        )
+
         Surface(
-            modifier =
-                Modifier.fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-            color = scheme.surface,
-            shape = RoundedCornerShape(D.navRadius),
-            border = BorderStroke(1.dp, scheme.outlineVariant),
-            shadowElevation = D.navElevation,
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding(),
+            color = Color.Transparent,
+            tonalElevation = 0.dp,
+            shadowElevation = 0.dp
         ) {
-            NavigationBar(
-                containerColor = scheme.surface,
-                tonalElevation = 0.dp,
-                windowInsets = WindowInsets(0, 0, 0, 0),
-                modifier = Modifier.heightIn(min = D.navHeight),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(72.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                items.forEach { item ->
-                    NavigationBarItem(
-                        selected = selected == item.route,
-                        onClick = { open(item.route) },
-                        modifier = Modifier.testTag("$tagPrefix${item.route}"),
-                        colors =
-                            NavigationBarItemDefaults.colors(
-                                selectedIconColor = scheme.primary,
-                                selectedTextColor = scheme.onSurface,
-                                indicatorColor = scheme.primary.copy(alpha = .18f),
-                                unselectedIconColor = scheme.onSurfaceVariant,
-                                unselectedTextColor = scheme.onSurfaceVariant,
-                            ),
-                        icon = { Icon(item.icon, null, Modifier.size(22.dp)) },
-                        label = {
-                            Text(
-                                item.title,
-                                fontSize = 11.sp,
-                                lineHeight = if (homeBaseline) 16.sp else 15.sp,
-                                maxLines = if (homeBaseline) 2 else 1,
-                                overflow = TextOverflow.Ellipsis,
-                                fontWeight =
-                                    if (selected == item.route) FontWeight.SemiBold
-                                    else FontWeight.Normal,
+                items.forEachIndexed { index, item ->
+                    val isCenter = index == 2
+                    val isSelected = selected == item.route
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = { open(item.route) }
                             )
-                        },
-                    )
+                            .testTag("$tagPrefix${item.route}"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (isCenter) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxHeight()
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .offset(y = (-8).dp)
+                                        .size(48.dp)
+                                        .shadow(
+                                            elevation = 6.dp,
+                                            shape = CircleShape,
+                                            ambientColor = activeColor,
+                                            spotColor = activeColor
+                                        )
+                                        .background(activeColor, CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = item.icon,
+                                        contentDescription = item.title,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                                Text(
+                                    text = item.title,
+                                    fontSize = 11.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                    color = if (isSelected) activeColor else inactiveColor,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        } else {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxHeight()
+                            ) {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.title,
+                                    tint = if (isSelected) activeColor else inactiveColor,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = item.title,
+                                    fontSize = 11.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) activeColor else inactiveColor,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

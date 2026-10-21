@@ -234,7 +234,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                             TeacherReferenceBottomNav(route, ::open, dark = false)
                         else if (inMain && !wide)
                             RefBottomNav(
-                                if (selectedTab == Routes.Progress) Routes.Profile else selectedTab,
+                                selectedTab,
                                 ::open,
                                 dark = false,
                             )

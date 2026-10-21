@@ -21,7 +21,7 @@ object Routes {
     const val Topic = "topic/{id}"
     const val Lesson = "lesson/{id}"
     const val Solution = "solution"
-    val tabs = listOf(Home, Study, Solver, Progress, Profile)
+    val tabs = listOf(Study, Solver, Home, "explore", Profile)
     const val TeacherMain = "teacher-main"
     const val TeacherHome = "teacher"
     const val TeacherClasses = "teacher/classes"
@@ -50,9 +50,9 @@ object Routes {
             route?.startsWith("teacher/classes/") == true -> TeacherClasses
             route?.startsWith("teacher/assignments/") == true -> TeacherAssignments
             route == "teacher/settings" || route == "teacher/notifications" -> TeacherProfile
-            route in listOf("settings", "notifications", "library") -> Profile
-            route?.startsWith("assignments") == true || route == "search" || route == "explore" ->
-                Home
+            route in listOf("settings", "notifications", "library", Progress) -> Profile
+            route == "explore" -> "explore"
+            route?.startsWith("assignments") == true || route == "search" -> Home
             else -> route
         }
 }

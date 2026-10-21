@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.dp
 import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.model.*
@@ -31,26 +32,27 @@ fun ProductProfileScreen(
 ) {
     var confirm by remember { mutableStateOf(false) }
     ScreenPage(Modifier.testTag("screen-profile")) {
-        PageHeading(
-            label(TextKey.t_2753fda825),
-            if (state.user?.type == AccountType.Guest) label(TextKey.t_5aef859af5)
-            else label(TextKey.t_e269f67032),
-        )
         AppCard {
             Column(
                 Modifier.fillMaxWidth(),
                 horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Space.md),
+                verticalArrangement = Arrangement.spacedBy(Space.sm),
             ) {
                 Avatar(state.user?.name.orEmpty())
                 Text(state.user?.name.orEmpty(), style = MaterialTheme.typography.titleLarge)
                 Text(
                     if (teacher) label(TextKey.t_e6145a851c) else label(TextKey.t_d60458396f),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 Text(state.user?.email.orEmpty(), style = MaterialTheme.typography.bodySmall)
-                if (teacher) Text(label(TextKey.t_c55bf2e6c2, state.product.classes.size))
-                else {
+                if (teacher) {
+                    Text(
+                        label(TextKey.t_c55bf2e6c2, state.product.classes.size),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
                     val progress = LearningRules.stats(state).lessonFraction
                     Text(
                         "${(progress * 100).toInt()}%",
