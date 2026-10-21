@@ -46,12 +46,7 @@ fun ExperiencePanel(
 fun ExperienceSection(title: String, subtitle: String = "") {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(title, style = MaterialTheme.typography.titleMedium)
-        if (subtitle.isNotEmpty())
-            Text(
-                subtitle,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+        if (subtitle.isNotEmpty()) MathProse(subtitle, MaterialTheme.typography.bodyMedium.copy(color=MaterialTheme.colorScheme.onSurfaceVariant))
     }
 }
 

@@ -1,5 +1,9 @@
 package com.ahmadmol.enmath.core
 
+import android.content.Context
+import androidx.lifecycle.viewModelScope
+import com.ahmadmol.enmath.core.localgems.LocalGemsCoordinator
+import com.ahmadmol.enmath.core.localgems.LocalGemsPolicy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ahmadmol.enmath.core.data.LearningRepository
@@ -9,14 +13,34 @@ import com.ahmadmol.enmath.core.data.question
 import com.ahmadmol.enmath.core.model.*
 import java.util.UUID
 
-class AppViewModel(val repository: LearningRepository) : ViewModel() {
+class AppViewModel(val repository: LearningRepository, context: Context? = null) : ViewModel() {
+    val gems = context?.let { LocalGemsCoordinator.create(it, viewModelScope) }
+    init { gems?.bind(repository.state.value) }
     val state = repository.state
+    private val demoSwitchAllowed = context?.applicationInfo?.flags?.let {
+        it and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0
+    } == true
+    fun canSwitchDemoRole() = DemoRolePolicy.target(state.value.user, demoSwitchAllowed) != null
+    fun switchDemoRole(): AccountType? {
+        val current=state.value.user ?: return null
+        val next=DemoRolePolicy.target(current, demoSwitchAllowed) ?: return null
+        signIn(current.copy(type=next))
+        return next
+    }
 
-    fun signIn(user: User) = repository.signIn(user)
+    fun signIn(user: User) { repository.signIn(user); gems?.bind(state.value) }
 
-    fun logout() = repository.logout()
+    fun logout() { repository.logout(); gems?.bind(state.value) }
 
-    fun complete(id: String) {
+    fun complete(id: String, startedBy: String? = null) = completeRecorded(id, null, startedBy)
+
+    fun completeInteractive(id: String, answers: Map<String, String>, startedBy: String?) = completeRecorded(id, answers.toMap(), startedBy)
+
+    fun verifyLesson(id: String, answer: String, startedBy: String?) {
+        if (LocalGemsPolicy.attributable(state.value.user, startedBy)) gems?.verifyLesson(state.value, id, answer)
+    }
+
+    private fun completeRecorded(id: String, interactive: Map<String, String>?, startedBy: String?) {
         val fresh = id !in state.value.completed
         repository.completeLesson(id)
         if (fresh)
@@ -32,6 +56,7 @@ class AppViewModel(val repository: LearningRepository) : ViewModel() {
                             )
                 )
             }
+        if (LocalGemsPolicy.attributable(state.value.user, startedBy)) gems?.completeLesson(state.value, id, interactive)
     }
 
     fun openLesson(id: String) = repository.openLesson(id)
@@ -55,7 +80,7 @@ class AppViewModel(val repository: LearningRepository) : ViewModel() {
             )
     }
 
-    fun recordPractice(setId: String, answers: Map<String, String>, seconds: Int) {
+    fun recordPractice(setId: String, answers: Map<String, String>, seconds: Int, startedBy: String? = null) {
         val set = ProductSeed.sets.find { it.id == setId } ?: return
         val correct =
             set.questionIds.count { id ->
@@ -85,9 +110,10 @@ class AppViewModel(val repository: LearningRepository) : ViewModel() {
                         ),
             )
         }
+        if (LocalGemsPolicy.attributable(state.value.user, startedBy)) gems?.practice(state.value, setId, answers)
     }
 
-    fun submitAssignment(id: String, answers: Map<String, String>, seconds: Int) {
+    fun submitAssignment(id: String, answers: Map<String, String>, seconds: Int, startedBy: String? = null) {
         val a = state.value.product.assignments.find { it.id == id } ?: return
         if (
             state.value.user?.type == AccountType.Guest ||
@@ -128,6 +154,7 @@ class AppViewModel(val repository: LearningRepository) : ViewModel() {
                         ),
             )
         }
+        if (LocalGemsPolicy.attributable(state.value.user, startedBy)) gems?.assignment(state.value, id, answers)
     }
 
     fun history(expression: String, topic: String): String {
@@ -227,11 +254,11 @@ class AppViewModel(val repository: LearningRepository) : ViewModel() {
     }
 
     companion object {
-        fun factory(repository: LearningRepository) =
+        fun factory(repository: LearningRepository, context: Context) =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                    AppViewModel(repository) as T
+                    AppViewModel(repository, context.applicationContext) as T
             }
     }
 }

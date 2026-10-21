@@ -32,19 +32,36 @@ import com.ahmadmol.enmath.features.reference.*
 import com.ahmadmol.enmath.features.solver.*
 import com.ahmadmol.enmath.features.teacher.TeacherReferenceBottomNav
 import com.ahmadmol.enmath.features.teacher.TeacherReferenceRoutes
+import com.ahmadmol.enmath.features.localgems.LocalGemsScreen
+import com.ahmadmol.enmath.features.localgems.LocalWeeklyReviewScreen
+import com.ahmadmol.enmath.core.localgems.LocalGemsPolicy
+
 
 @Composable
 fun ENMathApp(nav: NavHostController = rememberNavController()) {
     val context = LocalContext.current.applicationContext
     val repository = remember { LocalDemoRepository(context) }
-    val app: AppViewModel = viewModel(factory = AppViewModel.factory(repository))
+    val app: AppViewModel = viewModel(factory = AppViewModel.factory(repository, context))
     val auth: AuthViewModel = viewModel()
     val solver: SolverViewModel = viewModel()
+
     val state by app.state.collectAsStateWithLifecycle()
+    androidx.lifecycle.compose.LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+        app.gems?.refresh(app.state.value)
+    }
     ENMathTheme(state.theme, state.language) {
         val backStack by nav.currentBackStackEntryAsState()
         val route = backStack?.destination?.route
         val selectedTab = Routes.selectedTab(route)
+        val gemOwner = LocalGemsPolicy.owner(state.user)
+        val gemSnackbar = remember(gemOwner) { androidx.compose.material3.SnackbarHostState() }
+        LaunchedEffect(gemOwner, state.language) {
+            app.gems?.notices?.collect { event ->
+                if (event.owner == gemOwner && event.owner == LocalGemsPolicy.owner(app.state.value.user)) {
+                    gemSnackbar.showSnackbar(if (state.language == Language.Arabic) "أحسنت! +${event.units} جواهر" else "Well done! +${event.units} gems")
+                }
+            }
+        }
         val teacher = state.user?.type == AccountType.Teacher
         val tabs = if (teacher) Routes.teacherTabs else Routes.tabs
         val inMain = selectedTab in tabs && route !in Routes.focus
@@ -148,11 +165,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
             clearNavigate(Routes.Started)
         }
         fun switchDemoRole() {
-            val current = app.state.value.user ?: return
-            val next =
-                if (current.type == AccountType.Teacher) AccountType.Student
-                else AccountType.Teacher
-            app.signIn(current.copy(type = next))
+            val next = app.switchDemoRole() ?: return
             auth.chooseRole(next)
             clearNavigate(if (next == AccountType.Teacher) Routes.TeacherMain else Routes.Main)
         }
@@ -176,7 +189,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                     )
             if (route != null && !public) {
                 if (state.user == null) clearNavigate(Routes.Started)
-                else if (teacher && !route.startsWith("teacher")) clearNavigate(Routes.TeacherMain)
+                else if (teacher && !route.startsWith("teacher") && route != "gems/wallet") clearNavigate(Routes.TeacherMain)
                 else if (!teacher && route.startsWith("teacher")) clearNavigate(Routes.Main)
             }
         }
@@ -184,6 +197,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
             BoxWithConstraints {
                 val wide = maxWidth >= 768.dp
                 Scaffold(
+                    snackbarHost = { androidx.compose.material3.SnackbarHost(gemSnackbar) },
                     containerColor =
                         if (reference) RefPalette.background
                         else MaterialTheme.colorScheme.background,
@@ -339,6 +353,15 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                                     }
                                 }
                             }
+                            composable("gems/wallet") {
+                                app.gems?.let { LocalGemsScreen(state, it) {
+                                    auth.chooseRole(AccountType.Student)
+                                    nav.navigate(Routes.Login) { launchSingleTop = true }
+                                } }
+                            }
+                            composable("gems/review") {
+                                app.gems?.let { LocalWeeklyReviewScreen(state, it) { nav.popBackStack() } }
+                            }
                             navigation(startDestination = Routes.Home, route = Routes.Main) {
                                 studentGraph(
                                     nav,
@@ -347,14 +370,14 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                                     ::open,
                                     ::logout,
                                     ::guarded,
-                                    ::switchDemoRole,
+                                    if (app.canSwitchDemoRole()) ::switchDemoRole else null,
                                 )
                             }
                             navigation(
                                 startDestination = Routes.TeacherHome,
                                 route = Routes.TeacherMain,
                             ) {
-                                teacherGraph(nav, app, ::open, ::logout, ::switchDemoRole)
+                                teacherGraph(nav, app, ::open, ::logout, if (app.canSwitchDemoRole()) ::switchDemoRole else null)
                             }
                         }
                     }

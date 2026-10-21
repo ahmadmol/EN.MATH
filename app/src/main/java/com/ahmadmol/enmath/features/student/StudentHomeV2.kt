@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import com.ahmadmol.enmath.core.data.*
@@ -27,10 +28,13 @@ import com.ahmadmol.enmath.core.design.components.student.ProgressFeedback
 import com.ahmadmol.enmath.core.design.tokens.ApprovedHomeVisuals as V
 import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions as D
 import com.ahmadmol.enmath.features.courses.interactive.LimitsLessonSequence
+import com.ahmadmol.enmath.core.localgems.*
+import com.ahmadmol.enmath.features.localgems.*
+import com.ahmadmol.enmath.core.model.AccountType
 
 /** Approved L06/D06 presentation; existing Home data and destinations are unchanged. */
 @Composable
-fun StudentLearningHome(state: LearningState, open: (String) -> Unit) {
+fun StudentLearningHome(state: LearningState, open: (String) -> Unit, gems: LocalGemsUiState = LocalGemsUiState()) {
     val next = state.lesson(state.lastLessonId) ?: state.lesson(LimitsLessonSequence.lessonId)
     val assignment =
         state.product.assignments
@@ -93,6 +97,9 @@ fun StudentLearningHome(state: LearningState, open: (String) -> Unit) {
                     )
                 }
             }
+            GemCounter(gems, state.language, { open("gems/wallet") }, "home-gems")
+            if (LocalGemsPolicy.owner(state.user) != null)
+                WeeklyGemCard(gems, state.language) { open("gems/review") }
             ApprovedPanel(Modifier.testTag("daily-learning-goal")) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

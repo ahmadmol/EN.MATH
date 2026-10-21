@@ -13,6 +13,13 @@ class QuizViewModel(private val saved: SavedStateHandle) : ViewModel() {
     private val start: Long =
         saved.get<Long>("start") ?: System.currentTimeMillis().also { saved["start"] = it }
 
+    /** Bind new answers to their actual local account; old restored answers have no reward provenance. */
+    fun gemsOwner(current: String?): String? {
+        if (!saved.contains("local-gems-owner"))
+            saved["local-gems-owner"] = if (answers.value.isEmpty()) current.orEmpty() else ""
+        return saved.get<String>("local-gems-owner")?.takeIf { it.isNotBlank() }
+    }
+
     fun answer(id: String, value: String) {
         saved["answers"] = HashMap(answers.value).apply { put(id, value) }
         saved["checked"] = false

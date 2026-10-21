@@ -1,0 +1,17 @@
+Indeterminate limits — pilot study sheet
+New original material prepared within the EN.MATH project for this pilot. Scientific and publication-rights review are required before final approval.
+
+1. Try substitution first
+When the expression is continuous and substitution gives a real number, that is the limit. The form 0/0 is not an answer: it calls for further work.
+
+2. Factor before cancelling
+Find the limit of (x²−9)/(x−3) as x approaches 3.
+Factor x²−9=(x−3)(x+3). For x≠3 the quotient equals x+3, whose limit is 6. The original quotient is still undefined at 3; cancellation was used only away from that point.
+
+3. Use the conjugate
+For (√(1+x)−1)/x as x approaches zero, multiply by the conjugate √(1+x)+1. Away from zero the result is 1/(√(1+x)+1), with limit 1/2.
+
+4. Check independently
+The limit of (x²−4)/(x−2) at 2 is 4: factor, cancel away from 2, and take the limit of x+2. No step permits division by zero.
+
+This extra sheet does not replace the core curriculum or a teacher's explanation.
