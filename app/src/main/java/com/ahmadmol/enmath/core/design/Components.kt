@@ -404,7 +404,18 @@ fun AppTopBar(
     unread: Int = 0,
 ) {
     TopAppBar(
-        title = { Text(title, style = MaterialTheme.typography.titleMedium) },
+        title = {
+            if (title == "EN.MATH") {
+                BrandMark()
+            } else {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
+            }
+        },
         navigationIcon = {
             if (onBack != null)
                 IconButton(onClick = onBack, modifier = Modifier.testTag("back")) {

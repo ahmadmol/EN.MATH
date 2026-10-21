@@ -16,6 +16,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.unit.dp
 import com.ahmadmol.enmath.core.design.*
 import kotlin.math.abs
 
@@ -40,7 +41,6 @@ fun ExploreScreen() {
     val gridColor = MaterialTheme.colorScheme.outlineVariant
     val axisColor = MaterialTheme.colorScheme.onSurfaceVariant
     ScreenPage(Modifier.testTag("screen-explore")) {
-        PageHeading(label(TextKey.t_8d680ec8eb), label(TextKey.t_ccdff60317))
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Space.sm),
@@ -135,7 +135,7 @@ fun ExploreScreen() {
             first = {
                 Canvas(
                     Modifier.fillMaxWidth()
-                        .aspectRatio(1.33f)
+                        .height(260.dp)
                         .clipToBounds()
                         .testTag("graph-canvas")
                         .pointerInput(Unit) {

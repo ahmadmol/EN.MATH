@@ -12,7 +12,6 @@ fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (Str
     var query by rememberSaveable { mutableStateOf("") }
     val term = LearningRules.search(query)
     ScreenPage(androidx.compose.ui.Modifier.testTag("screen-search")) {
-        PageHeading(label(TextKey.t_a33bc556a4), label(TextKey.t_4fb8ba1914))
         SearchField(query, { query = it })
         SecondaryButton(label(TextKey.t_00965319c2), { onSearch(query) })
         if (term.isBlank()) {
