@@ -1,0 +1,22 @@
+Short enrichment review — additional course draft
+New original material prepared within EN.MATH for the pilot only. Scientific and publication-rights review are required before final release.
+
+Unit 1: A limit and its domain
+The limit of (x²−16)/(x−4) at 4 is 8. Factor as (x−4)(x+4) and cancel only when x≠4. The original quotient remains undefined at 4.
+
+Unit 2: Differentiate a product
+For f(x)=x²(x+1), expand to x³+x². Then f′(x)=3x²+2x. The product rule gives 2x(x+1)+x², the same result.
+
+Unit 3: Integrate and check
+∫(3x²+2x) dx = x³+x²+C. Differentiate to recover 3x²+2x. Include C because its derivative is zero.
+
+Unit 4: A definite integral
+The integral of 3x²+2x from 0 to 1 is [x³+x²] from 0 to 1, equal to 2. The final definite-integral value does not include an arbitrary C.
+
+Unit 5: A common error
+Do not cancel a term out of a sum. For x≠0, (x+2)/x=1+2/x, not 2.
+
+An extra worked exercise
+For g(x)=x²+3x, the derivative is 2x+3 and the tangent slope at x=2 is 7. The point is (2,10), so its tangent is y−10=7(x−2).
+
+This is enrichment material. The core curriculum does not require gems.

@@ -30,7 +30,7 @@ private fun assignedTopicCount(state: LearningState, c: Classroom, topicId: Stri
     }
 
 @Composable
-fun TeacherHome(state: LearningState, open: (String) -> Unit, switchRole: () -> Unit) {
+fun TeacherHome(state: LearningState, open: (String) -> Unit, switchRole: (() -> Unit)?) {
     val classes = state.product.classes
     val members = classes.flatMap { it.studentIds }.distinct()
     val scores =
@@ -117,8 +117,7 @@ fun TeacherHome(state: LearningState, open: (String) -> Unit, switchRole: () -> 
                 tr("Create assignment", "إنشاء واجب") to { open("teacher/assignments/new") },
                 tr("Manage classes", "إدارة الشعب") to { open(Routes.TeacherClasses) },
                 tr("Curriculum & tools", "المنهج والأدوات") to { open(Routes.TeacherResources) },
-                tr("Switch to student · demo", "الانتقال للطالب · تجريبي") to switchRole,
-            )
+            ) + if (switchRole != null) listOf(tr("Switch to student · demo", "الانتقال للطالب · تجريبي") to switchRole) else emptyList()
         )
         Text(
             tr(
