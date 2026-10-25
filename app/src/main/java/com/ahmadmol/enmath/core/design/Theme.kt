@@ -132,6 +132,11 @@ val AppShapes =
         extraLarge = RoundedCornerShape(32.dp),
     )
 val LocalLanguage = staticCompositionLocalOf { Language.Arabic }
+val LocalIsDarkTheme = staticCompositionLocalOf { false }
+val LocalStudentExperience = staticCompositionLocalOf { false }
+
+@Composable
+fun isDarkTheme(): Boolean = LocalIsDarkTheme.current
 
 @Composable
 fun tr(en: String, ar: String) = if (LocalLanguage.current == Language.Arabic) ar else en
@@ -139,7 +144,7 @@ fun tr(en: String, ar: String) = if (LocalLanguage.current == Language.Arabic) a
 @Composable fun Copy.text() = tr(en, ar)
 
 @Composable
-fun ENMathTheme(mode: ThemeMode, language: Language, content: @Composable () -> Unit) {
+fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, content: @Composable () -> Unit) {
     val dark =
         when (mode) {
             ThemeMode.System -> isSystemInDarkTheme()
@@ -173,14 +178,32 @@ fun ENMathTheme(mode: ThemeMode, language: Language, content: @Composable () -> 
     }
     CompositionLocalProvider(
         LocalLanguage provides language,
+        LocalIsDarkTheme provides dark,
+        LocalStudentExperience provides student,
         LocalLayoutDirection provides
             if (language == Language.Arabic) LayoutDirection.Rtl else LayoutDirection.Ltr,
     ) {
         MaterialTheme(
-            colorScheme = if (dark) DarkColorScheme else LightColorScheme,
+            colorScheme = if (student) studentColorScheme(dark) else if (dark) DarkColorScheme else LightColorScheme,
             typography = typography,
             shapes = AppShapes,
             content = content,
         )
     }
 }
+
+/** Student reference palette; role-scoped so teacher styling keeps its existing theme. */
+fun studentColorScheme(dark: Boolean): ColorScheme =
+    if (dark) DarkColorScheme.copy(
+        primary = Color(0xFF9BBCFF), onPrimary = Color(0xFF002C70),
+        primaryContainer = Color(0xFF163763), onPrimaryContainer = Color(0xFFDCE9FF),
+        secondary = Color(0xFF80DBB1), secondaryContainer = Color(0xFF123F32),
+        onSecondaryContainer = Color(0xFFC5F8DF), background = Color(0xFF0B1424),
+    ) else LightColorScheme.copy(
+        primary = Color(0xFF2563EB), onPrimary = Color.White,
+        primaryContainer = Color(0xFFEBF3FF), onPrimaryContainer = Color(0xFF174388),
+        secondary = Color(0xFF0F8250), secondaryContainer = Color(0xFFD1F4E2),
+        onSecondaryContainer = Color(0xFF065F46), background = Color(0xFFF4F7FB),
+        onSurface = Color(0xFF0F172A), onSurfaceVariant = Color(0xFF475569),
+        outlineVariant = Color(0xFFE2E8F0), surfaceVariant = Color(0xFFF1F5FA),
+    )

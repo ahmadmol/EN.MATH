@@ -56,6 +56,7 @@ class SolverViewModel(private val saved: SavedStateHandle) : ViewModel() {
     }
 
     fun reset() {
+        undoStack.clear()
         saved["expression"] = ""
         saved["submitted"] = ""
         saved["category"] = "all"

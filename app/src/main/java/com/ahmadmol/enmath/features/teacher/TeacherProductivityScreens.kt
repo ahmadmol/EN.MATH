@@ -351,7 +351,8 @@ fun TeacherStudentDetails(
             student.name.text(),
             c.name.text(),
         )
-        val completed = if (id == "ahmed") state.completed.size else student.completed.size
+        val isCurrentStudent = id == "ahmed" || id == state.activeStudentId
+        val completed = if (isCurrentStudent) state.completed.size else student.completed.size
         val latestSubmission =
             state.product.submissions
                 .filter {
@@ -447,7 +448,7 @@ fun TeacherStudentDetails(
                         )
                     }
             }
-        if (id == "ahmed") {
+        if (isCurrentStudent) {
             ExperienceSection(tr("Recent learning activity", "نشاط التعلم الأخير"))
             state.product.activity.takeLast(3).reversed().forEach {
                 DetailRow(it.title.text(), tr("${it.minutes} min", "${it.minutes} دقيقة"))

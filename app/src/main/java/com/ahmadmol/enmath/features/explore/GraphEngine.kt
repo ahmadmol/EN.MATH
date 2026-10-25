@@ -13,6 +13,7 @@ class DemoGraphEngine : GraphEngine {
             expression
                 .lowercase()
                 .replace(" ", "")
+                .removePrefix("f(x)=")
                 .removePrefix("y=")
                 .replace("²", "^2")
                 .replace("−", "-")
@@ -20,6 +21,10 @@ class DemoGraphEngine : GraphEngine {
             "sin(x)" -> return sin(x)
             "cos(x)" -> return cos(x)
             "tan(x)" -> return if (abs(cos(x)) < .001) null else tan(x)
+            "2sin(x)", "2*sin(x)" -> return 2 * sin(x)
+            "3cos(x)", "3*cos(x)" -> return 3 * cos(x)
+            "abs(x)" -> return abs(x)
+            "sqrt(x)" -> return if (x < 0) null else sqrt(x)
         }
         if (s.isBlank() || s.length > 100) return null
         val terms = Regex("[+-]?[^+-]+").findAll(s).map { it.value }.toList()

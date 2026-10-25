@@ -2,6 +2,9 @@ package com.ahmadmol.enmath.features.courses.interactive
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -29,74 +32,37 @@ fun LimitsPracticeScreen(
     val focus = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
     key(index) {
-        ExperiencePage("screen-practice") {
-            PageHeading(
-                tr("Apply the idea", "طبّق الفكرة"),
-                tr("Practice · Limits", "تدريب النهايات"),
-            )
+        LessonPage("screen-practice") {
             if (q == null) {
                 EmptyState(
                     tr("Practice unavailable", "التدريب غير متاح"),
                     tr("Return to the topic.", "عد إلى الموضوع."),
                 )
-                return@ExperiencePage
+                return@LessonPage
             }
-            ProgressFeedback(
-                tr("One idea at a time", "فكرة واحدة في كل مرة"),
-                tr(
-                    "${index + 1} of ${set.questionIds.size}",
-                    "${index + 1} من ${set.questionIds.size}",
-                ),
-                (index + 1f) / set.questionIds.size,
-            )
+            LessonProgressCard(tr("Limits · Practice", "النهايات · تدريب"), index + 1, set.questionIds.size, "learning-progress")
             val value = answers[q.id].orEmpty()
-            ExperiencePanel {
-                Text(q.prompt.text(), style = MaterialTheme.typography.titleLarge)
-                MathLine(q.expression)
-                when (q.kind) {
-                    QuestionKind.Choice,
-                    QuestionKind.TrueFalse ->
-                        InteractiveChoice(
-                            q.options,
-                            value,
-                            { vm.answer(q.id, it) },
-                            enabled = !checked,
-                        )
-                    QuestionKind.Numeric ->
-                        NumericAnswer(value, { vm.answer(q.id, it) }, enabled = !checked)
-                    QuestionKind.Expression ->
-                        MathExpressionAnswer(value, { vm.answer(q.id, it) }, enabled = !checked)
-                }
-            }
-            HintReveal(q.hint.text(), q.id)
+            LessonQuestion(q, value, { vm.answer(q.id, it) }, checked, vm.correct(q), !checked)
+            LessonHint(q.hint.text(), q.id)
             if (checked) {
-                AnswerFeedback(vm.correct(q), limitsExplanation(q).text())
+                LessonFeedback(vm.correct(q), limitsExplanation(q).text())
                 if (!vm.correct(q))
                     TextButton(vm::retry, Modifier.testTag("practice-retry-answer")) {
                         Text(tr("Try this question again", "أعد محاولة هذا السؤال"))
                     }
-                PrimaryButton(
-                    if (index == set.questionIds.lastIndex) tr("See my result", "عرض النتيجة")
-                    else tr("Next idea", "الفكرة التالية"),
-                    {
-                        focus.clearFocus()
-                        keyboard?.hide()
-                        if (index == set.questionIds.lastIndex) onFinish(answers, vm.seconds())
-                        else vm.next()
-                    },
-                    Modifier.testTag("quiz-next"),
-                )
-            } else
-                PrimaryButton(
-                    tr("Check answer", "تحقّق من الإجابة"),
-                    {
-                        focus.clearFocus()
-                        keyboard?.hide()
-                        vm.check()
-                    },
-                    Modifier.testTag("check-answer"),
-                    value.isNotBlank(),
-                )
+            }
+            LessonAction(tr("Verify my answer", "تحقّق من إجابتي"), {
+                focus.clearFocus()
+                keyboard?.hide()
+                vm.check(q)
+            }, value.isNotBlank() && !checked, "check-answer", verify = true)
+            LessonAction(if (index == set.questionIds.lastIndex) tr("See my result", "عرض النتيجة") else tr("Continue", "متابعة"), {
+                focus.clearFocus()
+                keyboard?.hide()
+                if (index == set.questionIds.lastIndex) {
+                    if (vm.claimFinish(set.questionIds)) onFinish(answers, vm.seconds())
+                } else vm.next(index)
+            }, checked, "quiz-next")
         }
     }
 }
@@ -105,19 +71,22 @@ fun LimitsPracticeScreen(
 fun LimitsPracticeResult(state: LearningState, retry: () -> Unit, topic: () -> Unit) {
     val attempt = state.product.attempts.lastOrNull { it.setId == LimitsLessonSequence.practiceId }
     val mastery = LearningRules.topic(state, "limits")
-    ExperiencePage("screen-practice-result") {
-        PageHeading(
-            tr("Reflect, then continue", "افهم نتيجتك، ثم تابع"),
-            tr("Your practice result", "نتيجة تدريبك"),
-        )
+    ScreenPage(Modifier.testTag("screen-practice-result")) {
+        RefHeroCard(tr("Your practice result", "نتيجة تدريبك"),
+            tr("Reflect, then continue", "افهم نتيجتك، ثم تابع"), artwork = { QuestionHeroArtwork() })
         if (attempt == null) {
             EmptyState(
                 tr("No attempt yet", "لا توجد محاولة بعد"),
                 tr("Complete the practice first.", "أكمل التدريب أولاً."),
             )
-            return@ExperiencePage
+            return@ScreenPage
         }
         OutcomeMedallion(attempt.accuracy >= .8f)
+        RefStatsRow(listOf(
+            RefStatItem(androidx.compose.material.icons.Icons.Outlined.CheckCircle, "${attempt.correct}/${attempt.total}", tr("Correct answers", "الإجابات الصحيحة")),
+            RefStatItem(androidx.compose.material.icons.Icons.Outlined.AccessTime, learningNumber(attempt.seconds), tr("Seconds", "ثانية")),
+            RefStatItem(androidx.compose.material.icons.Icons.Outlined.Star, learningPercent((attempt.accuracy * 100).toInt()), tr("Accuracy", "الدقة")),
+        ))
         ExperiencePanel(emphasized = true) {
             Text(
                 tr(
@@ -171,12 +140,12 @@ fun LimitsPracticeResult(state: LearningState, retry: () -> Unit, topic: () -> U
                     }
                 }
         }
-        PrimaryButton(
+        RefPrimaryButton(
             tr("Continue learning", "متابعة التعلم"),
             topic,
             Modifier.testTag("result-topic"),
         )
-        SecondaryButton(
+        RefSecondaryButton(
             tr("Practice again", "إعادة التدريب"),
             retry,
             Modifier.testTag("result-retry"),

@@ -9,9 +9,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.ahmadmol.enmath.core.data.LearningRepository
 import com.ahmadmol.enmath.core.data.LearningRules
 import com.ahmadmol.enmath.core.data.ProductSeed
+import com.ahmadmol.enmath.core.data.activeStudentId
 import com.ahmadmol.enmath.core.data.question
 import com.ahmadmol.enmath.core.model.*
 import java.util.UUID
+
+sealed interface AssignmentSubmissionResult {
+    data class Submitted(val submission: Submission) : AssignmentSubmissionResult
+    data object DeadlinePassed : AssignmentSubmissionResult
+    data object AttemptsExhausted : AssignmentSubmissionResult
+    data object GuestUser : AssignmentSubmissionResult
+    data object AssignmentNotFound : AssignmentSubmissionResult
+    data object OwnerChanged : AssignmentSubmissionResult
+}
 
 class AppViewModel(val repository: LearningRepository, context: Context? = null) : ViewModel() {
     val gems = context?.let { LocalGemsCoordinator.create(it, viewModelScope) }
@@ -32,7 +42,7 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
 
     fun logout() { repository.logout(); gems?.bind(state.value) }
 
-    fun complete(id: String, startedBy: String? = null) = completeRecorded(id, null, startedBy)
+    fun complete(id: String, startedBy: String? = LearningRules.commandOwner(state.value)) = completeRecorded(id, null, startedBy)
 
     fun completeInteractive(id: String, answers: Map<String, String>, startedBy: String?) = completeRecorded(id, answers.toMap(), startedBy)
 
@@ -41,6 +51,7 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
     }
 
     private fun completeRecorded(id: String, interactive: Map<String, String>?, startedBy: String?) {
+        if (!LearningRules.acceptsCommand(state.value, startedBy) || state.value.lesson(id) == null) return
         val fresh = id !in state.value.completed
         repository.completeLesson(id)
         if (fresh)
@@ -80,7 +91,10 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
             )
     }
 
-    fun recordPractice(setId: String, answers: Map<String, String>, seconds: Int, startedBy: String? = null) {
+    @Synchronized
+    fun recordPractice(setId: String, answers: Map<String, String>, seconds: Int, startedBy: String? = LearningRules.commandOwner(state.value), commandId: String = UUID.randomUUID().toString()) {
+        if (!LearningRules.acceptsCommand(state.value, startedBy)) return
+        if (commandId.isBlank() || commandId in state.value.product.learningCommands) return
         val set = ProductSeed.sets.find { it.id == setId } ?: return
         val correct =
             set.questionIds.count { id ->
@@ -90,6 +104,7 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
             }
         product {
             it.copy(
+                learningCommands = it.learningCommands + commandId,
                 attempts =
                     it.attempts +
                         Attempt(
@@ -113,16 +128,28 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
         if (LocalGemsPolicy.attributable(state.value.user, startedBy)) gems?.practice(state.value, setId, answers)
     }
 
-    fun submitAssignment(id: String, answers: Map<String, String>, seconds: Int, startedBy: String? = null) {
-        val a = state.value.product.assignments.find { it.id == id } ?: return
-        if (
-            state.value.user?.type == AccountType.Guest ||
-                state.value.product.submissions.count {
-                    it.assignmentId == id && it.studentId == "ahmed"
-                } >= a.attempts ||
-                (!a.late && a.due < System.currentTimeMillis())
-        )
-            return
+    fun submitAssignment(
+        id: String,
+        answers: Map<String, String>,
+        seconds: Int,
+        startedBy: String? = LearningRules.commandOwner(state.value)
+    ): AssignmentSubmissionResult {
+        val a = state.value.product.assignments.find { it.id == id }
+            ?: return AssignmentSubmissionResult.AssignmentNotFound
+        if (state.value.user?.type == AccountType.Guest) {
+            return AssignmentSubmissionResult.GuestUser
+        }
+        if (!LearningRules.acceptsCommand(state.value, startedBy)) return AssignmentSubmissionResult.OwnerChanged
+        val currentStudentId = state.value.activeStudentId
+        val existingSubmissions = state.value.product.submissions.count {
+            it.assignmentId == id && it.studentId == currentStudentId
+        }
+        if (existingSubmissions >= a.attempts) {
+            return AssignmentSubmissionResult.AttemptsExhausted
+        }
+        if (!a.late && a.due < System.currentTimeMillis()) {
+            return AssignmentSubmissionResult.DeadlinePassed
+        }
         val correct =
             a.questionIds.count { q ->
                 state.value.product.question(q)?.let {
@@ -130,18 +157,17 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
                 } == true
             }
         val score = if (a.questionIds.isEmpty()) 0 else correct * a.points / a.questionIds.size
+        val submission = Submission(
+            id,
+            currentStudentId,
+            answers,
+            score,
+            seconds,
+            System.currentTimeMillis(),
+        )
         product {
             it.copy(
-                submissions =
-                    it.submissions +
-                        Submission(
-                            id,
-                            "ahmed",
-                            answers,
-                            score,
-                            seconds,
-                            System.currentTimeMillis(),
-                        ),
+                submissions = it.submissions + submission,
                 notifications =
                     it.notifications +
                         AppNotification(
@@ -155,6 +181,7 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
             )
         }
         if (LocalGemsPolicy.attributable(state.value.user, startedBy)) gems?.assignment(state.value, id, answers)
+        return AssignmentSubmissionResult.Submitted(submission)
     }
 
     fun history(expression: String, topic: String): String {
@@ -170,7 +197,7 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
     }
 
     fun search(query: String) {
-        if (query.isNotBlank())
+        if (LearningRules.search(query).isNotBlank())
             product { it.copy(searches = (listOf(query.trim()) + it.searches).distinct().take(8)) }
     }
 

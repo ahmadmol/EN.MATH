@@ -1,36 +1,63 @@
 package com.ahmadmol.enmath.features.reference
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.text.style.TextAlign
+import com.ahmadmol.enmath.core.design.LocalStudentExperience
 
 data class CleanNavItem(val route: String, val title: String, val icon: ImageVector)
 
+object BottomNavLayoutDefaults {
+    val FloatingTopPadding = 10.dp
+    val BarContentHeight = 68.dp
+    val TotalBarHeight = FloatingTopPadding + BarContentHeight // 78.dp
+    val CenterCircleSize = 52.dp
+    val IconSize = 22.dp
+    val TextFontSize = 11.sp
+
+    /**
+     * Calculates estimated max content height inside a bottom nav item for a given font scale factor.
+     */
+    fun estimatedContentHeightDp(fontScale: Float): Float {
+        val textHeightSp = TextFontSize.value * fontScale * 1.25f
+        return IconSize.value + 4f + textHeightSp
+    }
+}
+
 /**
- * Pixel-perfect custom Bottom Navigation Bar matching the reference image specification:
- * - Full-width rectangular bar, non-floating.
- * - Dark Navy (#111221) in dark mode, clean surface in light mode.
- * - Subtle hairline top border.
+ * Custom Bottom Navigation Bar matching reference specification:
+ * - Full-width rectangular bar with top divider.
+ * - Center Home button elevated blue circle (#0084FF) floating ~10dp above bar top edge.
+ * - Unbounded clipping allowed for floating circle while bar height remains strictly bounded (78.dp + insets).
+ * - Label "الرئيسية" fully visible below circle without bottom cut-off.
  * - Accessible selectable semantics (Role.Tab, selected state, TalkBack support).
- * - Ripple visual interaction feedback on press/touch.
- * - System navigation bar padding and flexible min height for font scale x2.
- * - 5 evenly distributed items with Home in the exact center inside an elevated blue circle (#0084FF).
+ * - Circular ripple visual interaction feedback strictly on floating circle without square highlights.
+ * - Flexible for Font Scale x1, x1.5, x2 without stretching full screen.
  */
 @Composable
 fun CleanBottomBar(
@@ -41,41 +68,119 @@ fun CleanBottomBar(
     open: (String) -> Unit,
 ) {
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val navBgColor = if (isDark) Color(0xFF111221) else Color(0xFFFFFFFF)
-    val dividerColor = if (isDark) Color(0xFF1E2038) else Color(0xFFE0E3EF)
-    val activeColor = Color(0xFF0084FF)
-    val inactiveColor = if (isDark) Color(0xFF8A8F9E) else Color(0xFF6C727F)
+    val student = LocalStudentExperience.current
+    val navBgColor = if (student) MaterialTheme.colorScheme.surface else if (isDark) Color(0xFF111221) else Color(0xFFFFFFFF)
+    val dividerColor = if (student) MaterialTheme.colorScheme.outlineVariant else if (isDark) Color(0xFF1E2038) else Color(0xFFE0E3EF)
+    val activeColor = if (student) MaterialTheme.colorScheme.primary else Color(0xFF0084FF)
+    val inactiveColor = if (student) MaterialTheme.colorScheme.onSurfaceVariant else if (isDark) Color(0xFF8A8F9E) else Color(0xFF6C727F)
+    val density = LocalDensity.current
+    val textMeasurer = rememberTextMeasurer()
 
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .background(navBgColor)
+            .navigationBarsPadding()
     ) {
-        HorizontalDivider(
-            modifier = Modifier.align(Alignment.TopCenter),
-            thickness = 1.dp,
-            color = dividerColor
-        )
-
+        val labelWidth = with(density) { (maxWidth / items.size.coerceAtLeast(1) - 8.dp).roundToPx().coerceAtLeast(1) }
+        val labelHeight = if (student) items.maxOfOrNull {
+            textMeasurer.measure(it.title, style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = BottomNavLayoutDefaults.TextFontSize, fontWeight = FontWeight.Bold),
+                constraints = Constraints(maxWidth = labelWidth)).size.height
+        } ?: 0 else 0
+        val contentHeight = if (student) maxOf(BottomNavLayoutDefaults.BarContentHeight,
+            with(density) { labelHeight.toDp() } + 52.dp) else BottomNavLayoutDefaults.BarContentHeight
+        // Rectangular Bar Background
         Surface(
             modifier = Modifier
+                .padding(top = BottomNavLayoutDefaults.FloatingTopPadding)
                 .fillMaxWidth()
-                .navigationBarsPadding(),
-            color = Color.Transparent,
+                .height(contentHeight),
+            color = navBgColor,
             tonalElevation = 0.dp,
             shadowElevation = 0.dp
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 72.dp)
-                    .selectableGroup(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                items.forEachIndexed { index, item ->
-                    val isCenter = index == 2
-                    val isSelected = selected == item.route
+            Box(Modifier.fillMaxSize()) {
+                HorizontalDivider(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    thickness = 1.dp,
+                    color = dividerColor
+                )
+            }
+        }
 
+        // Navigation Row
+        Row(
+            modifier = Modifier
+                .padding(top = BottomNavLayoutDefaults.FloatingTopPadding)
+                .fillMaxWidth()
+                .height(contentHeight)
+                .selectableGroup(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            items.forEachIndexed { index, item ->
+                val isCenter = index == 2
+                val isSelected = selected == item.route
+
+                if (isCenter) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .testTag("$tagPrefix${item.route}"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) { open(item.route) }
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .layout { measurable, constraints ->
+                                        val placeable = measurable.measure(constraints)
+                                        val offsetPx = 10.dp.roundToPx()
+                                        val layoutHeight = (placeable.height - offsetPx).coerceAtLeast(0)
+                                        layout(placeable.width, layoutHeight) {
+                                            placeable.placeRelative(0, -offsetPx)
+                                        }
+                                    }
+                                    .size(BottomNavLayoutDefaults.CenterCircleSize)
+                                    .shadow(
+                                        elevation = 6.dp,
+                                        shape = CircleShape,
+                                        ambientColor = activeColor,
+                                        spotColor = activeColor
+                                    )
+                                    .background(activeColor, CircleShape)
+                                    .clip(CircleShape)
+                                    .clickable { open(item.route) },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.title,
+                                    tint = if (student) MaterialTheme.colorScheme.onPrimary else Color.White,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                            Spacer(Modifier.height(2.dp))
+                            Text(
+                                text = item.title,
+                                fontSize = BottomNavLayoutDefaults.TextFontSize,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                color = if (isSelected) activeColor else inactiveColor,
+                                textAlign = TextAlign.Center,
+                                maxLines = if (student) Int.MAX_VALUE else 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                } else {
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -88,67 +193,29 @@ fun CleanBottomBar(
                             .testTag("$tagPrefix${item.route}"),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (isCenter) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .offset(y = (-6).dp)
-                                        .size(48.dp)
-                                        .shadow(
-                                            elevation = 6.dp,
-                                            shape = CircleShape,
-                                            ambientColor = activeColor,
-                                            spotColor = activeColor
-                                        )
-                                        .background(activeColor, CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        imageVector = item.icon,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
-                                Text(
-                                    text = item.title,
-                                    fontSize = 11.sp,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isSelected) activeColor else inactiveColor,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        } else {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = null,
-                                    tint = if (isSelected) activeColor else inactiveColor,
-                                    modifier = Modifier.size(22.dp)
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = item.title,
-                                    fontSize = 11.sp,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (isSelected) activeColor else inactiveColor,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = null,
+                                tint = if (isSelected) activeColor else inactiveColor,
+                                modifier = Modifier.size(BottomNavLayoutDefaults.IconSize)
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = item.title,
+                                fontSize = BottomNavLayoutDefaults.TextFontSize,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isSelected) activeColor else inactiveColor,
+                                textAlign = TextAlign.Center,
+                                maxLines = if (student) Int.MAX_VALUE else 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
                     }
                 }
@@ -156,4 +223,3 @@ fun CleanBottomBar(
         }
     }
 }
-

@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Assignment
+import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -40,7 +41,22 @@ import com.ahmadmol.enmath.core.localgems.LocalGemsPolicy
 @Composable
 fun ENMathApp(nav: NavHostController = rememberNavController()) {
     val context = LocalContext.current.applicationContext
-    val repository = remember { LocalDemoRepository(context) }
+    val repositoryResult = remember { runCatching { LocalDemoRepository(context) } }
+    if (repositoryResult.isFailure) {
+        val failure = repositoryResult.exceptionOrNull()
+        if (failure !is com.ahmadmol.enmath.core.data.CorruptLocalData &&
+            failure !is com.ahmadmol.enmath.core.data.LocalDataWriteFailed) throw requireNotNull(failure)
+        ENMathTheme(ThemeMode.System, Language.Arabic, student = true) {
+            Surface(Modifier.fillMaxSize()) {
+                Column(Modifier.safeDrawingPadding().padding(24.dp), verticalArrangement = Arrangement.Center) {
+                    Text("تعذّر قراءة البيانات المحلية — Local data needs recovery", style = MaterialTheme.typography.titleLarge)
+                    Text("حُفظت البيانات الأصلية دون استبدال. أغلق التطبيق واطلب المساعدة لاستعادتها. لا تمسح بيانات التطبيق.\nOriginal data was preserved. Close the app and seek recovery support; do not clear app storage.")
+                }
+            }
+        }
+        return
+    }
+    val repository = repositoryResult.getOrThrow()
     val app: AppViewModel = viewModel(factory = AppViewModel.factory(repository, context))
     val auth: AuthViewModel = viewModel()
     val solver: SolverViewModel = viewModel()
@@ -49,8 +65,9 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
     androidx.lifecycle.compose.LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
         app.gems?.refresh(app.state.value)
     }
-    ENMathTheme(state.theme, state.language) {
+    ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher) {
         val backStack by nav.currentBackStackEntryAsState()
+        val visibleEntries by nav.visibleEntries.collectAsStateWithLifecycle()
         val route = backStack?.destination?.route
         val selectedTab = Routes.selectedTab(route)
         val gemOwner = LocalGemsPolicy.owner(state.user)
@@ -64,7 +81,11 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
         }
         val teacher = state.user?.type == AccountType.Teacher
         val tabs = if (teacher) Routes.teacherTabs else Routes.tabs
-        val inMain = selectedTab in tabs && route !in Routes.focus
+        val inMain = route in tabs
+        val studentNavigationVisible = showStudentNavigation(
+            route, visibleEntries.filterNot { it.destination is androidx.navigation.NavGraph }
+                .map { it.destination.route }, state.user != null,
+        )
         val teacherReference =
             teacher && route != Routes.TeacherHome && route in TeacherReferenceRoutes.screens
         val reference = false // All existing destinations share the approved app theme.
@@ -85,6 +106,9 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
             when (route) {
                 Routes.Home -> "EN.MATH"
                 Routes.Study -> label(TextKey.t_30593f37e9)
+                "study/catalog" -> if (state.language == Language.Arabic) "كتالوج الكتب" else "Books Catalog"
+                "gems/wallet" -> if (state.language == Language.Arabic) "جواهري" else "My Gems"
+                "gems/review" -> if (state.language == Language.Arabic) "مراجعة الأسبوع" else "Weekly Review"
                 Routes.Solver -> label(TextKey.t_28fd8d2a78)
                 Routes.Progress -> label(TextKey.t_693fec8aa7)
                 Routes.Profile -> label(TextKey.t_e269f67032)
@@ -196,43 +220,25 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
         ResourcePackPresentation(enabled = true) {
             BoxWithConstraints {
                 val wide = maxWidth >= 768.dp
+                val isPublic = route in listOf(
+                    Routes.Splash, Routes.Onboarding, Routes.Started, Routes.Login,
+                    Routes.AccountChoice, Routes.RegisterStudent, Routes.RegisterTeacher,
+                    Routes.Verify, Routes.Forgot, Routes.NewPassword
+                )
+                val hasSelfHeader = studentOwnsHeader(route, backStack?.arguments?.getString("id"))
+                val showSubHeader = !isPublic && !inMain && route != null && !hasSelfHeader
+
                 Scaffold(
                     snackbarHost = { androidx.compose.material3.SnackbarHost(gemSnackbar) },
                     containerColor =
                         if (reference) RefPalette.background
                         else MaterialTheme.colorScheme.background,
-                    topBar = {
-                        if (
-                            !reference &&
-                                route != Routes.Splash &&
-                                route != Routes.Onboarding &&
-                                route != Routes.Started
-                        ) {
-                            AppTopBar(
-                                topTitle,
-                                if (route !in tabs) ({ nav.popBackStack() }) else null,
-                                if (selectedTab in tabs && !teacher) ({ open("search") }) else null,
-                                if (selectedTab in tabs)
-                                    ({
-                                        open(
-                                            if (teacher) "teacher/notifications"
-                                            else "notifications"
-                                        )
-                                    })
-                                else null,
-                                state.product.notifications.count {
-                                    it.teacher == teacher &&
-                                        it.id !in state.product.readNotifications
-                                },
-                            )
-                        }
-                    },
                     bottomBar = {
                         if (teacherReference) TeacherReferenceBottomNav(route, ::open)
                         else if (reference) RefBottomNav(route, ::open)
                         else if (teacher && inMain && !wide)
                             TeacherReferenceBottomNav(route, ::open, dark = false)
-                        else if (inMain && !wide)
+                        else if (!teacher && studentNavigationVisible && !wide)
                             RefBottomNav(
                                 selectedTab,
                                 ::open,
@@ -240,28 +246,61 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                             )
                     },
                 ) { padding ->
-                    Row(Modifier.fillMaxSize().padding(padding).imePadding()) {
-                        if (inMain && wide && !reference)
-                            NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
-                                Spacer(Modifier.height(Space.xl))
-                                tabs.forEach { destination ->
-                                    NavigationRailItem(
-                                        selected = selectedTab == destination,
-                                        onClick = { tab(destination) },
-                                        icon = { Icon(tabIcon(destination), null) },
-                                        label = { Text(tabLabel(destination)) },
-                                        colors =
-                                            NavigationRailItemDefaults.colors(
-                                                selectedIconColor =
-                                                    MaterialTheme.colorScheme.primary,
-                                                indicatorColor =
-                                                    MaterialTheme.colorScheme.primaryContainer,
-                                            ),
-                                        modifier =
-                                            Modifier.testTag(
-                                                "${if (teacher) "teacher-nav-" else "nav-"}$destination"
-                                            ),
-                                    )
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                            .imePadding()
+                    ) {
+                        if (showSubHeader) {
+                            if (!teacher) {
+                                RefTopBar(topTitle, { nav.popBackStack() },
+                                    if (route != "search") ({ open("search") }) else null,
+                                    if (route != "notifications") ({ open("notifications") }) else null,
+                                    state.product.notifications.count { !it.teacher && it.id !in state.product.readNotifications })
+                            } else if (route in listOf("study/catalog", "gems/wallet", Routes.Book, "practice/{id}")) {
+                                PremiumSubScreenTopBar(topTitle, { nav.popBackStack() },
+                                    if (!teacher) ({ open("search") }) else null,
+                                    { open(if (teacher) "teacher/notifications" else "notifications") },
+                                    state.product.notifications.count { it.teacher == teacher && it.id !in state.product.readNotifications },
+                                    circular = route == "practice/{id}")
+                            } else {
+                            AppTopBar(
+                                title = topTitle,
+                                onBack = { nav.popBackStack() },
+                                onSearch = if (!teacher) ({ open("search") }) else null,
+                                onNotifications = ({
+                                    open(if (teacher) "teacher/notifications" else "notifications")
+                                }),
+                                unread = state.product.notifications.count {
+                                    it.teacher == teacher && it.id !in state.product.readNotifications
+                                }
+                            )
+                            }
+                        }
+                        Row(Modifier.weight(1f).fillMaxWidth()) {
+                            if (inMain && wide && !reference && (teacher || studentNavigationVisible)) {
+                                NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
+                                    Spacer(Modifier.height(Space.xl))
+                                    tabs.forEach { destination ->
+                                        NavigationRailItem(
+                                            selected = selectedTab == destination,
+                                            onClick = { tab(destination) },
+                                            icon = { Icon(tabIcon(destination), null) },
+                                            label = { Text(tabLabel(destination)) },
+                                            colors =
+                                                NavigationRailItemDefaults.colors(
+                                                    selectedIconColor =
+                                                        MaterialTheme.colorScheme.primary,
+                                                    indicatorColor =
+                                                        MaterialTheme.colorScheme.primaryContainer,
+                                                ),
+                                            modifier =
+                                                Modifier.testTag(
+                                                    "${if (teacher) "teacher-nav-" else "nav-"}$destination"
+                                                ),
+                                        )
+                                    }
                                 }
                             }
                         NavHost(
@@ -384,6 +423,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                 }
             }
         }
+    }
         if (accountPrompt)
             ResourcePackPresentation(enabled = true) {
                 AccountPrompt(
@@ -410,6 +450,8 @@ private fun tabLabel(route: String) =
         Routes.Study -> label(TextKey.t_30593f37e9)
         Routes.Solver -> label(TextKey.t_6e8911a0d6)
         Routes.Progress -> label(TextKey.t_693fec8aa7)
+        "explore" -> label(TextKey.t_a0fc50de5a)
+        Routes.Profile -> label(TextKey.t_e269f67032)
         else -> label(TextKey.t_e269f67032)
     }
 
@@ -424,5 +466,7 @@ private fun tabIcon(route: String): ImageVector =
         Routes.Study -> Icons.Outlined.School
         Routes.Solver -> Icons.Outlined.Calculate
         Routes.Progress -> Icons.AutoMirrored.Outlined.TrendingUp
+        "explore" -> Icons.AutoMirrored.Outlined.ShowChart
+        Routes.Profile -> Icons.Outlined.Person
         else -> Icons.Outlined.Person
     }

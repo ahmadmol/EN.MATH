@@ -1,6 +1,10 @@
 package com.ahmadmol.enmath.features.practice
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -13,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.model.*
+import com.ahmadmol.enmath.features.courses.interactive.*
 
 @Composable
 fun QuizQuestion(q: Question, value: String, onAnswer: (String) -> Unit) {
@@ -73,52 +78,42 @@ fun PracticeScreen(
     var confirm by remember { mutableStateOf(false) }
     var reveal by remember(index) { mutableStateOf(false) }
     val q = questionIds.getOrNull(index)?.let(product::question)
-    ScreenPage(Modifier.testTag("screen-practice"), narrow = true) {
-        PageHeading(label(TextKey.t_013f0e8043), title)
-        if (q == null) {
-            EmptyState(label(TextKey.t_4ae0bbc92c), label(TextKey.t_d8b994addd))
-            return@ScreenPage
-        }
-        Text(label(TextKey.t_b16ed530ed, index + 1, questionIds.size))
-        LinearProgressIndicator(
-            progress = { (index + 1f) / questionIds.size },
-            modifier = Modifier.fillMaxWidth(),
-        )
-        QuizQuestion(q, answers[q.id].orEmpty()) { vm.answer(q.id, it) }
-        if (hints)
-            TextButton(vm::hint, Modifier.testTag("hint")) { Text(label(TextKey.t_5e8aec3b47)) }
-        if (hint && hints) DemoNotice(q.hint.text())
-        if (checked && !assignment) {
-            AppCard(tonal = true) {
-                Text(
-                    if (vm.correct(q)) label(TextKey.t_584fa3f349) else label(TextKey.t_3b273d414e)
-                )
-                Text(q.explanation.text())
+    key(index) {
+        LessonPage("screen-practice") {
+            if (q == null) {
+                EmptyState(label(TextKey.t_4ae0bbc92c), label(TextKey.t_d8b994addd))
+                return@LessonPage
             }
-            if (!vm.correct(q)) SecondaryButton(label(TextKey.t_3b273d414e), vm::retry)
-            TextButton({ reveal = true }) { Text(label(TextKey.t_9e72a9bde6)) }
-            if (reveal) EquationCard(q.answer)
-        }
-        if (!checked && !assignment)
-            PrimaryButton(
-                label(TextKey.t_6c91f383f6),
-                vm::check,
-                Modifier.testTag("check-answer"),
-                answers[q.id].orEmpty().isNotBlank(),
-            )
-        if (checked || assignment)
-            PrimaryButton(
-                if (index == questionIds.lastIndex) label(TextKey.t_85731572ae)
-                else label(TextKey.t_704198b924),
+            LessonProgressCard(title, index + 1, questionIds.size, "learning-progress")
+            LessonQuestion(q, answers[q.id].orEmpty(), { vm.answer(q.id, it) }, checked && !assignment,
+                vm.correct(q), !checked || assignment)
+            if (hints) LessonHint(q.hint.text(), hint, vm::hint)
+            if (checked && !assignment) {
+                LessonFeedback(vm.correct(q), q.explanation.text())
+                if (!vm.correct(q)) SecondaryButton(label(TextKey.t_3b273d414e), vm::retry)
+                TextButton({ reveal = true }) { Text(label(TextKey.t_9e72a9bde6)) }
+                if (reveal) EquationCard(q.answer)
+            }
+            if (!assignment)
+                LessonAction(tr("Verify my answer", "تحقّق من إجابتي"), {
+                    focus.clearFocus()
+                    keyboard?.hide()
+                    vm.check(q)
+                },
+                    answers[q.id].orEmpty().isNotBlank() && !checked, "check-answer", verify = true)
+            LessonAction(
+                if (index == questionIds.lastIndex) label(TextKey.t_85731572ae) else tr("Continue", "متابعة"),
                 {
                     focus.clearFocus()
                     keyboard?.hide()
-                    if (index < questionIds.lastIndex) vm.next()
-                    else if (assignment) confirm = true else onFinish(answers, vm.seconds())
+                    if (index < questionIds.lastIndex) {
+                        vm.next(index, requireChecked = !assignment)
+                    } else if (assignment) confirm = true
+                    else if (vm.claimFinish(questionIds)) onFinish(answers, vm.seconds())
                 },
-                Modifier.testTag("quiz-next"),
-                answers[q.id].orEmpty().isNotBlank(),
+                (checked || assignment) && answers[q.id].orEmpty().isNotBlank(), "quiz-next",
             )
+        }
     }
     if (confirm)
         AlertDialog(
@@ -152,21 +147,49 @@ fun PracticeResultScreen(
     val attempt = state.product.attempts.lastOrNull { it.setId == setId }
     val set = state.practiceSets.find { it.id == setId }
     ScreenPage(Modifier.testTag("screen-practice-result")) {
-        PageHeading(label(TextKey.t_1ce0bc63cd), label(TextKey.t_1d32c31329))
+        RefHeroCard(
+            title = label(TextKey.t_1d32c31329),
+            subtitle = label(TextKey.t_1ce0bc63cd),
+            badgeText = tr("Result", "النتيجة"),
+            badgeColor = RefColors.LightBlueHeroBgStart,
+            badgeTextColor = RefColors.PrimaryBlue,
+            artwork = { QuestionHeroArtwork() }
+        )
+
         if (attempt == null || set == null) {
-            EmptyState(label(TextKey.t_9c505baa76), label(TextKey.t_11002dea21))
+            RefEmptyState(
+                title = label(TextKey.t_9c505baa76),
+                subtitle = label(TextKey.t_11002dea21),
+                artwork = { SearchHeroArtwork() }
+            )
             return@ScreenPage
         }
+
         OutcomeMedallion(attempt.accuracy >= .8f)
-        ProgressCard(
-            label(TextKey.t_094706a820),
-            "${attempt.correct}/${attempt.total}",
-            attempt.accuracy,
+
+        RefStatsRow(
+            stats = listOf(
+                RefStatItem(
+                    icon = androidx.compose.material.icons.Icons.Outlined.CheckCircle,
+                    value = "${attempt.correct}/${attempt.total}",
+                    label = label(TextKey.t_094706a820)
+                ),
+                RefStatItem(
+                    icon = androidx.compose.material.icons.Icons.Outlined.AccessTime,
+                    value = "${attempt.seconds}s",
+                    label = tr("Time", "الوقت")
+                ),
+                RefStatItem(
+                    icon = androidx.compose.material.icons.Icons.Outlined.Star,
+                    value = "${(attempt.accuracy * 100).toInt()}%",
+                    label = tr("Accuracy", "الدقة")
+                )
+            )
         )
-        Text(label(TextKey.t_03e1b7049a, attempt.seconds))
+
         MasteryBadge(LearningRules.topic(state, set.topicId))
-        DemoNotice(label(TextKey.t_29f6eb0ab8))
-        SecondaryButton(label(TextKey.t_b5e692ba92), onRetry)
-        PrimaryButton(label(TextKey.t_d475577a1a), onTopic)
+
+        RefSecondaryButton(label(TextKey.t_b5e692ba92), onRetry)
+        RefPrimaryButton(label(TextKey.t_d475577a1a), onTopic)
     }
 }

@@ -1,7 +1,13 @@
 package com.ahmadmol.enmath.core.navigation
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import com.ahmadmol.enmath.core.AssignmentSubmissionResult
 import com.ahmadmol.enmath.core.localgems.LocalGemsPolicy
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -74,27 +80,24 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Topic) { e ->
         val state by app.state.collectAsStateWithLifecycle()
-        if (e.arguments?.getString("id") == "limits")
-            StudentLimitsTopic(
-                state,
-                ::lesson,
-                { route("practice/${LimitsLessonSequence.practiceId}") },
-            )
-        else
-            TopicLessonsScreen(
-                e.arguments?.getString("id").orEmpty(),
-                state,
-                ::lesson,
-                { route("practice/$it") },
-            )
+        val topicId = e.arguments?.getString("id").orEmpty().ifEmpty { "limits" }
+        StudentLimitsTopic(
+            state = state,
+            lesson = ::lesson,
+            practice = { route("practice/${if (topicId == "limits") LimitsLessonSequence.practiceId else "$topicId-practice-set"}") },
+            onBack = { nav.popBackStack() },
+            onNotification = { route("notifications") },
+            onSearch = { route("search") },
+            topicId = topicId,
+        )
     }
     composable(Routes.Lesson) { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val id = e.arguments?.getString("id").orEmpty()
-        val lessonOwner by rememberSaveable(id, "gems-lesson-owner") { mutableStateOf(LocalGemsPolicy.owner(state.user)) }
+        val lessonOwner by rememberSaveable(id, "gems-lesson-owner") { mutableStateOf(com.ahmadmol.enmath.core.data.LearningRules.commandOwner(state)) }
         if (id == LimitsLessonSequence.lessonId) {
             val vm: InteractiveLessonViewModel = viewModel(e)
-            val interactiveOwner = vm.gemsOwner(LocalGemsPolicy.owner(state.user))
+            val interactiveOwner = vm.gemsOwner(com.ahmadmol.enmath.core.data.LearningRules.commandOwner(state))
             InteractiveLimitsScreen(
                 state,
                 vm,
@@ -103,13 +106,16 @@ fun NavGraphBuilder.studentGraph(
             )
         } else
             LessonScreen(
-                id,
-                state,
-                { app.complete(id, lessonOwner) },
-                { route("practice/$it") },
-                ::lesson,
-                { guarded { app.bookmark(id) } },
+                id = id,
+                state = state,
+                onComplete = { app.complete(id, lessonOwner) },
+                onPractice = { route("practice/$it") },
+                onNext = ::lesson,
+                onBookmark = { guarded { app.bookmark(id) } },
                 onVerified = { answer, owner -> app.verifyLesson(id, answer, owner) },
+                onBack = { nav.popBackStack() },
+                onSearch = { route("search") },
+                onNotification = { route("notifications") },
             )
     }
     composable("practice/{id}") { e ->
@@ -117,9 +123,9 @@ fun NavGraphBuilder.studentGraph(
         val id = e.arguments?.getString("id").orEmpty()
         val set = ProductSeed.sets.find { it.id == id }
         val vm: QuizViewModel = viewModel(e)
-        val practiceOwner = vm.gemsOwner(LocalGemsPolicy.owner(state.user))
+        val practiceOwner = vm.gemsOwner(com.ahmadmol.enmath.core.data.LearningRules.commandOwner(state))
         val finish: (Map<String, String>, Int) -> Unit = { answers, seconds ->
-            app.recordPractice(id, answers, seconds, practiceOwner)
+            app.recordPractice(id, answers, seconds, practiceOwner, vm.commandId)
             nav.navigate("practice/$id/result") { popUpTo("practice/{id}") { inclusive = true } }
         }
         if (id == LimitsLessonSequence.practiceId) LimitsPracticeScreen(state, vm, finish)
@@ -182,6 +188,7 @@ fun NavGraphBuilder.studentGraph(
                 }
             },
             { app.product { it.copy(history = emptyList(), savedProblems = emptySet()) } },
+            onBack = { nav.popBackStack() },
         )
     }
     composable("solver/solution/{id}") { e ->
@@ -215,7 +222,13 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Progress) {
         val state by app.state.collectAsStateWithLifecycle()
-        ProductProgressScreen(state)
+        ProductProgressScreen(
+            state = state,
+            onBack = { nav.popBackStack() },
+            onSearch = { route("search") },
+            onNotification = { route("notifications") },
+            onTopicClick = { topicId -> route("topic/$topicId") },
+        )
     }
     composable("assignments") {
         val state by app.state.collectAsStateWithLifecycle()
@@ -240,19 +253,71 @@ fun NavGraphBuilder.studentGraph(
         val id = e.arguments?.getString("id").orEmpty()
         val a = state.product.assignments.find { it.id == id }
         val vm: QuizViewModel = viewModel(e)
-        val assignmentOwner = vm.gemsOwner(LocalGemsPolicy.owner(state.user))
+        val assignmentOwner = vm.gemsOwner(com.ahmadmol.enmath.core.data.LearningRules.commandOwner(state))
+        var rejectionReason by remember { mutableStateOf<AssignmentSubmissionResult?>(null) }
+        var isSubmitting by remember { mutableStateOf(false) }
         ProtectedContent(state, guarded) {
-            PracticeScreen(
-                a?.questionIds.orEmpty(),
-                a?.title?.text().orEmpty(),
-                vm,
-                hints = a?.hints == true,
-                assignment = true,
-                product = state.product,
-            ) { answers, seconds ->
-                app.submitAssignment(id, answers, seconds, assignmentOwner)
-                nav.navigate("assignments/$id/result") {
-                    popUpTo("assignments/{id}/work") { inclusive = true }
+            Column(Modifier.fillMaxSize()) {
+                rejectionReason?.let { reason ->
+                    val message = when (reason) {
+                        is AssignmentSubmissionResult.DeadlinePassed ->
+                            if (state.language == Language.Arabic)
+                                "انتهى موعد تسليم الواجب. تعذر حفظ التسليم."
+                            else
+                                "The assignment deadline has passed. Submission could not be saved."
+                        is AssignmentSubmissionResult.AttemptsExhausted ->
+                            if (state.language == Language.Arabic)
+                                "استنفدت جميع المحاولات المتاحة لهذا الواجب."
+                            else
+                                "You have used all available attempts for this assignment."
+                        is AssignmentSubmissionResult.GuestUser ->
+                            if (state.language == Language.Arabic)
+                                "الزائر لا يمكنه تسليم الواجبات. يرجى تسجيل الدخول."
+                            else
+                                "Guest users cannot submit assignments. Please sign in."
+                        else ->
+                            if (state.language == Language.Arabic)
+                                "تعذر تسليم الواجب."
+                            else
+                                "Could not submit assignment."
+                    }
+                    Surface(
+                        color = MaterialTheme.colorScheme.errorContainer,
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .testTag("assignment-rejection-banner")
+                    ) {
+                        Text(
+                            text = message,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(12.dp)
+                        )
+                    }
+                }
+                Box(Modifier.weight(1f)) {
+                    PracticeScreen(
+                        a?.questionIds.orEmpty(),
+                        a?.title?.text().orEmpty(),
+                        vm,
+                        hints = a?.hints == true,
+                        assignment = true,
+                        product = state.product,
+                    ) { answers, seconds ->
+                        if (isSubmitting) return@PracticeScreen
+                        isSubmitting = true
+                        val res = app.submitAssignment(id, answers, seconds, assignmentOwner)
+                        if (res is AssignmentSubmissionResult.Submitted) {
+                            nav.navigate("assignments/$id/result") {
+                                popUpTo("assignments/{id}/work") { inclusive = true }
+                            }
+                        } else {
+                            isSubmitting = false
+                            rejectionReason = res
+                        }
+                    }
                 }
             }
         }

@@ -28,34 +28,49 @@ fun InteractiveChoice(
     tagPrefix: String = "answer-",
     enabled: Boolean = true,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         options.forEach { option ->
+            val selected = value == option
             Surface(
-                shape = MaterialTheme.shapes.medium,
-                color =
-                    if (value == option) MaterialTheme.colorScheme.primaryContainer
-                    else MaterialTheme.colorScheme.surfaceVariant,
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .heightIn(min = 56.dp)
-                        .testTag("$tagPrefix$option")
-                        .selectable(value == option, enabled = enabled, role = Role.RadioButton) {
-                            onAnswer(option)
-                        },
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                color = if (selected) RefColors.LightBlueHeroBgStart else androidx.compose.ui.graphics.Color.White,
+                border = androidx.compose.foundation.BorderStroke(
+                    if (selected) 2.dp else 1.dp,
+                    if (selected) RefColors.PrimaryBlue else RefColors.CardBorder
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 52.dp)
+                    .testTag("$tagPrefix$option")
+                    .selectable(selected, enabled = enabled, role = Role.RadioButton) {
+                        onAnswer(option)
+                    },
             ) {
                 Row(
-                    Modifier.padding(horizontal = 12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    RadioButton(selected = value == option, onClick = null, enabled = enabled)
                     Text(
-                        if (option == "true") tr("True", "صحيح")
+                        text = if (option == "true") tr("True", "صحيح")
                         else if (option == "false") tr("False", "غير صحيح") else option,
-                        Modifier.padding(vertical = 14.dp),
-                        style =
-                            MaterialTheme.typography.bodyLarge.copy(
-                                textDirection = TextDirection.ContentOrLtr
-                            ),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = if (selected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
+                            textDirection = TextDirection.ContentOrLtr
+                        ),
+                        color = if (selected) RefColors.PrimaryBlue else RefColors.TextPrimary,
+                        modifier = Modifier.weight(1f)
+                    )
+                    RadioButton(
+                        selected = selected,
+                        onClick = null,
+                        enabled = enabled,
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = RefColors.PrimaryBlue,
+                            unselectedColor = RefColors.TextMuted
+                        )
                     )
                 }
             }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -20,9 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions as D
 import com.ahmadmol.enmath.core.model.*
 
@@ -403,40 +407,151 @@ fun AppTopBar(
     onNotifications: (() -> Unit)? = null,
     unread: Int = 0,
 ) {
-    TopAppBar(
-        title = {
-            if (title == "EN.MATH") {
-                BrandMark()
-            } else {
-                Text(
-                    title,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 1,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-                )
-            }
-        },
-        navigationIcon = {
-            if (onBack != null)
-                IconButton(onClick = onBack, modifier = Modifier.testTag("back")) {
-                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, label(TextKey.t_794ab43a2c))
-                }
-        },
-        actions = {
-            if (onSearch != null)
-                IconButton(onSearch, Modifier.testTag("global-search")) {
-                    Icon(Icons.Outlined.Search, label(TextKey.t_67b32d1cb9))
-                }
-            if (onNotifications != null)
-                IconButton(onNotifications, Modifier.testTag("global-notifications")) {
-                    BadgedBox(badge = { if (unread > 0) Badge { Text("$unread") } }) {
-                        Icon(Icons.Outlined.Notifications, label(TextKey.t_bda3e17468))
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp
+    ) {
+        Column {
+            TopAppBar(
+                title = {
+                    if (title == "EN.MATH") {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            BookLogo(Modifier.size(36.dp))
+                            Column {
+                                Text(
+                                    "EN.MATH",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 17.sp
+                                    ),
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    label(TextKey.t_7a74be9631),
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    } else {
+                        Text(
+                            title,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                            maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                        )
                     }
-                }
-        },
-        colors =
-            TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-    )
+                },
+                navigationIcon = {
+                    if (onBack != null) {
+                        IconButton(
+                            onClick = onBack,
+                            modifier = Modifier
+                                .padding(start = 4.dp, end = 4.dp)
+                                .size(48.dp)
+                                .testTag("back")
+                        ) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                                modifier = Modifier.size(40.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                                        contentDescription = label(TextKey.t_794ab43a2c),
+                                        modifier = Modifier.size(20.dp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                },
+                actions = {
+                    if (onSearch != null) {
+                        IconButton(
+                            onClick = onSearch,
+                            modifier = Modifier
+                                .padding(horizontal = 2.dp)
+                                .size(48.dp)
+                                .testTag("global-search")
+                        ) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                                modifier = Modifier.size(40.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Search,
+                                        contentDescription = label(TextKey.t_67b32d1cb9),
+                                        modifier = Modifier.size(20.dp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    if (onNotifications != null) {
+                        IconButton(
+                            onClick = onNotifications,
+                            modifier = Modifier
+                                .padding(horizontal = 2.dp)
+                                .size(48.dp)
+                                .testTag("global-notifications")
+                        ) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+                                modifier = Modifier.size(40.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    BadgedBox(
+                                        badge = {
+                                            if (unread > 0) {
+                                                Badge(
+                                                    containerColor = MaterialTheme.colorScheme.error,
+                                                    contentColor = MaterialTheme.colorScheme.onError
+                                                ) {
+                                                    Text(
+                                                        if (unread > 99) "99+" else "$unread",
+                                                        fontSize = 10.sp
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Notifications,
+                                            contentDescription = label(TextKey.t_bda3e17468),
+                                            modifier = Modifier.size(20.dp),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Spacer(Modifier.width(4.dp))
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+            )
+        }
+    }
 }
 
 @Composable

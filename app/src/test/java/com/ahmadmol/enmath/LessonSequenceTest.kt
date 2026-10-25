@@ -9,7 +9,7 @@ import org.junit.Test
 class LessonSequenceTest {
     @Test
     fun sequenceReferencesExistingQuestionsAndRequiresCheckpointBeforeCompletion() {
-        val state = LearningState()
+        val state = LearningState(user = com.ahmadmol.enmath.core.model.User("Ahmed", "ahmed@example.com", com.ahmadmol.enmath.core.model.AccountType.Student))
         val blocks = LimitsLessonSequence.blocks(state)
         assertEquals(blocks.size, blocks.map { it.id }.distinct().size)
         assertTrue(blocks.first() is LessonBlock.Explanation)
@@ -31,7 +31,7 @@ class LessonSequenceTest {
 
     @Test
     fun presentationDoesNotCreateAnIndependentProgressRecord() {
-        val state = LearningState()
+        val state = LearningState(user = com.ahmadmol.enmath.core.model.User("Ahmed", "ahmed@example.com", com.ahmadmol.enmath.core.model.AccountType.Student))
         val score = LearningRules.topic(state, "limits").score
         LimitsLessonSequence.blocks(state)
         assertEquals(score, LearningRules.topic(state, "limits", "ahmed").score)

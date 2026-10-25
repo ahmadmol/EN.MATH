@@ -45,12 +45,13 @@ object Routes {
             route == Book ||
                 route == Topic ||
                 route == Lesson ||
-                route?.startsWith("practice/") == true -> Study
+                route?.startsWith("practice/") == true ||
+                route == "study/catalog" -> Study
             route == Solution || route?.startsWith("solver/") == true -> Solver
             route?.startsWith("teacher/classes/") == true -> TeacherClasses
             route?.startsWith("teacher/assignments/") == true -> TeacherAssignments
             route == "teacher/settings" || route == "teacher/notifications" -> TeacherProfile
-            route in listOf("settings", "notifications", "library", Progress) -> Profile
+            route in listOf("settings", "notifications", "library", Progress, "gems/wallet", "gems/review") -> Profile
             route == "explore" -> "explore"
             route?.startsWith("assignments") == true || route == "search" -> Home
             else -> route

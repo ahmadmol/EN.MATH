@@ -65,7 +65,7 @@ class ProductRulesTest {
 
     @Test
     fun teacherAndStudentReadSameAhmedMastery() {
-        val state = LearningState()
+        val state = LearningState(user = com.ahmadmol.enmath.core.model.User("Ahmed", "ahmed@example.com", com.ahmadmol.enmath.core.model.AccountType.Student))
         val student = LearningRules.topic(state, "derivatives")
         val teacher = LearningRules.topic(state, "derivatives", "ahmed")
         assertEquals(student, teacher)

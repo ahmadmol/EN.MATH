@@ -227,16 +227,17 @@ fun StudentDetailsScreen(id: String, state: LearningState, onAssignment: (String
                     MasteryBadge(LearningRules.topic(state, t.id, id))
                 }
             }
-        val completed = if (id == "ahmed") state.completed.size else student.completed.size
+        val isCurrentStudent = id == "ahmed" || id == state.activeStudentId
+        val completed = if (isCurrentStudent) state.completed.size else student.completed.size
         Text(label(TextKey.t_077e621825, completed))
         val accuracy =
-            if (id == "ahmed") LearningRules.stats(state).accuracy else student.practiceAccuracy
+            if (isCurrentStudent) LearningRules.stats(state).accuracy else student.practiceAccuracy
         Text(label(TextKey.t_e317f22089, (accuracy * 100).toInt()))
         SectionTitle(label(TextKey.t_f6202fc5ef))
         state.product.assignments
             .filter { a -> state.product.classes.any { it.id == a.classId && id in it.studentIds } }
             .forEach { a -> AssignmentCard(a, "", "", { onAssignment(a.id) }) }
         DemoNotice(label(TextKey.t_1e037b60b5))
-        if (id == "ahmed") state.product.activity.takeLast(3).forEach { Text(it.title.text()) }
+        if (isCurrentStudent) state.product.activity.takeLast(3).forEach { Text(it.title.text()) }
     }
 }
