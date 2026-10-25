@@ -3,8 +3,14 @@ package com.ahmadmol.enmath.core.data
 import com.ahmadmol.enmath.core.model.*
 import kotlinx.coroutines.flow.StateFlow
 
+data class StudentLearningRecord(val completed: Set<String>, val product: ProductState)
+
 data class LearningState(
     val user: User? = null,
+    val localGuestId: String? = null,
+    val studentRecordId: String? = null,
+    val studentRecordOwners: Map<String, String> = emptyMap(),
+    val studentRecords: Map<String, StudentLearningRecord> = emptyMap(),
     val completed: Set<String> = DemoContent.initiallyCompleted,
     val lastLessonId: String = "limits-practice",
     val theme: ThemeMode = ThemeMode.System,

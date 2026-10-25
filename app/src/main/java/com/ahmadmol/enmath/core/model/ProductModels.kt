@@ -147,6 +147,7 @@ data class ProductState(
     val activity: List<ActivityItem> = emptyList(),
     val notificationsEnabled: Boolean = true,
     val reminder: String = "18:00",
+    val learningCommands: Set<String> = emptySet(),
 )
 
 data class ProductStats(
