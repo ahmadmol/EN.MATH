@@ -80,8 +80,14 @@ class LocalGemsCoordinator(private val storage: LocalGemsStorage, private val sc
         val item=LocalGemCatalog.item(id) ?: return
         _ui.value=_ui.value.copy(busy=true,error=null)
         enqueue(ticket) {
-            try { publish(ticket,storage.change(ticket.owner) { LocalGemsPolicy.unlock(it,item,clock()) },state) }
-            catch (_: InsufficientLocalGems) { if(active==ticket) _ui.value=_ui.value.copy(busy=false,error="INSUFFICIENT_GEMS") }
+            try {
+                publish(ticket,storage.change(ticket.owner) { acc ->
+                    // D05 display compatibility never authorizes spending unearned currency.
+                    LocalGemsPolicy.unlock(acc, item, clock())
+                }, state)
+            } catch (_: InsufficientLocalGems) {
+                if(active==ticket) _ui.value=_ui.value.copy(busy=false,error="INSUFFICIENT_GEMS")
+            }
         }
     }
     fun openContent(state: LearningState, expectedOwner: String?, id: String) {
