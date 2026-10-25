@@ -58,7 +58,8 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
     }
     val repository = repositoryResult.getOrThrow()
     val app: AppViewModel = viewModel(factory = AppViewModel.factory(repository, context))
-    val auth: AuthViewModel = viewModel()
+    val demoAllowed = context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0
+    val auth: AuthViewModel = viewModel(factory = AuthViewModel.factory(demoAllowed))
     val solver: SolverViewModel = viewModel()
 
     val state by app.state.collectAsStateWithLifecycle()
