@@ -113,7 +113,7 @@ internal data class WeeklyGemCardPresentation(
             if (ar) "تحتاج إلى ٥ دروس مكتملة بنقاط تحقق موثقة ومختلفة؛ المتبقي: ${units(remainingLessons, Language.Arabic)}."
             else "Requires 5 completed lessons with distinct verified checkpoints ($remainingLessons remaining)."
         WeeklyGemCardStatus.Ready ->
-            if (ar) "خمسة أسئلة ممتازة · أكملها واحصل على حتى ١٥ جوهرة" else "Five questions · earn up to 15 gems"
+            if (ar) "خمسة أسئلة للمراجعة التعليمية · دون مكافأة جواهر جديدة" else "Five review questions · no new gem reward"
     }
 }
 
@@ -499,9 +499,9 @@ fun LocalWeeklyReviewScreen(state: LearningState, gems: LocalGemsCoordinator, on
             RefHeroCard(tr("Review result", "نتيجة المراجعة"), tr("Reflect on what you learned this week.", "راجع ما تعلمته هذا الأسبوع."), artwork = { RewardChestArtwork() })
             RefStatsRow(listOf(RefStatItem(Icons.Outlined.CheckCircle, "${score}/5", tr("Correct answers", "الإجابات الصحيحة"))))
             if (ui.busy) LinearProgressIndicator(Modifier.fillMaxWidth())
-            Text(if(score!!>=4) { if(ar) "أحسنت! يُحفظ استحقاق المراجعة ضمن حدود التجربة، دون تغيير درجاتك." else "Well done! Review eligibility is saved within the pilot caps, without changing your grades." }
+            Text(if(score!!>=4) { if(ar) "أحسنت! هذه نتيجة تعليمية فقط؛ لا تُمنح جواهر جديدة للمراجعة الأسبوعية." else "Well done! This is educational feedback only; weekly review grants no new gems." }
                 else { if(ar) "تحتاج أربع إجابات صحيحة على الأقل. يمكنك المحاولة مجددًا." else "You need at least four correct answers. You can try again." })
-            if(ui.error!=null) Text(if(ar) "تعذر حفظ الجواهر. أعد المحاولة لاحقًا؛ لم يتغير رصيدك." else "Gems could not be saved. Try later; your balance is unchanged.",color=MaterialTheme.colorScheme.error)
+            if(ui.error!=null) Text(if(ar) "تعذر تأكيد حالة الجواهر. أعد الفتح للتحقق من السجل المحفوظ." else "Gem status could not be acknowledged. Reopen to verify the saved ledger.",color=MaterialTheme.colorScheme.error)
             if(score!!<4 || ui.error!=null) OutlinedButton(onClick={attempt++;score=null},modifier=Modifier.heightIn(min=48.dp)) {Text(if(ar) "حاول مجددًا" else "Try again")}
             Button(onBack,Modifier.heightIn(min=48.dp)) { Text(if(ar) "العودة" else "Back") }
         }

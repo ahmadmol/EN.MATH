@@ -235,12 +235,14 @@ private fun ProfileHeroCard(
 ) {
     val user = state.user
     val name = user?.name.orEmpty().ifBlank { if (ar) "طالب" else "Student" }
-    val email = user?.email.orEmpty().ifBlank { "student@example.com" }
+    val email = if (user?.localId != null) tr("Local file on this device", "ملف محلي على هذا الجهاز")
+        else user?.email.orEmpty().ifBlank { "student@example.com" }
     val initial = name.trim().take(1).uppercase()
     val roleText = if (teacher) {
         label(TextKey.t_e6145a851c)
     } else {
-        if (ar) "طالب • الثالث الثانوي العلمي" else "Student • 3rd Scientific Secondary"
+        if (state.user?.studyStage == StudyStage.G9) { if (ar) "طالب • التاسع" else "Student • Grade 9" }
+        else if (ar) "طالب • الثالث الثانوي العلمي" else "Student • 3rd Scientific Secondary"
     }
 
     Box(

@@ -134,7 +134,7 @@ class WeeklyGemCardPresentationTest {
     @Test fun currentWeekReviewIsReadyAndUsesReadyCopy() {
         val p = project()
         assertEquals(WeeklyGemCardStatus.Ready, p.status)
-        assertTrue(p.detail(false).contains("15 gems"))
+        assertTrue(p.detail(false).contains("no new gem reward"))
         assertNoRequirements(p)
     }
 

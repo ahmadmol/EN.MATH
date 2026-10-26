@@ -13,6 +13,9 @@ object LocalLearningGems {
         state.product.attempts.forEach { add("PRACTICE:${it.setId}") }
         state.product.submissions.forEach { add("ASSIGNMENT:${it.assignmentId}") }
         state.topics.filter { LearningRules.topic(state,it.id).stage==Mastery.Mastered }.forEach { add("MASTERY:${it.id}") }
+        state.product.pendingGemEvents.filter { it.owner == LearningRules.commandOwner(state) }.forEach {
+            remove("${it.kind}:${it.contentId}")
+        }
     }
     fun lessonVerified(state: LearningState, id: String, answer: String): Boolean {
         val lesson=state.lesson(id) ?: return false
@@ -20,12 +23,13 @@ object LocalLearningGems {
         return lesson.checkpoint.isNotBlank() && lesson.checkpointAnswer.isNotBlank() && answer.trim()==lesson.checkpointAnswer
     }
     fun interactiveVerified(state: LearningState, id: String, answers: Map<String,String>): Boolean {
+        if (state.lesson(id) == null) return false
         if(id!=LimitsLessonSequence.lessonId) return false
         val questions=LimitsLessonSequence.blocks(state).mapNotNull { it.question() }.distinctBy { it.id }
         return questions.isNotEmpty() && questions.all { !answers[it.id].isNullOrBlank() && LearningRules.correct(it,answers.getValue(it.id)) }
     }
     fun practice(account: GemAccount, state: LearningState, id: String, answers: Map<String,String>, at: Long): GemAccount {
-        val set=ProductSeed.sets.find { it.id==id } ?: return account
+        val set=state.practiceSets.find { it.id==id } ?: return account
         val questions=set.questionIds.mapNotNull(ProductSeed::question)
         if(questions.size!=set.questionIds.size || questions.isEmpty() || questions.any { answers[it.id].isNullOrBlank() }) return account
         val correct=questions.count { LearningRules.correct(it,answers.getValue(it.id)) }
@@ -69,10 +73,7 @@ object LocalLearningGems {
         return GemWeeklyReview(week,questions)
     }
     fun finishWeekly(account: GemAccount, state: LearningState, review: GemWeeklyReview, answers: Map<String,String>, at: Long): GemAccount {
-        val current=weekly(account,state,at) ?: return account
-        if(review.week!=current.week || review!=current) return account
-        val correct=review.questions.count { LearningRules.correct(it.question,answers[it.question.id].orEmpty()) }
-        return if(LocalGemsPolicy.qualified(review.questions.map { it.question.id },answers,correct))
-            LocalGemsPolicy.award(account,GemReward.WEEKLY,review.week,at) else account
+        // D06: educational review only. Historical WEEKLY entries remain readable.
+        return account
     }
 }

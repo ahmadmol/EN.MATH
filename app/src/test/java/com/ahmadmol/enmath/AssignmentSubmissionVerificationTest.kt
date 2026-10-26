@@ -23,6 +23,8 @@ class AssignmentSubmissionVerificationTest {
         private val mode: WriteMode = WriteMode.MemoryOnly,
         private val backing: TestLearningRepository = TestLearningRepository(initial),
     ) : LearningRepository by backing {
+        override fun recordLearning(owner: String?, command: String, lesson: String?, transform: (ProductState) -> ProductState): Boolean =
+            super<LearningRepository>.recordLearning(owner, command, lesson, transform)
         var writes = 0
         val durableSnapshot = initial
         override fun changeProduct(transform: (ProductState) -> ProductState) {

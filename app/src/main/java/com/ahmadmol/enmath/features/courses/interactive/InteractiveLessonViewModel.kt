@@ -63,6 +63,8 @@ class InteractiveLessonViewModel(private val saved: SavedStateHandle) : ViewMode
         saved["lesson-checked"] = blocks[index].question()?.id in saved.get<ArrayList<String>>("lesson-reviewed").orEmpty()
     }
 
+    fun releaseCompletion() { saved["lesson-completion-sent"] = false }
+
     fun claimCompletion(blocks: List<LessonBlock>): Boolean {
         if (saved.get<Boolean>("lesson-completion-sent") == true || blocks.getOrNull(step.value) !is LessonBlock.Completion) return false
         if (blocks.mapNotNull { it.question() }.any { !correct(it) || it.id !in verified() }) return false

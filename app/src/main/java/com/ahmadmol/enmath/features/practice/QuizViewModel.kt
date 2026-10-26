@@ -66,6 +66,8 @@ class QuizViewModel(private val saved: SavedStateHandle) : ViewModel() {
         return true
     }
 
+    fun releaseFinish() { saved["finished"] = false }
+
     fun correct(q: Question) = LearningRules.correct(q, answers.value[q.id].orEmpty())
 
     fun seconds() = ((System.currentTimeMillis() - start) / 1000).toInt()

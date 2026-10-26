@@ -9,6 +9,15 @@ import org.junit.Test
 import java.time.Instant
 
 class LocalGemsPolicyTest {
+    @Test fun historicalWeeklyAndMasteryBalancesSurviveWhileAllNewGrantsAreRejected() {
+        val rewards = listOf(
+            GemRewardEntry("WEEKLY:old", GemReward.WEEKLY, 15, now, LocalGemsPolicy.day(now), LocalGemsPolicy.week(now)),
+            GemRewardEntry("MASTERY:old", GemReward.MASTERY, 20, now, LocalGemsPolicy.day(now), LocalGemsPolicy.week(now)))
+        val old = account().copy(balance = 35, rewards = rewards).also(LocalGemsPolicy::validate)
+        assertEquals(old, LocalGemsPolicy.award(old, GemReward.WEEKLY, "new", now + 86_400_000))
+        assertEquals(old, LocalGemsPolicy.award(old, GemReward.MASTERY, "new", now + 86_400_000))
+        assertEquals(35, old.balance)
+    }
     private val now=Instant.parse("2026-10-20T09:00:00Z").toEpochMilli()
     private fun account()=GemAccount("student@example.test",now)
     private val state get()=LearningState(completed=emptySet(),product=ProductState())
@@ -41,8 +50,9 @@ class LocalGemsPolicyTest {
     }
     @Test fun dailyCapPartiallyGrantsAndConsumesRemainder() {
         var a=(1..3).fold(account()) {v,i->LocalGemsPolicy.award(v,GemReward.LESSON,"l$i",now)}
-        a=LocalGemsPolicy.award(a,GemReward.WEEKLY,LocalGemsPolicy.week(now),now)
-        assertEquals(40,a.balance);assertEquals(10,a.rewards.last().units)
+        a=LocalGemsPolicy.award(a,GemReward.PRACTICE,"practice",now)
+        a=LocalGemsPolicy.award(a,GemReward.LESSON,"partial",now)
+        assertEquals(40,a.balance);assertEquals(5,a.rewards.last().units)
         a=LocalGemsPolicy.award(a,GemReward.LESSON,"capped",now)
         assertEquals(0,a.rewards.last().units)
         assertEquals(a,LocalGemsPolicy.award(a,GemReward.LESSON,"capped",now+86_400_000))
@@ -51,7 +61,7 @@ class LocalGemsPolicyTest {
         var a=account()
         for(day in 0..2) for(i in 1..4) a=LocalGemsPolicy.award(a,GemReward.LESSON,"$day-$i",now+day*86_400_000L)
         assertEquals(120,a.balance)
-        a=LocalGemsPolicy.award(a,GemReward.WEEKLY,LocalGemsPolicy.week(now),now+3*86_400_000L)
+        a=LocalGemsPolicy.award(a,GemReward.LESSON,"weekly-capped-lesson",now+3*86_400_000L)
         assertEquals(0,a.rewards.last().units);LocalGemsPolicy.validate(a)
     }
     @Test fun damascusDayAndWeekBoundary() {
@@ -137,10 +147,10 @@ class LocalGemsPolicyTest {
         val s=masteredState();assertEquals(Mastery.Mastered,LearningRules.topic(s,s.topics.first().id).stage)
         assertEquals(0,LocalLearningGems.mastery(account(),s,now).balance)
     }
-    @Test fun masteryRequiresNewOwnerEvidenceAndOnlyAwardsOnce() {
+    @Test fun masteryEvidenceCannotMintUnapprovedNewGems() {
         val s=masteredState();val topic=s.topics.first()
         val own=account().copy(lessons=topic.lessons.map {it.id}.toSet(),assessments=ProductSeed.sets.filter {it.topicId==topic.id}.map {GemAssessment(it.id,it.topicId,it.quiz,1f)})
-        val a=LocalLearningGems.mastery(own,s,now);assertEquals(20,a.balance)
+        val a=LocalLearningGems.mastery(own,s,now);assertEquals(own,a)
         assertEquals(a,LocalLearningGems.mastery(a,s,now+1))
         val blocked=own.copy(excluded=setOf("MASTERY:${topic.id}"));assertEquals(0,LocalLearningGems.mastery(blocked,s,now).balance)
     }
@@ -160,11 +170,11 @@ class LocalGemsPolicyTest {
             val lesson=s.lesson(source.lessonId)!!;assertEquals(lesson.checkpoint,source.question.expression);assertEquals(lesson.checkpointAnswer,source.question.answer)
         }
     }
-    @Test fun weeklyAwardsFifteenOnlyAndNeverNormalPractice() {
+    @Test fun weeklyReviewNeverAwardsNewGemsUnderD06() {
         val (a,s)=reviewFixture();val review=LocalLearningGems.weekly(a,s,now)!!;val all=review.questions.associate {it.question.id to it.question.answer}
         val four=all+(all.keys.first() to "wrong")
         val result=LocalLearningGems.finishWeekly(a,s,review,four,now)
-        assertEquals(15,result.balance);assertEquals(listOf(GemReward.WEEKLY),result.rewards.map {it.kind})
+        assertEquals(a,result);assertEquals(0,result.balance);assertTrue(result.rewards.isEmpty())
         assertEquals(result,LocalLearningGems.finishWeekly(result,s,review,all,now+1))
         assertEquals(a,LocalLearningGems.finishWeekly(a,s,review,all-all.keys.first(),now))
     }

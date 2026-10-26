@@ -26,6 +26,84 @@ private class TestGemStorage : LocalGemsStorage {
     }
 }
 class LocalGemsCoordinatorTest {
+    private fun durablePractice(wallet: String? = null): Pair<LearningState, PendingGemEvent> {
+        val id = "00000000-0000-4000-8000-000000000001"
+        val set = ProductSeed.sets.first()
+        val event = PendingGemEvent("fixture-event", id, "PRACTICE", set.id, answers(set.id), now)
+        val state = LearningState(user = User("Local", "", AccountType.Student, id, StudyStage.BAC, wallet),
+            completed = emptySet(), product = ProductState(learningCommands = setOf(event.id), pendingGemEvents = listOf(event)))
+        return state to event
+    }
+    @Test fun grantCommittedBeforeFailedAcknowledgmentReplaysOnceAfterCoordinatorRestart() {
+        val s = TestGemStorage(); val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            val (state, event) = durablePractice()
+            val owner = LocalGemsPolicy.owner(state.user)!!
+            val g = LocalGemsCoordinator(s, scope, { "fixture" }, { now + 1000 })
+            g.bind(state); await(g) { it.account != null }
+            g.deliver(state, event) { throw LocalDataWriteFailed() }
+            await(g) { it.error != null }
+            assertEquals(5, s.read(owner).balance)
+            assertEquals(1, s.read(owner).rewards.size)
+            val restored = LocalGemsCoordinator(s, scope, { "fixture" }, { now + 2000 })
+            restored.bind(state); await(restored) { it.account != null }
+            var acknowledgments = 0
+            val acknowledged = CountDownLatch(1)
+            restored.deliver(state, event) { acknowledgments++; acknowledged.countDown() }
+            assertTrue(acknowledged.await(5, TimeUnit.SECONDS))
+            await(restored) { it.account?.balance == 5 && it.error == null }
+            assertEquals(1, acknowledgments)
+            assertEquals(5, s.read(owner).balance)
+            assertEquals(1, s.read(owner).rewards.size)
+        } finally { scope.cancel() }
+    }
+    @Test fun failedLedgerDoesNotAcknowledgeAndRetainedEventCanRetry() {
+        val s = TestGemStorage(); val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            val (state, event) = durablePractice(); val owner = LocalGemsPolicy.owner(state.user)!!
+            val g = LocalGemsCoordinator(s, scope, { "fixture" }, { now })
+            g.bind(state); await(g) { it.account != null }; s.failWrites = true
+            var acknowledged = false
+            g.deliver(state, event) { acknowledged = true }
+            await(g) { it.error != null }
+            assertFalse(acknowledged); assertEquals(0, s.read(owner).balance)
+            s.failWrites = false
+            g.deliver(state, event) { acknowledged = true }
+            await(g) { it.account?.balance == 5 }
+            assertTrue(acknowledged)
+        } finally { scope.cancel() }
+    }
+    @Test fun uuidProfileUsesLegacyWalletKeyWithoutCreatingAReplacementAccount() {
+        val key = "historical-owner@example.test"
+        val s = TestGemStorage(); val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            val (state, event) = durablePractice(key)
+            val oldGrant = GemRewardEntry("WEEKLY:historical", GemReward.WEEKLY, 15, now, LocalGemsPolicy.day(now), LocalGemsPolicy.week(now))
+            val old = GemAccount(key, now, 15, rewards = listOf(oldGrant)).also(LocalGemsPolicy::validate)
+            s.accounts[key] = old
+            val g = LocalGemsCoordinator(s, scope, { "fixture" }, { now })
+            g.bind(state); assertEquals(old, await(g) { it.account != null }.account)
+            g.deliver(state, event) {}
+            await(g) { it.account?.balance == 20 }
+            assertEquals(setOf(key), s.accounts.keys)
+            assertEquals(oldGrant, s.read(key).rewards.first())
+            assertEquals(1, s.read(key).rewards.count { it.kind == GemReward.WEEKLY })
+            assertEquals(state.user!!.localId, event.owner)
+        } finally { scope.cancel() }
+    }
+    @Test fun guestAndForeignUuidEventsCannotReceiveOrAcknowledgeCurrency() {
+        val s = TestGemStorage(); val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            val (state, event) = durablePractice()
+            val g = LocalGemsCoordinator(s, scope, { "fixture" }, { now })
+            val guest = state.copy(user = state.user!!.copy(type = AccountType.Guest))
+            g.bind(guest); g.deliver(guest, event) { fail("Guest must not acknowledge a currency grant") }
+            assertTrue(s.accounts.isEmpty())
+            g.bind(state); await(g) { it.account != null }
+            g.deliver(state, event.copy(owner = "00000000-0000-4000-8000-000000000002")) { fail("Foreign event") }
+            assertEquals(0, s.read(LocalGemsPolicy.owner(state.user)!!).balance)
+        } finally { scope.cancel() }
+    }
     @Test fun legacyWalletReloadKeepsOwnerLedgerBalanceAndPurchasedContentWithoutDisplayBonus() {
         val owner = "legacy-owner@example.test"
         val s = TestGemStorage()

@@ -550,7 +550,7 @@ fun LessonScreen(
                 var answer by rememberSaveable(id) { mutableStateOf("") }
                 var checked by rememberSaveable(id) { mutableStateOf(false) }
                 val checkpointOwner by rememberSaveable(id, "gems-checkpoint-owner") {
-                    mutableStateOf(if (answer.isBlank()) LocalGemsPolicy.owner(state.user) else null)
+                    mutableStateOf(if (answer.isBlank()) LearningRules.commandOwner(state) else null)
                 }
                 val isCorrect = answer.trim() == lesson.checkpointAnswer
 

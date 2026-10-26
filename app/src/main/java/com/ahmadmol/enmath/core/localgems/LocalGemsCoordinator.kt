@@ -2,6 +2,8 @@ package com.ahmadmol.enmath.core.localgems
 
 import android.content.Context
 import com.ahmadmol.enmath.core.data.LearningState
+import com.ahmadmol.enmath.core.data.LearningRules
+import com.ahmadmol.enmath.core.model.PendingGemEvent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
@@ -24,7 +26,8 @@ class LocalGemsCoordinator(private val storage: LocalGemsStorage, private val sc
         generation++;active=owner?.let { Ticket(it,generation) }
         _ui.value=LocalGemsUiState(owner=owner,busy=owner!=null) // hide old owner's data synchronously
         val ticket=active ?: return
-        val excluded=LocalLearningGems.baseline(state);val now=clock()
+        val excluded=LocalLearningGems.baseline(state)
+        val now=minOf(clock(), state.product.pendingGemEvents.minOfOrNull { it.at } ?: clock())
         enqueue(ticket) { publish(ticket,storage.activate(ticket.owner,excluded,now),state) }
     }
     private fun ticket(state: LearningState): Ticket? = active?.takeIf { it.owner==LocalGemsPolicy.owner(state.user) }
@@ -56,6 +59,32 @@ class LocalGemsCoordinator(private val storage: LocalGemsStorage, private val sc
     fun verifyLesson(state: LearningState, id: String, answer: String) {
         if(!LocalLearningGems.lessonVerified(state,id,answer)) return
         change(state) { account,_ -> account.copy(lessons=account.lessons+id) }
+    }
+    /** At-least-once delivery from the acknowledged learner snapshot, with ledger dedupe. */
+    fun deliver(state: LearningState, event: PendingGemEvent, acknowledge: () -> Unit) {
+        if (event.owner != LearningRules.commandOwner(state) || event !in state.product.pendingGemEvents) return
+        val ticket = ticket(state) ?: return
+        enqueue(ticket) {
+            if (active != ticket) return@enqueue
+            val account = storage.change(ticket.owner) { old ->
+                val at = maxOf(event.at, old.activatedAt)
+                when (event.kind) {
+                    "LESSON" -> {
+                        val verified = event.answers["checkpoint"]?.let {
+                            LocalLearningGems.lessonVerified(state, event.contentId, it)
+                        } == true || LocalLearningGems.interactiveVerified(state, event.contentId, event.answers)
+                        if (event.contentId !in state.completed || !verified) old
+                        else LocalGemsPolicy.award(old.copy(lessons = old.lessons + event.contentId), GemReward.LESSON, event.contentId, at)
+                    }
+                    "PRACTICE" -> LocalLearningGems.practice(old, state, event.contentId, event.answers, at)
+                    "ASSIGNMENT" -> LocalLearningGems.assignment(old, state, event.contentId, event.answers, at)
+                    else -> error("Unsupported durable learning event")
+                }
+            }
+            // A crash/failure here keeps the pending event; replay cannot mint the grant twice.
+            acknowledge()
+            publish(ticket, account, state)
+        }
     }
     fun completeLesson(state: LearningState, id: String, interactiveAnswers: Map<String,String>?=null) {
         if(id !in state.completed) return

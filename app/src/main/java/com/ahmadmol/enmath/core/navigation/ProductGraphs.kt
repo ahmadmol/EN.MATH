@@ -46,27 +46,33 @@ fun NavGraphBuilder.studentGraph(
     switchRole: (() -> Unit)?,
 ) {
     fun route(path: String) {
-        if (path.startsWith("lesson/")) app.openLesson(path.substringAfter("lesson/"))
         open(path)
     }
     fun lesson(id: String) {
         route("lesson/$id")
     }
-    fun solve(expression: String, topic: String) {
-        val id = app.history(expression, topic)
-        route("solver/solution/$id")
+    fun solve(expression: String, topic: String, owner: String?) {
+        val id = app.history(expression, topic, owner)
+        if (id.isNotEmpty()) route("solver/solution/$id")
     }
     composable(Routes.Home) {
         val state by app.state.collectAsStateWithLifecycle()
         val gems = app.gems?.ui?.collectAsStateWithLifecycle()?.value ?: LocalGemsUiState()
-        StudentLearningHome(state, ::route, gems)
+        if (state.user?.studyStage == StudyStage.G9) {
+            ScreenPage { PageHeading("G9", tr("Grade 9 local file", "ملف التاسع المحلي"))
+                Text(tr("Your stage and local data are separate. Grade 9 curriculum content is not available in this bundled catalog yet.",
+                    "مرحلتك وبياناتك المحلية مستقلتان. محتوى منهج التاسع غير متاح في الكتالوج المرفق بعد."))
+                OutlinedButton({ route(Routes.Profile) }) { Text(tr("My file", "ملفي")) }
+            }
+        } else StudentLearningHome(state, ::route, gems)
     }
     composable(Routes.Study) {
         val state by app.state.collectAsStateWithLifecycle()
-        StudentStudy(state, ::route)
+        if (state.user?.studyStage == StudyStage.G9) StageContentUnavailable() else StudentStudy(state, ::route)
     }
     composable(Routes.Book) { e ->
         val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage == StudyStage.G9) { StageContentUnavailable(); return@composable }
         BookDetailsScreen(
             e.arguments?.getString("id").orEmpty(),
             state,
@@ -76,10 +82,12 @@ fun NavGraphBuilder.studentGraph(
     }
     composable("study/catalog") {
         val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage == StudyStage.G9) { StageContentUnavailable(); return@composable }
         StudyScreen(state, { route("book/$it") }, ::lesson, ::route)
     }
     composable(Routes.Topic) { e ->
         val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage == StudyStage.G9) { StageContentUnavailable(); return@composable }
         val topicId = e.arguments?.getString("id").orEmpty().ifEmpty { "limits" }
         StudentLimitsTopic(
             state = state,
@@ -93,15 +101,17 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Lesson) { e ->
         val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage == StudyStage.G9) { StageContentUnavailable(); return@composable }
         val id = e.arguments?.getString("id").orEmpty()
         val lessonOwner by rememberSaveable(id, "gems-lesson-owner") { mutableStateOf(com.ahmadmol.enmath.core.data.LearningRules.commandOwner(state)) }
+        LaunchedEffect(id, state.user?.localId) { app.openLesson(id, lessonOwner) }
         if (id == LimitsLessonSequence.lessonId) {
             val vm: InteractiveLessonViewModel = viewModel(e)
             val interactiveOwner = vm.gemsOwner(com.ahmadmol.enmath.core.data.LearningRules.commandOwner(state))
             InteractiveLimitsScreen(
                 state,
                 vm,
-                { app.completeInteractive(id, vm.answers.value, interactiveOwner) },
+                { if (!app.completeInteractive(id, vm.answers.value, interactiveOwner)) vm.releaseCompletion() },
                 { route("practice/${LimitsLessonSequence.practiceId}") },
             )
         } else
@@ -111,7 +121,7 @@ fun NavGraphBuilder.studentGraph(
                 onComplete = { app.complete(id, lessonOwner) },
                 onPractice = { route("practice/$it") },
                 onNext = ::lesson,
-                onBookmark = { guarded { app.bookmark(id) } },
+                onBookmark = { app.bookmark(id, startedBy = LearningRules.commandOwner(state)) },
                 onVerified = { answer, owner -> app.verifyLesson(id, answer, owner) },
                 onBack = { nav.popBackStack() },
                 onSearch = { route("search") },
@@ -120,13 +130,15 @@ fun NavGraphBuilder.studentGraph(
     }
     composable("practice/{id}") { e ->
         val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage == StudyStage.G9) { StageContentUnavailable(); return@composable }
         val id = e.arguments?.getString("id").orEmpty()
         val set = ProductSeed.sets.find { it.id == id }
         val vm: QuizViewModel = viewModel(e)
         val practiceOwner = vm.gemsOwner(com.ahmadmol.enmath.core.data.LearningRules.commandOwner(state))
         val finish: (Map<String, String>, Int) -> Unit = { answers, seconds ->
-            app.recordPractice(id, answers, seconds, practiceOwner, vm.commandId)
-            nav.navigate("practice/$id/result") { popUpTo("practice/{id}") { inclusive = true } }
+            if (app.recordPractice(id, answers, seconds, practiceOwner, vm.commandId))
+                nav.navigate("practice/$id/result") { popUpTo("practice/{id}") { inclusive = true } }
+            else vm.releaseFinish()
         }
         if (id == LimitsLessonSequence.practiceId) LimitsPracticeScreen(state, vm, finish)
         else
@@ -140,6 +152,7 @@ fun NavGraphBuilder.studentGraph(
     }
     composable("practice/{id}/result") { e ->
         val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage == StudyStage.G9) { StageContentUnavailable(); return@composable }
         val id = e.arguments?.getString("id").orEmpty()
         if (id == LimitsLessonSequence.practiceId)
             LimitsPracticeResult(
@@ -165,13 +178,20 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Solver) {
         val state by app.state.collectAsStateWithLifecycle()
-        SolverWorkspace(solver, state, ::solve, ::route)
+        val owner = LearningRules.commandOwner(state)
+        SolverWorkspace(solver, state, { expression, topic ->
+            val result = app.history(expression, topic, owner)
+            if (result.isNotEmpty()) route("solver/solution/$result")
+        }, ::route)
     }
     composable("solver/scan") {
         val state by app.state.collectAsStateWithLifecycle()
+        val owner = LearningRules.commandOwner(state)
         SolverScanScreen {
-            solver.edit(it)
-            nav.popBackStack()
+            if (LearningRules.acceptsCommand(app.state.value, owner)) {
+                solver.edit(it)
+                nav.popBackStack()
+            }
         }
     }
     composable("solver/history") {
@@ -180,14 +200,14 @@ fun NavGraphBuilder.studentGraph(
             state,
             { route("solver/solution/$it") },
             { id ->
-                app.product { p ->
+                app.product(LearningRules.commandOwner(state)) { p ->
                     p.copy(
                         history = p.history.filterNot { it.id == id },
                         savedProblems = p.savedProblems - id,
                     )
                 }
             },
-            { app.product { it.copy(history = emptyList(), savedProblems = emptySet()) } },
+            { app.product(LearningRules.commandOwner(state)) { it.copy(history = emptyList(), savedProblems = emptySet()) } },
             onBack = { nav.popBackStack() },
         )
     }
@@ -200,19 +220,23 @@ fun NavGraphBuilder.studentGraph(
             solution,
             state,
             id in state.product.savedProblems,
-            { guarded { app.bookmark(id, true) } },
+            { app.bookmark(id, true, LearningRules.commandOwner(state)) },
             {
+                if (LearningRules.acceptsCommand(app.state.value, LearningRules.commandOwner(state))) {
                 solver.edit(solution.expression)
                 nav.navigate(Routes.Solver) {
                     popUpTo(Routes.Solver)
                     launchSingleTop = true
                 }
+                }
             },
             ::lesson,
             {
-                solver.edit(it)
-                solver.solve()
-                solve(it, solver.solution.topicId)
+                if (LearningRules.acceptsCommand(app.state.value, LearningRules.commandOwner(state))) {
+                    solver.edit(it)
+                    solver.solve()
+                    solve(it, solver.solution.topicId, LearningRules.commandOwner(state))
+                }
             },
         )
     }
@@ -308,13 +332,14 @@ fun NavGraphBuilder.studentGraph(
                     ) { answers, seconds ->
                         if (isSubmitting) return@PracticeScreen
                         isSubmitting = true
-                        val res = app.submitAssignment(id, answers, seconds, assignmentOwner)
+                        val res = app.submitAssignment(id, answers, seconds, assignmentOwner, vm.commandId)
                         if (res is AssignmentSubmissionResult.Submitted) {
                             nav.navigate("assignments/$id/result") {
                                 popUpTo("assignments/{id}/work") { inclusive = true }
                             }
                         } else {
                             isSubmitting = false
+                            vm.releaseFinish()
                             rejectionReason = res
                         }
                     }
@@ -330,9 +355,7 @@ fun NavGraphBuilder.studentGraph(
     }
     composable("library") {
         val state by app.state.collectAsStateWithLifecycle()
-        ProtectedContent(state, guarded) {
-            LibraryScreen(state, ::lesson, { route("solver/solution/$it") })
-        }
+        LibraryScreen(state, ::lesson, { route("solver/solution/$it") })
     }
     composable("search") {
         val state by app.state.collectAsStateWithLifecycle()
@@ -343,9 +366,9 @@ fun NavGraphBuilder.studentGraph(
         NotificationsScreen(
             state,
             false,
-            { id -> app.product { it.copy(readNotifications = it.readNotifications + id) } },
+            { id -> app.product(LearningRules.commandOwner(state)) { it.copy(readNotifications = it.readNotifications + id) } },
             {
-                app.product {
+                app.product(LearningRules.commandOwner(state)) {
                     it.copy(
                         readNotifications =
                             it.readNotifications +
@@ -368,7 +391,7 @@ fun NavGraphBuilder.studentGraph(
             app::theme,
             app::language,
             { enabled, reminder ->
-                app.product { it.copy(notificationsEnabled = enabled, reminder = reminder) }
+                app.product(LearningRules.commandOwner(state)) { it.copy(notificationsEnabled = enabled, reminder = reminder) }
             },
             logout,
         )
@@ -381,12 +404,20 @@ private fun ProtectedContent(
     guarded: (() -> Unit) -> Unit,
     content: @Composable () -> Unit,
 ) {
-    if (state.user?.type == AccountType.Guest)
+    if (state.user?.type == AccountType.Guest && state.user.localId == null)
         ScreenPage {
             EmptyState(label(TextKey.t_e7bae5277c), label(TextKey.t_0656950f60))
             PrimaryButton(label(TextKey.t_604824dd52), { guarded {} })
         }
     else content()
+}
+
+
+@Composable
+private fun StageContentUnavailable() {
+    ScreenPage { EmptyState(tr("Stage content unavailable", "محتوى المرحلة غير متاح"),
+        tr("This content belongs to another stage. Your file and progress were not changed.",
+            "هذا المحتوى يخص مرحلة أخرى. لم يتغير ملفك أو تقدمك.")) }
 }
 
 fun NavGraphBuilder.teacherGraph(

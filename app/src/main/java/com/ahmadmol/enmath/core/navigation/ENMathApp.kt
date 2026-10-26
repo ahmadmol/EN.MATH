@@ -11,6 +11,7 @@ import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -37,11 +38,18 @@ import com.ahmadmol.enmath.features.localgems.LocalGemsScreen
 import com.ahmadmol.enmath.features.localgems.LocalWeeklyReviewScreen
 import com.ahmadmol.enmath.core.localgems.LocalGemsPolicy
 
+private class LocalRepositoryHolder(context: android.content.Context) : androidx.lifecycle.ViewModel() {
+    val result = runCatching { LocalDemoRepository(context.applicationContext) }
+}
 
 @Composable
 fun ENMathApp(nav: NavHostController = rememberNavController()) {
     val context = LocalContext.current.applicationContext
-    val repositoryResult = remember { runCatching { LocalDemoRepository(context) } }
+    val holder: LocalRepositoryHolder = viewModel(factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T = LocalRepositoryHolder(context) as T
+    })
+    val repositoryResult = holder.result
     if (repositoryResult.isFailure) {
         val failure = repositoryResult.exceptionOrNull()
         if (failure !is com.ahmadmol.enmath.core.data.CorruptLocalData &&
@@ -63,10 +71,46 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
     val solver: SolverViewModel = viewModel()
 
     val state by app.state.collectAsStateWithLifecycle()
+    var demoEntry by rememberSaveable { mutableStateOf(false) }
+    var renderedProfileId by rememberSaveable { mutableStateOf<String?>(null) }
+    if (state.user?.localId == null && state.user?.type != AccountType.Teacher && (!demoEntry || state.user != null)) {
+        ENMathTheme(state.theme, state.language, student = true) {
+            LocalIdentityScreen(state,
+                create = { name, stage, guest -> repository.createLocalProfile(name, stage, guest); app.refreshIdentity() },
+                select = { id -> repository.selectLocalProfile(id); app.refreshIdentity() },
+                importLegacy = { source, stage, name -> repository.importConfirmedLegacy(source, stage, name); app.refreshIdentity() },
+                debugEntry = if (demoAllowed) ({
+                    if (app.logout()) { auth.chooseRole(AccountType.Teacher); demoEntry = true }
+                }) else null)
+        }
+        return
+    }
+    LaunchedEffect(state.user?.localId) {
+        app.refreshIdentity()
+        val id = state.user?.localId
+        if (id != renderedProfileId) {
+            solver.reset()
+            if (id != null) {
+                nav.navigate(Routes.Main) {
+                    popUpTo(nav.graph.id) { inclusive = true }; launchSingleTop = true
+                }
+                Routes.tabs.forEach { nav.clearBackStack(it) }
+            }
+            renderedProfileId = id
+        }
+    }
+
     androidx.lifecycle.compose.LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
         app.gems?.refresh(app.state.value)
+        app.replayPendingGems()
     }
     ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher) {
+        if (state.storageIssue != null) AlertDialog(onDismissRequest = {},
+            title = { Text(tr("Storage needs attention", "التخزين يحتاج مراجعة")) },
+            text = { Text(tr("The latest operation was not acknowledged. Restart before retrying; do not clear app data.",
+                "لم يُؤكَّد حفظ العملية الأخيرة. أعد التشغيل قبل المحاولة؛ لا تمسح بيانات التطبيق.")) },
+            confirmButton = {})
+
         val backStack by nav.currentBackStackEntryAsState()
         val visibleEntries by nav.visibleEntries.collectAsStateWithLifecycle()
         val route = backStack?.destination?.route
@@ -169,7 +213,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
         }
         fun signIn() {
             val user = auth.user()
-            app.signIn(user)
+            if (!app.signIn(user)) return
             auth.clearSecrets()
             clearNavigate(if (user.type == AccountType.Teacher) Routes.TeacherMain else Routes.Main)
         }
@@ -184,7 +228,9 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
             else nav.navigate(path) { launchSingleTop = true }
         }
         fun logout() {
-            app.logout()
+            if (!app.logout()) return
+            demoEntry = false
+            renderedProfileId = null
             auth.reset()
             solver.reset()
             clearNavigate(Routes.Started)
@@ -395,8 +441,11 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                             }
                             composable("gems/wallet") {
                                 app.gems?.let { LocalGemsScreen(state, it) {
-                                    auth.chooseRole(AccountType.Student)
-                                    nav.navigate(Routes.Login) { launchSingleTop = true }
+                                    if (state.user?.localId != null) logout()
+                                    else {
+                                        auth.chooseRole(AccountType.Student)
+                                        nav.navigate(Routes.Login) { launchSingleTop = true }
+                                    }
                                 } }
                             }
                             composable("gems/review") {

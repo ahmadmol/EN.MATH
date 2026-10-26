@@ -96,4 +96,14 @@ class LocalGemsSQLiteTest(unittest.TestCase):
             self.assertEqual(before,snapshot(db))
         self.assertEqual('OWNED',self.spend(owner=owner))
         with closing(self.db()) as db:self.assertEqual(before,snapshot(db))
+    def test_historical_weekly_reward_and_balance_survive_reopen_unchanged(self):
+        owner='historical-weekly@example.test'
+        with closing(self.db()) as db:
+            db.execute('INSERT INTO gem_accounts VALUES(?,?,?)',(owner,1000,15))
+            db.execute('INSERT INTO gem_rewards VALUES(?,?,?,?,?,?,?)',
+                (owner,'WEEKLY:2026-10-19','WEEKLY',15,1000,'2026-10-20','2026-10-19'))
+        with closing(self.db()) as db:
+            self.assertEqual((15,),db.execute('SELECT balance FROM gem_accounts WHERE owner=?',(owner,)).fetchone())
+            self.assertEqual(('WEEKLY:2026-10-19','WEEKLY',15),
+                db.execute('SELECT achievement,kind,units FROM gem_rewards WHERE owner=?',(owner,)).fetchone())
 if __name__=='__main__':unittest.main(verbosity=2)

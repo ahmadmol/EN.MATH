@@ -28,7 +28,7 @@ object LocalGemsPolicy {
     private fun date(calendar: Calendar): String = String.format(Locale.ROOT, "%04d-%02d-%02d",
         calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DAY_OF_MONTH))
     fun owner(user: User?): String? = user?.takeIf { it.type == AccountType.Student }
-        ?.email?.trim()?.lowercase(Locale.ROOT)?.takeIf { it.isNotEmpty() }
+        ?.let { it.legacyWalletKey ?: it.localId ?: it.email.trim().lowercase(Locale.ROOT).takeIf(String::isNotEmpty) }
     fun attributable(user: User?, startedBy: String?): Boolean = startedBy != null && owner(user) == startedBy
     fun day(now: Long): String = date(calendar(now))
     fun week(now: Long): String = date(calendar(now).apply {
@@ -39,6 +39,8 @@ object LocalGemsPolicy {
             required.all { !answers[it].isNullOrBlank() } && correct in 0..required.size &&
             correct * 100L >= required.size * 80L
     fun award(account: GemAccount, kind: GemReward, id: String, at: Long): GemAccount {
+        // D06: retain these historical entries, but never mint new weekly/mastery grants.
+        if (kind == GemReward.WEEKLY || kind == GemReward.MASTERY) return account
         val key = "${kind.name}:$id"
         if (at < account.activatedAt || key in account.excluded || account.rewards.any { it.key == key }) return account
         val day = day(at); val week = week(at)
