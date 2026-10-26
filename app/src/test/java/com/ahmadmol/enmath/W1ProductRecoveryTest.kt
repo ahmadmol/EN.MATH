@@ -13,6 +13,9 @@ import org.junit.Test
 internal class FixturePreferences(val file: java.io.File = Files.createTempFile("w1-", ".fixture").toFile()) {
     val values = mutableMapOf<String, Any>()
     var fail = false
+    var commitCount = 0
+    var failCommitNumber: Int? = null
+    var afterCommit: (() -> Unit)? = null
     init {
         file.deleteOnExit()
         if (file.length() > 0) java.io.ObjectInputStream(file.inputStream()).use {
@@ -37,11 +40,14 @@ internal class FixturePreferences(val file: java.io.File = Files.createTempFile(
             when {
                 method.name.startsWith("put") -> { pending[args[0] as String] = args[1]; proxy }
                 method.name == "commit" || method.name == "apply" -> {
-                    if (!fail) {
+                    commitCount++
+                    val accepted = !fail && commitCount != failCommitNumber
+                    if (accepted) {
                         pending.forEach { (k, v) -> if (v == null) values.remove(k) else values[k] = v }
                         java.io.ObjectOutputStream(file.outputStream()).use { it.writeObject(HashMap(values)) }
+                        afterCommit?.invoke()
                     }
-                    if (method.name == "commit") !fail else null
+                    if (method.name == "commit") accepted else null
                 }
                 else -> error("Unsupported fixture editor: ${method.name}")
             }
@@ -103,7 +109,7 @@ class W1ProductRecoveryTest {
         val repo = LocalDemoRepository { name -> stores.getOrPut(name) { FixturePreferences() }.prefs }
         repo.signIn(User("Fixture", "fixture@example.test", AccountType.Student))
         val before = repo.state.value
-        val personal = stores.entries.single { it.key != "enmath_demo" }.value
+        val personal = stores.entries.single { it.key.startsWith("enmath_personal_") && it.value.prefs.contains("product_v1") }.value
         val personalBytes = personal.file.readBytes()
         val global = stores.getValue("enmath_demo")
         global.prefs.edit().putString("product_v1", "{broken").commit()

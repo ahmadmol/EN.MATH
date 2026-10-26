@@ -8,6 +8,9 @@ data class StudentLearningRecord(val completed: Set<String>, val product: Produc
 data class LearningState(
     val user: User? = null,
     val localGuestId: String? = null,
+    val localProfiles: List<LocalLearner> = emptyList(),
+    val legacyCandidates: List<LegacyCandidate> = emptyList(),
+    val storageIssue: String? = null,
     val studentRecordId: String? = null,
     val studentRecordOwners: Map<String, String> = emptyMap(),
     val studentRecords: Map<String, StudentLearningRecord> = emptyMap(),
@@ -19,7 +22,7 @@ data class LearningState(
     val product: ProductState = ProductSeed.seed(),
 ) {
     val books
-        get() = DemoContent.books
+        get() = if (user?.studyStage == StudyStage.G9) emptyList() else DemoContent.books
 
     val topics
         get() = books.flatMap { it.topics }
@@ -34,7 +37,7 @@ data class LearningState(
         get() = ProductSeed.questions + product.questions
 
     val practiceSets
-        get() = ProductSeed.sets
+        get() = if (user?.studyStage == StudyStage.G9) emptyList() else ProductSeed.sets
 
     val examples
         get() = DemoContent.examples
@@ -83,4 +86,18 @@ interface LearningRepository {
     fun setLanguage(language: Language)
 
     fun changeProduct(transform: (ProductState) -> ProductState)
+
+    fun recordLearning(owner: String?, command: String, lesson: String? = null,
+        transform: (ProductState) -> ProductState): Boolean {
+        if (!LearningRules.acceptsCommand(state.value, owner) || command.isBlank()) return false
+        if (command in state.value.product.learningCommands) return true
+        if (lesson != null) completeLesson(lesson)
+        changeProduct { transform(it).copy(learningCommands = it.learningCommands + command) }
+        return true
+    }
+
+    fun acknowledgeGem(owner: String, event: String) {
+        if (LearningRules.commandOwner(state.value) == owner)
+            changeProduct { it.copy(pendingGemEvents = it.pendingGemEvents.filterNot { e -> e.id == event }) }
+    }
 }

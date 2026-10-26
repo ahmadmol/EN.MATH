@@ -118,7 +118,7 @@ class W1IdentityIsolationTest {
         val global = stores.files.getValue("enmath_demo")
         global.prefs.edit().putStringSet("completed", setOf("legacy-only"))
             .putString("last", "legacy-only").commit()
-        val personal = stores.files.entries.single { it.key != "enmath_demo" }.value
+        val personal = stores.files.entries.single { it.key.startsWith("enmath_personal_") && it.value.prefs.contains("product_v1") }.value
         // The fixture's values model missing legacy keys; persist without touching app storage.
         personal.values.remove("completed")
         personal.values.remove("last")

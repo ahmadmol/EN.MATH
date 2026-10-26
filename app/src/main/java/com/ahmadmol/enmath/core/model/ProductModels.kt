@@ -131,6 +131,9 @@ data class HistoryItem(
 
 data class ActivityItem(val id: String, val title: Copy, val timestamp: Long, val minutes: Int)
 
+data class PendingGemEvent(val id: String, val owner: String, val kind: String,
+    val contentId: String, val answers: Map<String, String>, val at: Long)
+
 data class ProductState(
     val questions: List<Question> = emptyList(),
     val attempts: List<Attempt> = emptyList(),
@@ -148,6 +151,8 @@ data class ProductState(
     val notificationsEnabled: Boolean = true,
     val reminder: String = "18:00",
     val learningCommands: Set<String> = emptySet(),
+    val verifiedLessons: Map<String, String> = emptyMap(),
+    val pendingGemEvents: List<PendingGemEvent> = emptyList(),
 )
 
 data class ProductStats(

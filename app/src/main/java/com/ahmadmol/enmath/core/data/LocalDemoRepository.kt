@@ -13,6 +13,8 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
         context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0,
         { name -> context.getSharedPreferences(name, Context.MODE_PRIVATE) })
     private val prefs = preferences("enmath_demo")
+    private val local = LocalLearnerStore(preferences)
+    private val legacyProduct = runCatching { ProductCodec.load(prefs) }
     // New isolated guest scope; unscoped legacy progress is never assigned to it.
     private val guestId = prefs.getString("w1_guest_uuid", null) ?: java.util.UUID.randomUUID().toString().also {
         if (!prefs.edit().putString("w1_guest_uuid", it).commit()) throw LocalDataWriteFailed()
@@ -35,7 +37,7 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
                                 AccountType.entries.toTypedArray(),
                                 AccountType.Guest,
                             ),
-                        ).takeIf { user -> allowDemoAccounts || user.type == AccountType.Guest }
+                        ).takeIf { user -> legacyProduct.isSuccess && (allowDemoAccounts || user.type == AccountType.Guest) }
                     },
                 completed =
                     prefs.getStringSet("completed", null)?.toSet()
@@ -54,7 +56,8 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
                         Language.Arabic,
                     ),
                 onboarded = prefs.getBoolean("onboarded", false),
-                product = ProductCodec.load(prefs),
+                product = legacyProduct.getOrElse { ProductState() },
+                storageIssue = if (legacyProduct.isFailure) "LEGACY_CORRUPT_PRESERVED" else null,
             )
         )
     override val state: StateFlow<LearningState> = _state.asStateFlow()
@@ -81,7 +84,7 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
         prefs.getStringSet("student_snapshot_files", emptySet()).orEmpty().mapNotNull { file ->
             val stored = preferences(file)
             val id = stored.getString("record_owner", null) ?: return@mapNotNull null
-            id to StudentLearningRecord(stored.getStringSet("completed", emptySet()).orEmpty().toSet(), ProductCodec.load(stored))
+            runCatching { id to StudentLearningRecord(stored.getStringSet("completed", emptySet()).orEmpty().toSet(), ProductCodec.load(stored)) }.getOrNull()
         }.toMap()
 
     private fun shared(personal: ProductState, global: ProductState) = personal.copy(
@@ -108,10 +111,51 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
             _state.value = _state.value.copy(studentRecordId = legacyRecordId)
         }
         _state.value = _state.value.copy(studentRecords = studentRecords(), studentRecordOwners = recordOwners)
+        local.resumeMigrations()
+        local.active()?.let { profile ->
+            try { activateLocal(profile) } catch (_: CorruptLocalData) {
+                _state.value = _state.value.copy(user = null, completed = emptySet(), product = ProductState(),
+                    localProfiles = local.profiles(), legacyCandidates = local.legacyCandidates(), storageIssue = "CORRUPT_PROFILE_PRESERVED")
+            }
+        } ?: run {
+            _state.value = _state.value.copy(localProfiles = local.profiles(), legacyCandidates = local.legacyCandidates())
+        }
     }
 
-    private fun update(transform: (LearningState) -> LearningState) {
+    private fun activateLocal(profile: LocalLearner) {
+        val saved = local.load(profile.id)
+        _state.value = _state.value.copy(user = profile.user(), localGuestId = profile.id.takeIf { profile.guest },
+            studentRecordId = null, studentRecordOwners = emptyMap(), studentRecords = emptyMap(),
+            completed = saved.completed, lastLessonId = saved.last, product = saved.product,
+            localProfiles = local.profiles(), legacyCandidates = local.legacyCandidates(), storageIssue = null)
+    }
+
+    @Synchronized fun createLocalProfile(name: String, stage: StudyStage, guest: Boolean) =
+        local.create(name, stage, guest).also(::activateLocal)
+
+    @Synchronized fun selectLocalProfile(id: String) {
+        local.select(id)
+        activateLocal(requireNotNull(local.active()))
+    }
+
+    @Synchronized fun importConfirmedLegacy(source: String, stage: StudyStage, name: String) =
+        local.migrate(source, stage, name).also(::activateLocal)
+
+    fun reportStorageIssue() { _state.value = _state.value.copy(storageIssue = "LOCAL_STORAGE_UNAVAILABLE") }
+
+    @Synchronized private fun update(transform: (LearningState) -> LearningState) {
         val state = transform(_state.value)
+        state.user?.localId?.let { id ->
+            val identity = local.profiles().first { it.id == id }
+            require(state.user == identity.user()) { "Local identity and stage are immutable" }
+            if (state.theme != _state.value.theme || state.language != _state.value.language || state.onboarded != _state.value.onboarded) {
+                if (!prefs.edit().putString("theme", state.theme.name).putString("language", state.language.name)
+                    .putBoolean("onboarded", state.onboarded).commit()) throw LocalDataWriteFailed()
+            }
+            local.save(id, LearnerSnapshot(state.completed, state.lastLessonId, state.product))
+            _state.value = state
+            return
+        }
         val scoped = personalPrefs(state.user)
         // Check both stores before the first write; a corrupt global store must not partially
         // publish a successful personal update. Cross-store crash atomicity is DATA-01 work.
@@ -147,6 +191,10 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
     }
 
     override fun signIn(user: User) {
+        user.localId?.let { id ->
+            require(local.profiles().first { it.id == id }.user() == user)
+            selectLocalProfile(id); return
+        }
         check(allowDemoAccounts || user.type == AccountType.Guest) { "Demo accounts are unavailable in production; Guest remains local" }
         // Flush the departing account before switching; never copy its personal state.
         update { it }
@@ -165,6 +213,12 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
     }
 
     override fun logout() {
+        if (_state.value.user?.localId != null) {
+            local.select(null)
+            _state.value = _state.value.copy(user = null, localGuestId = null, completed = emptySet(),
+                product = ProductState(), studentRecordId = null)
+            return
+        }
         update { it }
         update { it.copy(user = null, studentRecordId = null, completed = emptySet(), product = ProductState()) }
     }
@@ -186,5 +240,28 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
 
     override fun changeProduct(transform: (ProductState) -> ProductState) = update {
         it.copy(product = transform(it.product))
+    }
+
+    @Synchronized override fun recordLearning(owner: String?, command: String, lesson: String?,
+        transform: (ProductState) -> ProductState): Boolean {
+        if (_state.value.user?.localId == null) return super<LearningRepository>.recordLearning(owner, command, lesson, transform)
+        if (!LearningRules.acceptsCommand(_state.value, owner) || command.isBlank()) return false
+        if (command in _state.value.product.learningCommands) return true
+        if (lesson != null && _state.value.lesson(lesson) == null) return false
+        update { state -> state.copy(
+            completed = if (lesson == null) state.completed else state.completed + lesson,
+            lastLessonId = lesson ?: state.lastLessonId,
+            product = transform(state.product).copy(learningCommands = state.product.learningCommands + command)) }
+        return true
+    }
+
+    @Synchronized override fun acknowledgeGem(owner: String, event: String) {
+        val profile = local.profiles().find { it.id == owner }
+            ?: return super<LearningRepository>.acknowledgeGem(owner, event)
+        val saved = local.load(profile.id)
+        if (saved.product.pendingGemEvents.none { it.id == event }) return
+        val next = saved.copy(product = saved.product.copy(pendingGemEvents = saved.product.pendingGemEvents.filterNot { it.id == event }))
+        local.save(profile.id, next)
+        if (_state.value.user?.localId == owner) _state.value = _state.value.copy(product = next.product)
     }
 }

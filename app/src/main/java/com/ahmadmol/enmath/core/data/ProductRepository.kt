@@ -15,8 +15,8 @@ val LearningState.activeStudentId: String
 object LearningRules {
     /** Provenance for learning only; Guest has no Gems owner. Legacy student IDs stay intact. */
     fun commandOwner(state: LearningState): String? = when (state.user?.type) {
-        AccountType.Student -> state.user.email.trim().lowercase(Locale.ROOT).takeIf { it.isNotEmpty() }
-        AccountType.Guest -> state.localGuestId
+        AccountType.Student -> state.user.localId ?: state.user.email.trim().lowercase(Locale.ROOT).takeIf { it.isNotEmpty() }
+        AccountType.Guest -> state.user.localId ?: state.localGuestId
         else -> null
     }
 
@@ -33,6 +33,7 @@ object LearningRules {
 
     fun activeStudentId(state: LearningState): String {
         val u = state.user ?: return "anonymous"
+        u.localId?.let { return it }
         if (u.type == AccountType.Guest) return "guest"
         val email = u.email.trim().lowercase(Locale.ROOT)
         val canonical = "${u.type.name.lowercase(Locale.ROOT)}:$email"
@@ -87,7 +88,7 @@ object LearningRules {
     }
 
     fun topic(state: LearningState, id: String, studentId: String = state.activeStudentId): TopicMastery {
-        val t = DemoContent.topic(id) ?: return TopicMastery(0, Mastery.NotStarted, 0, 0f, 0f)
+        val t = state.topic(id) ?: return TopicMastery(0, Mastery.NotStarted, 0, 0f, 0f)
         val targetStudentId = if (studentId.isBlank()) state.activeStudentId else studentId
         val s = ProductSeed.students.find { it.id == targetStudentId }
         val isCurrentStudent = targetStudentId == state.activeStudentId
@@ -123,10 +124,10 @@ object LearningRules {
         val attempts = state.product.attempts
         val total = attempts.sumOf { it.total }
         val accuracy =
-            if (total == 0) ProductSeed.students.first().practiceAccuracy
+            if (total == 0) { if (state.user?.localId != null) 0f else ProductSeed.students.first().practiceAccuracy }
             else attempts.sumOf { it.correct }.toFloat() / total
         return ProductStats(
-            state.completed.size.toFloat() / DemoContent.books.sumOf { it.lessons.size },
+            state.lessons.count { it.id in state.completed }.toFloat() / state.lessons.size.coerceAtLeast(1),
             total,
             accuracy,
             state.product.activity.sumOf { it.minutes },
@@ -174,9 +175,7 @@ internal object ProductCodec {
     private fun array(values: Iterable<JSONObject>) =
         JSONArray().apply { values.forEach { put(it) } }
 
-    fun save(prefs: SharedPreferences, p: ProductState) {
-        // Refuse every overwrite of an unreadable or newer store, including unrelated UI writes.
-        load(prefs)
+    fun encode(p: ProductState): String {
         val o = JSONObject().put("version", 1)
         o.put(
             "questions",
@@ -316,16 +315,30 @@ internal object ProductCodec {
             .put("enabled", p.notificationsEnabled)
             .put("reminder", p.reminder)
             .put("learning_commands", JSONArray(p.learningCommands.toList()))
+            .put("verified_lessons", JSONObject(p.verifiedLessons))
+            .put("pending_gems", array(p.pendingGemEvents.map {
+                JSONObject().put("id", it.id).put("owner", it.owner).put("kind", it.kind)
+                    .put("content", it.contentId).put("answers", JSONObject(it.answers)).put("at", it.at)
+            }))
+        return o.toString()
+    }
+
+    fun save(prefs: SharedPreferences, p: ProductState) {
+        load(prefs)
         val editor = prefs.edit()
         // Additive recovery snapshot. Never replace the first preserved version.
         prefs.getString("product_v1", null)?.let { original ->
             if (!prefs.contains("product_v1_recovery")) editor.putString("product_v1_recovery", original)
         }
-        if (!editor.putString("product_v1", o.toString()).commit()) throw LocalDataWriteFailed()
+        if (!editor.putString("product_v1", encode(p)).commit()) throw LocalDataWriteFailed()
     }
 
     fun load(prefs: SharedPreferences): ProductState {
         val raw = prefs.getString("product_v1", null) ?: return ProductSeed.seed()
+        return decode(raw)
+    }
+
+    fun decode(raw: String): ProductState {
         return runCatching {
                 val o = JSONObject(raw)
                 require(o.getInt("version") == 1) { "Unsupported product schema" }
@@ -444,6 +457,11 @@ internal object ProductCodec {
                     notificationsEnabled = o.optBoolean("enabled", true),
                     reminder = o.optString("reminder", "18:00"),
                     learningCommands = if (o.has("learning_commands")) strings(o, "learning_commands").toSet() else emptySet(),
+                    verifiedLessons = if (o.has("verified_lessons")) maps(o, "verified_lessons") else emptyMap(),
+                    pendingGemEvents = if (o.has("pending_gems")) objects(o, "pending_gems").map {
+                        PendingGemEvent(it.getString("id"), it.getString("owner"), it.getString("kind"),
+                            it.getString("content"), maps(it, "answers"), it.getLong("at"))
+                    } else emptyList(),
                 )
             }
             .getOrElse { throw CorruptLocalData(it) }
