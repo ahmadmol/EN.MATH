@@ -15,6 +15,14 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    buildTypes {
+        create("w1Qa") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".w1qa"
+            versionNameSuffix = "-w1qa"
+            matchingFallbacks += listOf("debug")
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -22,6 +30,13 @@ android {
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true }
     bundle { language { enableSplit = false } }
+}
+
+// QA-only version codes allow an isolated baseline -> final upgrade without uninstalling.
+androidComponents.onVariants(androidComponents.selector().withBuildType("w1Qa")) { variant ->
+    variant.outputs.forEach { output ->
+        output.versionCode.set(providers.gradleProperty("w1QaVersionCode").map(String::toInt).orElse(2))
+    }
 }
 
 dependencies {
