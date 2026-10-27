@@ -78,7 +78,7 @@ class FullApplicationUiTest {
         ui.runOnUiThread {
             ui.activity.enableEdgeToEdge()
             app =
-                ViewModelProvider(ui.activity, AppViewModel.factory(repo))[AppViewModel::class.java]
+                ViewModelProvider(ui.activity, AppViewModel.factory(repo, context))[AppViewModel::class.java]
             auth = ViewModelProvider(ui.activity)[AuthViewModel::class.java]
         }
         // Result evidence uses the real scoring rules, never grades copied from artwork.

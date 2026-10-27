@@ -1,0 +1,58 @@
+criterion,status,evidence_or_limitation,phone_qa
+Q-E01,CODE_COMPILED_DEVICE_NOT_RUN,"StudentExecution2ScreensTest (compiled, NOT_RUN); source review",NOT_RUN
+Q-E02,CODE_COMPILED_DEVICE_NOT_RUN,"StudentExecution2ScreensTest (compiled, NOT_RUN); source review",NOT_RUN
+Q-E03,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-E04,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-E05,CODE_COMPILED_DEVICE_NOT_RUN,"StudentExecution2ScreensTest (compiled, NOT_RUN); source review",NOT_RUN
+Q-E06,CODE_COMPILED_DEVICE_NOT_RUN,"StudentExecution2ScreensTest (compiled, NOT_RUN); source review",NOT_RUN
+Q-E07,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-E08,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-E09,CODE_COMPILED_DEVICE_NOT_RUN,"StudentExecution2ScreensTest (compiled, NOT_RUN); source review",NOT_RUN
+Q-E10,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-E11,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-G901,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-G902,BLOCKED_SOURCE,No verified G9 curriculum content bundled,NOT_RUN
+Q-G903,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-G904,BLOCKED_SOURCE,No verified G9 curriculum content bundled,NOT_RUN
+Q-G905,BLOCKED_SOURCE,No verified G9 curriculum content bundled,NOT_RUN
+Q-G906,HOST_PASS_DEVICE_NOT_RUN,PlannerStageModeMatrixTest: 18 stage/period/mode lifecycle cases; StudentPlannerTest; phone NOT_RUN,NOT_RUN
+Q-G907,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-B01,CODE_COMPILED_DEVICE_NOT_RUN,"StudentExecution2ScreensTest (compiled, NOT_RUN); source review",NOT_RUN
+Q-B02,DEMO_HOST_PASS_OFFICIAL_SOURCE_BLOCKED,CatalogAcceptanceTest: existing demo questions and checkpoints checked; official edition not verified,NOT_RUN
+Q-B03,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-B04,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-B05,HOST_PASS_DEVICE_NOT_RUN,PlannerStageModeMatrixTest: 18 stage/period/mode lifecycle cases; StudentPlannerTest; phone NOT_RUN,NOT_RUN
+Q-B06,NO_DEFAULT_COUNTDOWN,No default exam date/countdown; optional exam-date input is not implemented,NOT_RUN
+Q-B07,BLOCKED_SOURCE,No verified distributable physics resource supplied,NOT_RUN
+Q-B08,CODE_COMPILED_DEVICE_NOT_RUN,"StudentExecution2ScreensTest (compiled, NOT_RUN); source review",NOT_RUN
+Q-D01,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D02,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D03,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D04,SAFE_REJECTION_HOST_PASS,New unreviewed legacy apply disabled; originals preserved; existing recovery journal tested,NOT_RUN
+Q-D05,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D06,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D07,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D08,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D09,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D10,BLOCKED_SOURCE_EQUIVALENCE_REVIEW,Historical reward keys unchanged; no official edition/alias equivalence introduced,NOT_RUN
+Q-D11,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D12,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D13,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D14,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-D15,HOST_PARTIAL,StudentPlannerTest: Damascus calendar day/week/month; timezone editing is not exposed,NOT_RUN
+Q-D16,HOST_PASS_DEVICE_NOT_RUN,PlannerStageModeMatrixTest: 18 stage/period/mode lifecycle cases; StudentPlannerTest; phone NOT_RUN,NOT_RUN
+Q-A01,HOST_PASS_DEVICE_NOT_RUN,Execution2Boundary/Persistence/NavigationKey; CatalogAcceptance; W1CompletionIdentity; StudentPlanner; Gems JVM/SQLite suites (see test XML for individual assertions),NOT_RUN
+Q-A02,BLOCKED_PROVIDER,No verified production authentication provider,NOT_RUN
+Q-A03,BLOCKED_PROVIDER,No verified production authentication provider,NOT_RUN
+Q-A04,BLOCKED_PROVIDER,No verified production authentication provider,NOT_RUN
+Q-A05,BLOCKED_PROVIDER,No verified production authentication provider,NOT_RUN
+Q-A06,BLOCKED_PROVIDER,No verified production authentication provider,NOT_RUN
+Q-V01,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN
+Q-V02,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN
+Q-V03,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN
+Q-V04,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN
+Q-V05,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN
+Q-V06,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN
+Q-V07,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN
+Q-V08,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN
+Q-V09,NOT_RUN,"Real phone visual, accessibility, IME and direction acceptance deferred to user",NOT_RUN

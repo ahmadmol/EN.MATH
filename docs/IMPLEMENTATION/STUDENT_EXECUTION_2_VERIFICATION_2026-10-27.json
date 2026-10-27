@@ -1,0 +1,34 @@
+{
+  "baseline": {
+    "jvm": 212,
+    "sqlite": 10
+  },
+  "jvm": {
+    "tests": 249,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_jvm_tests": 37,
+  "sqlite": {
+    "tests": 10,
+    "failures": 0,
+    "fixtures": "temporary host SQLite databases"
+  },
+  "debug_build": "SUCCESS",
+  "lint": {
+    "errors": 0,
+    "warnings": 9
+  },
+  "android_test_compilation": "SUCCESS",
+  "student_ui_configurations": 24,
+  "phone_qa": "NOT_RUN",
+  "official_curriculum_source": "BLOCKED_SOURCE",
+  "production_authentication": "BLOCKED_PROVIDER",
+  "original_application_files_compared": 168,
+  "original_differences": 0,
+  "teacher_sources_changed": false,
+  "ledger_schema_and_reward_policy_changed": false,
+  "apk_sha256": "3d421e72b71254ed306b702c890bb977eef78a29e757826416ceec1f1de1d203",
+  "publication": "Verify the final remote SHA in the final delivery message; this evidence records the tested working tree before commits."
+}
