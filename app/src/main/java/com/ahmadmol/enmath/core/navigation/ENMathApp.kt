@@ -43,7 +43,7 @@ private class LocalRepositoryHolder(context: android.content.Context) : androidx
 }
 
 @Composable
-fun ENMathApp(nav: NavHostController = rememberNavController()) {
+fun ENMathApp(providedNav: NavHostController? = null) {
     val context = LocalContext.current.applicationContext
     val holder: LocalRepositoryHolder = viewModel(factory = object : androidx.lifecycle.ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
@@ -71,6 +71,20 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
     val solver: SolverViewModel = viewModel()
 
     val state by app.state.collectAsStateWithLifecycle()
+    val nav = providedNav ?: key(navigationSessionKey(state)) { rememberNavController() }
+    var initialSplash by rememberSaveable { mutableStateOf(true) }
+    if (initialSplash) {
+        ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher) {
+            SplashScreen { initialSplash = false }
+        }
+        return
+    }
+    if (state.user == null && !state.onboarded) {
+        ENMathTheme(state.theme, state.language, student = true) {
+            LocalOnboarding { repository.finishOnboarding() }
+        }
+        return
+    }
     var demoEntry by rememberSaveable { mutableStateOf(false) }
     var renderedProfileId by rememberSaveable { mutableStateOf<String?>(null) }
     if (state.user?.localId == null && state.user?.type != AccountType.Teacher && (!demoEntry || state.user != null)) {
@@ -79,6 +93,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                 create = { name, stage, guest -> repository.createLocalProfile(name, stage, guest); app.refreshIdentity() },
                 select = { id -> repository.selectLocalProfile(id); app.refreshIdentity() },
                 importLegacy = { source, stage, name -> repository.importConfirmedLegacy(source, stage, name); app.refreshIdentity() },
+                acknowledgeGuest = repository::acknowledgeGuestNotice,
                 debugEntry = if (demoAllowed) ({
                     if (app.logout()) { auth.chooseRole(AccountType.Teacher); demoEntry = true }
                 }) else null)
@@ -155,6 +170,8 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                 "gems/wallet" -> if (state.language == Language.Arabic) "جواهري" else "My Gems"
                 "gems/review" -> if (state.language == Language.Arabic) "مراجعة الأسبوع" else "Weekly Review"
                 Routes.Solver -> label(TextKey.t_28fd8d2a78)
+                "planner" -> if (state.language == Language.Arabic) "خطتي الدراسية" else "My study plan"
+                "review" -> if (state.language == Language.Arabic) "مراجعة الأخطاء" else "Mistake review"
                 Routes.Progress -> label(TextKey.t_693fec8aa7)
                 Routes.Profile -> label(TextKey.t_e269f67032)
                 Routes.Book -> label(TextKey.t_66df4d3113)
@@ -272,7 +289,8 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                     Routes.AccountChoice, Routes.RegisterStudent, Routes.RegisterTeacher,
                     Routes.Verify, Routes.Forgot, Routes.NewPassword
                 )
-                val hasSelfHeader = studentOwnsHeader(route, backStack?.arguments?.getString("id"))
+                val hasSelfHeader = studentOwnsHeader(route, backStack?.arguments?.getString("id")) &&
+                    (teacher || route !in listOf(Routes.Topic, Routes.Progress))
                 val showSubHeader = !isPublic && !inMain && route != null && !hasSelfHeader
 
                 Scaffold(
@@ -352,7 +370,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                             }
                         NavHost(
                             navController = nav,
-                            startDestination = Routes.Splash,
+                            startDestination = if (state.user?.localId != null) Routes.Main else Routes.Splash,
                             modifier = Modifier.weight(1f),
                             enterTransition = { fadeIn(tween(180)) },
                             exitTransition = { fadeOut(tween(120)) },
@@ -440,13 +458,7 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
                                 }
                             }
                             composable("gems/wallet") {
-                                app.gems?.let { LocalGemsScreen(state, it) {
-                                    if (state.user?.localId != null) logout()
-                                    else {
-                                        auth.chooseRole(AccountType.Student)
-                                        nav.navigate(Routes.Login) { launchSingleTop = true }
-                                    }
-                                } }
+                                app.gems?.let { LocalGemsScreen(state, it) { logout() } }
                             }
                             composable("gems/review") {
                                 app.gems?.let { LocalWeeklyReviewScreen(state, it) { nav.popBackStack() } }
@@ -476,14 +488,11 @@ fun ENMathApp(nav: NavHostController = rememberNavController()) {
     }
         if (accountPrompt)
             ResourcePackPresentation(enabled = true) {
-                AccountPrompt(
-                    { accountPrompt = false },
-                    {
-                        accountPrompt = false
-                        auth.chooseRole(AccountType.Student)
-                        clearNavigate(Routes.RegisterStudent)
-                    },
-                )
+                AlertDialog(onDismissRequest = { accountPrompt = false },
+                    title = { Text(tr("A local student file is needed", "يلزم ملف طالب محلي")) },
+                    text = { Text(tr("Guests can learn and plan locally. Cloud accounts are not connected. You can keep this guest file and choose a separate local student file.", "يمكن للزائر التعلم والتخطيط محليًا. الحسابات السحابية غير متصلة. يمكنك الاحتفاظ بملف الزائر واختيار ملف طالب محلي مستقل.")) },
+                    confirmButton = { TextButton({ accountPrompt = false; logout() }) { Text(tr("Choose a local file", "اختيار ملف محلي")) } },
+                    dismissButton = { TextButton({ accountPrompt = false }) { Text(tr("Back", "رجوع")) } })
             }
     }
 }

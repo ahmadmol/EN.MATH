@@ -51,7 +51,7 @@ object Routes {
             route?.startsWith("teacher/classes/") == true -> TeacherClasses
             route?.startsWith("teacher/assignments/") == true -> TeacherAssignments
             route == "teacher/settings" || route == "teacher/notifications" -> TeacherProfile
-            route in listOf("settings", "notifications", "library", Progress, "gems/wallet", "gems/review") -> Profile
+            route in listOf("settings", "notifications", "library", Progress, "gems/wallet", "gems/review", "planner", "review") -> Profile
             route == "explore" -> "explore"
             route?.startsWith("assignments") == true || route == "search" -> Home
             else -> route

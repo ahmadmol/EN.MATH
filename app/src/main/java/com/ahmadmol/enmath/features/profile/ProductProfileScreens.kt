@@ -39,7 +39,6 @@ import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.localgems.*
 import com.ahmadmol.enmath.core.model.*
-import com.ahmadmol.enmath.features.localgems.gemBalanceText
 
 private object ProfilePalette {
     @Composable
@@ -99,6 +98,7 @@ fun ProductProfileScreen(
     onSwitchRole: (() -> Unit)? = null,
     onLanguage: ((Language) -> Unit)? = null,
     gems: LocalGemsUiState = LocalGemsUiState(),
+    planner: com.ahmadmol.enmath.core.data.PlannerRepository? = null,
 ) {
     var confirm by remember { mutableStateOf(false) }
     val dark = isDarkTheme()
@@ -108,11 +108,21 @@ fun ProductProfileScreen(
         // 1. Premium Profile Hero Header Card
         ProfileHeroCard(state = state, teacher = teacher, dark = dark, ar = ar)
 
+        if (!teacher) {
+            Text(com.ahmadmol.enmath.features.student.studentStageLabel(state.user?.studyStage))
+            Text(if (state.user?.type == AccountType.Guest) tr("Guest · saved locally · no gems", "زائر · حفظ محلي · دون جواهر") else tr("Local student file · no cloud account", "ملف طالب محلي · دون حساب سحابي"))
+            com.ahmadmol.enmath.features.planner.PlanSummary(state, planner, onRoute)
+            TextButton({ onRoute("review") }) { Text(tr("Mistake review", "مراجعة الأخطاء")) }
+            if(com.ahmadmol.enmath.core.data.StudentCatalog.hasUnverifiedHistory(state)) {
+                com.ahmadmol.enmath.features.student.ReviewRequiredNotice()
+                TextButton({ onRoute("review/history") }) { Text(tr("Read preserved older records", "قراءة السجلات القديمة المحفوظة")) }
+            }
+        }
         // 2. Gems Card (Student Only)
         if (!teacher) {
             ProfileGemsCard(
                 gems = gems,
-                userEmail = state.user?.email,
+                user = state.user,
                 language = state.language,
                 dark = dark,
                 onClick = { onRoute("gems/wallet") }
@@ -199,7 +209,7 @@ fun ProductProfileScreen(
 
         // 5. Logout Button
         ProfileMenuItemCard(
-            title = if (ar) "تسجيل الخروج" else "Logout",
+            title = if (!teacher) tr("Switch local file", "تبديل الملف المحلي") else if (ar) "تسجيل الخروج" else "Logout",
             icon = Icons.Outlined.Logout,
             boxColor = if (dark) Color(0xFF3B1C22) else Color(0xFFFFEBEE),
             iconColor = MaterialTheme.colorScheme.error,
@@ -212,8 +222,8 @@ fun ProductProfileScreen(
     if (confirm) {
         AlertDialog(
             onDismissRequest = { confirm = false },
-            title = { Text(label(TextKey.t_7ac13fdc1e)) },
-            text = { Text(label(TextKey.t_acd69bb6a8)) },
+            title = { Text(if (!teacher) tr("Switch local file?", "تبديل الملف المحلي؟") else label(TextKey.t_7ac13fdc1e)) },
+            text = { Text(if (!teacher) tr("Recorded learning and plans stay in this file. Unsubmitted answers will be discarded. You will choose a separate local file.", "يبقى التعلم والخطط المحفوظة في هذا الملف. ستُترك الإجابات التي لم تُسلّم. ستختار ملفًا محليًا مستقلًا.") else label(TextKey.t_acd69bb6a8)) },
             confirmButton = {
                 TextButton(onLogout, Modifier.testTag("dialog-confirm")) {
                     Text(label(TextKey.t_2948c7a5a8))
@@ -238,7 +248,7 @@ private fun ProfileHeroCard(
     val email = if (user?.localId != null) tr("Local file on this device", "ملف محلي على هذا الجهاز")
         else user?.email.orEmpty().ifBlank { "student@example.com" }
     val initial = name.trim().take(1).uppercase()
-    val roleText = if (teacher) {
+    val roleText = if (user?.type == AccountType.Guest) tr("Local guest", "زائر محلي") else if (teacher) {
         label(TextKey.t_e6145a851c)
     } else {
         if (state.user?.studyStage == StudyStage.G9) { if (ar) "طالب • التاسع" else "Student • Grade 9" }
@@ -323,7 +333,7 @@ private fun ProfileHeroCard(
             Spacer(Modifier.height(4.dp))
 
             if (!teacher) {
-                val progress = LearningRules.stats(state).lessonFraction
+                val progress = com.ahmadmol.enmath.core.data.StudentCatalog.completed(state).size.toFloat() / state.lessons.size.coerceAtLeast(1)
                 val percentage = (progress * 100).toInt()
 
                 Surface(
@@ -351,7 +361,7 @@ private fun ProfileHeroCard(
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Text(
-                                    text = if (ar) "التقدم الكلي في التعلم" else "Overall Learning Progress",
+                                    text = if (ar) "إكمال المحتوى المتاح فقط" else "Available content completion only",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = ProfilePalette.textSecondary(dark)
                                 )
@@ -459,13 +469,13 @@ private fun ProfileHeroBackground(
 @Composable
 private fun ProfileGemsCard(
     gems: LocalGemsUiState,
-    userEmail: String?,
+    user: User?,
     language: Language,
     dark: Boolean,
     onClick: () -> Unit,
 ) {
     val ar = language == Language.Arabic
-    val balanceText = gemBalanceText(gems, userEmail, language)
+    val balanceText = profileGemBalanceText(gems, user, language)
 
     Surface(
         onClick = onClick,
@@ -533,7 +543,7 @@ private fun ProfileGemsCard(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = "$balanceText ${if (ar) "جوهرة" else "gems"}",
+                            text = balanceText,
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                             color = ProfilePalette.cyanAccent
                         )
