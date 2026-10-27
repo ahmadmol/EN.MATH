@@ -104,12 +104,13 @@ fun getFunctionDescription(expression: String, arabic: Boolean = true): String {
 }
 
 @Composable
-fun ExploreScreen() {
+fun ExploreScreen(initialExpression: String = "", onSave: ((String) -> Boolean)? = null) {
     val engine = remember { DemoGraphEngine() }
-    var functions by rememberSaveable { mutableStateOf(listOf("x^2", "sin(x)", "2x+1")) }
+    var functions by rememberSaveable { mutableStateOf(if (initialExpression.isBlank()) listOf("x^2", "sin(x)", "2x+1") else if (graphSupported(initialExpression)) listOf(initialExpression) else emptyList()) }
     var hidden by rememberSaveable { mutableStateOf(listOf<String>()) }
-    var input by rememberSaveable { mutableStateOf("") }
-    var error by rememberSaveable { mutableStateOf(false) }
+    var input by rememberSaveable { mutableStateOf(initialExpression.takeIf { !graphSupported(it) }.orEmpty()) }
+    var error by rememberSaveable { mutableStateOf(initialExpression.isNotBlank() && !graphSupported(initialExpression)) }
+    var savedMessage by remember { mutableStateOf<Boolean?>(null) }
     var zoom by rememberSaveable { mutableFloatStateOf(1f) }
     var panX by rememberSaveable { mutableFloatStateOf(0f) }
     var panY by rememberSaveable { mutableFloatStateOf(0f) }
@@ -138,7 +139,7 @@ fun ExploreScreen() {
         )
     }
 
-    ScreenPage(Modifier.testTag("screen-explore")) {
+    ScreenPage(Modifier.imePadding().testTag("screen-explore")) {
         // Header
         FunctionLabHeader(isDark = isDark)
 
@@ -150,7 +151,7 @@ fun ExploreScreen() {
                 error = false
             },
             onAddFunction = {
-                if (input.isNotBlank() && engine.evaluate(input, 0.0) != null) {
+                if (input.isNotBlank() && graphSupported(input)) {
                     functions = (functions + input).distinct().take(8)
                     input = ""
                     error = false
@@ -215,8 +216,14 @@ fun ExploreScreen() {
                     },
                     isDark = isDark
                 )
+                onSave?.let { save ->
+                    OutlinedButton({ savedMessage = save(expr) }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                        Text(tr("Save function to my library", "حفظ الدالة في مكتبتي"))
+                    }
+                }
             }
         }
+        savedMessage?.let { ok -> Text(if (ok) tr("Saved locally in your library", "حُفظت محليًا في مكتبتك") else tr("Save was not confirmed", "لم يُؤكَّد الحفظ")) }
 
         if (!student) graphControls()
 

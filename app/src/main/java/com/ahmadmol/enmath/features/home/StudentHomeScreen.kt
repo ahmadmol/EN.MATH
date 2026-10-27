@@ -69,10 +69,10 @@ fun StudentHomeScreen(state: LearningState, onRoute: (String) -> Unit) {
                 .filter { a ->
                     a.due >= System.currentTimeMillis() &&
                         state.product.classes.any {
-                            it.id == a.classId && "ahmed" in it.studentIds
+                            it.id == a.classId && state.activeStudentId in it.studentIds
                         } &&
                         state.product.submissions.none {
-                            it.assignmentId == a.id && it.studentId == "ahmed"
+                            it.assignmentId == a.id && it.studentId == state.activeStudentId
                         }
                 }
                 .minByOrNull { it.due }

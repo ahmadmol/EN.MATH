@@ -136,7 +136,7 @@ fun TopicLessonsScreen(
     com.ahmadmol.enmath.features.student.StudentLimitsTopic(
         state = state,
         lesson = onLesson,
-        practice = { onPractice("$id-practice-set") },
+        practice = { state.practiceSets.firstOrNull { it.topicId == id && !it.quiz }?.let { onPractice(it.id) } },
         topicId = id,
     )
 }
@@ -263,7 +263,7 @@ fun LessonScreen(
         val topic = state.topicOf(id)
         val book = state.books.find { b -> b.topics.any { it.id == topic?.id } }
         val isSaved = id in state.product.savedLessons
-        val isCompleted = id in state.completed
+        val isCompleted = id in StudentCatalog.completed(state)
 
         Column(
             modifier = Modifier
@@ -550,9 +550,9 @@ fun LessonScreen(
                 var answer by rememberSaveable(id) { mutableStateOf("") }
                 var checked by rememberSaveable(id) { mutableStateOf(false) }
                 val checkpointOwner by rememberSaveable(id, "gems-checkpoint-owner") {
-                    mutableStateOf(if (answer.isBlank()) LearningRules.commandOwner(state) else null)
+                    mutableStateOf(if (answer.isBlank()) LearningRules.sessionOwner(state) else null)
                 }
-                val isCorrect = answer.trim() == lesson.checkpointAnswer
+                val isCorrect = MathAnswer.matches(lesson.checkpointAnswer, answer)
 
                 LessonSectionCard(
                     icon = Icons.Outlined.Quiz,
@@ -766,7 +766,8 @@ fun LessonScreen(
 
                 // Button 2: Practice Skill
                 Surface(
-                    onClick = { onPractice("${topic?.id}-practice-set") },
+                    onClick = { StudentCatalog.practiceForLesson(state, id)?.let { onPractice(it.id) } },
+                    enabled = StudentCatalog.practiceForLesson(state, id) != null,
                     shape = RoundedCornerShape(26.dp),
                     color = electricBlue,
                     contentColor = Color.White,

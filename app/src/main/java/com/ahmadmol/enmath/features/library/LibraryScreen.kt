@@ -28,10 +28,10 @@ private data class FilterTabItem(val index: Int, val title: String, val icon: Im
 
 @Composable
 fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (String) -> Unit) {
-    var tab by rememberSaveable { mutableIntStateOf(0) }
-    var query by rememberSaveable { mutableStateOf("") }
-    var topic by rememberSaveable { mutableIntStateOf(0) }
-    var resourceType by rememberSaveable { mutableIntStateOf(0) }
+    var tab by rememberSaveable(state.user?.localId, state.generation) { mutableIntStateOf(0) }
+    var query by rememberSaveable(state.user?.localId, state.generation) { mutableStateOf("") }
+    var topic by rememberSaveable(state.user?.localId, state.generation) { mutableIntStateOf(0) }
+    var resourceType by rememberSaveable(state.user?.localId, state.generation) { mutableIntStateOf(0) }
     val topics = state.books.flatMap { it.topics }
     val normalized = LearningRules.search(query)
 
@@ -108,12 +108,12 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
                 .filter {
                     it.id in state.product.savedLessons &&
                         LearningRules.search(it.title.en + it.title.ar).contains(normalized) &&
-                        (topic == 0 || it.id.startsWith(topics[topic - 1].id))
+                        (topic == 0 || state.topicOf(it.id)?.id == topics.getOrNull(topic - 1)?.id)
                 }
 
             lessons.forEach { l ->
                 count++
-                val isDone = l.id in state.completed
+                val isDone = l.id in StudentCatalog.completed(state)
                 Card(
                     onClick = { onLesson(l.id) },
                     modifier = Modifier.fillMaxWidth().testTag("lesson-${l.id}"),
@@ -191,11 +191,11 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
                                 Surface(
                                     shape = CircleShape,
                                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                    modifier = Modifier.size(36.dp)
+                                    modifier = Modifier.size(48.dp)
                                 ) {
                                     Box(contentAlignment = Alignment.Center) {
                                         Icon(
-                                            imageVector = Icons.Outlined.MoreVert,
+                                            imageVector = Icons.Outlined.Description,
                                             contentDescription = null,
                                             modifier = Modifier.size(18.dp),
                                             tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -235,7 +235,7 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
                                 onClick = { onLesson(l.id) },
                                 shape = CircleShape,
                                 color = MaterialTheme.colorScheme.surfaceVariant,
-                                modifier = Modifier.size(36.dp)
+                                modifier = Modifier.size(48.dp)
                             ) {
                                 Box(contentAlignment = Alignment.Center) {
                                     Icon(
@@ -258,7 +258,7 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
                 .filter {
                     it.id in state.product.savedProblems &&
                         LearningRules.search(it.expression).contains(normalized) &&
-                        (topic == 0 || it.topicId == topics[topic - 1].id)
+                        (topic == 0 || it.topicId == topics.getOrNull(topic - 1)?.id.orEmpty())
                 }
                 .forEach { h ->
                     count++
@@ -300,7 +300,7 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
                         state.product.classes.any { it.id == c && state.activeStudentId in it.studentIds }
                     } &&
                         LearningRules.search(r.title.en + r.title.ar).contains(normalized) &&
-                        (topic == 0 || r.topicId == topics[topic - 1].id) &&
+                        (topic == 0 || r.topicId == topics.getOrNull(topic - 1)?.id.orEmpty()) &&
                         (resourceType == 0 ||
                             r.kind ==
                                 com.ahmadmol.enmath.core.model.ResourceKind.entries[
@@ -365,7 +365,7 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
                                 ) {
                                     Box(contentAlignment = Alignment.Center) {
                                         Icon(
-                                            imageVector = Icons.Outlined.MoreVert,
+                                            imageVector = Icons.Outlined.Description,
                                             contentDescription = null,
                                             modifier = Modifier.size(18.dp),
                                             tint = RefColors.TextMuted

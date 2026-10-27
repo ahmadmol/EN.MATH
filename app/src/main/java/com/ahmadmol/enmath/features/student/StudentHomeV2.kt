@@ -60,9 +60,7 @@ import com.ahmadmol.enmath.features.localgems.*
 enum class JourneyNodeStatus {
     COMPLETED,
     CURRENT,
-    LOCKED,
-    AVAILABLE_REWARD,
-    CLAIMED_REWARD
+    LOCKED
 }
 
 /** Definition of a node on the learning journey path */
@@ -76,7 +74,6 @@ data class JourneyNodeData(
     val subtitle: Copy?,
     val symbolText: String,
     val isHeaderNode: Boolean = false,
-    val isRewardNode: Boolean = false,
     val xOffsetDp: Int = 0 // Offset from center to create the winding path effect
 )
 
@@ -116,8 +113,6 @@ fun StudentLearningHome(
 
     val mastery = LearningRules.topic(state, "limits")
 
-    // State for claimed reward chests
-    var claimedRewards by remember { mutableStateOf(setOf<String>()) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Build curriculum journey nodes for Syrian Scientific Baccalaureate
@@ -157,20 +152,6 @@ fun StudentLearningHome(
                 subtitle = Copy("Explanation · Examples · Practice", "شرح · أمثلة · تدريبات"),
                 symbolText = "f(x)",
                 xOffsetDp = 30
-            ),
-
-            // Section Reward Chest
-            JourneyNodeData(
-                id = "reward-1",
-                lessonId = null,
-                chapterNumber = 1,
-                chapterTitle = Copy("Gems Reward", "مكافأة الجواهر"),
-                chapterSubtitle = Copy("Complete section to claim", "أكمل هذا القسم للحصول على الجواهر"),
-                title = Copy("Gems Chest Reward", "مكافأة الجواهر"),
-                subtitle = Copy("Complete this chapter", "أكمل هذا القسم"),
-                symbolText = "🎁",
-                isRewardNode = true,
-                xOffsetDp = 65
             ),
 
             // Chapter 2: Derivatives
@@ -314,7 +295,6 @@ fun StudentLearningHome(
                     studentName = studentName,
                     gemCountText = gemCountText,
                     streak = stats.streak,
-                    rankText = if (isAr) "المرتبة 25" else "Rank 25",
                     dark = dark,
                     isAr = isAr,
                     onOpenWallet = { open("gems/wallet") }
@@ -344,13 +324,9 @@ fun StudentLearningHome(
                     nodes = journeyNodes,
                     completedSet = completedSet,
                     activeLessonId = activeLessonId,
-                    claimedRewards = claimedRewards,
                     dark = dark,
                     isAr = isAr,
-                    open = open,
-                    // No approved durable grant exists for this chest. Keep it unclaimed
-                    // and open the existing wallet/status instead of reporting a fake success.
-                    onClaimReward = { open("gems/wallet") }
+                    open = open
                 )
 
                 // -------------------------------------------------------------
@@ -496,14 +472,13 @@ fun StudentLearningHome(
 
 /**
  * Top Header matching reference visual:
- * Deep Navy pill, Greeting with student name, Gems badge, Streak, Rank
+ * Deep Navy pill, Greeting with student name, Gems badge and Streak
  */
 @Composable
 private fun JourneyTopHeader(
     studentName: String,
     gemCountText: String,
     streak: Int,
-    rankText: String,
     dark: Boolean,
     isAr: Boolean,
     onOpenWallet: () -> Unit
@@ -564,7 +539,7 @@ private fun JourneyTopHeader(
                 }
             }
 
-            // Row 2: Status Badges (Gems, Streak, Rank)
+            // Row 2: Ledger balance and recorded streak
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -625,28 +600,7 @@ private fun JourneyTopHeader(
                     }
                 }
 
-                // Rank Badge
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (dark) Color(0xFF292415) else Color(0xFFFFF8E5),
-                    border = BorderStroke(1.dp, Color(0xFFFFB800).copy(alpha = 0.4f))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "🏆",
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = rankText,
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color(0xFFFFB800)
-                        )
-                    }
-                }
+
             }
         }
     }
@@ -804,11 +758,9 @@ private fun JourneyVerticalPathContainer(
     nodes: List<JourneyNodeData>,
     completedSet: Set<String>,
     activeLessonId: String,
-    claimedRewards: Set<String>,
     dark: Boolean,
     isAr: Boolean,
-    open: (String) -> Unit,
-    onClaimReward: (String) -> Unit
+    open: (String) -> Unit
 ) {
     var lastChapter = 0
 
@@ -821,12 +773,6 @@ private fun JourneyVerticalPathContainer(
     ) {
         nodes.forEachIndexed { index, node ->
             val status = when {
-                node.isRewardNode -> {
-                    if (node.id in claimedRewards) JourneyNodeStatus.CLAIMED_REWARD
-                    else if (completedSet.contains("limits-foundations") && completedSet.contains("limits-practice"))
-                        JourneyNodeStatus.AVAILABLE_REWARD
-                    else JourneyNodeStatus.LOCKED
-                }
                 node.lessonId in completedSet -> JourneyNodeStatus.COMPLETED
                 node.lessonId == activeLessonId || (index == 2 && completedSet.size >= 2) -> JourneyNodeStatus.CURRENT
                 else -> JourneyNodeStatus.LOCKED
@@ -852,8 +798,7 @@ private fun JourneyVerticalPathContainer(
                 status = status,
                 dark = dark,
                 isAr = isAr,
-                open = open,
-                onClaimReward = { onClaimReward(node.id) }
+                open = open
             )
         }
     }
@@ -926,8 +871,7 @@ private fun JourneyNodeRow(
     status: JourneyNodeStatus,
     dark: Boolean,
     isAr: Boolean,
-    open: (String) -> Unit,
-    onClaimReward: () -> Unit
+    open: (String) -> Unit
 ) {
     val xOffsetDp = node.xOffsetDp.dp
     val nextXOffsetDp = nextNode?.xOffsetDp?.dp ?: 0.dp
@@ -1000,12 +944,7 @@ private fun JourneyNodeRow(
                         dark = dark
                     )
 
-                    JourneyNodeStatus.AVAILABLE_REWARD, JourneyNodeStatus.CLAIMED_REWARD -> RewardChestJourneyNode(
-                        node = node,
-                        isClaimed = status == JourneyNodeStatus.CLAIMED_REWARD,
-                        dark = dark,
-                        onClaim = onClaimReward
-                    )
+
                 }
             }
         }
@@ -1234,66 +1173,6 @@ private fun LockedJourneyNode(
                 contentDescription = null,
                 tint = if (dark) Color(0xFF8B98C7) else Color(0xFF5A668C),
                 modifier = Modifier.size(11.dp)
-            )
-        }
-    }
-}
-
-/**
- * Reward Chest Node: Golden Chest with claimable Gems
- */
-@Composable
-private fun RewardChestJourneyNode(
-    node: JourneyNodeData,
-    isClaimed: Boolean,
-    dark: Boolean,
-    onClaim: () -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        // Tooltip Badge
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = if (isClaimed) if (dark) Color(0xFF1E241A) else Color(0xFFEDF7EB)
-            else if (dark) Color(0xFF2C2412) else Color(0xFFFFF8E5),
-            border = BorderStroke(
-                1.dp,
-                if (isClaimed) Color(0xFF4CAF50) else Color(0xFFFFB800)
-            )
-        ) {
-            Text(
-                text = if (isClaimed) "تم استلام المكافأة" else node.title.text(),
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                color = if (isClaimed) Color(0xFF4CAF50) else Color(0xFFFFB800),
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
-            )
-        }
-
-        // Golden Chest Circle
-        Box(
-            modifier = Modifier
-                .size(60.dp)
-                .shadow(
-                    elevation = if (isClaimed) 2.dp else 8.dp,
-                    shape = CircleShape,
-                    ambientColor = Color(0xFFFFB800),
-                    spotColor = Color(0xFFFFB800)
-                )
-                .background(
-                    brush = if (isClaimed) Brush.linearGradient(listOf(Color(0xFF388E3C), Color(0xFF2E7D32)))
-                    else Brush.radialGradient(listOf(Color(0xFFFFD54F), Color(0xFFFF8F00))),
-                    shape = CircleShape
-                )
-                .border(2.dp, if (isClaimed) Color(0xFF81C784) else Color(0xFFFFE082), CircleShape)
-                .clip(CircleShape)
-                .clickable(enabled = !isClaimed) { onClaim() },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = if (isClaimed) "✅" else "🎁",
-                fontSize = 26.sp
             )
         }
     }

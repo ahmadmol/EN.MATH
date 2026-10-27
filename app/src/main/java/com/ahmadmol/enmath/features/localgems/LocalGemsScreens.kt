@@ -46,7 +46,8 @@ private fun units(value: Int, language: Language)=NumberFormat.getIntegerInstanc
 fun gemBalanceText(ui: LocalGemsUiState, currentOwner: String?, language: Language): String {
     val ar = language == Language.Arabic
     if (currentOwner == null) return if (ar) "غير متاح" else "N/A"
-    if (ui.owner != currentOwner) return if (ar) "تحميل…" else "Loading…"
+    if (ui.owner != currentOwner || (ui.account != null && ui.account.owner != currentOwner))
+        return if (ar) "تحميل…" else "Loading…"
     if (ui.error != null) return if (ar) "خطأ" else "Error"
     if (ui.account == null) return if (ar) "تحميل…" else "Loading…"
     return units(ui.account.balance, language)
@@ -251,6 +252,12 @@ fun LocalGemsScreen(state: LearningState, gems: LocalGemsCoordinator, onStudentS
     val ui=observed.takeIf { it.owner==owner } ?: LocalGemsUiState()
     val ar=state.language==Language.Arabic
     fun text(arabic:String,english:String)=if(ar) arabic else english
+    var chooseFile by remember(owner) { mutableStateOf(false) }
+    if (chooseFile) AlertDialog(onDismissRequest = { chooseFile = false },
+        title = { Text(text("اختيار ملف محلي مستقل؟", "Choose a separate local file?")) },
+        text = { Text(text("يبقى تقدم الزائر وخطته محفوظين. الإجابات غير المسلّمة لن تُنقل إلى الملف الآخر.", "Guest learning and plans stay saved. Unsubmitted answers will not transfer to the other file.")) },
+        confirmButton = { TextButton({ chooseFile = false; onStudentSignIn() }) { Text(text("اختيار ملف", "Choose file")) } },
+        dismissButton = { TextButton({ chooseFile = false }) { Text(text("إلغاء", "Cancel")) } })
     var section by rememberSaveable(owner) { mutableStateOf("wallet") }
     var confirmation by rememberSaveable(owner) { mutableStateOf<String?>(null) }
     LaunchedEffect(owner) { gems.refresh(state) }
@@ -260,8 +267,8 @@ fun LocalGemsScreen(state: LearningState, gems: LocalGemsCoordinator, onStudentS
             Text(text("جواهري", "My gems"), style=MaterialTheme.typography.headlineMedium)
             Text(if(state.user?.type==com.ahmadmol.enmath.core.model.AccountType.Teacher)
                 text("أنت في واجهة المعلم. مكافآت الجواهر تخص حساب الطالب.","You are in the teacher workspace. Gem rewards belong to a student account.")
-                else text("سجّل الدخول بحساب الطالب داخل EN.MATH وبريد إلكتروني لبدء رصيد خاص بك. لا حساب إضافي للجواهر، ولا مكافآت رجعية.","Sign in to EN.MATH as a student with an email to start your own balance. No separate Gems login or retroactive rewards."))
-            Button(onClick=onStudentSignIn,modifier=Modifier.heightIn(min=48.dp).testTag("gems-use-student-account")) { Text(text("دخول حساب الطالب", "Student sign in")) }
+                else text("الجواهر غير متاحة للزائر. يمكنك اختيار ملف طالب محلي مستقل دون حساب سحابي أو بريد إلكتروني. يبقى تقدم الزائر محفوظًا ولا تُمنح مكافآت رجعية.","Gems are not available to guests. Choose a separate local student file without a cloud account or email. Guest progress stays saved; there are no retroactive rewards."))
+            Button(onClick={ chooseFile = true },modifier=Modifier.heightIn(min=48.dp).testTag("gems-use-student-account")) { Text(text("اختيار ملف طالب محلي", "Choose a local student file")) }
             return@PremiumPage
         }
         if(ui.content!=null) {
@@ -311,7 +318,7 @@ fun LocalGemsScreen(state: LearningState, gems: LocalGemsCoordinator, onStudentS
                 style = MaterialTheme.typography.bodyMedium,
                 color = RefColors.TextSecondary
             )
-            LocalGemCatalog.items.forEach { item ->
+            (if (state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.G9) emptyList() else LocalGemCatalog.items).forEach { item ->
                 val owned = ui.account?.unlocks?.any { it.itemId == item.id } == true
                 val enough = (ui.account?.balance ?: -1) >= item.price
 
@@ -437,8 +444,10 @@ fun LocalGemsScreen(state: LearningState, gems: LocalGemsCoordinator, onStudentS
                 RewardChestArtwork()
                 Text(text("محتواك الإضافي سيظهر هنا بعد فتحه بالجواهر.","Your extra content will appear here after you unlock it."))
             }
+            if (owned.isNotEmpty() && state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.G9)
+                Text(tr("Historical unlocks are preserved. These resources belong to another stage and cannot be opened in this file.", "الفتوحات السابقة محفوظة. هذه الموارد تخص مرحلة أخرى ولا تُفتح في هذا الملف."))
             owned.forEach { grant -> LocalGemCatalog.item(grant.itemId)?.let { item ->
-                OutlinedButton(onClick={gems.openContent(state,owner,item.id)},enabled=!ui.busy,
+                OutlinedButton(onClick={gems.openContent(state,owner,item.id)},enabled=!ui.busy && state.user?.studyStage != com.ahmadmol.enmath.core.model.StudyStage.G9,
                     modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("local-gems-owned-${item.id}")) { Text(if(ar) item.title.ar else item.title.en) }
             } }
             Text(text("سجل الجواهر","Gem history"),style=MaterialTheme.typography.titleLarge)

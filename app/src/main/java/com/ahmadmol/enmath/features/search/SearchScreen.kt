@@ -24,7 +24,7 @@ fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (Str
     val term = LearningRules.search(query)
     val ar = state.language == com.ahmadmol.enmath.core.model.Language.Arabic
 
-    ScreenPage(Modifier.testTag("screen-search")) {
+    ScreenPage(Modifier.imePadding().testTag("screen-search")) {
         // Hero Card matching Image 3
         RefHeroCard(
             title = tr("Search smart and learn more.", "ابحث بذكاء وتعلم أكثر."),
@@ -136,7 +136,7 @@ fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (Str
         val topics = state.books.flatMap { it.topics }.filter { match(it.title.en, it.title.ar) }
         val lessons = state.books.flatMap { it.lessons }.filter { match(it.title.en, it.title.ar) }
         val concepts = state.books.flatMap { it.lessons }.filter { match(it.rule.en, it.rule.ar) }
-        val questions = state.questions.filter { match(it.prompt.en + it.expression, it.prompt.ar + it.topicId) }
+        val questions = state.questions.filter { StudentCatalog.practiceForQuestion(state, it.id) != null }.filter { match(it.prompt.en + it.expression, it.prompt.ar + it.topicId) }
 
         if (topics.isEmpty() && lessons.isEmpty() && concepts.isEmpty() && questions.isEmpty()) {
             RefEmptyState(
@@ -149,7 +149,7 @@ fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (Str
         if (topics.isNotEmpty()) {
             SectionTitle(label(TextKey.t_519b0bc526))
             topics.forEach { t ->
-                TopicCard(t, state.completed) {
+                TopicCard(t, StudentCatalog.completed(state)) {
                     onSearch(query)
                     onRoute("topic/${t.id}")
                 }
@@ -158,7 +158,7 @@ fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (Str
         if (lessons.isNotEmpty()) {
             SectionTitle(label(TextKey.t_6c48dfb4c3))
             lessons.forEach { l ->
-                LessonCard(l, l.id in state.completed) {
+                LessonCard(l, l.id in StudentCatalog.completed(state)) {
                     onSearch(query)
                     onRoute("lesson/${l.id}")
                 }
@@ -188,7 +188,7 @@ fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (Str
             SectionTitle(label(TextKey.t_353becf694))
             questions.take(8).forEach { q ->
                 Card(
-                    onClick = { onSearch(query); onRoute("practice/${q.topicId}-practice-set") },
+                    onClick = { onSearch(query); onRoute("practice/${StudentCatalog.practiceForQuestion(state, q.id)?.id}") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -201,7 +201,7 @@ fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (Str
                         MathText(q.expression)
                         RefSecondaryButton(
                             text = label(TextKey.t_0991118449),
-                            onClick = { onSearch(query); onRoute("practice/${q.topicId}-practice-set") }
+                            onClick = { onSearch(query); onRoute("practice/${StudentCatalog.practiceForQuestion(state, q.id)?.id}") }
                         )
                     }
                 }

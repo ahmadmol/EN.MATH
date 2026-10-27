@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 
 class SolverViewModel(private val saved: SavedStateHandle) : ViewModel() {
     private val engine: SolverEngine = DemoSolverEngine()
+    val graphInput get() = saved.get<String>("graphInput").orEmpty()
+    fun graph(expression: String) { saved["graphInput"] = expression.take(100) }
     val expression = saved.getStateFlow("expression", "")
     val selectedCategory = saved.getStateFlow("category", "all")
     val recent = saved.getStateFlow("recent", arrayListOf<String>())
@@ -56,6 +58,7 @@ class SolverViewModel(private val saved: SavedStateHandle) : ViewModel() {
     }
 
     fun reset() {
+        saved["graphInput"] = ""
         undoStack.clear()
         saved["expression"] = ""
         saved["submitted"] = ""
