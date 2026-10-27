@@ -31,6 +31,10 @@ internal class LocalLearnerStore(private val preferences: (String) -> SharedPref
         return try {
             JSONObject(raw).also { o ->
                 require(o.getInt("version") == 1)
+                if (o.has("guestNotices")) {
+                    val notices = o.getJSONObject("guestNotices")
+                    StudyStage.entries.forEach { stage -> if (notices.has(stage.name)) require(notices.getInt(stage.name) >= 1) }
+                }
                 val profiles = array(o, "profiles").map(::profile)
                 require(profiles.map { it.id }.distinct().size == profiles.size)
                 val wallets = profiles.filterNot { it.guest }.map { it.legacyWalletKey ?: it.id }
@@ -63,6 +67,14 @@ internal class LocalLearnerStore(private val preferences: (String) -> SharedPref
     private fun json(p: LocalLearner) = JSONObject().put("id", p.id).put("name", p.name)
         .put("stage", p.stage.name).put("guest", p.guest).put("wallet", p.legacyWalletKey.orEmpty())
         .put("source", p.legacySource.orEmpty())
+    fun guestNotices(): Set<StudyStage> {
+        val a = read().optJSONObject("guestNotices") ?: return emptySet()
+        return StudyStage.entries.filter { a.optInt(it.name, 0) >= 1 }.toSet()
+    }
+    fun acknowledgeGuestNotice(stage: StudyStage) {
+        val o = read(); val a = o.optJSONObject("guestNotices") ?: JSONObject()
+        a.put(stage.name, 1); write(o.put("guestNotices", a))
+    }
     fun profiles(): List<LocalLearner> = array(read(), "profiles").map(::profile)
     fun active(): LocalLearner? = read().getString("active").let { id -> profiles().find { it.id == id } }
     fun select(id: String?) {

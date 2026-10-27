@@ -50,3 +50,7 @@ class DemoGraphEngine : GraphEngine {
         return sum.takeIf { it.isFinite() }
     }
 }
+
+/** A grammar support probe, not a claim that every sampled x is in the domain. */
+fun graphSupported(expression: String): Boolean = expression.isNotBlank() &&
+    listOf(-2.0, -1.0, 0.0, 1.0, 2.0).any { DemoGraphEngine().evaluate(expression, it) != null }

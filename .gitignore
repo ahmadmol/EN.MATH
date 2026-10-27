@@ -68,3 +68,16 @@ docs/visual-polish/evidence/
 docs/visual-polish/DELIVERY.json
 docs/visual-polish/SCREENSHOT_SHA256.csv
 docs/visual-polish/review.html
+
+# Local user databases and transaction sidecars
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.sqlite3-wal
+*.sqlite3-shm

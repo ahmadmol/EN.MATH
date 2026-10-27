@@ -7,8 +7,12 @@ data class StudentLearningRecord(val completed: Set<String>, val product: Produc
 
 data class LearningState(
     val user: User? = null,
+    val generation: Long = 0,
+    val catalogAvailable: Boolean = true,
+    val reviewRequired: Boolean = false,
     val localGuestId: String? = null,
     val localProfiles: List<LocalLearner> = emptyList(),
+    val acknowledgedGuestStages: Set<StudyStage> = emptySet(),
     val legacyCandidates: List<LegacyCandidate> = emptyList(),
     val storageIssue: String? = null,
     val studentRecordId: String? = null,
@@ -22,7 +26,7 @@ data class LearningState(
     val product: ProductState = ProductSeed.seed(),
 ) {
     val books
-        get() = if (user?.studyStage == StudyStage.G9) emptyList() else DemoContent.books
+        get() = if (!catalogAvailable) emptyList() else StudentCatalog.catalog(user?.studyStage ?: StudyStage.BAC).books
 
     val topics
         get() = books.flatMap { it.topics }
@@ -34,13 +38,13 @@ data class LearningState(
         get() = ProductSeed.students
 
     val questions
-        get() = ProductSeed.questions + product.questions
+        get() = if (!catalogAvailable) emptyList() else StudentCatalog.catalog(user?.studyStage ?: StudyStage.BAC).questions + (if (user?.localId == null) product.questions else emptyList())
 
     val practiceSets
-        get() = if (user?.studyStage == StudyStage.G9) emptyList() else ProductSeed.sets
+        get() = if (!catalogAvailable) emptyList() else StudentCatalog.catalog(user?.studyStage ?: StudyStage.BAC).sets
 
     val examples
-        get() = DemoContent.examples
+        get() = if (!catalogAvailable || user?.studyStage == StudyStage.G9) emptyList() else DemoContent.examples
 
     val dailyGoal
         get() = DemoContent.dailyGoal
@@ -94,6 +98,20 @@ interface LearningRepository {
         if (lesson != null) completeLesson(lesson)
         changeProduct { transform(it).copy(learningCommands = it.learningCommands + command) }
         return true
+    }
+
+    fun openScoped(scope: StudentScope, ref: ContentRef): Boolean {
+        if (!StudentCatalog.accepts(state.value, scope) || !StudentCatalog.accepts(state.value, ref)) return false
+        openLesson(ref.lessonId); return true
+    }
+    fun changeScoped(scope: StudentScope, transform: (ProductState) -> ProductState): Boolean {
+        if (!StudentCatalog.accepts(state.value, scope)) return false
+        changeProduct(transform); return true
+    }
+    fun recordCommand(scope: StudentScope, ref: ContentRef?, command: String, payload: String,
+        transform: (ProductState) -> ProductState): Boolean {
+        if (!StudentCatalog.accepts(state.value, scope) || (ref != null && !StudentCatalog.accepts(state.value, ref))) return false
+        return recordLearning(LearningRules.sessionOwner(state.value), command, ref?.lessonId, transform)
     }
 
     fun acknowledgeGem(owner: String, event: String) {

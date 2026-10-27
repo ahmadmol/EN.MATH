@@ -21,7 +21,12 @@ object LearningRules {
     }
 
     fun acceptsCommand(state: LearningState, startedBy: String?): Boolean =
-        startedBy != null && startedBy == commandOwner(state)
+        startedBy != null && startedBy == (if (state.user?.localId != null) sessionOwner(state) else commandOwner(state))
+
+    /** UI captures a generation ticket so A -> B -> A rejects the first A session. */
+    fun sessionOwner(state: LearningState): String? = commandOwner(state)?.let {
+        if (state.user?.localId == null) it else "$it|${state.generation}|${state.user.studyStage?.name}|${StudentCatalog.scope(state)?.edition}"
+    }
 
     val historyTopicIds = listOf("all", "limits", "derivatives", "integrals", "matrices", "probability")
 
@@ -50,23 +55,7 @@ object LearningRules {
         return "unidentified:${u.type.name.lowercase(Locale.ROOT)}"
     }
 
-    fun correct(question: Question, answer: String): Boolean {
-        fun normalized(s: String) =
-            s.trim().lowercase(Locale.ROOT).replace(" ", "").replace("−", "-").replace("²", "^2")
-        fun number(s: String): Double? {
-            val text = s.trim()
-            val parts = text.split("/")
-            return if (parts.size == 2) {
-                val a = parts[0].toDoubleOrNull()
-                val b = parts[1].toDoubleOrNull()
-                if (a != null && b != null && b != 0.0) a / b else null
-            } else text.toDoubleOrNull()
-        }
-        val actual = number(answer)
-        val expected = number(question.answer)
-        return if (actual != null && expected != null) kotlin.math.abs(actual - expected) < 1e-6
-        else normalized(answer) == normalized(question.answer)
-    }
+    fun correct(question: Question, answer: String): Boolean = MathAnswer.matches(question.answer, answer)
 
     fun mastery(topic: Topic, completed: Set<String>, accuracy: Float, quiz: Float): TopicMastery {
         val done = topic.lessons.count { it.id in completed }
@@ -200,6 +189,7 @@ internal object ProductCodec {
                 p.attempts.map {
                     JSONObject()
                         .put("set", it.setId)
+                        .put("edition", it.edition).put("stage", it.stage?.name).put("command", it.commandId)
                         .put("answers", JSONObject(it.answers))
                         .put("correct", it.correct)
                         .put("total", it.total)
@@ -315,6 +305,8 @@ internal object ProductCodec {
             .put("enabled", p.notificationsEnabled)
             .put("reminder", p.reminder)
             .put("learning_commands", JSONArray(p.learningCommands.toList()))
+            .put("command_receipts", JSONObject(p.commandReceipts))
+            .put("completion_refs", JSONObject(p.completionRefs))
             .put("verified_lessons", JSONObject(p.verifiedLessons))
             .put("pending_gems", array(p.pendingGemEvents.map {
                 JSONObject().put("id", it.id).put("owner", it.owner).put("kind", it.kind)
@@ -369,6 +361,9 @@ internal object ProductCodec {
                                 it.getInt("total"),
                                 it.getInt("seconds"),
                                 it.getLong("time"),
+                                it.optString("edition").takeIf(String::isNotBlank),
+                                it.optString("stage").takeIf(String::isNotBlank)?.let(StudyStage::valueOf),
+                                it.optString("command").takeIf(String::isNotBlank),
                             )
                         },
                     classes =
@@ -457,6 +452,8 @@ internal object ProductCodec {
                     notificationsEnabled = o.optBoolean("enabled", true),
                     reminder = o.optString("reminder", "18:00"),
                     learningCommands = if (o.has("learning_commands")) strings(o, "learning_commands").toSet() else emptySet(),
+                    completionRefs = if (o.has("completion_refs")) maps(o, "completion_refs") else emptyMap(),
+                    commandReceipts = if (o.has("command_receipts")) maps(o, "command_receipts") else emptyMap(),
                     verifiedLessons = if (o.has("verified_lessons")) maps(o, "verified_lessons") else emptyMap(),
                     pendingGemEvents = if (o.has("pending_gems")) objects(o, "pending_gems").map {
                         PendingGemEvent(it.getString("id"), it.getString("owner"), it.getString("kind"),

@@ -26,6 +26,41 @@ private class TestGemStorage : LocalGemsStorage {
     }
 }
 class LocalGemsCoordinatorTest {
+    @Test fun profileBalanceFollowsUuidLegacyGuestSwitchAndCoordinatorRestartWithoutWrites() {
+        val storage = TestGemStorage()
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            val fresh = com.ahmadmol.enmath.core.data.LocalLearner(
+                "00000000-0000-4000-8000-000000000011", "Local", StudyStage.BAC, false)
+            val legacy = fresh.copy(id = "00000000-0000-4000-8000-000000000012",
+                legacyWalletKey = "preserved-wallet@example.test")
+            val historical = LocalGemsPolicy.award(GemAccount(legacy.legacyWalletKey!!, now),
+                GemReward.LESSON, "historical", now)
+            storage.accounts[historical.owner] = historical
+            fun snapshot(profile: com.ahmadmol.enmath.core.data.LocalLearner) = LearningState(user = profile.user())
+            fun display(g: LocalGemsCoordinator, state: LearningState) =
+                com.ahmadmol.enmath.features.profile.profileGemBalanceText(g.ui.value, state.user, Language.English)
+            val coordinator = LocalGemsCoordinator(storage, scope, { "fixture" }, { now })
+            val newState = snapshot(fresh)
+            coordinator.bind(newState); await(coordinator) { it.account?.owner == fresh.id }
+            assertEquals("0 gems", display(coordinator, newState))
+            val legacyState = snapshot(legacy)
+            coordinator.bind(legacyState); await(coordinator) { it.account?.owner == historical.owner }
+            assertEquals("10 gems", display(coordinator, legacyState))
+            val guestState = snapshot(fresh.copy(guest = true))
+            coordinator.bind(guestState)
+            assertEquals("N/A", display(coordinator, guestState))
+            assertNull(coordinator.ui.value.account)
+            val restored = LocalGemsCoordinator(storage, scope, { "fixture" }, { now + 1000 })
+            restored.bind(legacyState); await(restored) { it.account?.owner == historical.owner }
+            assertEquals("10 gems", display(restored, legacyState))
+            restored.bind(newState); await(restored) { it.account?.owner == fresh.id }
+            assertEquals("0 gems", display(restored, newState))
+            assertEquals(historical, storage.read(historical.owner))
+            assertEquals(setOf(fresh.id, historical.owner), storage.accounts.keys)
+        } finally { scope.cancel() }
+    }
+
     private fun durablePractice(wallet: String? = null): Pair<LearningState, PendingGemEvent> {
         val id = "00000000-0000-4000-8000-000000000001"
         val set = ProductSeed.sets.first()

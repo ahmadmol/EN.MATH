@@ -20,7 +20,7 @@ object LocalLearningGems {
     fun lessonVerified(state: LearningState, id: String, answer: String): Boolean {
         val lesson=state.lesson(id) ?: return false
         // Same checkpoint and acceptance condition as the existing LessonScreen, not a new quiz.
-        return lesson.checkpoint.isNotBlank() && lesson.checkpointAnswer.isNotBlank() && answer.trim()==lesson.checkpointAnswer
+        return lesson.checkpoint.isNotBlank() && lesson.checkpointAnswer.isNotBlank() && MathAnswer.matches(lesson.checkpointAnswer, answer)
     }
     fun interactiveVerified(state: LearningState, id: String, answers: Map<String,String>): Boolean {
         if (state.lesson(id) == null) return false
@@ -30,7 +30,7 @@ object LocalLearningGems {
     }
     fun practice(account: GemAccount, state: LearningState, id: String, answers: Map<String,String>, at: Long): GemAccount {
         val set=state.practiceSets.find { it.id==id } ?: return account
-        val questions=set.questionIds.mapNotNull(ProductSeed::question)
+        val questions=set.questionIds.mapNotNull { q -> state.questions.find { it.id == q } }
         if(questions.size!=set.questionIds.size || questions.isEmpty() || questions.any { answers[it.id].isNullOrBlank() }) return account
         val correct=questions.count { LearningRules.correct(it,answers.getValue(it.id)) }
         val accuracy=correct.toFloat()/questions.size

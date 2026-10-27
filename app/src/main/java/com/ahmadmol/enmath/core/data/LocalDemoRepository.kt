@@ -14,6 +14,7 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
         { name -> context.getSharedPreferences(name, Context.MODE_PRIVATE) })
     private val prefs = preferences("enmath_demo")
     private val local = LocalLearnerStore(preferences)
+    val planner = PlannerRepository(preferences) { state.value }
     private val legacyProduct = runCatching { ProductCodec.load(prefs) }
     // New isolated guest scope; unscoped legacy progress is never assigned to it.
     private val guestId = prefs.getString("w1_guest_uuid", null) ?: java.util.UUID.randomUUID().toString().also {
@@ -23,10 +24,12 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
     private fun <T : Enum<T>> enumValue(value: String?, values: Array<T>, fallback: T): T =
         values.find { it.name == value } ?: fallback
 
+    private val sessionEpoch = System.nanoTime()
     private val _state =
         MutableStateFlow(
             LearningState(
                 localGuestId = guestId,
+                generation = sessionEpoch,
                 user =
                     prefs.getString("name", null)?.let {
                         User(
@@ -115,19 +118,21 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
         local.active()?.let { profile ->
             try { activateLocal(profile) } catch (_: CorruptLocalData) {
                 _state.value = _state.value.copy(user = null, completed = emptySet(), product = ProductState(),
-                    localProfiles = local.profiles(), legacyCandidates = local.legacyCandidates(), storageIssue = "CORRUPT_PROFILE_PRESERVED")
+                    localProfiles = local.profiles(), acknowledgedGuestStages = local.guestNotices(), legacyCandidates = local.legacyCandidates(), storageIssue = "CORRUPT_PROFILE_PRESERVED")
             }
         } ?: run {
-            _state.value = _state.value.copy(localProfiles = local.profiles(), legacyCandidates = local.legacyCandidates())
+            _state.value = _state.value.copy(localProfiles = local.profiles(), acknowledgedGuestStages = local.guestNotices(), legacyCandidates = local.legacyCandidates())
         }
+        _state.value = _state.value.copy(catalogAvailable = _state.value.user != null)
     }
 
     private fun activateLocal(profile: LocalLearner) {
         val saved = local.load(profile.id)
         _state.value = _state.value.copy(user = profile.user(), localGuestId = profile.id.takeIf { profile.guest },
             studentRecordId = null, studentRecordOwners = emptyMap(), studentRecords = emptyMap(),
+            catalogAvailable = true, generation = _state.value.generation + 1, reviewRequired = profile.legacySource != null,
             completed = saved.completed, lastLessonId = saved.last, product = saved.product,
-            localProfiles = local.profiles(), legacyCandidates = local.legacyCandidates(), storageIssue = null)
+            localProfiles = local.profiles(), acknowledgedGuestStages = local.guestNotices(), legacyCandidates = local.legacyCandidates(), storageIssue = null)
     }
 
     @Synchronized fun createLocalProfile(name: String, stage: StudyStage, guest: Boolean) =
@@ -139,7 +144,14 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
     }
 
     @Synchronized fun importConfirmedLegacy(source: String, stage: StudyStage, name: String) =
-        local.migrate(source, stage, name).also(::activateLocal)
+        local.profiles().firstOrNull { it.legacySource == source }?.also {
+            require(it.stage == stage); local.select(it.id); activateLocal(it)
+        } ?: throw IllegalArgumentException("ReviewRequired: curriculum provenance is not verified; source preserved")
+
+    @Synchronized fun acknowledgeGuestNotice(stage: StudyStage) {
+        local.acknowledgeGuestNotice(stage)
+        _state.value = _state.value.copy(acknowledgedGuestStages = local.guestNotices())
+    }
 
     fun reportStorageIssue() { _state.value = _state.value.copy(storageIssue = "LOCAL_STORAGE_UNAVAILABLE") }
 
@@ -208,7 +220,7 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
             scoped?.contains("completed") == true -> scoped.getStringSet("completed", null).orEmpty().toSet()
             else -> emptySet()
         }
-        update { current.copy(user = user, studentRecordId = scoped?.getString("student_record_id", null) ?: if (id == legacyOwner) legacyRecordId else null, product = shared(personal, global), completed = completed,
+        update { current.copy(user = user, catalogAvailable = true, studentRecordId = scoped?.getString("student_record_id", null) ?: if (id == legacyOwner) legacyRecordId else null, product = shared(personal, global), completed = completed,
             lastLessonId = scoped?.getString("last", "limits-practice") ?: "limits-practice") }
     }
 
@@ -216,43 +228,92 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
         if (_state.value.user?.localId != null) {
             local.select(null)
             _state.value = _state.value.copy(user = null, localGuestId = null, completed = emptySet(),
-                product = ProductState(), studentRecordId = null)
+                product = ProductState(), studentRecordId = null, catalogAvailable = false, generation = _state.value.generation + 1)
             return
         }
         update { it }
-        update { it.copy(user = null, studentRecordId = null, completed = emptySet(), product = ProductState()) }
+        update { it.copy(user = null, studentRecordId = null, completed = emptySet(), product = ProductState(), catalogAvailable = false) }
     }
 
     override fun finishOnboarding() = update { it.copy(onboarded = true) }
 
     override fun completeLesson(id: String) {
-        if (DemoContent.lesson(id) != null)
+        if (_state.value.user?.localId == null && _state.value.lesson(id) != null)
             update { it.copy(completed = it.completed + id, lastLessonId = id) }
     }
 
     override fun openLesson(id: String) {
-        if (DemoContent.lesson(id) != null) update { it.copy(lastLessonId = id) }
+        if (_state.value.user?.localId == null && _state.value.lesson(id) != null) update { it.copy(lastLessonId = id) }
     }
 
     override fun setTheme(mode: ThemeMode) = update { it.copy(theme = mode) }
 
     override fun setLanguage(language: Language) = update { it.copy(language = language) }
 
-    override fun changeProduct(transform: (ProductState) -> ProductState) = update {
-        it.copy(product = transform(it.product))
+    override fun changeProduct(transform: (ProductState) -> ProductState) {
+        check(_state.value.user?.localId == null) { "A scoped operation is required for a local learner" }
+        updateProduct(transform)
+    }
+    private fun updateProduct(transform: (ProductState) -> ProductState) = update {
+        val next = transform(it.product)
+        require(it.user?.localId == null || StudentCatalog.validDelta(it, next)) { "WrongStage or invalid learning provenance" }
+        it.copy(product = next)
     }
 
     @Synchronized override fun recordLearning(owner: String?, command: String, lesson: String?,
         transform: (ProductState) -> ProductState): Boolean {
         if (_state.value.user?.localId == null) return super<LearningRepository>.recordLearning(owner, command, lesson, transform)
         if (!LearningRules.acceptsCommand(_state.value, owner) || command.isBlank()) return false
-        if (command in _state.value.product.learningCommands) return true
+        val next = transform(_state.value.product)
+        if (command in _state.value.product.learningCommands)
+            return next == _state.value.product // no new effect can hide behind an older receipt
+        if (!StudentCatalog.validDelta(_state.value, next) || next.pendingGemEvents.filterNot { it in _state.value.product.pendingGemEvents }.any { it.id != command }) return false
         if (lesson != null && _state.value.lesson(lesson) == null) return false
         update { state -> state.copy(
             completed = if (lesson == null) state.completed else state.completed + lesson,
             lastLessonId = lesson ?: state.lastLessonId,
-            product = transform(state.product).copy(learningCommands = state.product.learningCommands + command)) }
+            product = next.copy(learningCommands = state.product.learningCommands + command,
+                completionRefs = if (lesson == null) next.completionRefs else next.completionRefs +
+                    (lesson to StudentCatalog.referenceKey(requireNotNull(StudentCatalog.ref(state, lesson)))))) }
         return true
+    }
+
+    @Synchronized override fun openScoped(scope: StudentScope, ref: ContentRef): Boolean {
+        if (!StudentCatalog.accepts(state.value, scope) || !StudentCatalog.accepts(state.value, ref)) return false
+        update { it.copy(lastLessonId = ref.lessonId) }; return true
+    }
+    @Synchronized override fun changeScoped(scope: StudentScope, transform: (ProductState) -> ProductState): Boolean {
+        if (!StudentCatalog.accepts(state.value, scope)) return false
+        val next = transform(state.value.product)
+        if (!StudentCatalog.validDelta(state.value, next) || next.pendingGemEvents != state.value.product.pendingGemEvents) return false
+        updateProduct { next }; return true
+    }
+    @Synchronized override fun recordCommand(scope: StudentScope, ref: ContentRef?, command: String, payload: String,
+        transform: (ProductState) -> ProductState): Boolean {
+        if (!StudentCatalog.accepts(state.value, scope) || command.isBlank() || payload.isBlank() ||
+            (ref != null && !StudentCatalog.accepts(state.value, ref))) return false
+        val old = state.value.product
+        val digest = java.security.MessageDigest.getInstance("SHA-256").digest("${scope.ownerId}|${scope.stage.name}|${scope.edition}|${ref?.let(StudentCatalog::referenceKey).orEmpty()}|$payload".toByteArray(Charsets.UTF_8))
+            .joinToString("") { "%02x".format(it) }
+        old.commandReceipts[command]?.let { return it == digest }
+        if (command in old.learningCommands) return false // preserved legacy receipt has no comparable payload
+        val next = transform(old)
+        if (!StudentCatalog.validDelta(state.value, next) || next.pendingGemEvents.filterNot { it in old.pendingGemEvents }.any { it.id != command }) return false
+        update { it.copy(completed = if (ref == null) it.completed else it.completed + ref.lessonId,
+            lastLessonId = ref?.lessonId ?: it.lastLessonId,
+            product = next.copy(learningCommands = old.learningCommands + command,
+                completionRefs = if (ref == null) next.completionRefs else next.completionRefs + (ref.lessonId to StudentCatalog.referenceKey(ref)),
+                commandReceipts = old.commandReceipts + (command to digest))) }
+        return true
+    }
+
+    @Synchronized fun lesson(scope: StudentScope, ref: ContentRef): Lesson? =
+        if (StudentCatalog.accepts(state.value, scope) && StudentCatalog.accepts(state.value, ref)) state.value.lesson(ref.lessonId) else null
+
+    @Synchronized fun recordScopedLearning(scope: StudentScope, ref: ContentRef?, command: String,
+        transform: (ProductState) -> ProductState): Boolean {
+        if (!StudentCatalog.accepts(state.value, scope) || (ref != null && !StudentCatalog.accepts(state.value, ref))) return false
+        return recordLearning(LearningRules.sessionOwner(state.value), command, ref?.lessonId, transform)
     }
 
     @Synchronized override fun acknowledgeGem(owner: String, event: String) {

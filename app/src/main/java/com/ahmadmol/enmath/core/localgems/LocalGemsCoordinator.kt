@@ -105,6 +105,7 @@ class LocalGemsCoordinator(private val storage: LocalGemsStorage, private val sc
         val captured=answers.toMap();change(state) { account,at -> LocalLearningGems.finishWeekly(account,state,review,captured,at) }
     }
     fun purchase(state: LearningState, expectedOwner: String?, id: String) {
+        if (state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.G9) return
         val ticket=ticket(state)?.takeIf { it.owner==expectedOwner } ?: return
         val item=LocalGemCatalog.item(id) ?: return
         _ui.value=_ui.value.copy(busy=true,error=null)
@@ -120,6 +121,7 @@ class LocalGemsCoordinator(private val storage: LocalGemsStorage, private val sc
         }
     }
     fun openContent(state: LearningState, expectedOwner: String?, id: String) {
+        if (state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.G9) return
         val ticket=ticket(state)?.takeIf { it.owner==expectedOwner } ?: return
         val item=LocalGemCatalog.item(id) ?: return
         val language=state.language
