@@ -12,62 +12,26 @@ import com.ahmadmol.enmath.core.model.*
 import com.ahmadmol.enmath.core.localgems.*
 import com.ahmadmol.enmath.features.planner.PlanSummary
 import com.ahmadmol.enmath.core.design.components.common.*
+import com.ahmadmol.enmath.features.courses.*
 
 @Composable fun studentStageLabel(stage: StudyStage?) = if (stage == StudyStage.G9) tr("Grade 9", "الصف التاسع") else tr("Scientific Baccalaureate", "البكالوريا العلمي")
 
 @Composable fun DualStageHome(state: LearningState, open: (String) -> Unit, gems: LocalGemsUiState, planner: PlannerRepository?) {
-    val g9 = state.user?.studyStage == StudyStage.G9
-    val next = state.lesson(state.lastLessonId)?.takeIf { it.id !in StudentCatalog.completed(state) }
-        ?: state.lessons.firstOrNull { it.id !in StudentCatalog.completed(state) }
-    ScreenPage(Modifier.testTag("screen-home")) {
-        PageHeading(studentStageLabel(state.user?.studyStage),
-            if (g9) tr("Ready for your next step?", "أهلاً! مستعد لخطوتك التالية؟") else tr("Ready to continue your preparation?", "جاهز لمتابعة تحضيرك؟"),
-            "${state.user?.name.orEmpty()} · ${if (state.user?.type == AccountType.Guest) tr("Local guest", "زائر محلي") else tr("Local student file", "ملف طالب محلي")}")
-        if (StudentCatalog.hasUnverifiedHistory(state)) ReviewRequiredNotice()
-        AppCard {
-            Text(if(g9) tr("Your next step", "خطوتك التالية") else tr("Continue your last lesson", "تابع من آخر درس"), style = MaterialTheme.typography.titleLarge)
-            if (next == null) Text(if (state.lessons.isEmpty()) tr("Curriculum content for this stage is not available in this version.", "محتوى منهج هذه المرحلة غير متاح في هذه النسخة.") else tr("You completed the available material. Review your recorded practice next.", "أنجزت المحتوى المتاح. راجع تدريباتك المحفوظة."))
-            else { Text(next.title.text()); PrimaryButton(tr("Continue learning", "متابعة التعلم"), { open("lesson/${next.id}") }, Modifier.testTag("student-continue")) }
-        }
-        if (g9) {
-            PlanSummary(state, planner, open)
-            ReviewSummary(state, open)
-            Text(tr("Your mathematics learning path", "مسارك في الرياضيات"), style = MaterialTheme.typography.titleLarge)
-            if (state.topics.isEmpty()) Text(tr("Grade 9 units and lessons have not been published here yet. Your local file and study plan remain available.", "لم تُنشر وحدات ودروس التاسع هنا بعد. ملفك المحلي وخطتك متاحان."))
-            state.topics.forEachIndexed { index, topic -> OutlinedButton({ open("topic/${topic.id}") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text("${index + 1}. ${topic.title.text()}") } }
-        } else {
-            Text(tr("Your books · partial demo content", "كتبك · محتوى تجريبي جزئي"), style = MaterialTheme.typography.titleLarge)
-            state.books.forEach { book -> AppCard {
-                Text(book.title.text(), style = MaterialTheme.typography.titleMedium)
-                Text(book.subtitle.text())
-                Text(tr("${book.lessons.count { it.id in StudentCatalog.completed(state) }}/${book.lessons.size} available lessons completed", "${book.lessons.count { it.id in StudentCatalog.completed(state) }}/${book.lessons.size} درسًا مكتملًا من المتاح"))
-                OutlinedButton({ open("book/${book.id}") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Open book", "فتح الكتاب")) }
-            } }
-            PlanSummary(state, planner, open)
-            ReviewSummary(state, open)
-        }
-        Text(tr("Learning tools", "أدوات التعلم"), style = MaterialTheme.typography.titleLarge)
-        if (!g9) {
-            OutlinedButton({ open("solver") }, Modifier.fillMaxWidth().testTag("home-quick-solver").heightIn(min=48.dp)) { Text(tr("Mathematics solver", "المحلّل الرياضي")) }
-            OutlinedButton({ open("explore") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Graph exploration", "استكشاف الرسم")) }
-        } else Text(tr("Grade 9 solver and graph templates are not available yet.", "قوالب المحلّل والرسم المناسبة للتاسع غير متاحة بعد."))
-        OutlinedButton({ open("study") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Study", "الدراسة")) }
-        OutlinedButton({ open("library") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("My library and resources", "مكتبتي والموارد")) }
-        OutlinedButton({ open("progress") }, Modifier.fillMaxWidth().testTag("home-all-progress").heightIn(min=48.dp)) { Text(tr("Recorded progress", "التقدم المحفوظ")) }
-        AppCard(Modifier.testTag("home-gems-badge")) {
-            val owner = LocalGemsPolicy.owner(state.user)
-            Text(when {
-                owner == null -> tr("Gems are not available to guests", "الجواهر غير متاحة للزائر")
-                gems.owner != owner || gems.busy -> tr("Loading gems…", "جارٍ تحميل الجواهر…")
-                gems.error != null || gems.account == null -> tr("Wallet could not be read; previous balance is preserved.", "تعذّر قراءة المحفظة؛ الرصيد السابق محفوظ.")
-                else -> tr("${gems.account.balance} gems", "${gems.account.balance} جوهرة")
-            })
-            TextButton({ open("gems/wallet") }) { Text(tr("Wallet and history", "المحفظة والسجل")) }
-        }
+    if (state.user?.studyStage == StudyStage.G9) {
+        Grade9RoadmapHomeScreen(state, open, gems, planner)
+    } else {
+        BaccalaureateRoadmapHomeScreen(state, open, gems, planner)
     }
 }
 
-@Composable fun ScopedStudyScreen(state: LearningState, open: (String) -> Unit, topicId: String? = null) {
+@Composable fun ScopedStudyScreen(state: LearningState, open: (String) -> Unit, topicId: String? = null, showDemo: Boolean = false) {
+    if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
+        if (topicId == null) Grade9StudyScreen(state, open) else Grade9UnitScreen(topicId, open)
+        return
+    }
+    if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && topicId == null && !showDemo) {
+        BacSourceStudyScreen(open); return
+    }
     ScreenPage(Modifier.testTag(if (topicId == null) "screen-study" else "screen-topic")) {
         PageHeading(studentStageLabel(state.user?.studyStage), tr("Study at your own pace", "تعلّم حسب وتيرتك"))
         OutlinedButton({ open("planner") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("My study plan", "خطتي الدراسية")) }
@@ -75,7 +39,7 @@ import com.ahmadmol.enmath.core.design.components.common.*
         Text(tr("Partial local demo content; this is not a complete official curriculum.", "محتوى محلي تجريبي جزئي؛ لا يمثل المنهج الرسمي الكامل."))
         if (topicId == null) state.books.forEach { book -> AppCard {
             Text(book.title.text(), style=MaterialTheme.typography.titleLarge)
-            OutlinedButton({ open("book/${book.id}") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Book details", "تفاصيل الكتاب")) }
+            OutlinedButton({ open(if (showDemo) "demo/book/${book.id}" else "book/${book.id}") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Book details", "تفاصيل الكتاب")) }
             book.topics.forEach { topic -> OutlinedButton({ open("topic/${topic.id}") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(topic.title.text()) } }
         } } else {
             val topic = state.topic(topicId)
@@ -114,15 +78,20 @@ fun recordedMistakes(state: LearningState): List<RecordedMistake> = StudentCatal
 } }
 
 @Composable fun RecordedProgressScreen(state: LearningState, open: (String) -> Unit, review: Boolean = false) {
+    if (!review && state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
+        Grade9ProgressScreen(state, open); return
+    }
     ScreenPage(Modifier.testTag(if(review) "screen-review" else "screen-progress")) {
         PageHeading(studentStageLabel(state.user?.studyStage), if(review) tr("Mistake review", "مراجعة الأخطاء") else tr("Recorded progress", "التقدم المحفوظ"))
         if(StudentCatalog.hasUnverifiedHistory(state)) ReviewRequiredNotice()
         if (!review) {
+            BacSourceProgress(state)
+            if (state.user?.studyStage == StudyStage.BAC) SectionTitle(tr("Existing demo progress", "تقدم الدروس التجريبية السابقة"))
             Text(tr("Completion describes available lessons, not mastery.", "الإكمال يصف الدروس المتاحة ولا يثبت الإتقان."))
             state.books.forEach { book -> AppCard {
                 Text(book.title.text(), style=MaterialTheme.typography.titleLarge)
                 Text("${book.lessons.count { it.id in StudentCatalog.completed(state) }}/${book.lessons.size}")
-                TextButton({ open("book/${book.id}") }) { Text(tr("Continue in this book", "متابعة هذا الكتاب")) }
+                TextButton({ open(if (state.user?.studyStage == StudyStage.BAC) "demo/book/${book.id}" else "book/${book.id}") }) { Text(tr("Continue in this book", "متابعة هذا الكتاب")) }
             } }
             val attempts = StudentCatalog.attempts(state)
             if(attempts.isEmpty()) Text(tr("There is not enough assessment evidence yet.", "لم تتوفر أدلة تقييم كافية بعد."))

@@ -44,202 +44,21 @@ private val pages =
 @Composable
 fun SplashScreen(onReady: () -> Unit) {
     val callback by rememberUpdatedState(onReady)
-    var alpha by remember { mutableFloatStateOf(0f) }
-    LaunchedEffect(Unit) {
-        animate(
-            initialValue = 0f,
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 450)
-        ) { value, _ -> alpha = value }
-        delay(600)
-        callback()
-    }
-    Surface(
-        modifier = Modifier.fillMaxSize().testTag("screen-splash"),
-        color = Color(0xFF070C1E)
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Canvas(Modifier.fillMaxSize()) {
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            Color(0xFF0052D4).copy(alpha = 0.40f),
-                            Color(0xFF00D2FF).copy(alpha = 0.15f),
-                            Color.Transparent
-                        ),
-                        center = center,
-                        radius = size.minDimension * 0.60f
-                    ),
-                    radius = size.minDimension * 0.60f,
-                    center = center
-                )
-            }
-            Column(
-                modifier = Modifier.graphicsLayer { this.alpha = alpha },
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Space.xl)
-            ) {
-                MnLogoMark(Modifier.size(140.dp))
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "E N . M A T H",
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.28.em
-                        ),
-                        color = Color.White
-                    )
-                    Spacer(Modifier.height(Space.xs))
-                    Text(
-                        text = tr("Interactive Mathematics Platform", "منصة الرياضيات المتكاملة"),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFF8A99AD)
-                    )
-                }
-                Spacer(Modifier.height(Space.sm))
-                LinearProgressIndicator(
-                    modifier = Modifier.width(130.dp).height(3.dp),
-                    color = Color(0xFF00E5FF),
-                    trackColor = Color(0xFF0F1A3A)
-                )
-            }
+    LaunchedEffect(Unit) { withFrameNanos { }; callback() }
+    EntryBackdrop(com.ahmadmol.enmath.R.drawable.entry_bg_splash) {
+        Column(Modifier.fillMaxSize().testTag("screen-splash").padding(24.dp), horizontalAlignment=Alignment.CenterHorizontally,
+            verticalArrangement=Arrangement.SpaceEvenly) {
+            androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(com.ahmadmol.enmath.R.drawable.ic_enmath), null, Modifier.size(110.dp))
+            Text("EN.MATH", color=entryInk(), fontWeight=FontWeight.ExtraBold, style=MaterialTheme.typography.displaySmall)
+            Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_44), color=entryInk(), textAlign=TextAlign.Center)
+            androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(com.ahmadmol.enmath.R.drawable.entry_student_grade9_cutout), null,
+                Modifier.fillMaxWidth().weight(1f).padding(top=24.dp), contentScale=androidx.compose.ui.layout.ContentScale.Fit)
+            Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_45), Modifier.padding(vertical=20.dp), color=entryInk(), textAlign=TextAlign.Center)
         }
     }
 }
-
 @Composable
-fun OnboardingScreen(onDone: () -> Unit) {
-    val pager = rememberPagerState(pageCount = { pages.size })
-    val scope = rememberCoroutineScope()
-    Column(
-        Modifier
-            .fillMaxSize()
-            .testTag("screen-onboarding")
-    ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Space.xl, vertical = Space.lg),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Space.sm)
-            ) {
-                MnLogoMark(Modifier.size(36.dp))
-                Text(
-                    "EN.MATH",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                )
-            }
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
-            ) {
-                TextButton(
-                    onClick = onDone,
-                    modifier = Modifier.testTag("intro-skip"),
-                    contentPadding = PaddingValues(horizontal = Space.md, vertical = Space.xs)
-                ) {
-                    Text(
-                        label(TextKey.t_485c964fc7),
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
-            }
-        }
-
-        HorizontalPager(state = pager, modifier = Modifier.weight(1f)) { index ->
-            val page = pages[index]
-            ScreenPage(narrow = true) {
-                AppCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    tonal = true
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(Space.md),
-                        modifier = Modifier.padding(vertical = Space.sm)
-                    ) {
-                        LearningArtwork(page.symbol, Modifier.height(ResourceDimensions.entryArtwork))
-                        Surface(
-                            shape = MaterialTheme.shapes.small,
-                            color = MaterialTheme.colorScheme.primaryContainer,
-                            modifier = Modifier.padding(top = Space.xs)
-                        ) {
-                            Text(
-                                text = page.formula,
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                modifier = Modifier.padding(horizontal = Space.lg, vertical = Space.sm)
-                            )
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(Space.sm))
-
-                Text(
-                    page.title.text(),
-                    Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                )
-                Text(
-                    page.body.text(),
-                    Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        }
-
-        Column(
-            Modifier
-                .widthIn(max = Space.formMax)
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
-                .padding(Space.xl),
-            verticalArrangement = Arrangement.spacedBy(Space.lg),
-        ) {
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                pages.indices.forEach { i ->
-                    val isSelected = i == pager.currentPage
-                    Surface(
-                        modifier = Modifier
-                            .padding(horizontal = Space.xs)
-                            .size(
-                                width = if (isSelected) 28.dp else 10.dp,
-                                height = 10.dp,
-                            ),
-                        shape = CircleShape,
-                        color = if (isSelected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.outlineVariant,
-                    ) {}
-                }
-            }
-
-            PrimaryButton(
-                text = if (pager.currentPage == pages.lastIndex) label(TextKey.t_df60f8d791)
-                else label(TextKey.t_704198b924),
-                onClick = {
-                    if (pager.currentPage == pages.lastIndex) onDone()
-                    else scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
-                },
-                modifier = Modifier.testTag("intro-next"),
-            )
-        }
-    }
-}
+fun OnboardingScreen(onDone: () -> Unit) { com.ahmadmol.enmath.features.auth.LocalOnboarding(onDone = onDone) }
 
 @Composable
 fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
@@ -303,7 +122,7 @@ fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
                             color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f)
                         ) {
                             Text(
-                                tr("Student", "طالب"),
+                                entryText(com.ahmadmol.enmath.R.string.entry_copy_46),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(horizontal = Space.sm, vertical = 2.dp)
@@ -356,7 +175,7 @@ fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
                             color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.7f)
                         ) {
                             Text(
-                                tr("Teacher", "معلم"),
+                                entryText(com.ahmadmol.enmath.R.string.entry_copy_47),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                                 modifier = Modifier.padding(horizontal = Space.sm, vertical = 2.dp)
@@ -400,4 +219,3 @@ fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
         DemoNotice()
     }
 }
-

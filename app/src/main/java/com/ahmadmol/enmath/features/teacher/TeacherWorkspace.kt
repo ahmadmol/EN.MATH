@@ -21,8 +21,8 @@ fun TeacherWorkspace(state: LearningState, open: (String) -> Unit, switchRole: (
     ReferencePage("screen-teacher-reference") {
         RefHeading(
             refText(
-                "مرحباً، ${state.user?.name.orEmpty()}",
-                "Welcome, ${state.user?.name.orEmpty()}",
+                "مرحباً، \u2068${state.user?.name.orEmpty()}\u2069",
+                "Welcome, \u2068${state.user?.name.orEmpty()}\u2069",
             ),
             refText(
                 "مساحة المعلم · إدارة التعليم في مكان واحد",
