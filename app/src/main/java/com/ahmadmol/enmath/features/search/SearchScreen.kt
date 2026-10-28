@@ -20,6 +20,9 @@ import com.ahmadmol.enmath.core.design.*
 
 @Composable
 fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (String) -> Unit) {
+    if (state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.G9 && state.catalogAvailable) {
+        Grade9SearchScreen(state, onSearch, onRoute); return
+    }
     var query by rememberSaveable(state.activeStudentId) { mutableStateOf("") }
     val term = LearningRules.search(query)
     val ar = state.language == com.ahmadmol.enmath.core.model.Language.Arabic
@@ -137,13 +140,23 @@ fun SearchScreen(state: LearningState, onSearch: (String) -> Unit, onRoute: (Str
         val lessons = state.books.flatMap { it.lessons }.filter { match(it.title.en, it.title.ar) }
         val concepts = state.books.flatMap { it.lessons }.filter { match(it.rule.en, it.rule.ar) }
         val questions = state.questions.filter { StudentCatalog.practiceForQuestion(state, it.id) != null }.filter { match(it.prompt.en + it.expression, it.prompt.ar + it.topicId) }
+        val sourceResults = if (state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.BAC && state.catalogAvailable)
+            BacSourceCatalog.search(query) else emptyList()
 
-        if (topics.isEmpty() && lessons.isEmpty() && concepts.isEmpty() && questions.isEmpty()) {
+        if (topics.isEmpty() && lessons.isEmpty() && concepts.isEmpty() && questions.isEmpty() && sourceResults.isEmpty()) {
             RefEmptyState(
                 title = label(TextKey.t_b8ee1e0f8c),
                 subtitle = label(TextKey.t_95644465fb),
                 artwork = { SearchHeroArtwork() }
             )
+        }
+
+        if (sourceResults.isNotEmpty()) {
+            SectionTitle(tr("Textbook source index · pending review", "فهرس مصدر الكتابين · قيد المراجعة"))
+            sourceResults.forEach { result -> com.ahmadmol.enmath.features.courses.BacSourceRow(result.title,
+                tr("Source reference; content is not approved", "مرجع مصدر؛ المحتوى غير معتمد"), "bac-search-${result.route}") {
+                onSearch(query); onRoute(result.route)
+            } }
         }
 
         if (topics.isNotEmpty()) {

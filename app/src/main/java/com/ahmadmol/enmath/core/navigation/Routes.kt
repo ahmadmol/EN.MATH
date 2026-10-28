@@ -46,7 +46,7 @@ object Routes {
                 route == Topic ||
                 route == Lesson ||
                 route?.startsWith("practice/") == true ||
-                route == "study/catalog" -> Study
+                route == "study/catalog" || route == "study/demo" || route == "demo/book/{id}" -> Study
             route == Solution || route?.startsWith("solver/") == true -> Solver
             route?.startsWith("teacher/classes/") == true -> TeacherClasses
             route?.startsWith("teacher/assignments/") == true -> TeacherAssignments

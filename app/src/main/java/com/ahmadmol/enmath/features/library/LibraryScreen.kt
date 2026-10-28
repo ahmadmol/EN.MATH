@@ -27,7 +27,7 @@ import androidx.compose.material.icons.automirrored.outlined.MenuBook
 private data class FilterTabItem(val index: Int, val title: String, val icon: ImageVector)
 
 @Composable
-fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (String) -> Unit) {
+fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (String) -> Unit, sourceReferences: @Composable () -> Unit = {}) {
     var tab by rememberSaveable(state.user?.localId, state.generation) { mutableIntStateOf(0) }
     var query by rememberSaveable(state.user?.localId, state.generation) { mutableStateOf("") }
     var topic by rememberSaveable(state.user?.localId, state.generation) { mutableIntStateOf(0) }
@@ -36,6 +36,7 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
     val normalized = LearningRules.search(query)
 
     ScreenPage(Modifier.testTag("screen-library")) {
+        sourceReferences()
         // Hero Section matching Image 1
         RefHeroCard(
             title = tr("Keep useful ideas saved.", "احتفظ بالأفكار المفيدة."),

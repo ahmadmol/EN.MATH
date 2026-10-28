@@ -81,7 +81,9 @@ fun planDate(at: Long) = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).apply { tim
                         if (t.mode != PlanMode.TIME) Text(tr("Achievement: ${t.done}/${t.target}", "الإنجاز: ${t.done}/${t.target}"))
                         if (t.mode != PlanMode.ACHIEVEMENT) Text(tr("Time: ${t.spent}/${t.minutes} minutes", "الوقت: ${t.spent}/${t.minutes} دقيقة"))
                         Text(if (t.source == "LEARNING_EVENT") tr("Source: recorded lesson completion", "المصدر: إكمال درس محفوظ") else tr("Source: manual entry", "المصدر: إدخال يدوي"))
-                        t.lesson?.let { Text(state.lesson(it.lessonId)?.title?.text() ?: tr("Linked content unavailable", "المحتوى المرتبط غير متاح")) }
+                        t.lesson?.let { ref -> Text(if (ref.kind == ContentKind.SOURCE_INDEX && StudentCatalog.acceptsReference(state, ref))
+                            StudentCatalog.sourceTitle(ref).orEmpty() + tr(" · source pending review", " · مرجع قيد المراجعة")
+                            else state.lesson(ref.lessonId)?.title?.text() ?: tr("Linked content unavailable", "المحتوى المرتبط غير متاح")) }
                         if (t.closed) Text(tr("Remaining work moved to another period", "نُقل المتبقي إلى فترة أخرى")) else {
                             OutlinedButton({ action = "progress" to original }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Record partial progress", "تسجيل إنجاز جزئي")) }
                             OutlinedButton({ editing = original; editorRevision = plan!!.revision; form = true }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Edit goal", "تعديل الهدف")) }
@@ -159,6 +161,16 @@ fun planDate(at: Long) = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).apply { tim
                 TextButton({ linked = null }) { Text(tr("No lesson link", "دون ربط بدرس")) }
                 state.lessons.forEach { lesson -> FilterChip(linked?.lessonId == lesson.id,
                     { linked = StudentCatalog.ref(state, lesson.id) }, label = { Text(lesson.title.text()) }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) }
+                if (state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.BAC && state.catalogAvailable) {
+                    Text(tr("Source references · content pending review", "مراجع المصدر · المحتوى قيد المراجعة"))
+                    BacSourceCatalog.lessons.forEach { source -> FilterChip(linked?.lessonId == source.id,
+                        { linked = BacSourceCatalog.ref(source.id) }, label = { Text(source.title) }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) }
+                }
+                if (state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.G9 && state.catalogAvailable) {
+                    Text(tr("Source references · content pending review", "مراجع المصدر · المحتوى قيد المراجعة"))
+                    G9SourceCatalog.indexedLessons.forEach { source -> FilterChip(linked?.lessonId == source.ref.lessonId,
+                        { linked = G9SourceCatalog.ref(requireNotNull(source.ref.lessonId)) }, label = { Text(source.title) }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) }
+                }
                 PrimaryButton(tr("Save goal", "حفظ الهدف"), {
                     failure = save(PlanTask(id, title.trim(), subject.trim(), old?.period ?: period, old?.start ?: start, mode,
                         if (mode == PlanMode.TIME) 0 else target.toIntOrNull() ?: -1,

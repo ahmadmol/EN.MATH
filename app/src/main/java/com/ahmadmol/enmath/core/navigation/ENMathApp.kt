@@ -72,7 +72,7 @@ fun ENMathApp(providedNav: NavHostController? = null) {
 
     val state by app.state.collectAsStateWithLifecycle()
     val nav = providedNav ?: key(navigationSessionKey(state)) { rememberNavController() }
-    var initialSplash by rememberSaveable { mutableStateOf(true) }
+    var initialSplash by rememberSaveable { mutableStateOf(state.user == null && !state.onboarded) }
     if (initialSplash) {
         ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher) {
             SplashScreen { initialSplash = false }

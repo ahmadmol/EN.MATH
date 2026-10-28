@@ -88,7 +88,13 @@ fun NavGraphBuilder.studentGraph(
     }
     composable(Routes.Book) { e ->
         val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
+            Grade9BookScreen(e.arguments?.getString("id").orEmpty(), ::route); return@composable
+        }
         val ticket = LearningRules.sessionOwner(state)
+        if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && BacSourceCatalog.book(e.arguments?.getString("id").orEmpty()) != null) {
+            BacSourceBookScreen(e.arguments?.getString("id").orEmpty(), ::route); return@composable
+        }
         if (state.books.none { it.id == e.arguments?.getString("id") }) { StageContentUnavailable(); return@composable }
         BookDetailsScreen(
             e.arguments?.getString("id").orEmpty(),
@@ -102,15 +108,34 @@ fun NavGraphBuilder.studentGraph(
         val ticket = LearningRules.sessionOwner(state)
         ScopedStudyScreen(state, ::route)
     }
+    composable("study/demo") {
+        val state by app.state.collectAsStateWithLifecycle()
+        ScopedStudyScreen(state, ::route, showDemo = true)
+    }
+    composable("demo/book/{id}") { e ->
+        val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage != StudyStage.BAC) { StageContentUnavailable(); return@composable }
+        BookDetailsScreen(e.arguments?.getString("id").orEmpty(), state.copy(completed = StudentCatalog.completed(state)),
+            { route("topic/$it") }, ::lesson)
+    }
     composable(Routes.Topic) { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
+        if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && BacSourceCatalog.unit(e.arguments?.getString("id").orEmpty()) != null) {
+            BacSourceUnitScreen(e.arguments?.getString("id").orEmpty(), ::route, { nav.popBackStack() }); return@composable
+        }
         ScopedStudyScreen(state, ::route, e.arguments?.getString("id").orEmpty())
     }
     composable(Routes.Lesson) { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         val id = e.arguments?.getString("id").orEmpty()
+        if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
+            Grade9LessonScreen(id, state, ::route, (app.repository as? LocalDemoRepository)?.planner); return@composable
+        }
+        if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && BacSourceCatalog.lesson(id) != null) {
+            BacSourceLessonScreen(id, state, (app.repository as? LocalDemoRepository)?.planner, ::route, { nav.popBackStack() }); return@composable
+        }
         if (state.lesson(id) == null) { StageContentUnavailable(); return@composable }
         val lessonOwner by rememberSaveable(id, "gems-lesson-owner") { mutableStateOf(ticket) }
         LaunchedEffect(id, state.user?.localId) { app.openLesson(id, lessonOwner) }
@@ -141,6 +166,12 @@ fun NavGraphBuilder.studentGraph(
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         val id = e.arguments?.getString("id").orEmpty()
+        if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
+            Grade9PracticeStatusScreen(id); return@composable
+        }
+        if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && (BacSourceCatalog.lesson(id) != null || BacSourceCatalog.section(id) != null)) {
+            BacSourcePracticeStatus(id); return@composable
+        }
         val set = state.practiceSets.find { it.id == id }
         if (set == null) { StageContentUnavailable(); return@composable }
         val vm: QuizViewModel = viewModel(e)
@@ -359,7 +390,11 @@ fun NavGraphBuilder.studentGraph(
     composable("library") {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        LibraryScreen(state, ::lesson, ::openHistory)
+        LibraryScreen(state, ::lesson, ::openHistory) {
+            if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable)
+                Grade9LibraryLinks(state, (app.repository as? LocalDemoRepository)?.planner, ::route)
+            else BacSourceLibraryLinks(state, (app.repository as? LocalDemoRepository)?.planner, ::route)
+        }
     }
     composable("search") {
         val state by app.state.collectAsStateWithLifecycle()
