@@ -81,3 +81,22 @@ docs/visual-polish/review.html
 *.sqlite-journal
 *.sqlite3-wal
 *.sqlite3-shm
+
+# Private machine recovery reports and design-only screen references
+/docs/CONSOLIDATION_2026-10-28.md
+/docs/CONSOLIDATION_RESULTS_2026-10-28.json
+/app/src/main/res/drawable-nodpi/bac_snake_path_reference_only.png
+/app/src/main/res/drawable-nodpi/concept_book_logo_transparent_reference.png
+/app/src/main/res/drawable-nodpi/g9_snake_path_reference_only.png
+/app/src/main/res/drawable-nodpi/reference_bac_footer.png
+/app/src/main/res/drawable-nodpi/reference_bac_full.png
+/app/src/main/res/drawable-nodpi/reference_bac_header.png
+/app/src/main/res/drawable-nodpi/reference_bac_path_first.png
+/app/src/main/res/drawable-nodpi/reference_bac_path_last.png
+/app/src/main/res/drawable-nodpi/reference_bac_path_middle.png
+/app/src/main/res/drawable-nodpi/reference_g9_footer.png
+/app/src/main/res/drawable-nodpi/reference_g9_full.png
+/app/src/main/res/drawable-nodpi/reference_g9_header.png
+/app/src/main/res/drawable-nodpi/reference_g9_path_first.png
+/app/src/main/res/drawable-nodpi/reference_g9_path_last.png
+/app/src/main/res/drawable-nodpi/reference_g9_path_middle.png

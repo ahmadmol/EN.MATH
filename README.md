@@ -1,10 +1,14 @@
 # EN.MATH
 
+Open this repository root in Android Studio or your coding assistant. Git is self-contained; private recovery archives remain outside version control.
+
+The unified source index contains Grade 9 (10 units / 32 researches) and Baccalaureate (14 units / 63 researches). Indexed source material remains separate from approved learning content and the 24 preserved legacy demo lessons. See [consolidation evidence](docs/PUBLICATION_2026-10-28.md).
+
 Android mathematics learning demo built with Kotlin, Jetpack Compose and Material 3. Arabic RTL is the default; English LTR and System/Light/Dark themes are supported. Student and teacher experiences have separate five-tab navigation, with a navigation rail on wide displays and adaptive two-column content.
 
 ## Build and run
 
-Open this folder in Android Studio, select JDK 17 for Gradle, install Android SDK 35, and run `app` on API 24 or later.
+Open this folder in Android Studio, select JDK 21 for Gradle, install Android SDK 35, and run `app` on API 24 or later. JVM bytecode targets Java 17. Configure your SDK using the ignored `local.properties` file.
 
 ```sh
 ./gradlew :app:assembleDebug :app:testDebugUnitTest :app:lintDebug

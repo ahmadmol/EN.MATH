@@ -1,0 +1,934 @@
+{
+  "schemaVersion": 1,
+  "sourceFileCount": 10,
+  "sourceHashes": {
+    "BAC_ACTIVITY_EXERCISE_SECTIONS.csv": "300bfeea783bea5f1774e912f03a9ab771d847b3bcc126887026dd61c6aecfb8",
+    "BAC_CURRICULUM_CATALOG.json": "cd479922227c6b8d73997040b527dbb9674c53b2fef50c847fecc1fa7ae77d76",
+    "BAC_LESSONS.csv": "d01dc8e50be7601ef96bd2cefd011afd4e3e277e2421d060e52c32b8d2c74661",
+    "BAC_ORIGINAL_PRACTICE_DRAFTS.csv": "0cf6e1758726ce7cc7fa8002eeae61381c987a0e4a8e9f92997584bdde8ebc16",
+    "BAC_ORIGINAL_PRACTICE_DRAFTS.json": "3493bfb2748ccea8272c2ded0848982726b18a6b179ed20bd5d022387e75d4ed",
+    "BAC_PAGE_INVENTORY.csv": "fbf3cc0ea9606203ff258a1b08cb0901201a64fd962bd80f71cd2539e95aab8a",
+    "BAC_UNITS.csv": "c760440dd25147f0c1a673ddc8c2d6eb7b30a090b680cf43dca2b0f1aef7d1d6",
+    "ENMATH_BAC_SOURCE_ANALYSIS.md": "a410baee553b7f2d35b30de73b518207adce47bd85e375c31713f1b578d7e17d",
+    "ENMATH_CODEX_BAC_INTEGRATION_INSTRUCTIONS.md": "62ef65f7ea7ae42af6fe10acf3a9cbc6e04e603119e5c8bc3864541d20401fc0",
+    "PEDAGOGICAL_MODEL.md": "e1af7f44eaa08e67f14852caae7b07ed58fad28c6bfb99d174820f03e85bb7e9"
+  },
+  "books": 2,
+  "units": 14,
+  "lessons": 63,
+  "activitySections": 13,
+  "exerciseSections": 14,
+  "pageInventory": 470,
+  "pageContentReviewed": 0,
+  "originalDrafts": 28,
+  "approvedLessons": 0,
+  "approvedExercises": 0,
+  "issueCount": 37,
+  "inventoryPagesFlagged": 34,
+  "issues": [
+    {
+      "code": "INVALID_UNIT_RANGE",
+      "ids": [
+        "bac-1-u07"
+      ],
+      "detail": {
+        "printed": [
+          217,
+          216
+        ],
+        "pdf": [
+          218,
+          217
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "INVALID_SECTION_RANGE",
+      "ids": [
+        "bac-1-u07-exercise"
+      ],
+      "detail": {
+        "printed": [
+          244,
+          216
+        ],
+        "pdf": [
+          245,
+          217
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "OVERLAPPING_LESSON_RANGE",
+      "ids": [
+        "bac-1-u05-l04",
+        "bac-1-u05-l05"
+      ],
+      "detail": [
+        164,
+        168
+      ],
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:218"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "218",
+          "printed_page": "217",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:219"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "219",
+          "printed_page": "218",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:220"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "220",
+          "printed_page": "219",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l01"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:221"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "221",
+          "printed_page": "220",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l01"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:222"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "222",
+          "printed_page": "221",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l01"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:223"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "223",
+          "printed_page": "222",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l01"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:224"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "224",
+          "printed_page": "223",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l02"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:225"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "225",
+          "printed_page": "224",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l02"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:226"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "226",
+          "printed_page": "225",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l02"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:227"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "227",
+          "printed_page": "226",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l02"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:228"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "228",
+          "printed_page": "227",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l02"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:229"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "229",
+          "printed_page": "228",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:230"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "230",
+          "printed_page": "229",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:231"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "231",
+          "printed_page": "230",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:232"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "232",
+          "printed_page": "231",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:233"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "233",
+          "printed_page": "232",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:234"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "234",
+          "printed_page": "233",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:235"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "235",
+          "printed_page": "234",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:236"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "236",
+          "printed_page": "235",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:237"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "237",
+          "printed_page": "236",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l03"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:238"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "238",
+          "printed_page": "237",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l04"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:239"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "239",
+          "printed_page": "238",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l04"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:240"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "240",
+          "printed_page": "239",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l04"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:241"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "241",
+          "printed_page": "240",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l04"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:242"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "242",
+          "printed_page": "241",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-l04"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:243"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "243",
+          "printed_page": "242",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-activity"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:244"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "244",
+          "printed_page": "243",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u07-activity"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH",
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:245"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "245",
+          "printed_page": "244",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:246"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "246",
+          "printed_page": "245",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:247"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "247",
+          "printed_page": "246",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:248"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "248",
+          "printed_page": "247",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:249"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "249",
+          "printed_page": "248",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:250"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "250",
+          "printed_page": "249",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:251"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "251",
+          "printed_page": "250",
+          "unit_id": "",
+          "unit_ar": "",
+          "page_kind_estimated_from_toc": "FRONT_MATTER",
+          "section_ids": "",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [],
+        "issues": [
+          "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+        ]
+      },
+      "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+    }
+  ],
+  "reviewRecords": 602
+}

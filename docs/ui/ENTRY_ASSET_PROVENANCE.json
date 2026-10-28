@@ -1,0 +1,142 @@
+[
+  {
+    "resource": "entry_bg_onboarding_01",
+    "source": "01_Backgrounds/bg_onboarding_01.png",
+    "width": 1080,
+    "height": 1920,
+    "sampledAlphaMin": 255.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "FED5425B60BECF337E4D82F56C4E0D2DA5ED8563FCC4168D3449C8824297A98E",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_bg_onboarding_02",
+    "source": "01_Backgrounds/bg_onboarding_02.png",
+    "width": 1080,
+    "height": 1920,
+    "sampledAlphaMin": 255.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "16E7289B7F29E2273FDCD0EE904449169ACA52375D5F7D61E8E50D0642DB663F",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_bg_onboarding_03",
+    "source": "01_Backgrounds/bg_onboarding_03.png",
+    "width": 1080,
+    "height": 1920,
+    "sampledAlphaMin": 255.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "1FABD8B948AC65E392F5E749925DEF18902E4127047E12818046C417B222B9FF",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_bg_splash",
+    "source": "01_Backgrounds/bg_splash.png",
+    "width": 1080,
+    "height": 1920,
+    "sampledAlphaMin": 255.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "204EE24F93BB967B624A39324404572DAD0248DA44E54AC917E76BC276B80AB9",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_bg_stage_picker",
+    "source": "01_Backgrounds/bg_stage_picker.png",
+    "width": 1080,
+    "height": 1920,
+    "sampledAlphaMin": 255.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "487F62E8FF60951C9CF4FEFA9217C68D674ED41979A1520601A2AA22F2490FE2",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_hero_onboarding_01_learn",
+    "source": "02_Illustrations/hero_onboarding_01_learn.png",
+    "width": 636,
+    "height": 735,
+    "sampledAlphaMin": 255.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "9E90036FC2D2E720B01FB3AFCADCCE1269F3C1423492DA259729AEF4935E03D8",
+    "transform": "Trim 12px left and 24px right; unchanged vertical bounds"
+  },
+  {
+    "resource": "entry_hero_onboarding_02_study",
+    "source": "02_Illustrations/hero_onboarding_02_study.png",
+    "width": 639,
+    "height": 786,
+    "sampledAlphaMin": 255.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "F8C1175B0AAC13EDCDB19D1EC9B0729688D5C65D5858B327A838D76307E696C6",
+    "transform": "Trim 12px left and 24px right; unchanged vertical bounds"
+  },
+  {
+    "resource": "entry_hero_onboarding_03_progress",
+    "source": "02_Illustrations/hero_onboarding_03_progress.png",
+    "width": 615,
+    "height": 792,
+    "sampledAlphaMin": 255.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "9637CFCABDCD1E7DF389CD4AF88574E2A442040D37322C30AF0A1065DD62B7FD",
+    "transform": "Trim 12px left and 24px right; unchanged vertical bounds"
+  },
+  {
+    "resource": "entry_ic_book_open",
+    "source": "04_Optional_Vector_Icons/ic_book_open.png",
+    "width": 96,
+    "height": 96,
+    "sampledAlphaMin": 0,
+    "sampledAlphaMax": 255,
+    "sha256": "70ECCE75DCAEDDB1AA6FBA01A1259E5B20D487C510DA3EE7FC639084F2DA648B",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_ic_folder",
+    "source": "04_Optional_Vector_Icons/ic_folder.png",
+    "width": 96,
+    "height": 96,
+    "sampledAlphaMin": 0,
+    "sampledAlphaMax": 255,
+    "sha256": "451580492D38AAD042DD90CB2197266F613F86344241987794866A4F3B259B96",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_ic_play",
+    "source": "04_Optional_Vector_Icons/ic_play.png",
+    "width": 96,
+    "height": 96,
+    "sampledAlphaMin": 0,
+    "sampledAlphaMax": 255,
+    "sha256": "1391466D7830DDB85BA125AE1D5FEB103C519A552BE6C4E65C56AF1FE006ECCE",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_ic_user",
+    "source": "04_Optional_Vector_Icons/ic_user.png",
+    "width": 96,
+    "height": 96,
+    "sampledAlphaMin": 0,
+    "sampledAlphaMax": 255,
+    "sha256": "52C59CB14DA9E06A6246227CB5365E8463602C55E0428675E5DDE2A5807550B1",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_student_baccalaureate_cutout",
+    "source": "02_Illustrations/student_baccalaureate_cutout.png",
+    "width": 486,
+    "height": 699,
+    "sampledAlphaMin": 0.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "4F4ABB47CBEDCC14B18D90C5B12091F393E3014EFBAB239CEBA54E25AEAA8A4E",
+    "transform": "Original ZIP bytes"
+  },
+  {
+    "resource": "entry_student_grade9_cutout",
+    "source": "02_Illustrations/student_grade9_cutout.png",
+    "width": 459,
+    "height": 702,
+    "sampledAlphaMin": 0.0,
+    "sampledAlphaMax": 255.0,
+    "sha256": "6762750F5ADEA2069CB4734A9DADF72B9FDB6D9E6B7A7317A205300829E89AAB",
+    "transform": "Original ZIP bytes"
+  }
+]
