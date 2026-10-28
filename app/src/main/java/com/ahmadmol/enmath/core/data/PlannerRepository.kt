@@ -67,7 +67,8 @@ class PlannerRepository internal constructor(private val preferences: (String) -
     }
     private fun decode(o: JSONObject, scope: StudentScope): PlanTask {
         val ref = o.optJSONObject("lesson")?.let {
-            ContentRef(StudyStage.valueOf(it.getString("stage")), it.getString("edition"), it.getString("id"), it.optInt("revision", 1), it.optString("source", "enmath-demo"))
+            ContentRef(StudyStage.valueOf(it.getString("stage")), it.getString("edition"), it.getString("id"), it.optInt("revision", 1), it.optString("source", "enmath-demo"),
+                ContentKind.valueOf(it.optString("kind", "LESSON")), it.optString("sourceSha256").takeIf(String::isNotEmpty))
         }
         require(ref == null || ref.stage == scope.stage)
         return PlanTask(o.getString("id"), o.getString("title"), o.getString("subject"),
@@ -81,14 +82,29 @@ class PlannerRepository internal constructor(private val preferences: (String) -
         .put("period", t.period.name).put("start", t.start).put("mode", t.mode.name).put("target", t.target)
         .put("minutes", t.minutes).put("done", t.done).put("spent", t.spent).put("source", t.source)
         .put("parent", t.parent.orEmpty()).put("closed", t.closed).put("linkedBaseline", t.linkedBaseline).apply { t.lesson?.let {
-            put("lesson", JSONObject().put("stage", it.stage.name).put("edition", it.edition).put("id", it.lessonId).put("revision", it.revision).put("source", it.sourceId)) } }
+            val link = JSONObject().put("stage", it.stage.name).put("edition", it.edition).put("id", it.lessonId).put("revision", it.revision).put("source", it.sourceId)
+            // Keep the exact legacy payload representation so old duplicate-command receipts still match.
+            if (it.kind != ContentKind.LESSON || it.sourceSha256 != null)
+                link.put("kind", it.kind.name).put("sourceSha256", it.sourceSha256.orEmpty())
+            put("lesson", link) } }
     private fun array(tasks: List<PlanTask>) = JSONArray().apply { tasks.forEach { put(json(it)) } }
     private fun valid(t: PlanTask, checkRef: Boolean = true) = t.id.isNotBlank() && t.title.isNotBlank() &&
         t.title.length <= 200 && t.subject.isNotBlank() && t.subject.length <= 100 &&
         t.target in 0..100000 && t.minutes in 0..100000 && t.done in 0..100000 && t.spent in 0..100000 &&
         (t.mode != PlanMode.TIME || t.minutes > 0) && (t.mode == PlanMode.TIME || t.target > 0) &&
         t.start == StudyPeriods.start(t.start, t.period) && t.source in setOf("MANUAL", "LEARNING_EVENT") &&
-        (!checkRef || t.lesson == null || StudentCatalog.accepts(current(), t.lesson))
+        (!checkRef || t.lesson == null || StudentCatalog.acceptsReference(current(), t.lesson))
+
+    @Synchronized fun pinSource(scope: StudentScope, ref: ContentRef): PlanWrite {
+        if (!StudentCatalog.accepts(current(), scope)) return PlanWrite.OWNER_CHANGED
+        if (ref.kind != ContentKind.SOURCE_INDEX || !StudentCatalog.acceptsReference(current(), ref)) return PlanWrite.INVALID
+        val plan = (read(scope) as? PlanRead.Ready)?.plan ?: return PlanWrite.STORAGE_ERROR
+        val start = StudyPeriods.start(System.currentTimeMillis(), PlanPeriod.WEEK)
+        val id = UUID.nameUUIDFromBytes("${scope.ownerId}|${StudentCatalog.referenceKey(ref)}|$start".toByteArray(Charsets.UTF_8)).toString()
+        plan.tasks.find { it.id == id }?.let { return if (it.lesson == ref) PlanWrite.ALREADY_SAVED else PlanWrite.CONFLICT }
+        return save(scope, plan.revision, "source-index:$id", PlanTask(id, requireNotNull(StudentCatalog.sourceTitle(ref)),
+            "Mathematics / الرياضيات", PlanPeriod.WEEK, start, PlanMode.ACHIEVEMENT, 1, lesson = ref))
+    }
 
     private fun write(scope: StudentScope, expected: Int, command: String, payload: String, action: String,
         transform: (StudyPlan) -> List<PlanTask>): PlanWrite {

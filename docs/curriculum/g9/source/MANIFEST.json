@@ -1,0 +1,27 @@
+{
+  "generated": "2026-10-27",
+  "note": "Source PDF books not included in this archive",
+  "books": {
+    "G9-ALG": {
+      "bookId": "G9-ALG",
+      "shortTitle": "رياضيات التاسع — الجبر",
+      "pages": 116,
+      "bookSubject": "ALGEBRA",
+      "sha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+      "fileName": "كتاب الرياضيات الجبر الصف التاسع الأساسي الفصل الاول والثاني سوريا.pdf"
+    },
+    "G9-GEO": {
+      "bookId": "G9-GEO",
+      "shortTitle": "رياضيات التاسع — الهندسة",
+      "pages": 84,
+      "bookSubject": "GEOMETRY",
+      "sha256": "9f7cb772556ded621d884f3e61c94ad37ad532b7b67c34464b29883bfe2659c4",
+      "fileName": "كتاب الرياضيات الهندسة الصف التاسع الأساسي الفصل الاول والثاني.pdf"
+    }
+  },
+  "units": 10,
+  "lessons": 32,
+  "pagesMapped": 200,
+  "originalDraftExercises": 32,
+  "readyForStudentRelease": false
+}

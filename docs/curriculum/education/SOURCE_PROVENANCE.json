@@ -1,0 +1,53 @@
+{
+  "sources": [
+    {
+      "sourceId": "G9-ALG",
+      "fileName": "كتاب الرياضيات الجبر الصف التاسع الأساسي الفصل الاول والثاني سوريا.pdf",
+      "sha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+      "pdfPages": 116,
+      "editionOnSource": "2025-2026",
+      "printedToPdfOffset": 0,
+      "status": "HASH_AND_PAGE_COUNT_VERIFIED",
+      "edition2026_2027": "NOT_VERIFIED",
+      "scanTextExtraction": "SCANNED_IMAGE_REQUIRES_OCR_AND_VISUAL_REVIEW",
+      "fullPedagogicalReview": false
+    },
+    {
+      "sourceId": "G9-GEO",
+      "fileName": "كتاب الرياضيات الهندسة الصف التاسع الأساسي الفصل الاول والثاني.pdf",
+      "sha256": "9f7cb772556ded621d884f3e61c94ad37ad532b7b67c34464b29883bfe2659c4",
+      "pdfPages": 84,
+      "editionOnSource": "2025-2026",
+      "printedToPdfOffset": 0,
+      "status": "HASH_AND_PAGE_COUNT_VERIFIED",
+      "edition2026_2027": "NOT_VERIFIED",
+      "scanTextExtraction": "SCANNED_IMAGE_REQUIRES_OCR_AND_VISUAL_REVIEW",
+      "fullPedagogicalReview": false
+    },
+    {
+      "sourceId": "bac_sci_math_part1",
+      "fileName": "Sci-Math-1.pdf",
+      "sha256": "68ac74c38efc97abe037df0cf185038fba28162de1f30c94ba12a61844b8867e",
+      "pdfPages": 253,
+      "editionOnSource": "2023-2024",
+      "printedToPdfOffset": 1,
+      "status": "HASH_AND_PAGE_COUNT_VERIFIED",
+      "edition2026_2027": "NOT_VERIFIED",
+      "scanTextExtraction": "SCANNED_IMAGE_REQUIRES_OCR_AND_VISUAL_REVIEW",
+      "fullPedagogicalReview": false
+    },
+    {
+      "sourceId": "bac_sci_math_part2",
+      "fileName": "زميلك - الرياضيات الجزء الثاني.pdf",
+      "sha256": "c43f76f7b8e9cda0a6d615b84dc40500825edc96dfbfb65cb845a037edb3745a",
+      "pdfPages": 217,
+      "editionOnSource": "2021-2022",
+      "printedToPdfOffset": 0,
+      "status": "HASH_AND_PAGE_COUNT_VERIFIED",
+      "edition2026_2027": "NOT_VERIFIED",
+      "scanTextExtraction": "SCANNED_IMAGE_REQUIRES_OCR_AND_VISUAL_REVIEW",
+      "fullPedagogicalReview": false
+    }
+  ],
+  "cacheExcludedFromRepository": true
+}

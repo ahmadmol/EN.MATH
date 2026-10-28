@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "sourceFileCount": 11,
+  "sourceHashes": {
+    "BAC_ACTIVITY_EXERCISE_SECTIONS.csv": "4cb0d39b6a858377826788b2dac2386d4a19eca8c20ce530a37952142a186aeb",
+    "BAC_CURRICULUM_CATALOG.json": "23c67003c5f6a619465e793d98c0a4e7bb67c7010945572b6ad6b1b5c98b25cb",
+    "BAC_LESSONS.csv": "347a0824fa0b4d6635a1ad15b1bf3513e9e4bbe450451a61b542dac49620e490",
+    "BAC_ORIGINAL_PRACTICE_DRAFTS.csv": "0cf6e1758726ce7cc7fa8002eeae61381c987a0e4a8e9f92997584bdde8ebc16",
+    "BAC_ORIGINAL_PRACTICE_DRAFTS.json": "3493bfb2748ccea8272c2ded0848982726b18a6b179ed20bd5d022387e75d4ed",
+    "BAC_PAGE_INVENTORY.csv": "2e31b91cb1e77332368624d6e9efcdeb0d94d7424896e54243cd3571428c78aa",
+    "BAC_SOURCE_ANALYSIS.md": "e6ab2e794c44c3ef9ef01fa8e0d0f2509b9ceadc8aadc70937028968e670adcd",
+    "BAC_SOURCE_VERIFIED_ERRATA.md": "fd0983f21f634030f7960d8e567cf10a78f12308afafb864f21f51ab38367740",
+    "BAC_UNITS.csv": "6c1c16e34227216a450c4d600438033168528048f15c95c429a99e4a305e8620",
+    "CODEX_BAC_INTEGRATION_INSTRUCTIONS.md": "62ef65f7ea7ae42af6fe10acf3a9cbc6e04e603119e5c8bc3864541d20401fc0",
+    "PEDAGOGICAL_MODEL.md": "e1af7f44eaa08e67f14852caae7b07ed58fad28c6bfb99d174820f03e85bb7e9"
+  },
+  "books": 2,
+  "units": 14,
+  "lessons": 63,
+  "activitySections": 13,
+  "exerciseSections": 14,
+  "pageInventory": 470,
+  "pageContentReviewed": 0,
+  "originalDrafts": 28,
+  "approvedLessons": 0,
+  "approvedExercises": 0,
+  "issueCount": 4,
+  "inventoryPagesFlagged": 4,
+  "issues": [
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:165"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "165",
+          "printed_page": "164",
+          "unit_id": "bac-1-u05",
+          "unit_ar": "التابع اللوغاريتمي النيبري",
+          "page_kind_estimated_from_toc": "LESSON",
+          "section_ids": "bac-1-u05-l04 | bac-1-u05-l05",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u05-l05"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH"
+        ]
+      },
+      "disposition": "RAW_ANCHORS_STALE_REGENERATED_FROM_CORRECTED_CATALOG"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:166"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "166",
+          "printed_page": "165",
+          "unit_id": "bac-1-u05",
+          "unit_ar": "التابع اللوغاريتمي النيبري",
+          "page_kind_estimated_from_toc": "LESSON",
+          "section_ids": "bac-1-u05-l04 | bac-1-u05-l05",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u05-l05"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH"
+        ]
+      },
+      "disposition": "RAW_ANCHORS_STALE_REGENERATED_FROM_CORRECTED_CATALOG"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:167"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "167",
+          "printed_page": "166",
+          "unit_id": "bac-1-u05",
+          "unit_ar": "التابع اللوغاريتمي النيبري",
+          "page_kind_estimated_from_toc": "LESSON",
+          "section_ids": "bac-1-u05-l04 | bac-1-u05-l05",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u05-l05"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH"
+        ]
+      },
+      "disposition": "RAW_ANCHORS_STALE_REGENERATED_FROM_CORRECTED_CATALOG"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:168"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "168",
+          "printed_page": "167",
+          "unit_id": "bac-1-u05",
+          "unit_ar": "التابع اللوغاريتمي النيبري",
+          "page_kind_estimated_from_toc": "LESSON",
+          "section_ids": "bac-1-u05-l04 | bac-1-u05-l05",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u05-l05"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH"
+        ]
+      },
+      "disposition": "RAW_ANCHORS_STALE_REGENERATED_FROM_CORRECTED_CATALOG"
+    }
+  ],
+  "verifiedSharedPages": [
+    {
+      "lessonIds": [
+        "bac-1-u05-l04",
+        "bac-1-u05-l05"
+      ],
+      "printedPage": 163,
+      "pdfPage": 164,
+      "status": "VERIFIED_SHARED_START_PAGE",
+      "evidence": "BAC_SOURCE_VERIFIED_ERRATA.md",
+      "remainingReview": "bac-1-u05-l05 end page 167 retained; detailed boundary review pending"
+    }
+  ],
+  "regeneratedAnchorCorrections": 4,
+  "remainingSourceReviews": [
+    {
+      "lessonId": "bac-1-u05-l05",
+      "field": "source_page_end",
+      "retainedValue": 167,
+      "status": "DETAILED_BOUNDARY_REVIEW_PENDING"
+    }
+  ],
+  "reviewRecords": 602
+}

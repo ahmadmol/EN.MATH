@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-28",
+  "head": "c8548955751cbfeeb26f08105c2a35a45ccf0703",
+  "remoteBranch": "c8548955751cbfeeb26f08105c2a35a45ccf0703",
+  "baseline": "c8548955751cbfeeb26f08105c2a35a45ccf0703",
+  "indexed": {
+    "G9": {
+      "books": 2,
+      "units": 10,
+      "lessons": 32,
+      "pages": 200
+    },
+    "BAC": {
+      "books": 2,
+      "units": 14,
+      "lessons": 63,
+      "pages": 470
+    },
+    "combined": {
+      "books": 4,
+      "units": 24,
+      "lessons": 95,
+      "pages": 670
+    },
+    "legacyDemoLessons": 24
+  },
+  "educationalApproval": {
+    "G9": 0,
+    "BAC": 0,
+    "approvedDraftExercises": 0,
+    "originalDrafts": 60
+  },
+  "sourceReconciliation": {
+    "previousFindings": 37,
+    "fixedAndTested": 36,
+    "verifiedSharedPageReclassifications": 1,
+    "unresolvedPreviousFindings": 0,
+    "regeneratedAnchorsCorrected": 4,
+    "remainingDetailedSourceReviews": [
+      {
+        "lessonId": "bac-1-u05-l05",
+        "field": "source_page_end",
+        "retainedValue": 167,
+        "status": "DETAILED_BOUNDARY_REVIEW_PENDING"
+      }
+    ],
+    "manualPageContentReviewed": 0,
+    "approvedLessons": 0
+  },
+  "rawInventoryFindings": 4,
+  "jvm": {
+    "tests": 264,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "grade9IntegrationTests": 7,
+    "bacIntegrationTests": 8,
+    "modernTestFilesUnchanged": 42,
+    "modernTestMethodsExecuted": 232
+  },
+  "sqlite": {
+    "tests": 10,
+    "result": "PASS",
+    "scope": "Temporary host databases and actual schema.sql"
+  },
+  "sourceRegression": {
+    "tests": 6,
+    "result": "PASS"
+  },
+  "importers": {
+    "G9": "PASS",
+    "BAC": "PASS"
+  },
+  "draftNumericalQa": {
+    "draftSourceSha256": "3493bfb2748ccea8272c2ded0848982726b18a6b179ed20bd5d022387e75d4ed",
+    "numericalProposalsChecked": 28,
+    "numericalMismatches": 0,
+    "educatorApproved": 0,
+    "published": 0,
+    "officialTextbookAnswerKeysChecked": 0
+  },
+  "debugBuild": "PASS",
+  "lint": {
+    "result": "PASS",
+    "Error": 0,
+    "Fatal": 0,
+    "Warning": 53
+  },
+  "androidTestCompilation": "PASS",
+  "instrumentationExecution": "NOT_RUN",
+  "visualDeviceAcceptance": "NOT_RUN",
+  "preservedStorageImplementations": [
+    "core/AppViewModel.kt",
+    "core/data/LearningRepository.kt",
+    "core/data/LocalDemoRepository.kt",
+    "core/data/LocalLearnerStore.kt",
+    "core/data/ProductRepository.kt",
+    "core/model/Models.kt",
+    "core/model/ProductModels.kt",
+    "core/localgems/LocalLearningGems.kt",
+    "core/localgems/SQLiteLocalGems.kt"
+  ],
+  "apk": {
+    "path": "app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "4d7e226c06f267bd694d46d742f929cdd55a91b7d549b199f11e9d590d262b67",
+    "pdfFiles": 0,
+    "draftPrompts": 0
+  },
+  "buildLogSha256": "53332f6c9ed30ce4c6ebb12af898e6e379795fde8302fa7e12e2e079c6c8fba3",
+  "emulatorUsed": false,
+  "adbUsed": false,
+  "phoneDataTouched": false,
+  "installedApk": false,
+  "commitPerformed": false,
+  "pushPerformed": false
+}

@@ -1,0 +1,857 @@
+{
+  "schemaVersion": "0.1.0-index-only",
+  "stage": "G9",
+  "editionLabelOnSource": "2025-2026",
+  "publicationReview": "NOT_VERIFIED_FOR_2026_2027",
+  "bookAttribution": "الجمهورية العربية السورية، وزارة التربية والتعليم - كما يظهر على الغلاف المصور",
+  "copyrightNotice": "أغلفة المصدر تشير إلى أن حقوق التأليف والنشر محفوظة؛ لا تُنشر صور الكتب أو نصوص أسئلتها الطويلة في GitHub دون إذن.",
+  "sources": [
+    {
+      "bookId": "G9-ALG",
+      "shortTitle": "رياضيات التاسع — الجبر",
+      "pages": 116,
+      "bookSubject": "ALGEBRA",
+      "sha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f"
+    },
+    {
+      "bookId": "G9-GEO",
+      "shortTitle": "رياضيات التاسع — الهندسة",
+      "pages": 84,
+      "bookSubject": "GEOMETRY",
+      "sha256": "9f7cb772556ded621d884f3e61c94ad37ad532b7b67c34464b29883bfe2659c4"
+    }
+  ],
+  "units": [
+    {
+      "unitId": "G9-ALG-U01",
+      "sourceBookId": "G9-ALG",
+      "orderInBook": 1,
+      "title": "الأعداد والكسور",
+      "sourcePages": {
+        "from": 4,
+        "to": 26
+      },
+      "introductionPages": {
+        "from": 4,
+        "to": 5
+      },
+      "reviewExercisePages": {
+        "from": 22,
+        "to": 26
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-ALG-U01-L01",
+          "order": 1,
+          "title": "طبيعة الأعداد",
+          "sourcePages": {
+            "from": 6,
+            "to": 7,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "الأعداد الطبيعية والصحيحة والنسبية وغير النسبية",
+          "draftLearningObjectiveOriginal": "يميز تصنيفات الأعداد وكتابتها",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U01-L02",
+          "order": 2,
+          "title": "القواسم المشتركة لعددين صحيحين",
+          "sourcePages": {
+            "from": 8,
+            "to": 13,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "القاسم المشترك الأكبر وخوارزمية إقليدس",
+          "draftLearningObjectiveOriginal": "يحسب القواسم المشتركة والقاسم المشترك الأكبر",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U01-L03",
+          "order": 3,
+          "title": "كسور مختزلة",
+          "sourcePages": {
+            "from": 14,
+            "to": 15,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "تبسيط الكسور والقاسم المشترك الأكبر",
+          "draftLearningObjectiveOriginal": "يختزل الكسور إلى أبسط صورة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U01-L04",
+          "order": 4,
+          "title": "الجذر التربيعي لعدد موجب",
+          "sourcePages": {
+            "from": 16,
+            "to": 21,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "الجذور التربيعية وقواعد العمليات عليها",
+          "draftLearningObjectiveOriginal": "يحسب الجذور ويبسط المقادير الجذرية",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-ALG-U02",
+      "sourceBookId": "G9-ALG",
+      "orderInBook": 2,
+      "title": "قوى الأعداد العادية - الحساب بالرموز",
+      "sourcePages": {
+        "from": 27,
+        "to": 41
+      },
+      "introductionPages": {
+        "from": 27,
+        "to": 28
+      },
+      "reviewExercisePages": {
+        "from": 38,
+        "to": 41
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-ALG-U02-L01",
+          "order": 1,
+          "title": "قوة عدد عادي",
+          "sourcePages": {
+            "from": 29,
+            "to": 31,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "تعريف القوى وقواعد العمليات عليها",
+          "draftLearningObjectiveOriginal": "يطبق خصائص القوى في الحساب",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U02-L02",
+          "order": 2,
+          "title": "النشر والتحليل",
+          "sourcePages": {
+            "from": 32,
+            "to": 33,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "نشر العبارات الجبرية وتحليلها",
+          "draftLearningObjectiveOriginal": "ينشر ويحلل عبارات جبرية بسيطة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U02-L03",
+          "order": 3,
+          "title": "متطابقات شهيرة",
+          "sourcePages": {
+            "from": 34,
+            "to": 37,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "مربعا مجموع وفرق والفرق بين مربعين",
+          "draftLearningObjectiveOriginal": "يوظف المتطابقات الشهيرة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-ALG-U03",
+      "sourceBookId": "G9-ALG",
+      "orderInBook": 3,
+      "title": "معادلات ومتراجحات",
+      "sourcePages": {
+        "from": 42,
+        "to": 60
+      },
+      "introductionPages": {
+        "from": 42,
+        "to": 43
+      },
+      "reviewExercisePages": {
+        "from": 57,
+        "to": 60
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-ALG-U03-L01",
+          "order": 1,
+          "title": "معادلات الدرجة الأولى بمجهول واحد",
+          "sourcePages": {
+            "from": 44,
+            "to": 47,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "حل المعادلات الخطية والتحقق من الحل",
+          "draftLearningObjectiveOriginal": "يحل معادلة خطية بمجهول واحد",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U03-L02",
+          "order": 2,
+          "title": "معادلات - خاصية الجداء الصفري",
+          "sourcePages": {
+            "from": 48,
+            "to": 51,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "حل المعادلات باستخدام خاصية الجداء الصفري",
+          "draftLearningObjectiveOriginal": "يستنتج جذور معادلة على شكل جداء",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U03-L03",
+          "order": 3,
+          "title": "متراجحات الدرجة الأولى بمجهول واحد",
+          "sourcePages": {
+            "from": 52,
+            "to": 56,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "المتراجحات ومجموعة حلولها وتمثيلها",
+          "draftLearningObjectiveOriginal": "يحل المتراجحة ويمثل الحل",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-ALG-U04",
+      "sourceBookId": "G9-ALG",
+      "orderInBook": 4,
+      "title": "جمل المعادلات",
+      "sourcePages": {
+        "from": 61,
+        "to": 76
+      },
+      "introductionPages": {
+        "from": 61,
+        "to": 62
+      },
+      "reviewExercisePages": {
+        "from": 73,
+        "to": 76
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-ALG-U04-L01",
+          "order": 1,
+          "title": "جملة معادلتين خطيتين بمجهولين",
+          "sourcePages": {
+            "from": 63,
+            "to": 67,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "حل جمل المعادلات بالتعويض والحذف",
+          "draftLearningObjectiveOriginal": "يحدد حل جملة خطية ويتحقق منه",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U04-L02",
+          "order": 2,
+          "title": "معادلة مستقيم",
+          "sourcePages": {
+            "from": 68,
+            "to": 69,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "المعادلة الخطية وتمثيل مستقيم في المستوى",
+          "draftLearningObjectiveOriginal": "يوجد معادلة خط ويربطها بالنقاط",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U04-L03",
+          "order": 3,
+          "title": "حل جملة معادلتين خطيتين بيانياً",
+          "sourcePages": {
+            "from": 70,
+            "to": 72,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "تقاطع مستقيمين والحل البياني",
+          "draftLearningObjectiveOriginal": "يحدد حل جملة من تقاطع المستقيمين",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-ALG-U05",
+      "sourceBookId": "G9-ALG",
+      "orderInBook": 5,
+      "title": "التابع",
+      "sourcePages": {
+        "from": 77,
+        "to": 93
+      },
+      "introductionPages": {
+        "from": 77,
+        "to": 78
+      },
+      "reviewExercisePages": {
+        "from": 88,
+        "to": 93
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-ALG-U05-L01",
+          "order": 1,
+          "title": "مفهوم التابع",
+          "sourcePages": {
+            "from": 79,
+            "to": 81,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "التعريف والمجال والصور والسوابق",
+          "draftLearningObjectiveOriginal": "يحدد صورة عنصر وفق قاعدة التابع",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U05-L02",
+          "order": 2,
+          "title": "طرائق تعريف التابع",
+          "sourcePages": {
+            "from": 82,
+            "to": 87,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "التمثيل البياني والجدولي والتعبير الجبري",
+          "draftLearningObjectiveOriginal": "يمثل التابع ويقرأ قيمه من أكثر من تمثيل",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-ALG-U06",
+      "sourceBookId": "G9-ALG",
+      "orderInBook": 6,
+      "title": "مبادئ الاحتمال والإحصاء",
+      "sourcePages": {
+        "from": 94,
+        "to": 116
+      },
+      "introductionPages": {
+        "from": 94,
+        "to": 95
+      },
+      "reviewExercisePages": {
+        "from": 111,
+        "to": 116
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-ALG-U06-L01",
+          "order": 1,
+          "title": "مفهوم الاحتمال",
+          "sourcePages": {
+            "from": 96,
+            "to": 102,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "الحدث والفضاء العيني والاحتمالات البسيطة",
+          "draftLearningObjectiveOriginal": "يحسب احتمالات أحداث بسيطة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U06-L02",
+          "order": 2,
+          "title": "أحداث متنافية وأحداث متعاكسة",
+          "sourcePages": {
+            "from": 103,
+            "to": 104,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "جمع احتمالات أحداث متنافية والحدث المكمل",
+          "draftLearningObjectiveOriginal": "يحسب احتمال المتمم ويعرف التنافي",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U06-L03",
+          "order": 3,
+          "title": "تجارب عشوائية مركبة",
+          "sourcePages": {
+            "from": 105,
+            "to": 107,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "مخططات الشجرة وقواعد الاحتمال المركب",
+          "draftLearningObjectiveOriginal": "يحسب احتمالات أحداث في تجارب مركبة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-ALG-U06-L04",
+          "order": 4,
+          "title": "الربيعات",
+          "sourcePages": {
+            "from": 108,
+            "to": 110,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "ترتيب البيانات والوسيط والربيعات",
+          "draftLearningObjectiveOriginal": "يحدد الربيعات من مجموعة مرتبة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-GEO-U01",
+      "sourceBookId": "G9-GEO",
+      "orderInBook": 1,
+      "title": "النسب المثلثية لزاوية حادة",
+      "sourcePages": {
+        "from": 2,
+        "to": 19
+      },
+      "introductionPages": {
+        "from": 2,
+        "to": 3
+      },
+      "reviewExercisePages": {
+        "from": 16,
+        "to": 19
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-GEO-U01-L01",
+          "order": 1,
+          "title": "بعض خواص التناسب",
+          "sourcePages": {
+            "from": 4,
+            "to": 6,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "النسب والتناسب وتطبيقاتها على الأطوال",
+          "draftLearningObjectiveOriginal": "يوظف خواص التناسب",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U01-L02",
+          "order": 2,
+          "title": "النسب المثلثية لزاوية حادة",
+          "sourcePages": {
+            "from": 7,
+            "to": 10,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "الجيب وجيب التمام والظل في المثلث القائم",
+          "draftLearningObjectiveOriginal": "يحدد ويحسب النسب المثلثية",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U01-L03",
+          "order": 3,
+          "title": "علاقتان مهمتان بين النسب المثلثية",
+          "sourcePages": {
+            "from": 11,
+            "to": 12,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "العلاقات بين جيب الزاوية وجيب تمامها وظلها",
+          "draftLearningObjectiveOriginal": "يستخدم المتطابقات المثلثية الأساسية",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U01-L04",
+          "order": 4,
+          "title": "نسب زوايا شهيرة",
+          "sourcePages": {
+            "from": 13,
+            "to": 15,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "النسب المثلثية لزوايا 30 و45 و60 درجة",
+          "draftLearningObjectiveOriginal": "يستخدم نسب الزوايا الخاصة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-GEO-U02",
+      "sourceBookId": "G9-GEO",
+      "orderInBook": 2,
+      "title": "مبرهنة النسب الثلاث",
+      "sourcePages": {
+        "from": 20,
+        "to": 38
+      },
+      "introductionPages": {
+        "from": 20,
+        "to": 20
+      },
+      "reviewExercisePages": {
+        "from": 33,
+        "to": 38
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-GEO-U02-L01",
+          "order": 1,
+          "title": "مبرهنة النسب الثلاث",
+          "sourcePages": {
+            "from": 21,
+            "to": 24,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "التناسب الناتج عن مستقيم مواز لأحد أضلاع مثلث",
+          "draftLearningObjectiveOriginal": "يحسب أطوالاً اعتمادًا على التناسب",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U02-L02",
+          "order": 2,
+          "title": "عكس مبرهنة النسب الثلاث",
+          "sourcePages": {
+            "from": 25,
+            "to": 28,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "شروط استنتاج التوازي من تساوي النسب",
+          "draftLearningObjectiveOriginal": "يستنتج التوازي من نسب متوافقة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U02-L03",
+          "order": 3,
+          "title": "التشابه",
+          "sourcePages": {
+            "from": 29,
+            "to": 32,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "تشابه المثلثات ونسب الأطوال والمساحات والحجوم",
+          "draftLearningObjectiveOriginal": "يستعمل نسبة التشابه في مسائل هندسية",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-GEO-U03",
+      "sourceBookId": "G9-GEO",
+      "orderInBook": 3,
+      "title": "الزوايا والمضلعات في الدائرة - المضلعات المنتظمة",
+      "sourcePages": {
+        "from": 39,
+        "to": 59
+      },
+      "introductionPages": {
+        "from": 39,
+        "to": 39
+      },
+      "reviewExercisePages": {
+        "from": 54,
+        "to": 59
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-GEO-U03-L01",
+          "order": 1,
+          "title": "زوايا محيطية وزوايا مركزية",
+          "sourcePages": {
+            "from": 40,
+            "to": 46,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "الزوايا على أقواس الدائرة والزاوية المماسية",
+          "draftLearningObjectiveOriginal": "يطبق العلاقة بين الزوايا المحيطية والمركزية",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U03-L02",
+          "order": 2,
+          "title": "الرباعي الدائري",
+          "sourcePages": {
+            "from": 47,
+            "to": 50,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "زوايا الرباعي المرسوم داخل دائرة",
+          "draftLearningObjectiveOriginal": "يستخدم خواص الرباعي الدائري",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U03-L03",
+          "order": 3,
+          "title": "المضلعات المنتظمة",
+          "sourcePages": {
+            "from": 51,
+            "to": 53,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "المضلعات المنتظمة والزوايا والأضلاع",
+          "draftLearningObjectiveOriginal": "يحسب زوايا المضلعات المنتظمة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    },
+    {
+      "unitId": "G9-GEO-U04",
+      "sourceBookId": "G9-GEO",
+      "orderInBook": 4,
+      "title": "مجسمات ومقاطع",
+      "sourcePages": {
+        "from": 60,
+        "to": 84
+      },
+      "introductionPages": {
+        "from": 60,
+        "to": 61
+      },
+      "reviewExercisePages": {
+        "from": 78,
+        "to": 84
+      },
+      "lessons": [
+        {
+          "lessonId": "G9-GEO-U04-L01",
+          "order": 1,
+          "title": "تذكرة بالمجسمات",
+          "sourcePages": {
+            "from": 62,
+            "to": 65,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "الحجوم للأسطوانة والهرم والمخروط",
+          "draftLearningObjectiveOriginal": "يحسب حجوم مجسمات معروفة",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U04-L02",
+          "order": 2,
+          "title": "الكرة",
+          "sourcePages": {
+            "from": 66,
+            "to": 69,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "السطح الكروي والكرة ومساحتها وحجمها",
+          "draftLearningObjectiveOriginal": "يحسب مساحة سطح كرة وحجمها",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        },
+        {
+          "lessonId": "G9-GEO-U04-L03",
+          "order": 3,
+          "title": "مقاطع مجسمات",
+          "sourcePages": {
+            "from": 70,
+            "to": 77,
+            "numbering": "PDF-page = printed-page for these lesson pages"
+          },
+          "topicSummaryOriginal": "المقاطع المستوية للمجسمات والكرة",
+          "draftLearningObjectiveOriginal": "يستنتج خواص المقاطع الهندسية",
+          "lessonOutlineStatus": "INDEX_VERIFIED_BY_PAGE_IMAGE",
+          "completeBookTextImported": false,
+          "exerciseStatementsTranscribed": false,
+          "pedagogicalReviewStatus": "PENDING",
+          "publishingStatus": "BLOCKED_PENDING_MATH_REVIEW_AND_RIGHTS"
+        }
+      ],
+      "reviewExerciseCount": "NOT_COUNTED_FROM_SCANS",
+      "implementationState": "INDEX_READY_CONTENT_NOT_TRANSCRIBED"
+    }
+  ],
+  "instructionPatternsFromBooks": [
+    {
+      "bookHeading": "انطلاقة نشطة",
+      "uiBlock": "prerequisite_check",
+      "purpose": "تهيئة الطالب واستدعاء المعرفة السابقة"
+    },
+    {
+      "bookHeading": "نشاط",
+      "uiBlock": "guided_activity",
+      "purpose": "نشاط استكشافي يتدرج إلى المفهوم"
+    },
+    {
+      "bookHeading": "تعلّم / تعريف",
+      "uiBlock": "concept_explanation",
+      "purpose": "تقديم المصطلح والتعريف العلمي"
+    },
+    {
+      "bookHeading": "خاصية / خواص / خلاصة / نتيجة",
+      "uiBlock": "rule_card",
+      "purpose": "قاعدة رياضية مستقلة وشروط استخدامها"
+    },
+    {
+      "bookHeading": "مثال / الحل",
+      "uiBlock": "worked_example",
+      "purpose": "مثال محلول تدريجيًا مع التحقق من النتيجة"
+    },
+    {
+      "bookHeading": "اكتساب معارف",
+      "uiBlock": "guided_practice",
+      "purpose": "توظيف جديد للمعلومة ضمن سياق من الكتاب"
+    },
+    {
+      "bookHeading": "تحقق من فهمك",
+      "uiBlock": "formative_check",
+      "purpose": "تحقق قصير، دون منح إتقان تلقائي"
+    },
+    {
+      "bookHeading": "تدرّب",
+      "uiBlock": "independent_practice",
+      "purpose": "تدريب غير إجباري ومرتبط بالمهارة"
+    },
+    {
+      "bookHeading": "تمارين ومسائل",
+      "uiBlock": "unit_review",
+      "purpose": "بنك أسئلة نهاية الوحدة"
+    },
+    {
+      "bookHeading": "لإحراز تقدم",
+      "uiBlock": "challenge_optional",
+      "purpose": "تحدٍّ أعلى مستوى، لا يحجب إكمال الدرس"
+    }
+  ],
+  "counts": {
+    "books": 2,
+    "pages": 200,
+    "units": 10,
+    "algebraUnits": 6,
+    "geometryUnits": 4,
+    "lessons": 32,
+    "algebraLessons": 19,
+    "geometryLessons": 13
+  },
+  "warnings": [
+    "هذا فهرس درس وصفحة لا يتضمن نقل كامل التمارين ولا رسومها الهندسية.",
+    "تطابق المصدر مع طبعة السنة التالية غير مؤكد.",
+    "المسائل المقترحة في الملف المنفصل مؤلفة استقلالًا وليست نسخًا حرفية من الكتاب."
+  ]
+}
