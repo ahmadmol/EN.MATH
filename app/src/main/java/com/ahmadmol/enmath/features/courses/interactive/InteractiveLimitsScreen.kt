@@ -63,6 +63,7 @@ fun InteractiveLessonScreen(
     val block = blocks.getOrNull(index)
     key(index) {
         LessonPage("screen-interactive-lesson") {
+            EducationalInfoBanner(tr("Demo lesson · independent learning evidence", "درس تجريبي · أدلة تعلّم مستقلة"))
             LessonProgressCard(
                 "$title · ${tr("Guided practice", "تدريب موجّه")}",
                 if (blocks.isEmpty()) 0 else index + 1, blocks.size,

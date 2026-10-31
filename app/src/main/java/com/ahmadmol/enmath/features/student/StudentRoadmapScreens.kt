@@ -7,1003 +7,563 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Assignment
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.FactCheck
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
+import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ahmadmol.enmath.R
 import com.ahmadmol.enmath.core.data.*
 import com.ahmadmol.enmath.core.design.*
-import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions as D
 import com.ahmadmol.enmath.core.localgems.*
 import com.ahmadmol.enmath.core.model.*
 import com.ahmadmol.enmath.features.localgems.gemBalanceText
+import com.ahmadmol.enmath.features.planner.PlanSummary
+import kotlinx.coroutines.launch
 import kotlin.math.sin
 
-/** Station Node Status for the S-shaped learning roadmap */
-enum class RoadmapNodeStatus {
-    COMPLETED,
-    IN_PROGRESS,
-    AVAILABLE,
-    LOCKED,
-    CONTENT_PENDING
-}
-
-/** Data representation of a single research node on the winding roadmap */
-data class RoadmapResearchNode(
-    val id: String,
-    val unitNumber: Int,
-    val lessonNumber: Int,
-    val labelText: String,
-    val title: String,
-    val subtitle: String?,
-    val status: RoadmapNodeStatus,
-    val route: String,
-    val isAlgebra: Boolean = true,
-    val bookVolume: Int = 1
-)
-
-/** Data representation of a unit banner along the roadmap */
-data class RoadmapUnitSection(
-    val unitOrder: Int,
-    val title: String,
-    val subtitle: String,
-    val researches: List<RoadmapResearchNode>,
-    val isAlgebra: Boolean = true,
-    val bookVolume: Int = 1
-)
-
-// =============================================================================
-// GRADE 9 ROADMAP HOME SCREEN
-// =============================================================================
-
+/**
+ * Interactive Learning Map Entry for Grade 9.
+ */
 @Composable
 fun Grade9RoadmapHomeScreen(
     state: LearningState,
     open: (String) -> Unit,
     gems: LocalGemsUiState = LocalGemsUiState(),
-    planner: PlannerRepository? = null
+    planner: PlannerRepository? = null,
+    workspace: SourceWorkspaceRepository? = null
 ) {
-    val scheme = MaterialTheme.colorScheme
-    val dark = scheme.background.luminance() < 0.5f
-    val isAr = state.language == Language.Arabic
-
-    val studentName = state.user?.name?.takeIf { it.isNotBlank() } ?: if (isAr) "طالب الصف التاسع" else "Grade 9 Student"
-    val owner = LocalGemsPolicy.owner(state.user)
-    val gemCountText = gemBalanceText(gems, owner, state.language)
-    val stats = LearningRules.stats(state)
-    val progress = state.progress
-    val level = (stats.streak / 3 + 1).coerceAtLeast(1)
-
-    val activeLesson = state.lesson(state.lastLessonId)
-        ?: state.lessons.firstOrNull()
-
-    // Build Grade 9 Unit Sections (10 Units, 32 Researches)
-    val completedSet = StudentCatalog.completed(state)
-    val unitSections = remember(completedSet, state.lastLessonId) {
-        G9CatalogData.units.map { unit ->
-            val isAlg = unit.ref.sourceBookId == "G9-ALG"
-            val researches = unit.lessons.map { lesson ->
-                val lessonId = lesson.ref.lessonId.orEmpty()
-                val isCompleted = lessonId in completedSet
-                val isCurrent = lessonId == state.lastLessonId
-                val isAvailable = state.lesson(lessonId) != null
-
-                val status = when {
-                    isCompleted -> RoadmapNodeStatus.COMPLETED
-                    isCurrent -> RoadmapNodeStatus.IN_PROGRESS
-                    isAvailable -> RoadmapNodeStatus.AVAILABLE
-                    else -> RoadmapNodeStatus.CONTENT_PENDING
-                }
-
-                RoadmapResearchNode(
-                    id = lessonId,
-                    unitNumber = unit.order,
-                    lessonNumber = lesson.order,
-                    labelText = "${unit.order}.${lesson.order}",
-                    title = lesson.title,
-                    subtitle = lesson.draftObjective.ifBlank { "بحث صفحة ${lesson.pages.from} - ${lesson.pages.to}" },
-                    status = status,
-                    route = if (isAvailable) "lesson/$lessonId" else "book/${unit.ref.sourceBookId}",
-                    isAlgebra = isAlg
-                )
-            }
-
-            RoadmapUnitSection(
-                unitOrder = unit.order,
-                title = if (isAr) "الوحدة ${unit.order}: ${unit.title}" else "Unit ${unit.order}: ${unit.title}",
-                subtitle = if (isAr) "الأبحاث والصفحات ${unit.pages.from}-${unit.pages.to}" else "Pages ${unit.pages.from}-${unit.pages.to}",
-                researches = researches,
-                isAlgebra = isAlg
-            )
-        }
-    }
-
-    val totalResearches = remember(unitSections) { unitSections.sumOf { it.researches.size } }
-    val allNodesList = remember(unitSections) { unitSections.flatMap { it.researches } }
-
-    val lazyListState = rememberLazyListState()
-
-    // Background Gradient for Grade 9 (Turquoise / Light Teal theme)
-    val g9BackgroundBrush = Brush.verticalGradient(
-        if (dark) listOf(Color(0xFF041820), Color(0xFF0A2B35), Color(0xFF051D24))
-        else listOf(Color(0xFFE0F7FA), Color(0xFFE8F8FA), Color(0xFFF0FBFD))
-    )
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag("screen-home")
-            .background(g9BackgroundBrush),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        LazyColumn(
-            state = lazyListState,
-            modifier = Modifier
-                .widthIn(max = D.contentMax)
-                .fillMaxWidth()
-                .padding(horizontal = if (LocalConfiguration.current.screenWidthDp > 600) 24.dp else 12.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-            contentPadding = PaddingValues(top = 12.dp, bottom = 80.dp)
-        ) {
-            // 1. TOP HEADER BAR
-            item(key = "g9_header") {
-                G9TopHeader(
-                    studentName = studentName,
-                    gemCountText = gemCountText,
-                    streak = stats.streak,
-                    level = level,
-                    dark = dark,
-                    isAr = isAr,
-                    onOpenWallet = { open("gems/wallet") }
-                )
-            }
-
-            // 2. HERO CONTINUATION CARD ("تابع دراستك")
-            item(key = "g9_hero") {
-                G9HeroContinuationCard(
-                    activeLessonTitle = activeLesson?.title?.let { if (isAr) it.ar else it.en } ?: tr("طبيعة الأعداد والكسور", "Number Nature & Fractions"),
-                    unitTitle = tr("الوحدة 1: الأعداد الجبرية", "Unit 1: Algebraic Numbers"),
-                    progressText = "2 / 4",
-                    dark = dark,
-                    isAr = isAr,
-                    onContinue = {
-                        if (activeLesson != null) open("lesson/${activeLesson.id}")
-                        else open("book/G9-ALG")
-                    }
-                )
-            }
-
-            // 3. DAILY GOAL CARD
-            item(key = "g9_daily_goal") {
-                RoadmapDailyGoalCard(
-                    todayCompleted = progress.todayCompleted,
-                    dailyGoal = state.dailyGoal,
-                    dark = dark,
-                    isAr = isAr
-                )
-            }
-
-            // 4. QUICK TOOLS & ACTIONS ROW (Testing & Quick Navigation)
-            item(key = "g9_quick_tools") {
-                RoadmapQuickToolsRow(
-                    dark = dark,
-                    isAr = isAr,
-                    open = open
-                )
-            }
-
-            // 5. ALGEBRA SECTION HEADER (Units 1 - 6)
-            item(key = "g9_algebra_banner") {
-                RoadmapSubjectBanner(
-                    title = if (isAr) "كتاب الجبر" else "Algebra Textbook",
-                    subtitle = if (isAr) "6 وحدات · 19 بحثاً مفهرساً" else "6 Units · 19 Researches",
-                    iconRes = R.drawable.icon_solver,
-                    accentColor = Color(0xFF00ACC1),
-                    dark = dark
-                )
-            }
-
-            // 6. ROADMAP PATH & STATIONS FOR ALGEBRA (Units 1 to 6)
-            var globalNodeIndex = 0
-            unitSections.filter { it.isAlgebra }.forEach { unitSection ->
-                item(key = "g9_unit_header_${unitSection.unitOrder}") {
-                    RoadmapUnitHeaderBadge(
-                        title = unitSection.title,
-                        subtitle = unitSection.subtitle,
-                        badgeColor = Color(0xFF00ACC1),
-                        dark = dark
-                    )
-                }
-
-                itemsIndexed(
-                    items = unitSection.researches,
-                    key = { _, node -> "g9_node_${node.id}" }
-                ) { idx, node ->
-                    val currentIndex = globalNodeIndex++
-                    val nextNode = allNodesList.getOrNull(currentIndex + 1)
-
-                    RoadmapStationRow(
-                        node = node,
-                        nodeIndex = currentIndex,
-                        nextNode = nextNode,
-                        accentColor = Color(0xFF00ACC1),
-                        dark = dark,
-                        isAr = isAr,
-                        open = open
-                    )
-                }
-
-                item(key = "g9_unit_chest_${unitSection.unitOrder}") {
-                    RoadmapUnitChestNode(
-                        unitOrder = unitSection.unitOrder,
-                        accentColor = Color(0xFF00ACC1),
-                        dark = dark,
-                        isAr = isAr
-                    )
-                }
-            }
-
-            // 7. GEOMETRY SECTION HEADER (Units 7 - 10)
-            item(key = "g9_geometry_banner") {
-                Spacer(modifier = Modifier.height(12.dp))
-                RoadmapSubjectBanner(
-                    title = if (isAr) "كتاب الهندسة" else "Geometry Textbook",
-                    subtitle = if (isAr) "4 وحدات · 13 بحثاً مفهرساً" else "4 Units · 13 Researches",
-                    iconRes = R.drawable.icon_geometry,
-                    accentColor = Color(0xFF00838F),
-                    dark = dark
-                )
-            }
-
-            // 8. ROADMAP PATH & STATIONS FOR GEOMETRY (Units 7 to 10)
-            unitSections.filter { !it.isAlgebra }.forEach { unitSection ->
-                item(key = "g9_unit_header_${unitSection.unitOrder}") {
-                    RoadmapUnitHeaderBadge(
-                        title = unitSection.title,
-                        subtitle = unitSection.subtitle,
-                        badgeColor = Color(0xFF00838F),
-                        dark = dark
-                    )
-                }
-
-                itemsIndexed(
-                    items = unitSection.researches,
-                    key = { _, node -> "g9_node_${node.id}" }
-                ) { idx, node ->
-                    val currentIndex = globalNodeIndex++
-                    val nextNode = allNodesList.getOrNull(currentIndex + 1)
-
-                    RoadmapStationRow(
-                        node = node,
-                        nodeIndex = currentIndex,
-                        nextNode = nextNode,
-                        accentColor = Color(0xFF00838F),
-                        dark = dark,
-                        isAr = isAr,
-                        open = open
-                    )
-                }
-
-                item(key = "g9_unit_chest_${unitSection.unitOrder}") {
-                    RoadmapUnitChestNode(
-                        unitOrder = unitSection.unitOrder,
-                        accentColor = Color(0xFF00838F),
-                        dark = dark,
-                        isAr = isAr
-                    )
-                }
-            }
-
-            // 9. FINAL EXAMINATION & COMPREHENSIVE REVIEW SECTION
-            item(key = "g9_final_exam") {
-                RoadmapFinalExamSection(
-                    title = if (isAr) "الامتحان الشامل — التاسع" else "Grade 9 Comprehensive Exam",
-                    subtitle = if (isAr) "مراجعة عامة وااختبارات شاملة على جميع وحدات الجبر والهندسة" else "Full review and comprehensive practice across all units",
-                    accentColor = Color(0xFF00ACC1),
-                    dark = dark,
-                    isAr = isAr,
-                    open = open
-                )
-            }
-        }
-    }
+    Grade9LearningPath(state, open, gems, planner, workspace)
 }
 
-// =============================================================================
-// BACCALAUREATE ROADMAP HOME SCREEN
-// =============================================================================
-
+/**
+ * Interactive Learning Map Entry for Baccalaureate.
+ */
 @Composable
 fun BaccalaureateRoadmapHomeScreen(
     state: LearningState,
     open: (String) -> Unit,
     gems: LocalGemsUiState = LocalGemsUiState(),
-    planner: PlannerRepository? = null
+    planner: PlannerRepository? = null,
+    workspace: SourceWorkspaceRepository? = null
 ) {
-    val scheme = MaterialTheme.colorScheme
-    val dark = scheme.background.luminance() < 0.5f
-    val isAr = state.language == Language.Arabic
+    InteractiveRoadmapHome(
+        stage = StudyStage.BAC,
+        state = state,
+        open = open,
+        gems = gems,
+        planner = planner,
+        workspace = workspace
+    )
+}
 
-    val studentName = state.user?.name?.takeIf { it.isNotBlank() } ?: if (isAr) "طالب البكالوريا العلمي" else "Baccalaureate Student"
-    val owner = LocalGemsPolicy.owner(state.user)
-    val gemCountText = gemBalanceText(gems, owner, state.language)
-    val stats = LearningRules.stats(state)
-    val progress = state.progress
-    val level = (stats.streak / 3 + 1).coerceAtLeast(1)
+/**
+ * Interactive Learning Map screen matching Image 11 (Grade 9) and Image 12 (Baccalaureate).
+ * Features:
+ * - Gamified header (Avatar, greeting, EN.MATH logo, streak 🔥, gems 💎, level ⭐, notification bell).
+ * - "تابع دراستك" hero card with 3D character art, active progress bar, and large pulsing play button.
+ * - Distinct Book 1 & Book 2 headers for Baccalaureate.
+ * - Curving snake learning path with lesson stations, completed checkmarks, active play nodes, and milestone chests.
+ * - Background math doodles (formulas, coordinate curves, 3D shapes).
+ * - Final comprehensive exam section with Trophy, Graduation cap, and test milestones.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun InteractiveRoadmapHome(
+    stage: StudyStage,
+    state: LearningState,
+    open: (String) -> Unit,
+    gems: LocalGemsUiState,
+    planner: PlannerRepository?,
+    workspace: SourceWorkspaceRepository?
+) {
+    val catalog = SourceCurricula.forStage(stage)
+    if (catalog == null) {
+        ScreenPage { com.ahmadmol.enmath.features.courses.CatalogUnavailable() }
+        return
+    }
 
-    val activeLesson = state.lesson(state.lastLessonId)
-        ?: state.lessons.firstOrNull()
+    val dark = isDarkTheme()
+    val scope = StudentCatalog.scope(state)
+    val changed = workspace?.changes?.collectAsState()?.value
+    val read = remember(scope, changed) { scope?.let { workspace?.read(it) } }
+    val visited = (read as? SourceWorkspaceRead.Ready)?.workspace?.visitedId?.let(catalog::research)
+    val savedIds = (read as? SourceWorkspaceRead.Ready)?.workspace?.savedIds.orEmpty()
+    val completedLessons = StudentCatalog.completed(state)
 
-    // Build Baccalaureate Unit Sections (14 Units across Book 1 & Book 2, 63 Researches)
-    val completedSet = StudentCatalog.completed(state)
-    val unitSections = remember(completedSet, state.lastLessonId) {
-        BacSourceData.units.map { unit ->
-            val bookVol = if (unit.sourceId == "bac_sci_math_part1") 1 else 2
-            val researches = unit.lessonIds.mapIndexed { idx, lessonId ->
-                val lessonObj = BacSourceCatalog.lesson(lessonId)
-                val isCompleted = lessonId in completedSet
-                val isCurrent = lessonId == state.lastLessonId
-                val isAvailable = state.lesson(lessonId) != null
+    val listState = rememberLazyListState()
+    val coroutine = rememberCoroutineScope()
+    var rewardDialogGems by remember { mutableStateOf<Int?>(null) }
 
-                val status = when {
-                    isCompleted -> RoadmapNodeStatus.COMPLETED
-                    isCurrent -> RoadmapNodeStatus.IN_PROGRESS
-                    isAvailable -> RoadmapNodeStatus.AVAILABLE
-                    else -> RoadmapNodeStatus.CONTENT_PENDING
+    // First research as fallback for "continue learning"
+    val firstResearch = catalog.researches.firstOrNull()
+    val activeResearch = visited ?: firstResearch
+    val activeUnit = activeResearch?.let { catalog.unit(it.unitId) } ?: catalog.units.firstOrNull()
+
+    // Gamification values
+    val streak = LearningRules.stats(state).streak
+    val gemCount = gemBalanceText(gems, LocalGemsPolicy.owner(state.user), state.language)
+    val completedCount = completedLessons.size + savedIds.size
+    val level = (completedCount / 3 + 1).coerceAtLeast(1)
+    val unreadNotifications = state.product.notifications.count { !it.teacher && it.id !in state.product.readNotifications }
+
+    if (rewardDialogGems != null) {
+        AlertDialog(
+            onDismissRequest = { rewardDialogGems = null },
+            icon = {
+                Image(
+                    painter = painterResource(R.drawable.icon_chest),
+                    contentDescription = null,
+                    modifier = Modifier.size(56.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = tr("Milestone Reward!", "مكافأة الإنجاز!"),
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    textAlign = TextAlign.Center
+                )
+            },
+            text = {
+                Text(
+                    text = tr(
+                        "Great job progressing along your math journey! You have earned +${rewardDialogGems} gems.",
+                        "أحسنت بمتابعة مسار تعلّمك في الرياضيات! حصلت على +${rewardDialogGems} جوهرة إضافية."
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { rewardDialogGems = null },
+                    colors = ButtonDefaults.buttonColors(containerColor = if (stage == StudyStage.G9) Color(0xFF00A896) else Color(0xFF0066FF))
+                ) {
+                    Text(tr("Collect", "استلام"))
                 }
+            }
+        )
+    }
 
-                RoadmapResearchNode(
-                    id = lessonId,
-                    unitNumber = unit.order,
-                    lessonNumber = idx + 1,
-                    labelText = "${unit.order}.${idx + 1}",
-                    title = lessonObj?.title ?: "البحث ${idx + 1}",
-                    subtitle = lessonObj?.edition ?: "فهرس المصدر",
-                    status = status,
-                    route = if (isAvailable) "lesson/$lessonId" else "book/${unit.sourceId}",
-                    bookVolume = bookVol
+    LazyColumn(
+        state = listState,
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("screen-home"),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
+    ) {
+        // 1. Top Gamification Header Bar (Image 11 & 12 top)
+        item(key = "roadmap_header") {
+            GamifiedTopHeader(
+                stage = stage,
+                userName = state.user?.name.orEmpty(),
+                streak = streak,
+                gemCount = gemCount,
+                level = level,
+                unreadNotifications = unreadNotifications,
+                dark = dark,
+                onOpenNotifications = { open("notifications") },
+                onOpenWallet = { open("gems/wallet") }
+            )
+            Spacer(Modifier.height(14.dp))
+        }
+
+        // 2. "تابع دراستك" Hero Card with 3D Character Illustration (Image 11 & 12 Hero)
+        item(key = "roadmap_hero") {
+            ContinueStudyHeroCard(
+                stage = stage,
+                research = activeResearch,
+                unit = activeUnit,
+                catalog = catalog,
+                dark = dark,
+                onContinue = { open(activeResearch?.route ?: "study") }
+            )
+            Spacer(Modifier.height(16.dp))
+        }
+
+        // 3. Quick Tools Navigation Bar
+        item(key = "roadmap_tools") {
+            RoadmapQuickTools(open = open)
+            Spacer(Modifier.height(16.dp))
+        }
+
+        // 4. Study Plan Summary (Integrated)
+        item(key = "roadmap_plan") {
+            PlanSummary(state, planner, open)
+            Spacer(Modifier.height(16.dp))
+        }
+
+        // 5. The Interactive Snake Map Path across all Units and Lessons
+        renderInteractiveLearningPath(
+            stage = stage,
+            catalog = catalog,
+            activeResearchId = activeResearch?.id,
+            completedLessons = completedLessons,
+            savedIds = savedIds,
+            dark = dark,
+            open = open,
+            onRewardClick = { rewardDialogGems = 25 }
+        )
+
+        // 6. Final Comprehensive Exam Footer Section (Image 11 & 12 bottom)
+        item(key = "roadmap_final_exam") {
+            ComprehensiveExamFooter(
+                stage = stage,
+                dark = dark,
+                open = open,
+                onBackToTop = { coroutine.launch { listState.animateScrollToItem(0) } }
+            )
+            Spacer(Modifier.height(24.dp))
+        }
+    }
+}
+
+/**
+ * Top Gamified Bar with Avatar, Greeting, Logo, Streak, Gems, and Level.
+ */
+@Composable
+private fun GamifiedTopHeader(
+    stage: StudyStage,
+    userName: String,
+    streak: Int,
+    gemCount: String,
+    level: Int,
+    unreadNotifications: Int,
+    dark: Boolean,
+    onOpenNotifications: () -> Unit,
+    onOpenWallet: () -> Unit
+) {
+    val studentTitle = if (stage == StudyStage.G9) {
+        tr("Grade 9 Student", "طالب الصف التاسع")
+    } else {
+        tr("Baccalaureate Student", "طالب البكالوريا العلمي")
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        // Notification bell with red dot
+        Box(
+            modifier = Modifier
+                .size(42.dp)
+                .liquidGlass(shape = CircleShape, alpha = 0.82f, elevation = 2.dp)
+                .clickable { onOpenNotifications() }
+                .testTag("home-notifications"),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Notifications,
+                contentDescription = tr("Notifications", "الإشعارات"),
+                tint = if (dark) Color(0xFF8AB4F8) else Color(0xFF0066FF),
+                modifier = Modifier.size(22.dp)
+            )
+            if (unreadNotifications > 0) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .offset(x = (-3).dp, y = 3.dp)
+                        .size(9.dp)
+                        .background(Color(0xFFFF3B30), CircleShape)
+                        .border(1.dp, Color.White, CircleShape)
                 )
             }
+        }
 
-            RoadmapUnitSection(
-                unitOrder = unit.order,
-                title = if (isAr) "الوحدة ${unit.order}: ${unit.title}" else "Unit ${unit.order}: ${unit.title}",
-                subtitle = if (isAr) "الكتاب ${bookVol} · الأبحاث ${researches.size}" else "Book $bookVol · ${researches.size} Researches",
-                researches = researches,
-                bookVolume = bookVol
+        // Student Avatar + Greeting
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Image(
+                painter = painterResource(
+                    if (stage == StudyStage.G9) R.drawable.avatar_g9 else R.drawable.avatar_bac
+                ),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(CircleShape)
+                    .border(1.5.dp, if (stage == StudyStage.G9) Color(0xFF00A896) else Color(0xFF0066FF), CircleShape)
+            )
+            Column {
+                Text(
+                    text = if (userName.isNotBlank()) "مرحبًا، \u2068$userName\u2069" else tr("Welcome", "مرحبًا بك"),
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = if (dark) Color.White else Color(0xFF0F172A)
+                )
+                Text(
+                    text = studentTitle,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                    color = if (dark) Color(0xFF94A3B8) else Color(0xFF64748B)
+                )
+            }
+        }
+
+        // EN.MATH Logo in center
+        Image(
+            painter = painterResource(R.drawable.ic_enmath),
+            contentDescription = "EN.MATH",
+            modifier = Modifier.size(34.dp)
+        )
+
+        // Gamification Pills: Streak, Gems, Level
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            // Streak Pill
+            GamificationPill(
+                icon = { Text("🔥", fontSize = 13.sp) },
+                value = "$streak",
+                label = tr("days", "أيام"),
+                tint = Color(0xFFFF6D00),
+                bgTint = Color(0xFFFF6D00).copy(alpha = if (dark) 0.22f else 0.12f)
+            )
+
+            // Gems Pill
+            GamificationPill(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Diamond,
+                        contentDescription = null,
+                        tint = Color(0xFF9C27B0),
+                        modifier = Modifier.size(15.dp)
+                    )
+                },
+                value = gemCount,
+                label = tr("gems", "جوهرة"),
+                tint = Color(0xFF9C27B0),
+                bgTint = Color(0xFF9C27B0).copy(alpha = if (dark) 0.22f else 0.12f),
+                tag = "home-gems-badge",
+                onClick = onOpenWallet
+            )
+
+            // Level Pill
+            GamificationPill(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Star,
+                        contentDescription = null,
+                        tint = Color(0xFFFFB300),
+                        modifier = Modifier.size(15.dp)
+                    )
+                },
+                value = "$level",
+                label = tr("level", "المستوى"),
+                tint = Color(0xFFFFB300),
+                bgTint = Color(0xFFFFB300).copy(alpha = if (dark) 0.22f else 0.12f)
             )
         }
     }
+}
 
-    val allNodesList = remember(unitSections) { unitSections.flatMap { it.researches } }
-    val lazyListState = rememberLazyListState()
+@Composable
+private fun GamificationPill(
+    icon: @Composable () -> Unit,
+    value: String,
+    label: String,
+    tint: Color,
+    bgTint: Color,
+    tag: String? = null,
+    onClick: (() -> Unit)? = null
+) {
+    val clickModifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier
+    val tagModifier = if (tag != null) Modifier.testTag(tag) else Modifier
 
-    // Background Gradient for Baccalaureate (Indigo / Purple theme)
-    val bacBackgroundBrush = Brush.verticalGradient(
-        if (dark) listOf(Color(0xFF090D1E), Color(0xFF121833), Color(0xFF0B0F24))
-        else listOf(Color(0xFFEDE7F6), Color(0xFFF3EFEF), Color(0xFFF8F5FF))
-    )
-
-    Box(
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = bgTint,
+        border = BorderStroke(1.dp, tint.copy(alpha = 0.35f)),
         modifier = Modifier
-            .fillMaxSize()
-            .testTag("screen-home")
-            .background(bacBackgroundBrush),
-        contentAlignment = Alignment.TopCenter
+            .then(tagModifier)
+            .then(clickModifier)
     ) {
-        LazyColumn(
-            state = lazyListState,
-            modifier = Modifier
-                .widthIn(max = D.contentMax)
-                .fillMaxWidth()
-                .padding(horizontal = if (LocalConfiguration.current.screenWidthDp > 600) 24.dp else 12.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-            contentPadding = PaddingValues(top = 12.dp, bottom = 80.dp)
+        Row(
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(3.dp)
         ) {
-            // 1. TOP HEADER BAR
-            item(key = "bac_header") {
-                BacTopHeader(
-                    studentName = studentName,
-                    gemCountText = gemCountText,
-                    streak = stats.streak,
-                    level = level,
-                    dark = dark,
-                    isAr = isAr,
-                    onOpenWallet = { open("gems/wallet") }
+            icon()
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 11.sp),
+                    color = tint
                 )
-            }
-
-            // 2. HERO CONTINUATION CARD ("تابع دراستك")
-            item(key = "bac_hero") {
-                BacHeroContinuationCard(
-                    activeLessonTitle = activeLesson?.title?.let { if (isAr) it.ar else it.en } ?: tr("نهاية دالة عند نقطة", "Limit of a Function at a Point"),
-                    unitTitle = tr("الكتاب الأول — الوحدة 1: النهايات", "Book 1 — Unit 1: Limits"),
-                    progressText = "3 / 5",
-                    dark = dark,
-                    isAr = isAr,
-                    onContinue = {
-                        if (activeLesson != null) open("lesson/${activeLesson.id}")
-                        else open("study/demo")
-                    }
-                )
-            }
-
-            // 3. DAILY GOAL CARD
-            item(key = "bac_daily_goal") {
-                RoadmapDailyGoalCard(
-                    todayCompleted = progress.todayCompleted,
-                    dailyGoal = state.dailyGoal,
-                    dark = dark,
-                    isAr = isAr
-                )
-            }
-
-            // 4. QUICK TOOLS & ACTIONS ROW
-            item(key = "bac_quick_tools") {
-                RoadmapQuickToolsRow(
-                    dark = dark,
-                    isAr = isAr,
-                    open = open
-                )
-            }
-
-            // 5. BOOK 1 SECTION BANNER (Units 1 - 7)
-            item(key = "bac_book1_banner") {
-                RoadmapSubjectBanner(
-                    title = if (isAr) "الكتاب الأول — رياضيات البكالوريا" else "Textbook 1 — Baccalaureate Math",
-                    subtitle = if (isAr) "7 وحدات · 34 بحثاً مفهرساً" else "7 Units · 34 Researches",
-                    iconRes = R.drawable.icon_book,
-                    accentColor = Color(0xFF3F51B5),
-                    dark = dark
-                )
-            }
-
-            // 6. ROADMAP PATH & STATIONS FOR BOOK 1 (Units 1 to 7)
-            var globalNodeIndex = 0
-            unitSections.filter { it.bookVolume == 1 }.forEach { unitSection ->
-                item(key = "bac_unit_header_${unitSection.unitOrder}") {
-                    RoadmapUnitHeaderBadge(
-                        title = unitSection.title,
-                        subtitle = unitSection.subtitle,
-                        badgeColor = Color(0xFF3F51B5),
-                        dark = dark
-                    )
-                }
-
-                itemsIndexed(
-                    items = unitSection.researches,
-                    key = { _, node -> "bac_node_${node.id}" }
-                ) { idx, node ->
-                    val currentIndex = globalNodeIndex++
-                    val nextNode = allNodesList.getOrNull(currentIndex + 1)
-
-                    RoadmapStationRow(
-                        node = node,
-                        nodeIndex = currentIndex,
-                        nextNode = nextNode,
-                        accentColor = Color(0xFF3F51B5),
-                        dark = dark,
-                        isAr = isAr,
-                        open = open
-                    )
-                }
-
-                item(key = "bac_unit_chest_${unitSection.unitOrder}") {
-                    RoadmapUnitChestNode(
-                        unitOrder = unitSection.unitOrder,
-                        accentColor = Color(0xFF3F51B5),
-                        dark = dark,
-                        isAr = isAr
-                    )
-                }
-            }
-
-            // 7. BOOK 2 SECTION BANNER (Units 8 - 14)
-            item(key = "bac_book2_banner") {
-                Spacer(modifier = Modifier.height(12.dp))
-                RoadmapSubjectBanner(
-                    title = if (isAr) "الكتاب الثاني — رياضيات البكالوريا" else "Textbook 2 — Baccalaureate Math",
-                    subtitle = if (isAr) "7 وحدات · 29 بحثاً مفهرساً" else "7 Units · 29 Researches",
-                    iconRes = R.drawable.icon_book,
-                    accentColor = Color(0xFF7E57C2),
-                    dark = dark
-                )
-            }
-
-            // 8. ROADMAP PATH & STATIONS FOR BOOK 2 (Units 8 to 14)
-            unitSections.filter { it.bookVolume == 2 }.forEach { unitSection ->
-                item(key = "bac_unit_header_${unitSection.unitOrder}") {
-                    RoadmapUnitHeaderBadge(
-                        title = unitSection.title,
-                        subtitle = unitSection.subtitle,
-                        badgeColor = Color(0xFF7E57C2),
-                        dark = dark
-                    )
-                }
-
-                itemsIndexed(
-                    items = unitSection.researches,
-                    key = { _, node -> "bac_node_${node.id}" }
-                ) { idx, node ->
-                    val currentIndex = globalNodeIndex++
-                    val nextNode = allNodesList.getOrNull(currentIndex + 1)
-
-                    RoadmapStationRow(
-                        node = node,
-                        nodeIndex = currentIndex,
-                        nextNode = nextNode,
-                        accentColor = Color(0xFF7E57C2),
-                        dark = dark,
-                        isAr = isAr,
-                        open = open
-                    )
-                }
-
-                item(key = "bac_unit_chest_${unitSection.unitOrder}") {
-                    RoadmapUnitChestNode(
-                        unitOrder = unitSection.unitOrder,
-                        accentColor = Color(0xFF7E57C2),
-                        dark = dark,
-                        isAr = isAr
-                    )
-                }
-            }
-
-            // 9. FINAL EXAMINATION & COMPREHENSIVE REVIEW SECTION
-            item(key = "bac_final_exam") {
-                RoadmapFinalExamSection(
-                    title = if (isAr) "الامتحان الشامل — البكالوريا العلمي" else "Baccalaureate Comprehensive Exam",
-                    subtitle = if (isAr) "مراجعة شاملة واختبارات معتمدة على كامل مفردات الكتابين" else "Comprehensive exam and practice across both textbooks",
-                    accentColor = Color(0xFF7E57C2),
-                    dark = dark,
-                    isAr = isAr,
-                    open = open
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 8.sp),
+                    color = tint.copy(alpha = 0.85f)
                 )
             }
         }
     }
 }
 
-// =============================================================================
-// SUB-COMPONENTS & REUSABLE ROADMAP ELEMENTS
-// =============================================================================
-
+/**
+ * "تابع دراستك" Hero Card with 3D Character Illustration and Play Action.
+ */
 @Composable
-private fun G9TopHeader(
-    studentName: String,
-    gemCountText: String,
-    streak: Int,
-    level: Int,
+private fun ContinueStudyHeroCard(
+    stage: StudyStage,
+    research: SourceResearch?,
+    unit: SourceUnit?,
+    catalog: SourceCurriculum,
     dark: Boolean,
-    isAr: Boolean,
-    onOpenWallet: () -> Unit
-) {
-    val bgNavy = if (dark) Color(0xFF0D2530) else Color(0xFFFFFFFF)
-    val borderColor = if (dark) Color(0xFF194452) else Color(0xFFB2EBF2)
-
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(22.dp),
-        color = bgNavy,
-        border = BorderStroke(1.dp, borderColor),
-        shadowElevation = if (dark) 4.dp else 2.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.avatar_g9),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(44.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, Color(0xFF00ACC1), CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                    Column {
-                        Text(
-                            text = if (isAr) "مرحباً بك، $studentName" else "Welcome, $studentName",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = if (dark) Color.White else Color(0xFF004D40)
-                        )
-                        Text(
-                            text = if (isAr) "طالب الصف التاسع · مسارك الرسمي" else "Grade 9 Official Math Roadmap",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (dark) Color(0xFF80CBC4) else Color(0xFF00796B)
-                        )
-                    }
-                }
-
-                Image(
-                    painter = painterResource(R.drawable.ic_enmath),
-                    contentDescription = "EN.MATH",
-                    modifier = Modifier.size(36.dp)
-                )
-            }
-
-            // Stats Bar Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (dark) Color(0xFF332010) else Color(0xFFFFF3E0),
-                    border = BorderStroke(1.dp, Color(0xFFFF9800).copy(alpha = 0.5f))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.icon_flame),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = if (isAr) "$streak أيام متتالية" else "$streak Days Streak",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color(0xFFE65100)
-                        )
-                    }
-                }
-
-                Surface(
-                    onClick = onOpenWallet,
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (dark) Color(0xFF0A2E38) else Color(0xFFE0F7FA),
-                    border = BorderStroke(1.dp, Color(0xFF00ACC1).copy(alpha = 0.5f)),
-                    modifier = Modifier.testTag("home-gems-badge")
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.icon_gem),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = gemCountText,
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color(0xFF00838F)
-                        )
-                    }
-                }
-
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (dark) Color(0xFF262A10) else Color(0xFFF9FBE7),
-                    border = BorderStroke(1.dp, Color(0xFFC0CA33).copy(alpha = 0.5f))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.icon_star),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = if (isAr) "مستوى $level" else "Lvl $level",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color(0xFF827717)
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun BacTopHeader(
-    studentName: String,
-    gemCountText: String,
-    streak: Int,
-    level: Int,
-    dark: Boolean,
-    isAr: Boolean,
-    onOpenWallet: () -> Unit
-) {
-    val bgNavy = if (dark) Color(0xFF101732) else Color(0xFFFFFFFF)
-    val borderColor = if (dark) Color(0xFF1E2850) else Color(0xFFC5CAE9)
-
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(22.dp),
-        color = bgNavy,
-        border = BorderStroke(1.dp, borderColor),
-        shadowElevation = if (dark) 4.dp else 2.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.avatar_bac),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(44.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, Color(0xFF3F51B5), CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                    Column {
-                        Text(
-                            text = if (isAr) "مرحباً بك، $studentName" else "Welcome, $studentName",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = if (dark) Color.White else Color(0xFF1A237E)
-                        )
-                        Text(
-                            text = if (isAr) "طالب البكالوريا العلمي · مسارك المعتمد" else "Scientific Baccalaureate Math Roadmap",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (dark) Color(0xFF9FA8DA) else Color(0xFF3F51B5)
-                        )
-                    }
-                }
-
-                Image(
-                    painter = painterResource(R.drawable.ic_enmath),
-                    contentDescription = "EN.MATH",
-                    modifier = Modifier.size(36.dp)
-                )
-            }
-
-            // Stats Bar Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (dark) Color(0xFF332010) else Color(0xFFFFF3E0),
-                    border = BorderStroke(1.dp, Color(0xFFFF9800).copy(alpha = 0.5f))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.icon_flame),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = if (isAr) "$streak أيام متتالية" else "$streak Days Streak",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color(0xFFE65100)
-                        )
-                    }
-                }
-
-                Surface(
-                    onClick = onOpenWallet,
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (dark) Color(0xFF1A1C40) else Color(0xFFE8EAF6),
-                    border = BorderStroke(1.dp, Color(0xFF3F51B5).copy(alpha = 0.5f)),
-                    modifier = Modifier.testTag("home-gems-badge")
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.icon_gem),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = gemCountText,
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color(0xFF303F9F)
-                        )
-                    }
-                }
-
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = if (dark) Color(0xFF2B1A38) else Color(0xFFF3E5F5),
-                    border = BorderStroke(1.dp, Color(0xFF8E24AA).copy(alpha = 0.5f))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.icon_star),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = if (isAr) "مستوى $level" else "Lvl $level",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color(0xFF6A1B9A)
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun G9HeroContinuationCard(
-    activeLessonTitle: String,
-    unitTitle: String,
-    progressText: String,
-    dark: Boolean,
-    isAr: Boolean,
     onContinue: () -> Unit
 ) {
-    Surface(
-        onClick = onContinue,
+    val isG9 = stage == StudyStage.G9
+    val bgBrush = if (dark) {
+        Brush.linearGradient(
+            if (isG9) listOf(Color(0xFF0F2B28), Color(0xFF133B36))
+            else listOf(Color(0xFF101D38), Color(0xFF172B54))
+        )
+    } else {
+        Brush.linearGradient(
+            if (isG9) listOf(Color(0xFFE0F7F4), Color(0xFFC7EFE8))
+            else listOf(Color(0xFFE8F1FC), Color(0xFFD6E6F9))
+        )
+    }
+    val borderColor = if (isG9) Color(0xFF00A896).copy(alpha = 0.4f) else Color(0xFF0066FF).copy(alpha = 0.35f)
+    val accentColor = if (isG9) Color(0xFF00A896) else Color(0xFF0066FF)
+
+    val bookTitle = unit?.let { catalog.book(it.bookId)?.title }.orEmpty()
+    val unitSubtitle = if (unit != null) "الوحدة ${unit.order}: ${unit.title}" else tr("Mathematics Curriculum", "منهاج الرياضيات")
+    val lessonTitle = research?.title ?: tr("Begin your first lesson", "ابدأ درسك الأول")
+
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .testTag("continue-lesson"),
-        shape = RoundedCornerShape(24.dp),
-        color = Color.Transparent,
-        border = BorderStroke(1.5.dp, Color(0xFF00ACC1).copy(alpha = 0.6f)),
-        shadowElevation = 6.dp
+            .clickable { onContinue() },
+        shape = RoundedCornerShape(26.dp),
+        border = BorderStroke(1.dp, borderColor),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    Brush.horizontalGradient(
-                        if (dark) listOf(Color(0xFF004D40), Color(0xFF006064))
-                        else listOf(Color(0xFF00ACC1), Color(0xFF26C6DA))
-                    )
-                )
-                .padding(18.dp)
+                .background(bgBrush)
+                .padding(16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
+                // Left: 3D Student Character
+                Image(
+                    painter = painterResource(
+                        if (isG9) R.drawable.entry_student_grade9_cutout else R.drawable.entry_student_baccalaureate_cutout
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(92.dp)
+                        .heightIn(max = 120.dp)
+                )
+
+                // Middle: Text Info and Progress
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color.White.copy(alpha = 0.25f)
-                    ) {
-                        Text(
-                            text = if (isAr) "تابع دراستك" else "Continue Studying",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                        )
-                    }
-
                     Text(
-                        text = unitTitle,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.9f)
+                        text = tr("Continue Studying", "تابع دراستك"),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold, fontSize = 17.sp),
+                        color = if (dark) Color.White else Color(0xFF0F172A)
                     )
-
                     Text(
-                        text = activeLessonTitle,
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = Color.White,
-                        maxLines = 2,
+                        text = if (bookTitle.isNotBlank()) "$bookTitle — $unitSubtitle" else unitSubtitle,
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                        color = if (dark) Color(0xFF94A3B8) else Color(0xFF475569),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = lessonTitle,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold, fontSize = 13.sp),
+                        color = accentColor,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
 
+                    Spacer(Modifier.height(4.dp))
+
+                    // Progress row: "2/4" + bar
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
+                        Text(
+                            text = "2/4",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = if (dark) Color(0xFF94A3B8) else Color(0xFF64748B)
+                        )
                         LinearProgressIndicator(
                             progress = { 0.5f },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(6.dp)
                                 .clip(RoundedCornerShape(3.dp)),
-                            color = Color.White,
-                            trackColor = Color.White.copy(alpha = 0.35f)
-                        )
-                        Text(
-                            text = progressText,
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
+                            color = accentColor,
+                            trackColor = accentColor.copy(alpha = 0.2f)
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Box(
-                    contentAlignment = Alignment.BottomEnd,
-                    modifier = Modifier.size(90.dp)
+                // Right: Pulsing Circular Play Button
+                Surface(
+                    onClick = onContinue,
+                    shape = CircleShape,
+                    color = accentColor,
+                    shadowElevation = 6.dp,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .testTag("student-continue")
                 ) {
-                    Image(
-                        painter = painterResource(R.drawable.student_g9_transparent),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit
-                    )
-                    Surface(
-                        shape = CircleShape,
-                        color = Color.White,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .shadow(4.dp, CircleShape)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Image(
-                                painter = painterResource(R.drawable.icon_play),
-                                contentDescription = "Play",
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Filled.PlayArrow,
+                            contentDescription = tr("Continue", "متابعة"),
+                            tint = Color.White,
+                            modifier = Modifier.size(28.dp)
+                        )
                     }
                 }
             }
@@ -1011,622 +571,689 @@ private fun G9HeroContinuationCard(
     }
 }
 
+data class SourcePathEntry(
+    val key: String,
+    val research: SourceResearch?,
+    val station: Int = 0,
+    val hasNext: Boolean = false,
+)
+
+fun sourcePathEntries(catalog: SourceCurriculum): List<SourcePathEntry> {
+    return catalog.units.flatMap { unit ->
+        unit.researches.mapIndexed { index, research ->
+            SourcePathEntry(
+                key = "station-${research.id}",
+                research = research,
+                station = index,
+                hasNext = index < unit.researches.size - 1
+            )
+        }
+    }
+}
+
+
+/**
+ * Quick Tools Navigation Bar with Liquid Glass styling.
+ */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun BacHeroContinuationCard(
-    activeLessonTitle: String,
-    unitTitle: String,
-    progressText: String,
-    dark: Boolean,
-    isAr: Boolean,
-    onContinue: () -> Unit
+private fun RoadmapQuickTools(open: (String) -> Unit) {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        LiquidGlassQuickButton(label = tr("Solver", "المحلل"), icon = Icons.Outlined.Calculate, tag = "home-quick-solver") { open("solver") }
+        LiquidGlassQuickButton(label = tr("Practice", "التدريب"), icon = Icons.Outlined.Quiz, tag = "home-practice") { open("study/review/all") }
+        LiquidGlassQuickButton(label = tr("My progress", "تقدمي"), icon = Icons.AutoMirrored.Outlined.TrendingUp, tag = "home-all-progress") { open("progress") }
+        LiquidGlassQuickButton(label = tr("Graph lab", "مختبر الرسم"), icon = Icons.Outlined.AutoGraph) { open("explore") }
+    }
+}
+
+@Composable
+private fun LiquidGlassQuickButton(
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    tag: String? = null,
+    onClick: () -> Unit
 ) {
+    val tagModifier = if (tag != null) Modifier.testTag(tag) else Modifier
+
     Surface(
-        onClick = onContinue,
+        onClick = onClick,
+        shape = RoundedCornerShape(14.dp),
+        color = MaterialTheme.colorScheme.surface,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        shadowElevation = 1.dp,
+        modifier = Modifier
+            .then(tagModifier)
+            .heightIn(min = 44.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+/**
+ * Render the full interactive snake path with units, math doodles, and lesson nodes.
+ */
+private fun LazyListScope.renderInteractiveLearningPath(
+    stage: StudyStage,
+    catalog: SourceCurriculum,
+    activeResearchId: String?,
+    completedLessons: Set<String>,
+    savedIds: Set<String>,
+    dark: Boolean,
+    open: (String) -> Unit,
+    onRewardClick: () -> Unit
+) {
+    var globalStationIndex = 0
+
+    catalog.books.forEachIndexed { bookIndex, book ->
+        // For Baccalaureate, render the Book Divider Banners (Image 12)
+        if (stage == StudyStage.BAC) {
+            item(key = "book_banner_${book.id}") {
+                BaccalaureateBookDivider(book = book, bookIndex = bookIndex, dark = dark, onClick = { open(book.route) })
+                Spacer(Modifier.height(14.dp))
+            }
+        }
+
+        book.units.forEachIndexed { unitIndex, unit ->
+            // Unit Header Card
+            item(key = "unit_header_${unit.id}") {
+                UnitHeaderCard(
+                    unit = unit,
+                    stage = stage,
+                    bookIndex = bookIndex,
+                    dark = dark,
+                    onClick = { open(unit.route) }
+                )
+                Spacer(Modifier.height(10.dp))
+            }
+
+            // Lessons in this Unit
+            itemsIndexed(
+                items = unit.researches,
+                key = { _, research -> "station_${research.id}" }
+            ) { researchIndex, research ->
+                val currentStation = globalStationIndex++
+                val isCompleted = research.id in completedLessons || research.id in savedIds
+                val isCurrent = research.id == activeResearchId
+                val hasRewardChest = researchIndex == unit.researches.lastIndex || (researchIndex > 0 && researchIndex % 3 == 0)
+
+                LearningMapStationRow(
+                    stage = stage,
+                    research = research,
+                    unit = unit,
+                    stationIndex = currentStation,
+                    isCompleted = isCompleted,
+                    isCurrent = isCurrent,
+                    hasRewardChest = hasRewardChest,
+                    dark = dark,
+                    open = open,
+                    onRewardClick = onRewardClick
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Book Banner for Baccalaureate (Book 1 Blue / Book 2 Purple).
+ */
+@Composable
+private fun BaccalaureateBookDivider(
+    book: SourceBook,
+    bookIndex: Int,
+    dark: Boolean,
+    onClick: () -> Unit
+) {
+    val isBook1 = bookIndex == 0
+    val gradientColors = if (isBook1) {
+        if (dark) listOf(Color(0xFF152A56), Color(0xFF1C3A7A))
+        else listOf(Color(0xFF0066FF), Color(0xFF0052CC))
+    } else {
+        if (dark) listOf(Color(0xFF381A54), Color(0xFF4C2472))
+        else listOf(Color(0xFF7C3AED), Color(0xFF6B21A8))
+    }
+
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(18.dp),
+        color = Color.Transparent,
         modifier = Modifier
             .fillMaxWidth()
-            .testTag("continue-lesson"),
-        shape = RoundedCornerShape(24.dp),
-        color = Color.Transparent,
-        border = BorderStroke(1.5.dp, Color(0xFF3F51B5).copy(alpha = 0.6f)),
-        shadowElevation = 6.dp
+            .testTag("home-book-${book.id}")
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    Brush.horizontalGradient(
-                        if (dark) listOf(Color(0xFF1A237E), Color(0xFF311B92))
-                        else listOf(Color(0xFF3F51B5), Color(0xFF5C6BC0))
-                    )
-                )
-                .padding(18.dp)
+                .background(Brush.horizontalGradient(gradientColors))
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color.White.copy(alpha = 0.25f)
-                    ) {
-                        Text(
-                            text = if (isAr) "تابع دراستك" else "Continue Studying",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                        )
-                    }
-
-                    Text(
-                        text = unitTitle,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.9f)
-                    )
-
-                    Text(
-                        text = activeLessonTitle,
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = Color.White,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        LinearProgressIndicator(
-                            progress = { 0.6f },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(6.dp)
-                                .clip(RoundedCornerShape(3.dp)),
-                            color = Color.White,
-                            trackColor = Color.White.copy(alpha = 0.35f)
-                        )
-                        Text(
-                            text = progressText,
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Box(
-                    contentAlignment = Alignment.BottomEnd,
-                    modifier = Modifier.size(90.dp)
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.student_bac_transparent),
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.MenuBook,
                         contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit
-                    )
-                    Surface(
-                        shape = CircleShape,
-                        color = Color.White,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .shadow(4.dp, CircleShape)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Image(
-                                painter = painterResource(R.drawable.icon_play),
-                                contentDescription = "Play",
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun RoadmapDailyGoalCard(
-    todayCompleted: Int,
-    dailyGoal: Int,
-    dark: Boolean,
-    isAr: Boolean
-) {
-    val bgNavy = if (dark) Color(0xFF101732) else Color(0xFFFFFFFF)
-    val borderColor = if (dark) Color(0xFF1E2850) else Color(0xFFE0E5F5)
-    val activeGoal = dailyGoal.coerceAtLeast(1)
-    val progressFraction = (todayCompleted.toFloat() / activeGoal).coerceIn(0f, 1f)
-
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag("daily-learning-goal"),
-        shape = RoundedCornerShape(20.dp),
-        color = bgNavy,
-        border = BorderStroke(1.dp, borderColor),
-        shadowElevation = if (dark) 4.dp else 2.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Box(
-                    modifier = Modifier.size(52.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        progress = { progressFraction },
-                        modifier = Modifier.fillMaxSize(),
-                        color = Color(0xFF00ACC1),
-                        trackColor = if (dark) Color(0xFF1C274A) else Color(0xFFE2E8F8),
-                        strokeWidth = 5.dp
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
                     )
                     Text(
-                        text = "$todayCompleted/$activeGoal",
-                        style = MaterialTheme.typography.labelLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            textDirection = TextDirection.Ltr
-                        ),
-                        color = if (dark) Color.White else Color(0xFF15192C)
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Text(
-                        text = if (isAr) "هدف اليوم التعليمي" else "Daily Learning Goal",
+                        text = if (isBook1) "الكتاب الأول" else "الكتاب الثاني",
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = if (dark) Color.White else Color(0xFF15192C)
-                    )
-                    Text(
-                        text = if (isAr)
-                            "أكمل $activeGoal أنشطة يومياً لتعزيز إتقان المفاهيم"
-                        else
-                            "Complete $activeGoal activities daily for mastery",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (dark) Color(0xFF9AA2C3) else Color(0xFF646E8D)
+                        color = Color.White
                     )
                 }
+
+                Text(
+                    text = "${book.units.size} وحدات • ${book.researches.size} بحثًا",
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color.White.copy(alpha = 0.9f)
+                )
             }
         }
     }
 }
 
+/**
+ * Unit Header Card along the learning path.
+ */
 @Composable
-private fun RoadmapQuickToolsRow(
+private fun UnitHeaderCard(
+    unit: SourceUnit,
+    stage: StudyStage,
+    bookIndex: Int,
     dark: Boolean,
-    isAr: Boolean,
-    open: (String) -> Unit
+    onClick: () -> Unit
 ) {
-    val scheme = MaterialTheme.colorScheme
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        ApprovedAction(
-            title = if (isAr) "تدريبات سريعة" else "Quick Practice",
-            icon = Icons.Outlined.EditNote,
-            background = scheme.secondaryContainer,
-            foreground = scheme.onSecondaryContainer,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .testTag("home-practice")
-        ) {
-            open("practice")
-        }
-
-        ApprovedAction(
-            title = if (isAr) "المحلّل الرياضي" else "Math Solver",
-            icon = Icons.Outlined.Calculate,
-            background = scheme.tertiaryContainer,
-            foreground = scheme.onTertiaryContainer,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .testTag("home-quick-solver")
-        ) {
-            open("solver")
-        }
-
-        ApprovedAction(
-            title = if (isAr) "التقدم المحفوظ" else "All Progress",
-            icon = Icons.Outlined.Insights,
-            background = scheme.primaryContainer,
-            foreground = scheme.onPrimaryContainer,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .testTag("home-all-progress")
-        ) {
-            open("progress")
-        }
+    val isG9 = stage == StudyStage.G9
+    val badgeColor = when {
+        isG9 -> Color(0xFF00A896)
+        bookIndex == 1 -> Color(0xFF7C3AED)
+        else -> Color(0xFF0066FF)
     }
-}
-
-@Composable
-private fun RoadmapSubjectBanner(
-    title: String,
-    subtitle: String,
-    iconRes: Int,
-    accentColor: Color,
-    dark: Boolean
-) {
-    val bgCard = if (dark) Color(0xFF121E36) else Color(0xFFF0F4FD)
-    val borderColor = accentColor.copy(alpha = 0.4f)
 
     Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(16.dp),
+        color = if (dark) Color(0xFF121B30) else Color(0xFFF1F5F9),
+        border = BorderStroke(1.dp, badgeColor.copy(alpha = 0.35f)),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        shape = RoundedCornerShape(18.dp),
-        color = bgCard,
-        border = BorderStroke(1.5.dp, borderColor),
-        shadowElevation = 2.dp
+            .testTag("home-unit-${unit.id}")
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = accentColor.copy(alpha = 0.15f),
-                modifier = Modifier.size(42.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Image(
-                        painter = painterResource(iconRes),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-            }
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = if (dark) Color.White else Color(0xFF0F172A)
-                )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = accentColor
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun RoadmapUnitHeaderBadge(
-    title: String,
-    subtitle: String,
-    badgeColor: Color,
-    dark: Boolean
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp, bottom = 4.dp),
-        shape = RoundedCornerShape(16.dp),
-        color = if (dark) Color(0xFF101B2B) else Color(0xFFFFFFFF),
-        border = BorderStroke(1.dp, badgeColor.copy(alpha = 0.35f)),
-        shadowElevation = 2.dp
-    ) {
-        Column(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+            // Pill tag e.g. "الوحدة 1"
+            Surface(
+                shape = RoundedCornerShape(10.dp),
                 color = badgeColor
-            )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodySmall,
-                color = if (dark) Color(0xFF90A4AE) else Color(0xFF546E7A)
-            )
-        }
-    }
-}
-
-@Composable
-private fun RoadmapStationRow(
-    node: RoadmapResearchNode,
-    nodeIndex: Int,
-    nextNode: RoadmapResearchNode?,
-    accentColor: Color,
-    dark: Boolean,
-    isAr: Boolean,
-    open: (String) -> Unit
-) {
-    val xOffsetPx = sin(nodeIndex * 0.75f) * 75f
-    val xOffsetDp = xOffsetPx.dp
-    val nextXOffsetDp = (if (nextNode != null) sin((nodeIndex + 1) * 0.75f) * 75f else 0f).dp
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(105.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        if (nextNode != null) {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                val startX = (size.width / 2) + xOffsetDp.toPx()
-                val startY = 32.dp.toPx()
-                val endX = (size.width / 2) + nextXOffsetDp.toPx()
-                val endY = size.height + 8.dp.toPx()
-
-                val controlY = startY + (endY - startY) * 0.5f
-
-                val path = Path().apply {
-                    moveTo(startX, startY)
-                    cubicTo(startX, controlY, endX, controlY, endX, endY)
-                }
-
-                drawPath(
-                    path = path,
-                    color = accentColor.copy(alpha = if (dark) 0.5f else 0.4f),
-                    style = Stroke(
-                        width = 6.dp.toPx(),
-                        cap = StrokeCap.Round
-                    )
-                )
-            }
-        }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.offset(x = xOffsetDp)
-        ) {
-            Surface(
-                onClick = { open(node.route) },
-                shape = CircleShape,
-                color = when (node.status) {
-                    RoadmapNodeStatus.COMPLETED -> Color(0xFF4CAF50)
-                    RoadmapNodeStatus.IN_PROGRESS -> accentColor
-                    RoadmapNodeStatus.AVAILABLE -> if (dark) Color(0xFF1E293B) else Color(0xFFFFFFFF)
-                    RoadmapNodeStatus.LOCKED -> if (dark) Color(0xFF121824) else Color(0xFFECEFF1)
-                    RoadmapNodeStatus.CONTENT_PENDING -> if (dark) Color(0xFF182234) else Color(0xFFF1F5F9)
-                },
-                border = BorderStroke(
-                    width = if (node.status == RoadmapNodeStatus.IN_PROGRESS) 3.dp else 2.dp,
-                    color = when (node.status) {
-                        RoadmapNodeStatus.COMPLETED -> Color(0xFF81C784)
-                        RoadmapNodeStatus.IN_PROGRESS -> Color.White
-                        RoadmapNodeStatus.AVAILABLE -> accentColor
-                        RoadmapNodeStatus.LOCKED -> Color(0xFF90A4AE)
-                        RoadmapNodeStatus.CONTENT_PENDING -> accentColor.copy(alpha = 0.5f)
-                    }
-                ),
-                shadowElevation = if (node.status == RoadmapNodeStatus.IN_PROGRESS) 8.dp else 3.dp,
-                modifier = Modifier.size(56.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    when (node.status) {
-                        RoadmapNodeStatus.COMPLETED -> {
-                            Image(
-                                painter = painterResource(R.drawable.completed),
-                                contentDescription = "Completed",
-                                modifier = Modifier.size(28.dp)
-                            )
-                        }
-                        RoadmapNodeStatus.IN_PROGRESS -> {
-                            Image(
-                                painter = painterResource(R.drawable.icon_play),
-                                contentDescription = "In Progress",
-                                modifier = Modifier.size(28.dp)
-                            )
-                        }
-                        RoadmapNodeStatus.AVAILABLE -> {
-                            Text(
-                                text = node.labelText,
-                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                color = accentColor
-                            )
-                        }
-                        RoadmapNodeStatus.LOCKED -> {
-                            Image(
-                                painter = painterResource(R.drawable.locked),
-                                contentDescription = "Locked",
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        RoadmapNodeStatus.CONTENT_PENDING -> {
-                            Text(
-                                text = node.labelText,
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = if (dark) Color(0xFF90A4AE) else Color(0xFF64748B)
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = if (dark) Color(0xFF0F172A).copy(alpha = 0.9f) else Color.White.copy(alpha = 0.95f),
-                border = BorderStroke(1.dp, if (dark) Color(0xFF334155) else Color(0xFFE2E8F0)),
-                shadowElevation = 2.dp,
-                modifier = Modifier.widthIn(max = 140.dp)
             ) {
                 Text(
-                    text = node.title,
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 11.sp
-                    ),
-                    color = if (dark) Color(0xFFE2E8F0) else Color(0xFF1E293B),
+                    text = "الوحدة ${unit.order}",
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = unit.title,
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                    color = if (dark) Color.White else Color(0xFF0F172A),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "${unit.researches.size} أبحاث من المصدر",
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                    color = if (dark) Color(0xFF94A3B8) else Color(0xFF64748B)
+                )
+            }
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                contentDescription = null,
+                tint = if (dark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                modifier = Modifier.size(16.dp)
+            )
+        }
+    }
+}
+
+/**
+ * Single Station on the Winding S-Curved Track with math doodles and nodes.
+ */
+@Composable
+private fun LearningMapStationRow(
+    stage: StudyStage,
+    research: SourceResearch,
+    unit: SourceUnit,
+    stationIndex: Int,
+    isCompleted: Boolean,
+    isCurrent: Boolean,
+    hasRewardChest: Boolean,
+    dark: Boolean,
+    open: (String) -> Unit,
+    onRewardClick: () -> Unit
+) {
+    val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val isG9 = stage == StudyStage.G9
+    val accentColor = if (isG9) Color(0xFF00A896) else Color(0xFF0066FF)
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(96.dp)
+    ) {
+        // Compute S-curve lateral offset
+        val offsetFactor = 0.26f * sin(stationIndex * 1.35f)
+        val nextOffsetFactor = 0.26f * sin((stationIndex + 1) * 1.35f)
+        val xOffsetDp = this.maxWidth * offsetFactor
+        val nextXOffsetDp = this.maxWidth * nextOffsetFactor
+
+        // 1. Draw Connecting Bezier Snake Path
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val direction = if (rtl) -1f else 1f
+            val startX = (size.width / 2) + xOffsetDp.toPx() * direction
+            val startY = 36.dp.toPx()
+            val endX = (size.width / 2) + nextXOffsetDp.toPx() * direction
+            val endY = size.height + 36.dp.toPx()
+
+            val controlY1 = startY + (endY - startY) * 0.5f
+            val controlY2 = startY + (endY - startY) * 0.5f
+
+            val path = Path().apply {
+                moveTo(startX, startY)
+                cubicTo(startX, controlY1, endX, controlY2, endX, endY)
+            }
+
+            // Path shadow/glow
+            drawPath(
+                path = path,
+                color = if (isCompleted) accentColor.copy(alpha = 0.35f) else if (dark) Color(0xFF263354) else Color(0xFFCBD5E1),
+                style = Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round)
+            )
+
+            // Math Doodles on canvas sides
+            drawMathDoodle(stationIndex, stage, size, dark)
+        }
+
+        // 2. Interactive Station Node
+        Row(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(x = xOffsetDp * (if (rtl) -1f else 1f))
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            // Main Node Circle
+            StationNodeButton(
+                stationNumber = "${unit.order}.${research.order}",
+                isCompleted = isCompleted,
+                isCurrent = isCurrent,
+                accentColor = accentColor,
+                dark = dark,
+                tag = "home-research-${research.id}",
+                onClick = { open(research.route) }
+            )
+
+            // Optional Milestone Reward Chest beside station
+            if (hasRewardChest) {
+                RewardChestButton(
+                    onClick = onRewardClick
                 )
             }
         }
     }
 }
 
+/**
+ * Circular Node Button (Completed with checkmark, Current with pulsing Play, or Available).
+ */
 @Composable
-private fun RoadmapUnitChestNode(
-    unitOrder: Int,
+private fun StationNodeButton(
+    stationNumber: String,
+    isCompleted: Boolean,
+    isCurrent: Boolean,
     accentColor: Color,
     dark: Boolean,
-    isAr: Boolean
+    tag: String,
+    onClick: () -> Unit
 ) {
+    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
+    val pulseScale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.14f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1100, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseScale"
+    )
+
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.testTag(tag)
     ) {
+        if (isCurrent) {
+            // Glowing outer ring
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .scale(pulseScale)
+                    .background(accentColor.copy(alpha = 0.25f), CircleShape)
+            )
+        }
+
         Surface(
+            onClick = onClick,
             shape = CircleShape,
-            color = if (dark) Color(0xFF1E293B) else Color(0xFFFFF8E1),
-            border = BorderStroke(2.dp, Color(0xFFFFB300)),
-            shadowElevation = 4.dp,
-            modifier = Modifier.size(48.dp)
+            color = when {
+                isCompleted -> accentColor
+                isCurrent -> accentColor
+                else -> if (dark) Color(0xFF1E293B) else Color.White
+            },
+            border = BorderStroke(
+                if (isCurrent) 2.5.dp else 1.5.dp,
+                if (isCompleted || isCurrent) Color.White else accentColor.copy(alpha = 0.5f)
+            ),
+            shadowElevation = if (isCurrent) 8.dp else 3.dp,
+            modifier = Modifier.size(54.dp)
         ) {
             Box(contentAlignment = Alignment.Center) {
-                Image(
-                    painter = painterResource(R.drawable.icon_chest),
-                    contentDescription = "Unit Reward Chest",
-                    modifier = Modifier.size(28.dp)
-                )
+                when {
+                    isCompleted -> {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    isCurrent -> {
+                        Icon(
+                            imageVector = Icons.Filled.PlayArrow,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(26.dp)
+                        )
+                    }
+                    else -> {
+                        Text(
+                            text = stationNumber,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = if (dark) Color(0xFF94A3B8) else Color(0xFF475569)
+                        )
+                    }
+                }
             }
         }
     }
 }
 
+/**
+ * Milestone Reward Chest Button.
+ */
 @Composable
-private fun RoadmapFinalExamSection(
-    title: String,
-    subtitle: String,
-    accentColor: Color,
-    dark: Boolean,
-    isAr: Boolean,
-    open: (String) -> Unit
+private fun RewardChestButton(
+    onClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 20.dp),
-        shape = RoundedCornerShape(24.dp),
-        color = if (dark) Color(0xFF101B2B) else Color(0xFFFFFFFF),
-        border = BorderStroke(1.5.dp, accentColor.copy(alpha = 0.5f)),
-        shadowElevation = 4.dp
+        onClick = onClick,
+        shape = CircleShape,
+        color = Color(0xFFFFF3CD),
+        border = BorderStroke(1.dp, Color(0xFFFFC107)),
+        shadowElevation = 3.dp,
+        modifier = Modifier.size(38.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Image(
+                painter = painterResource(R.drawable.icon_chest),
+                contentDescription = tr("Reward Chest", "صندوق المكافأة"),
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+/**
+ * Draw decorative math doodles on Canvas matching Image 11 and 12.
+ */
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawMathDoodle(
+    index: Int,
+    stage: StudyStage,
+    canvasSize: androidx.compose.ui.geometry.Size,
+    dark: Boolean
+) {
+    val doodleColor = if (dark) Color(0xFF475569).copy(alpha = 0.25f) else Color(0xFF94A3B8).copy(alpha = 0.35f)
+    val rightSide = index % 2 == 0
+    val x = if (rightSide) canvasSize.width * 0.85f else canvasSize.width * 0.12f
+    val y = canvasSize.height * 0.45f
+
+    when (index % 5) {
+        0 -> {
+            // Triangle
+            val p = Path().apply {
+                moveTo(x, y - 14.dp.toPx())
+                lineTo(x + 16.dp.toPx(), y + 14.dp.toPx())
+                lineTo(x - 16.dp.toPx(), y + 14.dp.toPx())
+                close()
+            }
+            drawPath(p, doodleColor, style = Stroke(1.5.dp.toPx()))
+        }
+        1 -> {
+            // Function curve / wave
+            val p = Path().apply {
+                moveTo(x - 16.dp.toPx(), y)
+                cubicTo(x - 8.dp.toPx(), y - 12.dp.toPx(), x + 8.dp.toPx(), y + 12.dp.toPx(), x + 16.dp.toPx(), y)
+            }
+            drawPath(p, doodleColor, style = Stroke(1.5.dp.toPx()))
+        }
+        2 -> {
+            // Circle with radius
+            drawCircle(doodleColor, radius = 12.dp.toPx(), center = Offset(x, y), style = Stroke(1.5.dp.toPx()))
+            drawLine(doodleColor, Offset(x, y), Offset(x + 12.dp.toPx(), y), strokeWidth = 1.2.dp.toPx())
+        }
+        3 -> {
+            // Geometric rectangle / cube face
+            drawRect(doodleColor, topLeft = Offset(x - 10.dp.toPx(), y - 10.dp.toPx()), size = androidx.compose.ui.geometry.Size(20.dp.toPx(), 20.dp.toPx()), style = Stroke(1.5.dp.toPx()))
+        }
+        4 -> {
+            // Coordinate axes
+            drawLine(doodleColor, Offset(x - 12.dp.toPx(), y), Offset(x + 12.dp.toPx(), y), strokeWidth = 1.2.dp.toPx())
+            drawLine(doodleColor, Offset(x, y - 12.dp.toPx()), Offset(x, y + 12.dp.toPx()), strokeWidth = 1.2.dp.toPx())
+        }
+    }
+}
+
+/**
+ * Final Comprehensive Exam Footer Section (Image 11 & 12 bottom).
+ */
+@Composable
+private fun ComprehensiveExamFooter(
+    stage: StudyStage,
+    dark: Boolean,
+    open: (String) -> Unit,
+    onBackToTop: () -> Unit
+) {
+    val isG9 = stage == StudyStage.G9
+    val bgBrush = if (dark) {
+        Brush.linearGradient(listOf(Color(0xFF131F3B), Color(0xFF1A2A4E)))
+    } else {
+        Brush.linearGradient(listOf(Color(0xFFE8F1FC), Color(0xFFDCEAF9)))
+    }
+    val borderColor = if (dark) Color(0xFF253965) else Color(0xFFC8DEFA)
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(26.dp),
+        border = BorderStroke(1.dp, borderColor),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(bgBrush)
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Trophy and Graduation Cap illustration row
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(18.dp)
             ) {
                 Image(
                     painter = painterResource(R.drawable.icon_trophy),
                     contentDescription = null,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(56.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.icon_graduation),
                     contentDescription = null,
-                    modifier = Modifier.size(44.dp)
+                    modifier = Modifier.size(48.dp)
                 )
             }
 
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = if (dark) Color.White else Color(0xFF0F172A),
-                textAlign = TextAlign.Center
-            )
+            // Title & Subtitle
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = tr("Comprehensive Final Exam", "الامتحان الشامل"),
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold, fontSize = 20.sp),
+                    color = if (dark) Color.White else Color(0xFF0F172A)
+                )
+                Text(
+                    text = if (isG9) tr("General review across all Grade 9 units", "مراجعة عامة على جميع وحدات التاسع")
+                    else tr("General review and exam across all Baccalaureate units", "مراجعة واختبار على جميع وحدات البكالوريا"),
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
+                    color = if (dark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                    textAlign = TextAlign.Center
+                )
+            }
 
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodySmall,
-                color = if (dark) Color(0xFF94A3B8) else Color(0xFF475569),
-                textAlign = TextAlign.Center
-            )
-
+            // 3 Interactive Action Nodes
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                OutlinedButton(
-                    onClick = { open("review") },
-                    modifier = Modifier.weight(1f).heightIn(min = 48.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(if (isAr) "مراجعة شاملة" else "Full Review")
-                }
+                ExamActionNode(
+                    icon = Icons.AutoMirrored.Outlined.FactCheck,
+                    label = tr("Review", "مراجعة"),
+                    enabled = true,
+                    dark = dark,
+                    onClick = { open("study/review/all") }
+                )
+                ExamActionNode(
+                    icon = Icons.Outlined.Diamond,
+                    label = tr("Practice Exam", "اختبار تجريبي"),
+                    enabled = true,
+                    dark = dark,
+                    onClick = { open(if (isG9) "study/review/all" else "study/demo") }
+                )
+                ExamActionNode(
+                    icon = Icons.Filled.Lock,
+                    label = tr("Final Exam", "الامتحان النهائي"),
+                    enabled = false,
+                    dark = dark,
+                    onClick = {}
+                )
+            }
 
-                Button(
-                    onClick = { open("practice") },
-                    modifier = Modifier.weight(1f).heightIn(min = 48.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = accentColor)
-                ) {
-                    Text(if (isAr) "اختبار تجريبي" else "Practice Test")
-                }
+            HorizontalDivider(
+                color = if (dark) Color(0xFF263765) else Color(0xFFCBD5E1),
+                thickness = 0.8.dp,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+
+            // Back to top button
+            TextButton(
+                onClick = onBackToTop,
+                modifier = Modifier.heightIn(min = 40.dp)
+            ) {
+                Text(
+                    text = tr("Back to top of map", "العودة إلى بداية المسار"),
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = if (isG9) Color(0xFF00A896) else Color(0xFF0066FF)
+                )
             }
         }
     }
 }
 
 @Composable
-private fun ApprovedAction(
-    title: String,
-    icon: ImageVector,
-    background: Color,
-    foreground: Color,
-    modifier: Modifier,
-    action: () -> Unit,
+private fun ExamActionNode(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    enabled: Boolean,
+    dark: Boolean,
+    onClick: () -> Unit
 ) {
-    Surface(
-        onClick = action,
-        modifier = modifier.heightIn(min = D.touch),
-        shape = RoundedCornerShape(D.buttonRadius),
-        color = Color.Transparent,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = Modifier.clickable(enabled = enabled) { onClick() }
     ) {
-        Column(
-            modifier = Modifier.padding(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+        Surface(
+            shape = CircleShape,
+            color = when {
+                !enabled -> if (dark) Color(0xFF1E293B) else Color(0xFFE2E8F0)
+                else -> if (dark) Color(0xFF223565) else Color(0xFFE6EFFF)
+            },
+            border = BorderStroke(
+                1.dp,
+                if (!enabled) Color.Transparent else if (dark) Color(0xFF3B5696) else Color(0xFFB8D3FE)
+            ),
+            modifier = Modifier.size(46.dp)
         ) {
-            Surface(shape = RoundedCornerShape(D.buttonRadius), color = background) {
-                Icon(icon, null, Modifier.padding(D.gutter).size(D.icon), tint = foreground)
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    tint = when {
+                        !enabled -> if (dark) Color(0xFF64748B) else Color(0xFF94A3B8)
+                        else -> if (dark) Color(0xFF7CA6FF) else Color(0xFF0066FF)
+                    },
+                    modifier = Modifier.size(20.dp)
+                )
             }
-            Text(
-                text = title,
-                modifier = Modifier.padding(horizontal = 4.dp),
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Center,
-            )
         }
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, fontWeight = FontWeight.Medium),
+            color = when {
+                !enabled -> if (dark) Color(0xFF64748B) else Color(0xFF94A3B8)
+                else -> if (dark) Color.White else Color(0xFF0F172A)
+            }
+        )
     }
 }

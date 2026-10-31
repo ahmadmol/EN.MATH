@@ -103,8 +103,9 @@ fun getFunctionDescription(expression: String, arabic: Boolean = true): String {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ExploreScreen(initialExpression: String = "", onSave: ((String) -> Boolean)? = null) {
+fun ExploreScreen(initialExpression: String = "", onRoute: ((String) -> Unit)? = null, onSave: ((String) -> Boolean)? = null) {
     val engine = remember { DemoGraphEngine() }
     var functions by rememberSaveable { mutableStateOf(if (initialExpression.isBlank()) listOf("x^2", "sin(x)", "2x+1") else if (graphSupported(initialExpression)) listOf(initialExpression) else emptyList()) }
     var hidden by rememberSaveable { mutableStateOf(listOf<String>()) }
@@ -140,8 +141,17 @@ fun ExploreScreen(initialExpression: String = "", onSave: ((String) -> Boolean)?
     }
 
     ScreenPage(Modifier.imePadding().testTag("screen-explore")) {
+        onRoute?.let { open ->
+            SectionTitle(tr("Explore mathematics tools", "استكشف أدوات الرياضيات"))
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton({ open("solver") }, Modifier.heightIn(min=48.dp)) { Text(tr("Solver", "المحلل")) }
+                OutlinedButton({ open("library") }, Modifier.heightIn(min=48.dp)) { Text(tr("My library", "مكتبتي")) }
+                OutlinedButton({ open("search") }, Modifier.heightIn(min=48.dp)) { Text(tr("Curriculum search", "البحث في المنهج")) }
+            }
+        }
         // Header
         FunctionLabHeader(isDark = isDark)
+        EducationalInfoBanner(tr("Independent graph tool. Initial curves are examples; only explicit saves enter your library.", "أداة رسم مستقلة. المنحنيات الأولية أمثلة؛ تُضاف إلى مكتبتك بالحفظ الصريح فقط."))
 
         // Function Input Area
         FunctionInputRow(

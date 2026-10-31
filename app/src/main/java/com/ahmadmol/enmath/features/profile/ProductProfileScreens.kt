@@ -15,6 +15,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.automirrored.outlined.TrendingUp
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -100,6 +101,10 @@ fun ProductProfileScreen(
     gems: LocalGemsUiState = LocalGemsUiState(),
     planner: com.ahmadmol.enmath.core.data.PlannerRepository? = null,
 ) {
+    if (!teacher && state.user?.studyStage == StudyStage.G9) {
+        Grade9ProfileScreen(state, onRoute, onLogout, onSwitchRole, onLanguage, gems, planner)
+        return
+    }
     var confirm by remember { mutableStateOf(false) }
     val dark = isDarkTheme()
     val ar = state.language == Language.Arabic
@@ -142,7 +147,7 @@ fun ProductProfileScreen(
             onClick = { onRoute(prefix + "settings") }
         )
 
-        ProfileMenuItemCard(
+        if (teacher || state.user?.studyStage != StudyStage.G9) ProfileMenuItemCard(
             title = if (ar) "الإشعارات" else "Notifications",
             icon = Icons.Outlined.Notifications,
             boxColor = ProfilePalette.notificationsBox(dark),
@@ -152,6 +157,18 @@ fun ProductProfileScreen(
         )
 
         if (!teacher) {
+            if (state.user?.studyStage == StudyStage.G9) {
+                listOf(
+                    Triple(tr("Math solver", "الحل الرياضي"), "solver", Icons.Outlined.Calculate),
+                    Triple(tr("Graph lab", "مختبر الرسم"), "explore", Icons.Outlined.Science),
+                    Triple(tr("Source and availability", "المصدر والتوفر"), "g9/source", Icons.Outlined.Info),
+                    Triple(tr("Help and local data", "المساعدة والبيانات المحلية"), "g9/help", Icons.AutoMirrored.Outlined.HelpOutline),
+                ).forEach { (title, route, icon) ->
+                    ProfileMenuItemCard(title = title, icon = icon,
+                        boxColor = ProfilePalette.settingsBox(dark), iconColor = ProfilePalette.primaryBlue,
+                        dark = dark, testTag = "profile-$route", onClick = { onRoute(route) })
+                }
+            }
             ProfileMenuItemCard(
                 title = if (ar) "المكتبة" else "Library",
                 icon = Icons.Outlined.LocalLibrary,
@@ -243,6 +260,21 @@ private fun ProfileHeroCard(
     dark: Boolean,
     ar: Boolean,
 ) {
+    if (!teacher && state.user?.studyStage != null) {
+        val catalog = SourceCurricula.forState(state)
+        val stage = state.user?.studyStage
+        if (catalog != null) {
+            StageHero(stage, state.user?.name.orEmpty(), if (state.user?.type == AccountType.Guest)
+                tr("Guest · saved locally", "زائر · محفوظ محليًا") else tr("Local student file · no cloud account", "ملف طالب محلي · دون حساب سحابي"))
+            SourceMetrics(listOf("${catalog.units.size}" to tr("Indexed units", "وحدات مفهرسة"),
+                "${catalog.researches.size}" to tr("Indexed researches", "أبحاث مفهرسة"),
+                "${catalog.reviewed}" to tr("Reviewed lessons", "دروس معتمدة")))
+            Text(tr("Source learning evidence is not available yet. Demo evidence is shown separately in Progress.",
+                "أدلة تعلّم المصدر غير متاحة بعد. تُعرض أدلة التجربة بصورة مستقلة في التقدم."))
+        }
+        return
+    }
+
     val user = state.user
     val name = user?.name.orEmpty().ifBlank { if (ar) "طالب" else "Student" }
     val email = if (user?.localId != null) tr("Local file on this device", "ملف محلي على هذا الجهاز")

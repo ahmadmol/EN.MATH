@@ -134,6 +134,7 @@ val AppShapes =
 val LocalLanguage = staticCompositionLocalOf { Language.Arabic }
 val LocalIsDarkTheme = staticCompositionLocalOf { false }
 val LocalStudentExperience = staticCompositionLocalOf { false }
+val LocalStudyStage = staticCompositionLocalOf<StudyStage?> { null }
 
 @Composable
 fun isDarkTheme(): Boolean = LocalIsDarkTheme.current
@@ -144,7 +145,7 @@ fun tr(en: String, ar: String) = if (LocalLanguage.current == Language.Arabic) a
 @Composable fun Copy.text() = tr(en, ar)
 
 @Composable
-fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, content: @Composable () -> Unit) {
+fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, stage: StudyStage? = null, content: @Composable () -> Unit) {
     val dark =
         when (mode) {
             ThemeMode.System -> isSystemInDarkTheme()
@@ -180,11 +181,12 @@ fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, c
         LocalLanguage provides language,
         LocalIsDarkTheme provides dark,
         LocalStudentExperience provides student,
+        LocalStudyStage provides if (student) stage else null,
         LocalLayoutDirection provides
             if (language == Language.Arabic) LayoutDirection.Rtl else LayoutDirection.Ltr,
     ) {
         MaterialTheme(
-            colorScheme = if (student) studentColorScheme(dark) else if (dark) DarkColorScheme else LightColorScheme,
+            colorScheme = if (student) studentColorScheme(dark, stage) else if (dark) DarkColorScheme else LightColorScheme,
             typography = typography,
             shapes = AppShapes,
             content = content,
@@ -193,7 +195,27 @@ fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, c
 }
 
 /** Student reference palette; role-scoped so teacher styling keeps its existing theme. */
-fun studentColorScheme(dark: Boolean): ColorScheme =
+fun studentColorScheme(dark: Boolean, stage: StudyStage? = null): ColorScheme =
+    if (stage == StudyStage.G9) {
+        if (dark) DarkColorScheme.copy(primary = Color(0xFF79DBD2), onPrimary = Color(0xFF003B39),
+            primaryContainer = Color(0xFF104847), onPrimaryContainer = Color(0xFFBDF8EF),
+            background = Color(0xFF0B1920), surface = Color(0xFF10232A),
+            surfaceContainerLowest = Color(0xFF09171D), surfaceContainerLow = Color(0xFF12282F),
+            surfaceContainer = Color(0xFF173038), surfaceContainerHigh = Color(0xFF1C3840),
+            surfaceContainerHighest = Color(0xFF23434A), surfaceVariant = Color(0xFF23434A),
+            outlineVariant = Color(0xFF36575C), secondary = Color(0xFF89D2E0),
+            secondaryContainer = Color(0xFF123F4B), onSecondaryContainer = Color(0xFFC5F2FA))
+        else LightColorScheme.copy(primary = Color(0xFF007F7B), onPrimary = Color.White,
+            primaryContainer = Color(0xFFDDF8F4), onPrimaryContainer = Color(0xFF004C49),
+            background = Color(0xFFF5FCFC),
+            surfaceContainerLowest = Color.White, surfaceContainerLow = Color(0xFFF0FAF8),
+            surfaceContainer = Color(0xFFE8F5F3), surfaceContainerHigh = Color(0xFFE1EFED),
+            surfaceContainerHighest = Color(0xFFD9EAE7), surfaceVariant = Color(0xFFD9EAE7),
+            outlineVariant = Color(0xFFC4DBD7), secondary = Color(0xFF176A7C),
+            secondaryContainer = Color(0xFFDFF4FA), onSecondaryContainer = Color(0xFF123F4B))
+    } else if (stage == StudyStage.BAC) {
+        if (dark) DarkColorScheme else LightColorScheme.copy(background = Color(0xFFF8F8FF))
+    } else
     if (dark) DarkColorScheme.copy(
         primary = Color(0xFF9BBCFF), onPrimary = Color(0xFF002C70),
         primaryContainer = Color(0xFF163763), onPrimaryContainer = Color(0xFFDCE9FF),

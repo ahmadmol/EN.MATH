@@ -32,7 +32,8 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
     var query by rememberSaveable(state.user?.localId, state.generation) { mutableStateOf("") }
     var topic by rememberSaveable(state.user?.localId, state.generation) { mutableIntStateOf(0) }
     var resourceType by rememberSaveable(state.user?.localId, state.generation) { mutableIntStateOf(0) }
-    val topics = state.books.flatMap { it.topics }
+    val stageBooks = if (state.user?.studyStage == com.ahmadmol.enmath.core.model.StudyStage.G9) emptyList() else state.books
+    val topics = stageBooks.flatMap { it.topics }
     val normalized = LearningRules.search(query)
 
     ScreenPage(Modifier.testTag("screen-library")) {
@@ -42,8 +43,8 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
             title = tr("Keep useful ideas saved.", "احتفظ بالأفكار المفيدة."),
             subtitle = tr("Return anytime and continue learning at your pace.", "ارجع إليها في أي وقت وواصل تعلمك بأسلوبك."),
             badgeText = tr("Your Library", "مكتبتك"),
-            badgeColor = RefColors.LightBlueHeroBgStart,
-            badgeTextColor = RefColors.PrimaryBlue,
+            badgeColor = if (LocalStudyStage.current == com.ahmadmol.enmath.core.model.StudyStage.G9) MaterialTheme.colorScheme.primaryContainer else RefColors.LightBlueHeroBgStart,
+            badgeTextColor = if (LocalStudyStage.current == com.ahmadmol.enmath.core.model.StudyStage.G9) MaterialTheme.colorScheme.onPrimaryContainer else RefColors.PrimaryBlue,
             artwork = { LibraryHeroArtwork() }
         )
 
@@ -104,7 +105,7 @@ fun LibraryScreen(state: LearningState, onLesson: (String) -> Unit, onProblem: (
 
         // Lessons Tab
         if (tab == 0) {
-            val lessons = state.books
+            val lessons = stageBooks
                 .flatMap { it.lessons }
                 .filter {
                     it.id in state.product.savedLessons &&

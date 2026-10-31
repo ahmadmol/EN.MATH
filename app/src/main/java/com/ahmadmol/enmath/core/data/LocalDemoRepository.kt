@@ -15,6 +15,8 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
     private val prefs = preferences("enmath_demo")
     private val local = LocalLearnerStore(preferences)
     val planner = PlannerRepository(preferences) { state.value }
+    val sourceWorkspace = SourceWorkspaceRepository(preferences) { state.value }
+    val grade9Study = Grade9StudyRepository(preferences) { state.value }
     private val legacyProduct = runCatching { ProductCodec.load(prefs) }
     // New isolated guest scope; unscoped legacy progress is never assigned to it.
     private val guestId = prefs.getString("w1_guest_uuid", null) ?: java.util.UUID.randomUUID().toString().also {

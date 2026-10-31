@@ -1,6 +1,10 @@
 package com.ahmadmol.enmath.features.student
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.FactCheck
+import androidx.compose.material.icons.automirrored.outlined.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -16,11 +20,11 @@ import com.ahmadmol.enmath.features.courses.*
 
 @Composable fun studentStageLabel(stage: StudyStage?) = if (stage == StudyStage.G9) tr("Grade 9", "الصف التاسع") else tr("Scientific Baccalaureate", "البكالوريا العلمي")
 
-@Composable fun DualStageHome(state: LearningState, open: (String) -> Unit, gems: LocalGemsUiState, planner: PlannerRepository?) {
+@Composable fun DualStageHome(state: LearningState, open: (String) -> Unit, gems: LocalGemsUiState, planner: PlannerRepository?, workspace: SourceWorkspaceRepository? = null, grade9Study: Grade9StudyRepository? = null) {
     if (state.user?.studyStage == StudyStage.G9) {
-        Grade9RoadmapHomeScreen(state, open, gems, planner)
+        Grade9LearningPath(state, open, gems, planner, workspace, grade9Study)
     } else {
-        BaccalaureateRoadmapHomeScreen(state, open, gems, planner)
+        BaccalaureateRoadmapHomeScreen(state, open, gems, planner, workspace)
     }
 }
 
@@ -33,7 +37,7 @@ import com.ahmadmol.enmath.features.courses.*
         BacSourceStudyScreen(open); return
     }
     ScreenPage(Modifier.testTag(if (topicId == null) "screen-study" else "screen-topic")) {
-        PageHeading(studentStageLabel(state.user?.studyStage), tr("Study at your own pace", "تعلّم حسب وتيرتك"))
+        PageHeading(studentStageLabel(state.user?.studyStage), tr("Demo learning · separate progress", "التجربة التعليمية · تقدم مستقل"))
         OutlinedButton({ open("planner") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("My study plan", "خطتي الدراسية")) }
         if (state.books.isEmpty()) { Text(tr("Content for this stage has not been published in this version.", "لم يُنشر محتوى هذه المرحلة في هذه النسخة.")); return@ScreenPage }
         Text(tr("Partial local demo content; this is not a complete official curriculum.", "محتوى محلي تجريبي جزئي؛ لا يمثل المنهج الرسمي الكامل."))
@@ -77,54 +81,92 @@ fun recordedMistakes(state: LearningState): List<RecordedMistake> = StudentCatal
     TextButton({ open("review") }) { Text(tr("Mistake review", "مراجعة الأخطاء")) }
 } }
 
-@Composable fun RecordedProgressScreen(state: LearningState, open: (String) -> Unit, review: Boolean = false) {
-    if (!review && state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
-        Grade9ProgressScreen(state, open); return
+@Composable fun RecordedProgressScreen(state: LearningState, open: (String) -> Unit, review: Boolean = false, grade9Study: Grade9StudyRepository? = null) {
+    if (!review) { SourceProgressScreen(state, open); return }
+    if (state.user?.studyStage == StudyStage.G9) {
+        Grade9Scaffold("screen-review") {
+            item("title") { Text(tr("My mistakes", "دفتر أخطائي"), style = MaterialTheme.typography.headlineSmall) }
+            if (StudentCatalog.hasUnverifiedHistory(state)) item("older") { ReviewRequiredNotice() }
+            item("evidence") { Grade9EvidenceSection(state, grade9Study, open, mistakes = true) }
+            item("plan") { OutlinedButton({ open("planner") }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Plan a review goal", "خطّط لهدف مراجعة")) } }
+        }
+        return
     }
-    ScreenPage(Modifier.testTag(if(review) "screen-review" else "screen-progress")) {
-        PageHeading(studentStageLabel(state.user?.studyStage), if(review) tr("Mistake review", "مراجعة الأخطاء") else tr("Recorded progress", "التقدم المحفوظ"))
-        if(StudentCatalog.hasUnverifiedHistory(state)) ReviewRequiredNotice()
-        if (!review) {
-            BacSourceProgress(state)
-            if (state.user?.studyStage == StudyStage.BAC) SectionTitle(tr("Existing demo progress", "تقدم الدروس التجريبية السابقة"))
-            Text(tr("Completion describes available lessons, not mastery.", "الإكمال يصف الدروس المتاحة ولا يثبت الإتقان."))
-            state.books.forEach { book -> AppCard {
-                Text(book.title.text(), style=MaterialTheme.typography.titleLarge)
-                Text("${book.lessons.count { it.id in StudentCatalog.completed(state) }}/${book.lessons.size}")
-                TextButton({ open(if (state.user?.studyStage == StudyStage.BAC) "demo/book/${book.id}" else "book/${book.id}") }) { Text(tr("Continue in this book", "متابعة هذا الكتاب")) }
-            } }
-            val attempts = StudentCatalog.attempts(state)
-            if(attempts.isEmpty()) Text(tr("There is not enough assessment evidence yet.", "لم تتوفر أدلة تقييم كافية بعد."))
-            attempts.asReversed().forEach { a -> AppCard {
-                Text(state.practiceSets.find { it.id == a.setId }?.title?.text().orEmpty())
-                Text(tr("${a.correct}/${a.total} correct · ${a.seconds} seconds", "${a.correct}/${a.total} إجابة صحيحة · ${a.seconds} ثانية"))
-                TextButton({ open("practice/${a.setId}/result") }) { Text(tr("Latest result for this practice", "آخر نتيجة لهذا التدريب")) }
+    val catalog = SourceCurricula.forState(state)
+    ScreenPage(Modifier.testTag("screen-review")) {
+        if (catalog == null) { CatalogUnavailable(); return@ScreenPage }
+        StageHero(catalog.stage, tr("Mistake review", "مراجعة الأخطاء"),
+            tr("Based on your actual saved practice", "من محاولات التدريب المحفوظة فعليًا"))
+        if (StudentCatalog.hasUnverifiedHistory(state)) ReviewRequiredNotice()
+        val mistakes = recordedMistakes(state)
+        if (mistakes.isEmpty()) {
+            EmptyMistakesCard()
+        } else {
+            mistakes.forEach { m -> AppCard {
+                Text(tr("Demo practice evidence", "أدلة تدريب تجريبي"), style = MaterialTheme.typography.labelLarge)
+                Text(m.question.prompt.text()); MathLine(m.question.expression)
+                Text(tr("Your saved answer: ${m.answer.ifBlank { "—" }}", "إجابتك المحفوظة: ${m.answer.ifBlank { "—" }}"))
+                Text(m.question.explanation.text())
+                OutlinedButton({ open("practice/${m.attempt.setId}/result?attempt=${m.attempt.commandId}") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Review this attempt", "مراجعة هذه المحاولة")) }
+                OutlinedButton({ open("practice/${m.attempt.setId}") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Try this practice again", "جرّب هذا التدريب مجددًا")) }
             } }
         }
-        val mistakes = recordedMistakes(state)
-        if(mistakes.isEmpty()) Text(tr("No saved mistakes to review.", "لا أخطاء محفوظة للمراجعة."))
-        mistakes.forEach { m -> AppCard {
-            Text(m.question.prompt.text()); MathLine(m.question.expression)
-            Text(tr("Your saved answer: ${m.answer.ifBlank { "—" }}", "إجابتك المحفوظة: ${m.answer.ifBlank { "—" }}"))
-            Text(m.question.explanation.text())
-            TextButton({ open("practice/${m.attempt.setId}") }) { Text(tr("Try this practice again", "جرّب هذا التدريب مجددًا")) }
-        } }
-        OutlinedButton({ open("planner") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Plan your next step", "خطّط لخطوتك التالية")) }
-        OutlinedButton({ open("study") }, Modifier.fillMaxWidth().heightIn(min=48.dp)) { Text(tr("Continue learning", "متابعة التعلم")) }
+        Button(
+            onClick = { open("planner") },
+            modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.ui.graphics.Color(0xFF0066FF))
+        ) {
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = androidx.compose.material.icons.Icons.Outlined.Schedule,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    text = tr("Plan my next step", "خطّط لخطوتي التالية"),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                )
+            }
+        }
+        OutlinedButton(
+            onClick = { open("study/review/all") },
+            modifier = Modifier.fillMaxWidth().heightIn(min = 50.dp),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+            border = androidx.compose.foundation.BorderStroke(1.5.dp, androidx.compose.ui.graphics.Color(0xFF0066FF)),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = androidx.compose.ui.graphics.Color(0xFF0066FF))
+        ) {
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.FactCheck,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    text = tr("Source review availability", "حالة مراجعة المصدر"),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                )
+            }
+        }
     }
 }
 
-
-@Composable fun SavedPracticeResultScreen(state: LearningState, setId: String, open: (String) -> Unit) {
+@Composable fun SavedPracticeResultScreen(state: LearningState, setId: String, open: (String) -> Unit, attemptId: String? = null) {
     val set = state.practiceSets.find { it.id == setId }
-    val attempt = StudentCatalog.attempts(state).lastOrNull { it.setId == setId }
+    val attempt = savedPracticeAttempt(state, setId, attemptId)
     ScreenPage(Modifier.testTag("screen-practice-result")) {
-        PageHeading(studentStageLabel(state.user?.studyStage), tr("Practice result", "نتيجة التدريب"))
+        StageHero(state.user?.studyStage ?: StudyStage.BAC, tr("Demo practice result", "نتيجة التدريب التجريبي"), tr("Saved evidence for this attempt", "أدلة محفوظة لهذه المحاولة"))
         if (attempt == null || set == null) {
             Text(tr("No verified saved result is available for this practice. Older records remain preserved for review.", "لا توجد نتيجة محفوظة متحققة لهذا التدريب. السجلات القديمة محفوظة للمراجعة."))
         } else {
             Text(set.title.text(), style=MaterialTheme.typography.titleLarge)
-            Text(tr("${attempt.correct}/${attempt.total} correct · ${attempt.seconds} seconds", "${attempt.correct}/${attempt.total} إجابة صحيحة · ${attempt.seconds} ثانية"))
+            SourceMetrics(listOf("${attempt.correct}/${attempt.total}" to tr("Correct answers", "إجابات صحيحة"), "${attempt.seconds}" to tr("Seconds", "ثوانٍ")))
             Text(tr("This result describes this attempt. It does not certify mastery.", "هذه النتيجة تصف هذه المحاولة ولا تثبت الإتقان."))
             set.questionIds.forEach { id -> state.questions.find { it.id == id }?.let { q -> AppCard {
                 Text(q.prompt.text()); MathLine(q.expression)

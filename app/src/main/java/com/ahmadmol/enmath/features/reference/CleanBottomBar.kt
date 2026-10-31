@@ -21,6 +21,10 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.LineBreak
+import com.ahmadmol.enmath.core.design.LocalStudyStage
+import com.ahmadmol.enmath.core.model.StudyStage
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,9 +70,13 @@ fun CleanBottomBar(
     tagPrefix: String,
     dark: Boolean = true,
     open: (String) -> Unit,
+    accessibleCenter: Boolean = false,
 ) {
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val student = LocalStudentExperience.current
+    val g9 = LocalStudyStage.current == StudyStage.G9
+    val labelStyle = if (g9) MaterialTheme.typography.bodyMedium.copy(
+        lineBreak = LineBreak.Paragraph, hyphens = Hyphens.Auto, lineHeight = 14.sp) else LocalTextStyle.current
     val navBgColor = if (student) MaterialTheme.colorScheme.surface else if (isDark) Color(0xFF111221) else Color(0xFFFFFFFF)
     val dividerColor = if (student) MaterialTheme.colorScheme.outlineVariant else if (isDark) Color(0xFF1E2038) else Color(0xFFE0E3EF)
     val activeColor = if (student) MaterialTheme.colorScheme.primary else Color(0xFF0084FF)
@@ -83,7 +91,7 @@ fun CleanBottomBar(
     ) {
         val labelWidth = with(density) { (maxWidth / items.size.coerceAtLeast(1) - 8.dp).roundToPx().coerceAtLeast(1) }
         val labelHeight = if (student) items.maxOfOrNull {
-            textMeasurer.measure(it.title, style = MaterialTheme.typography.bodyMedium.copy(
+            textMeasurer.measure(it.title, style = (if (g9) labelStyle else MaterialTheme.typography.bodyMedium).copy(
                 fontSize = BottomNavLayoutDefaults.TextFontSize, fontWeight = FontWeight.Bold),
                 constraints = Constraints(maxWidth = labelWidth)).size.height
         } ?: 0 else 0
@@ -126,6 +134,9 @@ fun CleanBottomBar(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
+                            .then(if (accessibleCenter) Modifier.selectable(
+                                selected = isSelected, onClick = { open(item.route) }, role = Role.Tab
+                            ) else Modifier)
                             .testTag("$tagPrefix${item.route}"),
                         contentAlignment = Alignment.Center
                     ) {
@@ -134,10 +145,10 @@ fun CleanBottomBar(
                             verticalArrangement = Arrangement.Top,
                             modifier = Modifier
                                 .fillMaxHeight()
-                                .clickable(
+                                .then(if (accessibleCenter) Modifier else Modifier.clickable(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
-                                ) { open(item.route) }
+                                ) { open(item.route) })
                         ) {
                             Box(
                                 modifier = Modifier
@@ -158,12 +169,12 @@ fun CleanBottomBar(
                                     )
                                     .background(activeColor, CircleShape)
                                     .clip(CircleShape)
-                                    .clickable { open(item.route) },
+                                    .then(if (accessibleCenter) Modifier else Modifier.clickable { open(item.route) }),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = item.icon,
-                                    contentDescription = item.title,
+                                    contentDescription = if (accessibleCenter) null else item.title,
                                     tint = if (student) MaterialTheme.colorScheme.onPrimary else Color.White,
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -171,6 +182,7 @@ fun CleanBottomBar(
                             Spacer(Modifier.height(2.dp))
                             Text(
                                 text = item.title,
+                                style = labelStyle,
                                 fontSize = BottomNavLayoutDefaults.TextFontSize,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                 color = if (isSelected) activeColor else inactiveColor,
@@ -195,10 +207,10 @@ fun CleanBottomBar(
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                            verticalArrangement = if (g9) Arrangement.Top else Arrangement.Center,
                             modifier = Modifier
                                 .fillMaxHeight()
-                                .padding(vertical = 4.dp)
+                                .padding(top = if (g9) 18.dp else 4.dp, bottom = 4.dp)
                         ) {
                             Icon(
                                 imageVector = item.icon,
@@ -209,6 +221,7 @@ fun CleanBottomBar(
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = item.title,
+                                style = labelStyle,
                                 fontSize = BottomNavLayoutDefaults.TextFontSize,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                 color = if (isSelected) activeColor else inactiveColor,

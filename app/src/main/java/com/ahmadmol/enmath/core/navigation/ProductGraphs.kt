@@ -60,11 +60,67 @@ fun NavGraphBuilder.studentGraph(
         val id = app.history(expression, topic, owner)
         if (id.isNotEmpty()) route("solver/solution/$id")
     }
+    composable(Routes.Grade9Activity) {
+        val state by app.state.collectAsStateWithLifecycle()
+        if(state.user?.studyStage != StudyStage.G9 || state.user?.type == AccountType.Teacher || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
+        val repo=app.repository as? LocalDemoRepository
+        val gems=app.gems?.ui?.collectAsStateWithLifecycle()?.value ?: LocalGemsUiState()
+        Grade9ActivityScreen(state,repo?.grade9Study,repo?.planner,gems,::route)
+    }
+    composable(Routes.Grade9Goal) { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        if(state.user?.studyStage != StudyStage.G9 || state.user?.type == AccountType.Teacher || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
+        Grade9GoalScreen(state,(app.repository as? LocalDemoRepository)?.planner,entry.arguments?.getString("id").orEmpty(),::route)
+    }
+    composable("g9/practice") { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage != StudyStage.G9 || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
+        val vm: Grade9PracticeViewModel = viewModel(entry)
+        Grade9PracticeScreen(state, (app.repository as? LocalDemoRepository)?.grade9Study, vm) { path ->
+            nav.navigate(path) { popUpTo("g9/practice") { inclusive = true }; launchSingleTop = true }
+        }
+    }
+    composable("g9/result/{id}") { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage != StudyStage.G9 || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
+        Grade9ResultScreen(state, (app.repository as? LocalDemoRepository)?.grade9Study, entry.arguments?.getString("id").orEmpty(), ::route)
+    }
+    composable("g9/reference/{id}") { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage != StudyStage.G9 || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
+        SourceResearchScreen(entry.arguments?.getString("id").orEmpty(), state,
+            (app.repository as? LocalDemoRepository)?.planner, (app.repository as? LocalDemoRepository)?.sourceWorkspace, ::route)
+    }
+    composable("g9/files") {
+        val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage != StudyStage.G9 || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
+        Grade9FilesScreen(state, (app.repository as? LocalDemoRepository)?.grade9Study, ::route)
+    }
+    composable("g9/file/{id}") { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        if (state.user?.studyStage != StudyStage.G9 || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
+        Grade9FileScreen(state, (app.repository as? LocalDemoRepository)?.grade9Study, entry.arguments?.getString("id").orEmpty())
+    }
+    listOf(Routes.Grade9Algebra, Routes.Grade9Geometry, Routes.Grade9Exercises,
+        Routes.Grade9Source, Routes.Grade9Help).forEach { destination ->
+        composable(destination) {
+            val state by app.state.collectAsStateWithLifecycle()
+            if (state.user?.studyStage != StudyStage.G9 || !state.catalogAvailable) {
+                StageContentUnavailable()
+            } else when (destination) {
+                Routes.Grade9Algebra -> Grade9SubjectScreen(state, false, ::route)
+                Routes.Grade9Geometry -> Grade9SubjectScreen(state, true, ::route)
+                Routes.Grade9Exercises -> Grade9ExercisesScreen(state, ::route, (app.repository as? LocalDemoRepository)?.grade9Study)
+                Routes.Grade9Source -> Grade9SourceScreen()
+                Routes.Grade9Help -> Grade9HelpScreen(::route)
+            }
+        }
+    }
     composable(Routes.Home) {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         val gems = app.gems?.ui?.collectAsStateWithLifecycle()?.value ?: LocalGemsUiState()
-        DualStageHome(state, ::route, gems, (app.repository as? LocalDemoRepository)?.planner)
+        DualStageHome(state, ::route, gems, (app.repository as? LocalDemoRepository)?.planner, (app.repository as? LocalDemoRepository)?.sourceWorkspace, (app.repository as? LocalDemoRepository)?.grade9Study)
     }
     composable(Routes.Study) {
         val state by app.state.collectAsStateWithLifecycle()
@@ -74,7 +130,7 @@ fun NavGraphBuilder.studentGraph(
     composable("planner") {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        (app.repository as? LocalDemoRepository)?.let { com.ahmadmol.enmath.features.planner.PlannerScreen(state, it.planner) }
+        (app.repository as? LocalDemoRepository)?.let { com.ahmadmol.enmath.features.planner.PlannerScreen(state, it.planner, open = ::route) }
     }
     composable("review/history") {
         val state by app.state.collectAsStateWithLifecycle()
@@ -84,16 +140,16 @@ fun NavGraphBuilder.studentGraph(
     composable("review") {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        RecordedProgressScreen(state, ::route, review = true)
+        RecordedProgressScreen(state, ::route, review = true, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study)
     }
     composable(Routes.Book) { e ->
         val state by app.state.collectAsStateWithLifecycle()
         if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
-            Grade9BookScreen(e.arguments?.getString("id").orEmpty(), ::route); return@composable
+            SourceBookScreen(StudyStage.G9, e.arguments?.getString("id").orEmpty(), ::route, state, (app.repository as? LocalDemoRepository)?.sourceWorkspace); return@composable
         }
         val ticket = LearningRules.sessionOwner(state)
         if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && BacSourceCatalog.book(e.arguments?.getString("id").orEmpty()) != null) {
-            BacSourceBookScreen(e.arguments?.getString("id").orEmpty(), ::route); return@composable
+            SourceBookScreen(StudyStage.BAC, e.arguments?.getString("id").orEmpty(), ::route, state, (app.repository as? LocalDemoRepository)?.sourceWorkspace); return@composable
         }
         if (state.books.none { it.id == e.arguments?.getString("id") }) { StageContentUnavailable(); return@composable }
         BookDetailsScreen(
@@ -114,12 +170,17 @@ fun NavGraphBuilder.studentGraph(
     }
     composable("demo/book/{id}") { e ->
         val state by app.state.collectAsStateWithLifecycle()
-        if (state.user?.studyStage != StudyStage.BAC) { StageContentUnavailable(); return@composable }
+        if (state.user?.studyStage != StudyStage.BAC || state.books.none { it.id == e.arguments?.getString("id") }) { StageContentUnavailable(); return@composable }
         BookDetailsScreen(e.arguments?.getString("id").orEmpty(), state.copy(completed = StudentCatalog.completed(state)),
             { route("topic/$it") }, ::lesson)
     }
     composable(Routes.Topic) { e ->
         val state by app.state.collectAsStateWithLifecycle()
+        if(state.user?.studyStage == StudyStage.G9 && state.user?.type != AccountType.Teacher && state.catalogAvailable) {
+            val id=e.arguments?.getString("id").orEmpty()
+            SourceUnitScreen(StudyStage.G9,id,::route) { G9PinUnitAction(state,(app.repository as? LocalDemoRepository)?.planner,id) }
+            return@composable
+        }
         val ticket = LearningRules.sessionOwner(state)
         if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && BacSourceCatalog.unit(e.arguments?.getString("id").orEmpty()) != null) {
             BacSourceUnitScreen(e.arguments?.getString("id").orEmpty(), ::route, { nav.popBackStack() }); return@composable
@@ -131,10 +192,15 @@ fun NavGraphBuilder.studentGraph(
         val ticket = LearningRules.sessionOwner(state)
         val id = e.arguments?.getString("id").orEmpty()
         if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
-            Grade9LessonScreen(id, state, ::route, (app.repository as? LocalDemoRepository)?.planner); return@composable
+            if (id == Grade9Pilot.lessonId) {
+                val sourceScope = StudentCatalog.scope(state)
+                LaunchedEffect(sourceScope, id) { sourceScope?.let { (app.repository as? LocalDemoRepository)?.sourceWorkspace?.visit(it, Grade9Pilot.ref) } }
+                Grade9LessonScreen(state, (app.repository as? LocalDemoRepository)?.grade9Study, ::route); return@composable
+            }
+            SourceResearchScreen(id, state, (app.repository as? LocalDemoRepository)?.planner, (app.repository as? LocalDemoRepository)?.sourceWorkspace, ::route); return@composable
         }
         if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && BacSourceCatalog.lesson(id) != null) {
-            BacSourceLessonScreen(id, state, (app.repository as? LocalDemoRepository)?.planner, ::route, { nav.popBackStack() }); return@composable
+            SourceResearchScreen(id, state, (app.repository as? LocalDemoRepository)?.planner, (app.repository as? LocalDemoRepository)?.sourceWorkspace, ::route); return@composable
         }
         if (state.lesson(id) == null) { StageContentUnavailable(); return@composable }
         val lessonOwner by rememberSaveable(id, "gems-lesson-owner") { mutableStateOf(ticket) }
@@ -167,10 +233,10 @@ fun NavGraphBuilder.studentGraph(
         val ticket = LearningRules.sessionOwner(state)
         val id = e.arguments?.getString("id").orEmpty()
         if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
-            Grade9PracticeStatusScreen(id); return@composable
+            SourceExercisePending(StudyStage.G9, id, ::route); return@composable
         }
         if (state.user?.studyStage == StudyStage.BAC && state.catalogAvailable && (BacSourceCatalog.lesson(id) != null || BacSourceCatalog.section(id) != null)) {
-            BacSourcePracticeStatus(id); return@composable
+            SourceExercisePending(StudyStage.BAC, id, ::route); return@composable
         }
         val set = state.practiceSets.find { it.id == id }
         if (set == null) { StageContentUnavailable(); return@composable }
@@ -178,7 +244,7 @@ fun NavGraphBuilder.studentGraph(
         val practiceOwner = vm.gemsOwner(ticket)
         val finish: (Map<String, String>, Int) -> Unit = { answers, seconds ->
             if (app.recordPractice(id, answers, seconds, practiceOwner, vm.commandId))
-                nav.navigate("practice/$id/result") { popUpTo("practice/{id}") { inclusive = true } }
+                nav.navigate("practice/$id/result?attempt=${vm.commandId}") { popUpTo("practice/{id}") { inclusive = true } }
             else vm.releaseFinish()
         }
         if (id == LimitsLessonSequence.practiceId) LimitsPracticeScreen(state, vm, finish)
@@ -191,17 +257,18 @@ fun NavGraphBuilder.studentGraph(
                 onFinish = finish,
             )
     }
-    composable("practice/{id}/result") { e ->
+    composable("practice/{id}/result?attempt={attempt}", arguments = listOf(androidx.navigation.navArgument("attempt") { type = androidx.navigation.NavType.StringType; nullable = true; defaultValue = null })) { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         val id = e.arguments?.getString("id").orEmpty()
-        SavedPracticeResultScreen(state, id, ::route)
+        val source = SourceCurricula.forState(state)
+        if (source?.research(id) != null) { SourceExercisePending(source.stage, id, ::route); return@composable }
+        SavedPracticeResultScreen(state, id, ::route, e.arguments?.getString("attempt"))
     }
     composable(Routes.Solver) {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         val owner = ticket
-        if (state.user?.studyStage == StudyStage.G9) { StageContentUnavailable(); return@composable }
         SolverWorkspace(solver, state, { expression, topic ->
             val result = app.history(expression, topic, owner)
             if (result.isNotEmpty()) route("solver/solution/$result")
@@ -242,9 +309,9 @@ fun NavGraphBuilder.studentGraph(
     composable("solver/solution/{id}") { e ->
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        if (state.user?.studyStage == StudyStage.G9) { StageContentUnavailable(); return@composable }
         val id = e.arguments?.getString("id").orEmpty()
         val h = state.product.history.find { it.id == id }
+        if (h == null || h.topicId == "graph") { StageContentUnavailable(); return@composable }
         val solution = DemoSolverEngine().solve(h?.expression.orEmpty())
         ProductSolutionScreen(
             solution,
@@ -273,8 +340,8 @@ fun NavGraphBuilder.studentGraph(
     composable("explore") {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        if (state.user?.studyStage == StudyStage.G9) StageContentUnavailable() else androidx.compose.runtime.key(ticket, solver.graphInput) {
-            ExploreScreen(solver.graphInput) { expression ->
+        androidx.compose.runtime.key(ticket, solver.graphInput) {
+            ExploreScreen(solver.graphInput, ::route) { expression ->
                 app.saveGraph(expression, ticket)
             }
         }
@@ -282,7 +349,23 @@ fun NavGraphBuilder.studentGraph(
     composable(Routes.Progress) {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        RecordedProgressScreen(state, ::route)
+        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study)
+    }
+    composable("progress/book/{id}") { e ->
+        val state by app.state.collectAsStateWithLifecycle()
+        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, bookId = e.arguments?.getString("id"), grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study)
+    }
+    composable("progress/unit/{id}") { e ->
+        val state by app.state.collectAsStateWithLifecycle()
+        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, unitId = e.arguments?.getString("id"), grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study)
+    }
+    composable("study/review/{id}") { e ->
+        val state by app.state.collectAsStateWithLifecycle()
+        SourceReviewHub(state, e.arguments?.getString("id").orEmpty(), ::route)
+    }
+    composable("study/laws") {
+        val state by app.state.collectAsStateWithLifecycle()
+        SourceReviewHub(state, "all", ::route, laws = true)
     }
     composable("assignments") {
         val state by app.state.collectAsStateWithLifecycle()
@@ -391,6 +474,8 @@ fun NavGraphBuilder.studentGraph(
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         LibraryScreen(state, ::lesson, ::openHistory) {
+            if (state.user?.studyStage == StudyStage.G9) Grade9FilesEntry(::route)
+            SourceSavedLibrary(state, (app.repository as? LocalDemoRepository)?.sourceWorkspace, ::route)
             if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable)
                 Grade9LibraryLinks(state, (app.repository as? LocalDemoRepository)?.planner, ::route)
             else BacSourceLibraryLinks(state, (app.repository as? LocalDemoRepository)?.planner, ::route)

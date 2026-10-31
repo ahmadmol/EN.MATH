@@ -5,8 +5,15 @@ internal fun showStudentNavigation(
     route: String?,
     visibleRoutes: List<String?>,
     hasStudentSession: Boolean,
-): Boolean = hasStudentSession && route in Routes.tabs && visibleRoutes.isNotEmpty() &&
-    visibleRoutes.all { it in Routes.tabs }
+    stage: com.ahmadmol.enmath.core.model.StudyStage? = null,
+): Boolean = hasStudentSession && route in Routes.studentTabs(stage) && visibleRoutes.isNotEmpty() &&
+    visibleRoutes.all { it in Routes.studentTabs(stage) }
+
+/** G9's long Home path must retain its scroll when a student switches tabs. */
+internal fun restoreStudentTabState(
+    stage: com.ahmadmol.enmath.core.model.StudyStage?, destination: String, teacher: Boolean,
+): Boolean = (stage == com.ahmadmol.enmath.core.model.StudyStage.G9 && !teacher) ||
+    (destination != Routes.Home && destination != Routes.TeacherHome)
 
 /** Never restore a learner's NavController/ViewModels into another owner or process session. */
 internal fun navigationSessionKey(state: com.ahmadmol.enmath.core.data.LearningState): String =

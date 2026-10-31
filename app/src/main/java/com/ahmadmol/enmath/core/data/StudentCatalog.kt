@@ -58,7 +58,7 @@ object StudentCatalog {
                         s.questions.find { it.id == id }?.let { LearningRules.correct(it, a.answers[id].orEmpty()) } == true
                     }
             } &&
-            (s.user?.studyStage != StudyStage.G9 || next.history.all { it in s.product.history }) &&
+            next.history.filterNot { it in s.product.history }.all { it.id.isNotBlank() && it.expression.isNotBlank() } &&
             next.pendingGemEvents.filterNot { it in s.product.pendingGemEvents }.all {
                 it.owner == s.user?.localId && s.user?.type == AccountType.Student &&
                     when (it.kind) { "LESSON" -> it.contentId in lessonIds; "PRACTICE" -> it.contentId in sets

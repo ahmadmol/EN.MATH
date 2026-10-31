@@ -74,7 +74,7 @@ fun ENMathApp(providedNav: NavHostController? = null) {
     val nav = providedNav ?: key(navigationSessionKey(state)) { rememberNavController() }
     var initialSplash by rememberSaveable { mutableStateOf(state.user == null && !state.onboarded) }
     if (initialSplash) {
-        ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher) {
+        ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher, stage = state.user?.studyStage) {
             SplashScreen { initialSplash = false }
         }
         return
@@ -87,6 +87,7 @@ fun ENMathApp(providedNav: NavHostController? = null) {
     }
     var demoEntry by rememberSaveable { mutableStateOf(false) }
     var renderedProfileId by rememberSaveable { mutableStateOf<String?>(null) }
+    var renderedSession by rememberSaveable { mutableStateOf<String?>(null) }
     if (state.user?.localId == null && state.user?.type != AccountType.Teacher && (!demoEntry || state.user != null)) {
         ENMathTheme(state.theme, state.language, student = true) {
             LocalIdentityScreen(state,
@@ -100,18 +101,19 @@ fun ENMathApp(providedNav: NavHostController? = null) {
         }
         return
     }
-    LaunchedEffect(state.user?.localId) {
+    LaunchedEffect(navigationSessionKey(state)) {
         app.refreshIdentity()
         val id = state.user?.localId
-        if (id != renderedProfileId) {
+        if (navigationSessionKey(state) != renderedSession) {
             solver.reset()
             if (id != null) {
                 nav.navigate(Routes.Main) {
                     popUpTo(nav.graph.id) { inclusive = true }; launchSingleTop = true
                 }
-                Routes.tabs.forEach { nav.clearBackStack(it) }
+                (Routes.tabs + Routes.grade9Tabs).distinct().forEach { nav.clearBackStack(it) }
             }
             renderedProfileId = id
+            renderedSession = navigationSessionKey(state)
         }
     }
 
@@ -119,7 +121,7 @@ fun ENMathApp(providedNav: NavHostController? = null) {
         app.gems?.refresh(app.state.value)
         app.replayPendingGems()
     }
-    ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher) {
+    ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher, stage = state.user?.studyStage) {
         if (state.storageIssue != null) AlertDialog(onDismissRequest = {},
             title = { Text(tr("Storage needs attention", "التخزين يحتاج مراجعة")) },
             text = { Text(tr("The latest operation was not acknowledged. Restart before retrying; do not clear app data.",
@@ -140,11 +142,11 @@ fun ENMathApp(providedNav: NavHostController? = null) {
             }
         }
         val teacher = state.user?.type == AccountType.Teacher
-        val tabs = if (teacher) Routes.teacherTabs else Routes.tabs
+        val tabs = if (teacher) Routes.teacherTabs else Routes.studentTabs(state.user?.studyStage)
         val inMain = route in tabs
         val studentNavigationVisible = showStudentNavigation(
             route, visibleEntries.filterNot { it.destination is androidx.navigation.NavGraph }
-                .map { it.destination.route }, state.user != null,
+                .map { it.destination.route }, state.user != null, state.user?.studyStage,
         )
         val teacherReference =
             teacher && route != Routes.TeacherHome && route in TeacherReferenceRoutes.screens
@@ -164,14 +166,25 @@ fun ENMathApp(providedNav: NavHostController? = null) {
         var accountPrompt by remember { mutableStateOf(false) }
         val topTitle =
             when (route) {
+                Routes.Grade9Activity -> tr("My achievements and activity", "إنجازاتي ونشاطي")
+                Routes.Grade9Goal -> tr("Goal details and history", "تفاصيل الهدف وسجله")
+                "g9/practice" -> tr("Practice", "تدريب")
+                "g9/result/{id}" -> tr("Saved result", "النتيجة المحفوظة")
+                "g9/files", "g9/file/{id}" -> tr("My study files", "ملفات دراستي")
+                "g9/reference/{id}" -> tr("Source reference", "مرجع المصدر")
+                Routes.Grade9Source -> tr("Source and availability", "المصدر والتوفر")
+                Routes.Grade9Help -> tr("Help", "المساعدة")
+                "planner" -> tr("My study plan", "خطتي الدراسية")
+                "study/review/{id}" -> tr("Review and preparation", "المراجعة والاستعداد")
+                "study/laws" -> tr("Laws and proofs", "القوانين والبراهين")
+                "progress/book/{id}", "progress/unit/{id}" -> tr("Learning evidence", "أدلة التعلم")
+                "review" -> tr("Mistake review", "مراجعة الأخطاء")
                 Routes.Home -> "EN.MATH"
                 Routes.Study -> label(TextKey.t_30593f37e9)
                 "study/catalog" -> if (state.language == Language.Arabic) "كتالوج الكتب" else "Books Catalog"
                 "gems/wallet" -> if (state.language == Language.Arabic) "جواهري" else "My Gems"
                 "gems/review" -> if (state.language == Language.Arabic) "مراجعة الأسبوع" else "Weekly Review"
                 Routes.Solver -> label(TextKey.t_28fd8d2a78)
-                "planner" -> if (state.language == Language.Arabic) "خطتي الدراسية" else "My study plan"
-                "review" -> if (state.language == Language.Arabic) "مراجعة الأخطاء" else "Mistake review"
                 Routes.Progress -> label(TextKey.t_693fec8aa7)
                 Routes.Profile -> label(TextKey.t_e269f67032)
                 Routes.Book -> label(TextKey.t_66df4d3113)
@@ -180,7 +193,7 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                 Routes.Solution,
                 "solver/solution/{id}" -> label(TextKey.t_ada94e31a4)
                 "practice/{id}" -> label(TextKey.t_054b6afa54)
-                "practice/{id}/result" -> label(TextKey.t_7b1a0e1b9f)
+                "practice/{id}/result", "practice/{id}/result?attempt={attempt}" -> label(TextKey.t_7b1a0e1b9f)
                 "explore" -> label(TextKey.t_a0fc50de5a)
                 "solver/history" -> label(TextKey.t_ae1c6ca083)
                 "solver/scan" -> label(TextKey.t_af36e1e442)
@@ -221,7 +234,7 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                     saveState = true
                 }
                 launchSingleTop = true
-                restoreState = destination != Routes.Home && destination != Routes.TeacherHome
+                restoreState = restoreStudentTabState(app.state.value.user?.studyStage, destination, teacher)
             }
         }
         fun openLesson(id: String) {
@@ -239,7 +252,7 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                 path in
                     (if (app.state.value.user?.type == AccountType.Teacher)
                         Routes.teacherTabs + TeacherReferenceRoutes.screens
-                    else Routes.tabs)
+                    else Routes.studentTabs(app.state.value.user?.studyStage))
             )
                 tab(path)
             else nav.navigate(path) { launchSingleTop = true }
@@ -289,7 +302,14 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                     Routes.AccountChoice, Routes.RegisterStudent, Routes.RegisterTeacher,
                     Routes.Verify, Routes.Forgot, Routes.NewPassword
                 )
-                val hasSelfHeader = studentOwnsHeader(route, backStack?.arguments?.getString("id")) &&
+                val contentId = backStack?.arguments?.getString("id").orEmpty()
+                val sourceScreen = route in listOf(Routes.Book, Routes.Topic, Routes.Lesson) &&
+                    com.ahmadmol.enmath.core.data.SourceCurricula.forState(state)?.let {
+                        it.book(contentId) != null || it.unit(contentId) != null || it.research(contentId) != null ||
+                            (route == Routes.Book && state.user?.studyStage == StudyStage.BAC && com.ahmadmol.enmath.core.data.BacSourceCatalog.book(contentId) != null)
+                    } == true
+                val g9PilotScreen = state.user?.studyStage == StudyStage.G9 && route == Routes.Lesson && contentId == com.ahmadmol.enmath.core.data.Grade9Pilot.lessonId
+                val hasSelfHeader = !g9PilotScreen && !sourceScreen && (route != Routes.Lesson || state.lesson(contentId) != null) && studentOwnsHeader(route, contentId) &&
                     (teacher || route !in listOf(Routes.Topic, Routes.Progress))
                 val showSubHeader = !isPublic && !inMain && route != null && !hasSelfHeader
 
@@ -304,7 +324,9 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                         else if (teacher && inMain && !wide)
                             TeacherReferenceBottomNav(route, ::open, dark = false)
                         else if (!teacher && studentNavigationVisible && !wide)
-                            RefBottomNav(
+                            if (state.user?.studyStage == StudyStage.G9) {
+                                com.ahmadmol.enmath.features.student.Grade9BottomNav(selectedTab, ::open)
+                            } else RefBottomNav(
                                 selectedTab,
                                 ::open,
                                 dark = false,
@@ -320,9 +342,9 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                         if (showSubHeader) {
                             if (!teacher) {
                                 RefTopBar(topTitle, { nav.popBackStack() },
-                                    if (route != "search") ({ open("search") }) else null,
-                                    if (route != "notifications") ({ open("notifications") }) else null,
-                                    state.product.notifications.count { !it.teacher && it.id !in state.product.readNotifications })
+                                    if (route != "search" && state.user?.studyStage != StudyStage.G9) ({ open("search") }) else null,
+                                    null,
+                                    0)
                             } else if (route in listOf("study/catalog", "gems/wallet", Routes.Book, "practice/{id}")) {
                                 PremiumSubScreenTopBar(topTitle, { nav.popBackStack() },
                                     if (!teacher) ({ open("search") }) else null,
@@ -500,6 +522,9 @@ fun ENMathApp(providedNav: NavHostController? = null) {
 @Composable
 private fun tabLabel(route: String) =
     when (route) {
+        Routes.Grade9Algebra -> tr("Algebra", "الجبر")
+        Routes.Grade9Geometry -> tr("Geometry", "الهندسة")
+        Routes.Grade9Exercises -> tr("Exercises", "التمارين")
         Routes.TeacherHome -> label(TextKey.t_bc2753a2c0)
         Routes.TeacherClasses -> label(TextKey.t_2ade063f4e)
         Routes.TeacherAssignments -> label(TextKey.t_f6202fc5ef)
@@ -516,6 +541,9 @@ private fun tabLabel(route: String) =
 
 private fun tabIcon(route: String): ImageVector =
     when (route) {
+        Routes.Grade9Algebra -> Icons.Outlined.Calculate
+        Routes.Grade9Geometry -> Icons.Outlined.SquareFoot
+        Routes.Grade9Exercises -> Icons.Outlined.EditNote
         Routes.TeacherHome -> Icons.Outlined.Dashboard
         Routes.TeacherClasses -> Icons.Outlined.Groups
         Routes.TeacherAssignments -> Icons.AutoMirrored.Outlined.Assignment

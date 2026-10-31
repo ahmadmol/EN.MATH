@@ -80,6 +80,7 @@ fun PracticeScreen(
     val q = questionIds.getOrNull(index)?.let(product::question)
     key(index) {
         LessonPage("screen-practice") {
+            if (!assignment) EducationalInfoBanner(tr("Demo practice · separate from source exercises", "تدريب تجريبي · مستقل عن تمارين المصدر"))
             if (q == null) {
                 EmptyState(label(TextKey.t_4ae0bbc92c), label(TextKey.t_d8b994addd))
                 return@LessonPage

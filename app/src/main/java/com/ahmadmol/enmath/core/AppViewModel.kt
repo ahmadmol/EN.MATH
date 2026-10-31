@@ -251,12 +251,14 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
 
     fun history(expression: String, topic: String, startedBy: String? = LearningRules.sessionOwner(state.value)): String {
         if (state.value.user?.type != AccountType.Teacher && !LearningRules.acceptsCommand(state.value, startedBy)) return ""
-        if (state.value.user?.studyStage == StudyStage.G9) return ""
+        val captured = expression.trim()
+        if (captured.isBlank()) return ""
+        state.value.product.history.firstOrNull { it.expression == captured && it.topicId == topic }?.let { return it.id }
         val id = UUID.randomUUID().toString()
         val saved = product(startedBy) {
             it.copy(
                 history =
-                    listOf(HistoryItem(id, expression, topic, System.currentTimeMillis())) +
+                    listOf(HistoryItem(id, captured, topic, System.currentTimeMillis())) +
                         it.history.take(99)
             )
         }
@@ -264,7 +266,7 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
     }
 
     fun saveGraph(expression: String, startedBy: String? = LearningRules.sessionOwner(state.value)): Boolean {
-        if (!LearningRules.acceptsCommand(state.value, startedBy) || state.value.user?.studyStage == StudyStage.G9 ||
+        if (!LearningRules.acceptsCommand(state.value, startedBy) ||
             !com.ahmadmol.enmath.features.explore.graphSupported(expression)) return false
         val captured = expression.trim()
         val existing = state.value.product.history.firstOrNull { it.topicId == "graph" && it.expression == captured }

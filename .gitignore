@@ -100,3 +100,6 @@ docs/visual-polish/review.html
 /app/src/main/res/drawable-nodpi/reference_g9_path_first.png
 /app/src/main/res/drawable-nodpi/reference_g9_path_last.png
 /app/src/main/res/drawable-nodpi/reference_g9_path_middle.png
+
+# Generated screenshot test previews and reference captures
+app/src/screenshotTestDebug/

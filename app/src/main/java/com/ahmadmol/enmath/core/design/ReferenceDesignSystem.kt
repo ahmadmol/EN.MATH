@@ -127,7 +127,7 @@ fun RefHeroCard(
         }
     }
 }
-/** Unified Top Bar component matching the 6 reference screens */
+/** Unified Top Bar component matching the reference screens */
 @Composable
 fun RefTopBar(
     title: String,
@@ -143,23 +143,58 @@ fun RefTopBar(
         BoxWithConstraints(Modifier.fillMaxWidth().padding(horizontal = Space.lg, vertical = Space.sm)) {
             val wrap = maxWidth < 340.dp || androidx.compose.ui.platform.LocalDensity.current.fontScale > 1.3f
             val actions: @Composable RowScope.() -> Unit = {
-                if (onSearch != null) OutlinedIconButton(onSearch, Modifier.size(48.dp).testTag(searchTag)) {
-                    Icon(Icons.Outlined.Search, tr("Search", "بحث"), tint = RefColors.PrimaryBlue)
+                if (onSearch != null) {
+                    OutlinedIconButton(
+                        onClick = onSearch,
+                        modifier = Modifier
+                            .size(46.dp)
+                            .liquidGlass(shape = CircleShape, alpha = 0.82f, elevation = 2.dp)
+                            .testTag(searchTag),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.45f))
+                    ) {
+                        Icon(Icons.Outlined.Search, tr("Search", "بحث"), tint = RefColors.PrimaryBlue)
+                    }
                 }
-                if (onNotifications != null) OutlinedIconButton(onNotifications, Modifier.size(48.dp).testTag(notificationsTag)) {
-                    BadgedBox(badge = { if (unread > 0) Badge { Text(learningNumber(unread)) } }) {
-                        Icon(Icons.Outlined.Notifications,
-                            tr("Notifications: $unread unread", "الإشعارات: $unread غير مقروءة"), tint = RefColors.PrimaryBlue)
+                if (onNotifications != null) {
+                    OutlinedIconButton(
+                        onClick = onNotifications,
+                        modifier = Modifier
+                            .size(46.dp)
+                            .liquidGlass(shape = CircleShape, alpha = 0.82f, elevation = 2.dp)
+                            .testTag(notificationsTag),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.45f))
+                    ) {
+                        BadgedBox(badge = { if (unread > 0) Badge { Text(learningNumber(unread)) } }) {
+                            Icon(Icons.Outlined.Notifications,
+                                tr("Notifications: $unread unread", "الإشعارات: $unread غير مقروءة"), tint = RefColors.PrimaryBlue)
+                        }
                     }
                 }
             }
             Column(verticalArrangement = Arrangement.spacedBy(Space.xs)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Space.sm)) {
-                    if (onBack != null) OutlinedIconButton(onBack, Modifier.size(48.dp).testTag(backTag)) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, tr("Back", "رجوع"), tint = RefColors.PrimaryBlue)
+                    if (onBack != null) {
+                        OutlinedIconButton(
+                            onClick = onBack,
+                            modifier = Modifier
+                                .size(46.dp)
+                                .liquidGlass(shape = CircleShape, alpha = 0.82f, elevation = 2.dp)
+                                .testTag(backTag),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.45f))
+                        ) {
+                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, tr("Back", "رجوع"), tint = RefColors.PrimaryBlue)
+                        }
+                    } else {
+                        // Balance spacing when back button is absent on main screens
+                        Spacer(Modifier.width(4.dp))
                     }
-                    Text(title, Modifier.weight(1f), style = MaterialTheme.typography.titleLarge,
-                        color = RefColors.TextPrimary)
+                    Text(
+                        text = title,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        textAlign = if (onBack != null) TextAlign.Center else TextAlign.Start,
+                        color = RefColors.TextPrimary
+                    )
                     if (!wrap) actions()
                 }
                 if (wrap && (onSearch != null || onNotifications != null)) {

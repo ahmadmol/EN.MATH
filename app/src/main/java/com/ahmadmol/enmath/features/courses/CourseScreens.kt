@@ -100,6 +100,7 @@ fun BookDetailsScreen(id: String, state: LearningState, onTopic: (String) -> Uni
             return@PremiumPage
         }
         val progress = state.completion(book.lessons)
+        EducationalInfoBanner(tr("Demo book · completion is separate from the source curriculum", "كتاب تجريبي · إكماله مستقل عن منهج المصدر"))
         PremiumHeroCard {
             PremiumHeroLayout(artwork = { PremiumBookArtwork(if (book.id == "book-1") "∫" else "π") }) {
                 Text(tr("Scientific secondary · year 3", "الثالث الثانوي العلمي"), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
@@ -276,6 +277,7 @@ fun LessonScreen(
                 state.product.notifications.count { !it.teacher && it.id !in state.product.readNotifications },
                 backTag = "nav-back", searchTag = "header-search", notificationsTag = "header-notifications")
             // 2. Lesson Overview Card
+            EducationalInfoBanner(tr("Demo lesson · not a reviewed source research", "درس تجريبي · ليس بحثًا معتمدًا من المصدر"))
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -106,6 +106,24 @@ class PlannerRepository internal constructor(private val preferences: (String) -
             "Mathematics / الرياضيات", PlanPeriod.WEEK, start, PlanMode.ACHIEVEMENT, 1, lesson = ref))
     }
 
+    /** G9-only atomic batch using the same stable IDs as individual source pins. */
+    @Synchronized fun pinGrade9Unit(scope: StudentScope, unitId: String): PlanWrite {
+        if (!StudentCatalog.accepts(current(), scope)) return PlanWrite.OWNER_CHANGED
+        if (scope.stage != StudyStage.G9 || current().user?.type == com.ahmadmol.enmath.core.model.AccountType.Teacher) return PlanWrite.INVALID
+        val unit = SourceCurricula.forStage(StudyStage.G9).unit(unitId) ?: return PlanWrite.INVALID
+        if (unit.researches.any { !StudentCatalog.acceptsReference(current(), it.ref) }) return PlanWrite.INVALID
+        val plan = (read(scope) as? PlanRead.Ready)?.plan ?: return PlanWrite.STORAGE_ERROR
+        val start = StudyPeriods.start(System.currentTimeMillis(), PlanPeriod.WEEK)
+        val candidates = unit.researches.map { research ->
+            val id = UUID.nameUUIDFromBytes("${scope.ownerId}|${StudentCatalog.referenceKey(research.ref)}|$start".toByteArray(Charsets.UTF_8)).toString()
+            PlanTask(id, research.title, "Mathematics / الرياضيات", PlanPeriod.WEEK, start, PlanMode.ACHIEVEMENT, 1, lesson = research.ref)
+        }
+        if (candidates.any { candidate -> plan.tasks.any { it.id == candidate.id && it.lesson != candidate.lesson } }) return PlanWrite.CONFLICT
+        val additions = candidates.filter { c -> plan.tasks.none { it.id == c.id } }
+        if (additions.isEmpty()) return PlanWrite.ALREADY_SAVED
+        return write(scope, plan.revision, "g9-unit:$unitId:$start:${plan.revision}", candidates.joinToString { it.id }, "PIN_UNIT:$unitId") { it.tasks + additions }
+    }
+
     private fun write(scope: StudentScope, expected: Int, command: String, payload: String, action: String,
         transform: (StudyPlan) -> List<PlanTask>): PlanWrite {
         if (!StudentCatalog.accepts(current(), scope)) return PlanWrite.OWNER_CHANGED
@@ -146,6 +164,12 @@ class PlannerRepository internal constructor(private val preferences: (String) -
     @Synchronized fun remove(scope: StudentScope, revision: Int, command: String, id: String) =
         write(scope, revision, command, "delete:$id", "DELETE:$id") { old ->
             require(old.tasks.any { it.id == id }); old.tasks.filterNot { it.id == id } }
+    /** Revert the most recent acknowledged change, retaining both snapshots and command receipts. */
+    @Synchronized fun undo(scope: StudentScope, revision: Int, command: String) =
+        write(scope, revision, command, "undo:$revision", "UNDO") { old ->
+            require(old.history.isNotEmpty() && old.history.last().action != "UNDO")
+            old.history.last().tasks
+        }
     @Synchronized fun progress(scope: StudentScope, revision: Int, command: String, id: String, amount: Int, minutes: Int): PlanWrite {
         if (amount < 0 || minutes < 0 || (amount == 0 && minutes == 0)) return PlanWrite.INVALID
         return write(scope, revision, command, "manual:$id:$amount:$minutes", "MANUAL:$id") { old -> old.tasks.map {
@@ -172,3 +196,11 @@ class PlannerRepository internal constructor(private val preferences: (String) -
         StudentCatalog.accepts(state, it) && it.lessonId in StudentCatalog.completed(state) } == true)
         task.copy(done = maxOf(task.done, 1), source = if (task.done == 0) "LEARNING_EVENT" else task.source) else task
 }
+
+/** Day/month are views over the same goals; changing a view never rewrites a goal's period. */
+fun planTasksInView(plan: StudyPlan, period: PlanPeriod, at: Long): List<PlanTask> {
+    val from = StudyPeriods.start(at, period); val until = StudyPeriods.next(from, period)
+    return plan.tasks.filter { it.start < until && StudyPeriods.next(it.start, it.period) > from }
+}
+fun PlanTask.isAchieved() = (mode == PlanMode.TIME || done >= target) &&
+    (mode == PlanMode.ACHIEVEMENT || spent >= minutes)

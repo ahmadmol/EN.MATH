@@ -22,6 +22,16 @@ object Routes {
     const val Lesson = "lesson/{id}"
     const val Solution = "solution"
     val tabs = listOf(Study, Solver, Home, "explore", Profile)
+    const val Grade9Algebra = "g9/algebra"
+    const val Grade9Geometry = "g9/geometry"
+    const val Grade9Exercises = "g9/exercises"
+    const val Grade9Source = "g9/source"
+    const val Grade9Help = "g9/help"
+    const val Grade9Activity = "g9/activity"
+    const val Grade9Goal = "g9/goal/{id}"
+    val grade9Tabs = listOf(Grade9Algebra, Grade9Geometry, Home, Grade9Exercises, Profile)
+    fun studentTabs(stage: com.ahmadmol.enmath.core.model.StudyStage?) =
+        if (stage == com.ahmadmol.enmath.core.model.StudyStage.G9) grade9Tabs else tabs
     const val TeacherMain = "teacher-main"
     const val TeacherHome = "teacher"
     const val TeacherClasses = "teacher/classes"
@@ -46,12 +56,12 @@ object Routes {
                 route == Topic ||
                 route == Lesson ||
                 route?.startsWith("practice/") == true ||
-                route == "study/catalog" || route == "study/demo" || route == "demo/book/{id}" -> Study
+                route == "study/catalog" || route == "study/demo" || route == "demo/book/{id}" || route?.startsWith("study/review") == true || route == "study/laws" -> Study
             route == Solution || route?.startsWith("solver/") == true -> Solver
             route?.startsWith("teacher/classes/") == true -> TeacherClasses
             route?.startsWith("teacher/assignments/") == true -> TeacherAssignments
             route == "teacher/settings" || route == "teacher/notifications" -> TeacherProfile
-            route in listOf("settings", "notifications", "library", Progress, "gems/wallet", "gems/review", "planner", "review") -> Profile
+            route in listOf("settings", "notifications", "library", Progress, "gems/wallet", "gems/review", "planner", "review") || route?.startsWith("progress/") == true -> Profile
             route == "explore" -> "explore"
             route?.startsWith("assignments") == true || route == "search" -> Home
             else -> route
