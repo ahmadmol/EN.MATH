@@ -23,7 +23,7 @@ fun LocalIdentityScreen(state: LearningState, create: (String, StudyStage, Boole
     var name by rememberSaveable { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
-    val stage = stageName?.let(StudyStage::valueOf)
+    val stage = stageName?.let { runCatching { StudyStage.valueOf(it) }.getOrNull() }
     fun attempt(action: () -> Unit) {
         if (busy) return
         busy = true
@@ -35,6 +35,7 @@ fun LocalIdentityScreen(state: LearningState, create: (String, StudyStage, Boole
         Box(Modifier.fillMaxSize()) {
             ScreenPage(Modifier.testTag("screen-local-identity"), narrow = true) {
                 if (state.storageIssue != null) Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_16), color = MaterialTheme.colorScheme.error)
+                if (busy) LinearProgressIndicator(Modifier.fillMaxWidth().padding(vertical = 4.dp), color = MaterialTheme.colorScheme.primary)
                 when(page) {
                     "stage" -> {
                         StagePicker { value -> stageName = value.name; page = "entry"; name = "" }
@@ -42,10 +43,14 @@ fun LocalIdentityScreen(state: LearningState, create: (String, StudyStage, Boole
                         debugEntry?.let { TextButton(it) { Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_18)) } }
                     }
                     "entry" -> {
-                        StageEntryContent(requireNotNull(stage), busy,
-                            back = { page="stage" },
-                            guest = { if(stage in state.acknowledgedGuestStages) attempt { create("", stage, true) } else page="notice" },
-                            create = { page="create" }, saved = { page="profiles" })
+                        if (stage == null) {
+                            page = "stage"
+                        } else {
+                            StageEntryContent(stage, busy,
+                                back = { page="stage" },
+                                guest = { if(stage in state.acknowledgedGuestStages) attempt { create("", stage, true) } else page="notice" },
+                                create = { page="create" }, saved = { page="profiles" })
+                        }
                     }
                     "notice" -> {
                         EntryBrand(); EntryTitle(studentStageLabel(stage))

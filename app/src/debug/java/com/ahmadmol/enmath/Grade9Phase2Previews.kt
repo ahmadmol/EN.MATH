@@ -95,14 +95,16 @@ internal class Grade9PreviewPreferences : SharedPreferences {
         }
     }
     ENMathTheme(ThemeMode.System, language, true, StudyStage.G9) { Surface {
-        val tab = when(screen) { "home", "home-geometry" -> "home"; "algebra" -> "g9/algebra"; "geometry" -> "g9/geometry"; "exercises" -> "g9/exercises"; "profile" -> "profile"; else -> null }
+        val tab = when(screen) { "home", "home-middle", "home-geometry", "home-geometry-end" -> "home"; "algebra" -> "g9/algebra"; "geometry" -> "g9/geometry"; "exercises" -> "g9/exercises"; "profile" -> "profile"; else -> null }
         Scaffold(bottomBar = { if (tab != null) Grade9BottomNav(tab, {}) }, topBar = {
             if (tab == null) RefTopBar(if (language == Language.Arabic) "التاسع" else "Grade 9", {}, null, null, 0)
         }) { insets -> Box(Modifier.padding(insets).imePadding()) {
         when (screen) {
             "home" -> Grade9LearningPath(state, {}, LocalGemsUiState(), dailyPlanner, dailyWorkspace, repository)
+            "home-middle" -> Grade9LearningPath(state, {}, LocalGemsUiState(), dailyPlanner, dailyWorkspace, repository, initialPathIndex = 14)
             "home-geometry" -> Grade9LearningPath(state, {}, LocalGemsUiState(), null, null, repository,
                 initialPathIndex = 4 + SourceCurricula.forStage(StudyStage.G9).books.first().let { it.units.size + it.researches.size })
+            "home-geometry-end" -> Grade9LearningPath(state, {}, LocalGemsUiState(), null, null, repository, initialPathIndex = 45)
             "algebra" -> Grade9SubjectScreen(state, false, {})
             "geometry" -> Grade9SubjectScreen(state, true, {})
             "exercises" -> Grade9ExercisesScreen(state, {}, repository)

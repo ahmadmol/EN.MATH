@@ -104,16 +104,33 @@ fun ENMathApp(providedNav: NavHostController? = null) {
     LaunchedEffect(navigationSessionKey(state)) {
         app.refreshIdentity()
         val id = state.user?.localId
-        if (navigationSessionKey(state) != renderedSession) {
+        val sessionKey = navigationSessionKey(state)
+        if (sessionKey != renderedSession) {
             solver.reset()
-            if (id != null) {
-                nav.navigate(Routes.Main) {
-                    popUpTo(nav.graph.id) { inclusive = true }; launchSingleTop = true
+            if (renderedSession != null && id != null) {
+                val hasGraph = runCatching { nav.graph }.isSuccess
+                if (hasGraph && nav.currentDestination?.route != Routes.Home && nav.currentDestination?.parent?.route != Routes.Main) {
+                    runCatching {
+                        nav.navigate(Routes.Main) {
+                            popUpTo(nav.graph.startDestinationId) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    }
                 }
-                (Routes.tabs + Routes.grade9Tabs).distinct().forEach { nav.clearBackStack(it) }
             }
             renderedProfileId = id
-            renderedSession = navigationSessionKey(state)
+            renderedSession = sessionKey
+        }
+    }
+
+    LaunchedEffect(nav.currentBackStackEntry) {
+        val hasGraph = runCatching { nav.graph }.isSuccess
+        if (hasGraph && nav.currentDestination == null && state.user?.localId != null) {
+            runCatching {
+                nav.navigate(Routes.Main) {
+                    launchSingleTop = true
+                }
+            }
         }
     }
 
