@@ -1,0 +1,540 @@
+{
+  "schemaVersion": 1,
+  "stage": "G9",
+  "source": {
+    "lessonId": "G9-ALG-U01-L02",
+    "title": "القواسم المشتركة لعددين صحيحين",
+    "unitId": "G9-ALG-U01",
+    "unitTitle": "الأعداد والكسور",
+    "sourceId": "G9-ALG",
+    "sourceSha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+    "edition": "2025-2026",
+    "pdfFrom": 8,
+    "pdfTo": 13
+  },
+  "contentRevision": "u01-draft-v1",
+  "publication": "DRAFT_ONLY",
+  "author": "EN.MATH original editorial draft prepared with Codex; not an educator signoff",
+  "objectives": [
+    {
+      "ar": "أحدد القواسم المشتركة والقاسم المشترك الأكبر لعددين موجبين.",
+      "en": "Find common divisors and the GCD of positive integers."
+    },
+    {
+      "ar": "أطبق الطرح المتتالي وخوارزمية إقليدس وأفسر معنى الباقي الأخير غير المعدوم.",
+      "en": "Apply subtraction and Euclidean division; explain the last nonzero remainder."
+    }
+  ],
+  "prerequisites": [
+    {
+      "ar": "الضرب والقسمة الصحيحة مع الباقي.",
+      "en": "Integer multiplication and division with remainder."
+    }
+  ],
+  "sections": [
+    {
+      "kind": "explanation",
+      "title": {
+        "ar": "قاسم أم مضاعف؟",
+        "en": "Divisor or multiple?"
+      },
+      "body": {
+        "ar": "القاسم يقسم العدد دون باقٍ. لإيجاد قواسم مشتركة نبحث عما يقسم العددين معًا؛ لا نبحث عن مضاعفاتهما.",
+        "en": "A divisor divides with zero remainder. Common divisors divide both numbers; they are not the multiples of the numbers."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "definition",
+      "title": {
+        "ar": "القاسم المشترك الأكبر",
+        "en": "Greatest common divisor"
+      },
+      "body": {
+        "ar": "هو أكبر عدد صحيح موجب يقسم العددين. إذا كان واحدًا فقط فالعددان أوليان فيما بينهما؛ لا يشترط أن يكون كل منهما عددًا أوليًا.",
+        "en": "The GCD is the largest positive integer dividing both numbers. GCD one means coprime; the numbers themselves need not each be prime."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "formula",
+      "title": {
+        "ar": "اختزال المسألة",
+        "en": "Reduce the problem"
+      },
+      "body": {
+        "ar": "طرح الأصغر من الأكبر لا يغير القواسم المشتركة. بدل تكرار الطرح، نقسم مع الباقي. نكرر على المقسوم عليه والباقي؛ المقسوم عليه في القسمة ذات الباقي صفر هو القاسم المشترك الأكبر.",
+        "en": "Subtracting the smaller from the larger preserves common divisors. Euclidean division combines repeated subtraction. Continue with divisor and remainder; the divisor when the remainder becomes zero is the GCD."
+      },
+      "math": "a = bq + r; gcd(a,b) = gcd(b,r)",
+      "conditions": [
+        {
+          "ar": "عددان صحيحان موجبان؛ صفر ≤ الباقي < المقسوم عليه. نتوقف عند باقي صفر ولا نقسم على صفر.",
+          "en": "Positive integers; 0 ≤ remainder < divisor. Stop at remainder zero; never divide by zero."
+        }
+      ]
+    },
+    {
+      "kind": "explanation",
+      "title": {
+        "ar": "تحقق من الجواب",
+        "en": "Check your result"
+      },
+      "body": {
+        "ar": "تحقق أن الجواب يقسم العددين. مجرد إيجاد قاسم مشترك لا يثبت أنه الأكبر؛ تبرر خوارزمية إقليدس أنه الأكبر.",
+        "en": "Check that the result divides both inputs. Finding any common divisor does not establish maximality; Euclidean division provides that justification."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "summary",
+      "title": {
+        "ar": "تذكّر الترتيب",
+        "en": "Remember the sequence"
+      },
+      "body": {
+        "ar": "الأكبر مقسوم، والأصغر مقسوم عليه، ثم ننتقل إلى المقسوم عليه والباقي. إذا كان الأصغر يقسم الأكبر فالأصغر هو الجواب.",
+        "en": "Divide larger by smaller; continue with divisor and remainder. If the smaller divides the larger, it is already the GCD."
+      },
+      "math": "",
+      "conditions": []
+    }
+  ],
+  "examples": [
+    {
+      "id": "gcd-e1",
+      "prompt": {
+        "ar": "أوجد القاسم المشترك الأكبر للعددين 84 و30.",
+        "en": "Find gcd(84,30)."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 84,
+        "b": 30
+      },
+      "verifiedResult": "6",
+      "steps": [
+        {
+          "math": "84 = 30 × 2 + 24",
+          "reason": {
+            "ar": "الباقي أصغر من ثلاثين.",
+            "en": "The remainder is less than thirty."
+          }
+        },
+        {
+          "math": "30 = 24 × 1 + 6",
+          "reason": {
+            "ar": "نقسم من جديد.",
+            "en": "Divide again."
+          }
+        },
+        {
+          "math": "24 = 6 × 4 + 0",
+          "reason": {
+            "ar": "آخر باقٍ غير معدوم ستة؛ وهو يقسم العددين.",
+            "en": "The last nonzero remainder is six and divides both inputs."
+          }
+        }
+      ],
+      "check": {
+        "expression": "84-30*2-24",
+        "expected": "0"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-e2",
+      "prompt": {
+        "ar": "استعمل القواسم مع عددين صغيرين.",
+        "en": "Use divisor lists for two small numbers."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 18,
+        "b": 42
+      },
+      "verifiedResult": "6",
+      "steps": [
+        {
+          "math": "18: 1,2,3,6,9,18",
+          "reason": {
+            "ar": "نعدد القواسم الموجبة للأول.",
+            "en": "List positive divisors of the first."
+          }
+        },
+        {
+          "math": "42: 1,2,3,6,7,14,21,42",
+          "reason": {
+            "ar": "القواسم المشتركة واحد واثنان وثلاثة وستة؛ الأكبر ستة.",
+            "en": "Common divisors are one, two, three and six; the greatest is six."
+          }
+        }
+      ],
+      "check": {
+        "expression": "18/6+42/6",
+        "expected": "10"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-e3",
+      "prompt": {
+        "ar": "هل العددان 14 و25 أوليان فيما بينهما؟",
+        "en": "Are 14 and 25 coprime?"
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 14,
+        "b": 25
+      },
+      "verifiedResult": "1",
+      "steps": [
+        {
+          "math": "25 = 14 + 11; 14 = 11 + 3",
+          "reason": {
+            "ar": "نبدأ القسمة الإقليدية.",
+            "en": "Begin Euclidean division."
+          }
+        },
+        {
+          "math": "11 = 3 × 3 + 2; 3 = 2 + 1; 2 = 1 × 2",
+          "reason": {
+            "ar": "نصل إلى واحد. العددان ليسا أوليين منفردين، لكنهما أوليان فيما بينهما.",
+            "en": "The GCD is one. Neither input is prime, but they are coprime."
+          }
+        }
+      ],
+      "check": {
+        "expression": "25-14",
+        "expected": "11"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "gcd-q1",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "أوجد gcd(36, 54).",
+        "en": "Find gcd(36, 54)."
+      },
+      "hint": {
+        "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+        "en": "Use Euclidean division until the remainder is zero."
+      },
+      "correction": {
+        "ar": "القاسم المشترك الأكبر هو 18. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+        "en": "The GCD is 18. It divides both inputs and is the last nonzero Euclidean remainder."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 36,
+        "b": 54
+      },
+      "answer": "18",
+      "check": {
+        "expression": "18",
+        "expected": "18"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-q2",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "أوجد gcd(72, 120).",
+        "en": "Find gcd(72, 120)."
+      },
+      "hint": {
+        "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+        "en": "Use Euclidean division until the remainder is zero."
+      },
+      "correction": {
+        "ar": "القاسم المشترك الأكبر هو 24. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+        "en": "The GCD is 24. It divides both inputs and is the last nonzero Euclidean remainder."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 72,
+        "b": 120
+      },
+      "answer": "24",
+      "check": {
+        "expression": "24",
+        "expected": "24"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-q3",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "أوجد gcd(35, 64).",
+        "en": "Find gcd(35, 64)."
+      },
+      "hint": {
+        "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+        "en": "Use Euclidean division until the remainder is zero."
+      },
+      "correction": {
+        "ar": "القاسم المشترك الأكبر هو 1. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+        "en": "The GCD is 1. It divides both inputs and is the last nonzero Euclidean remainder."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 35,
+        "b": 64
+      },
+      "answer": "1",
+      "check": {
+        "expression": "1",
+        "expected": "1"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-q4",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "أوجد gcd(96, 32).",
+        "en": "Find gcd(96, 32)."
+      },
+      "hint": {
+        "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+        "en": "Use Euclidean division until the remainder is zero."
+      },
+      "correction": {
+        "ar": "القاسم المشترك الأكبر هو 32. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+        "en": "The GCD is 32. It divides both inputs and is the last nonzero Euclidean remainder."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 96,
+        "b": 32
+      },
+      "answer": "32",
+      "check": {
+        "expression": "32",
+        "expected": "32"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-q5",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "أوجد gcd(147, 63).",
+        "en": "Find gcd(147, 63)."
+      },
+      "hint": {
+        "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+        "en": "Use Euclidean division until the remainder is zero."
+      },
+      "correction": {
+        "ar": "القاسم المشترك الأكبر هو 21. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+        "en": "The GCD is 21. It divides both inputs and is the last nonzero Euclidean remainder."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 147,
+        "b": 63
+      },
+      "answer": "21",
+      "check": {
+        "expression": "21",
+        "expected": "21"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-q6",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "أوجد gcd(100, 45).",
+        "en": "Find gcd(100, 45)."
+      },
+      "hint": {
+        "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+        "en": "Use Euclidean division until the remainder is zero."
+      },
+      "correction": {
+        "ar": "القاسم المشترك الأكبر هو 5. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+        "en": "The GCD is 5. It divides both inputs and is the last nonzero Euclidean remainder."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 100,
+        "b": 45
+      },
+      "answer": "5",
+      "check": {
+        "expression": "5",
+        "expected": "5"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-q7",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "أوجد gcd(81, 54).",
+        "en": "Find gcd(81, 54)."
+      },
+      "hint": {
+        "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+        "en": "Use Euclidean division until the remainder is zero."
+      },
+      "correction": {
+        "ar": "القاسم المشترك الأكبر هو 27. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+        "en": "The GCD is 27. It divides both inputs and is the last nonzero Euclidean remainder."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 81,
+        "b": 54
+      },
+      "answer": "27",
+      "check": {
+        "expression": "27",
+        "expected": "27"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    },
+    {
+      "id": "gcd-q8",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "أوجد gcd(91, 65).",
+        "en": "Find gcd(91, 65)."
+      },
+      "hint": {
+        "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+        "en": "Use Euclidean division until the remainder is zero."
+      },
+      "correction": {
+        "ar": "القاسم المشترك الأكبر هو 13. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+        "en": "The GCD is 13. It divides both inputs and is the last nonzero Euclidean remainder."
+      },
+      "verification": {
+        "operation": "gcd",
+        "a": 91,
+        "b": 65
+      },
+      "answer": "13",
+      "check": {
+        "expression": "13",
+        "expected": "13"
+      },
+      "sourcePages": {
+        "fromPdf": 8,
+        "toPdf": 13
+      }
+    }
+  ],
+  "checkpoint": {
+    "id": "gcd-q9",
+    "kind": "exact_number",
+    "prompt": {
+      "ar": "أوجد gcd(252, 105).",
+      "en": "Find gcd(252, 105)."
+    },
+    "hint": {
+      "ar": "اقسم مع الباقي، وواصل حتى يصبح الباقي صفرًا.",
+      "en": "Use Euclidean division until the remainder is zero."
+    },
+    "correction": {
+      "ar": "القاسم المشترك الأكبر هو 21. يقسم العددين، وهو آخر باقٍ غير معدوم في خوارزمية إقليدس.",
+      "en": "The GCD is 21. It divides both inputs and is the last nonzero Euclidean remainder."
+    },
+    "verification": {
+      "operation": "gcd",
+      "a": 252,
+      "b": 105
+    },
+    "answer": "21",
+    "check": {
+      "expression": "21",
+      "expected": "21"
+    },
+    "sourcePages": {
+      "fromPdf": 8,
+      "toPdf": 13
+    }
+  },
+  "reviews": {
+    "source": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "rights": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "mathematics": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "pedagogy": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "editionAlignment": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    }
+  },
+  "independentEducatorReview": "NOT_PERFORMED",
+  "textbookTextCopied": false,
+  "grantsGems": false,
+  "authoringPack": "g9-u01-v1",
+  "sourceInspection": {
+    "pdfFrom": 8,
+    "pdfTo": 13,
+    "evidence": "docs/QA/g9-phase4-2026-10-30/source-review.json",
+    "scope": "ENGINEERING_SOURCE_INSPECTION_NOT_EDUCATOR_REVIEW"
+  }
+}

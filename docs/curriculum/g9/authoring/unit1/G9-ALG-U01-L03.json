@@ -1,0 +1,498 @@
+{
+  "schemaVersion": 1,
+  "stage": "G9",
+  "source": {
+    "lessonId": "G9-ALG-U01-L03",
+    "title": "كسور مختزلة",
+    "unitId": "G9-ALG-U01",
+    "unitTitle": "الأعداد والكسور",
+    "sourceId": "G9-ALG",
+    "sourceSha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+    "edition": "2025-2026",
+    "pdfFrom": 14,
+    "pdfTo": 15
+  },
+  "contentRevision": "u01-draft-v1",
+  "publication": "DRAFT_ONLY",
+  "author": "EN.MATH original editorial draft prepared with Codex; not an educator signoff",
+  "objectives": [
+    {
+      "ar": "أختزل كسرًا موجبًا دون تغيير قيمته وأبرر توقف الاختزال.",
+      "en": "Reduce a positive fraction without changing its value and justify stopping."
+    }
+  ],
+  "prerequisites": [
+    {
+      "ar": "القاسم المشترك الأكبر والكسور المتكافئة.",
+      "en": "GCD and equivalent fractions."
+    }
+  ],
+  "sections": [
+    {
+      "kind": "explanation",
+      "title": {
+        "ar": "قيمة واحدة وكتابات متعددة",
+        "en": "One value, multiple forms"
+      },
+      "body": {
+        "ar": "يمكن أن يمثل كسران القيمة نفسها. أبسط صورة تساعد على المقارنة، لكنها لا تغيّر القيمة.",
+        "en": "Equivalent fractions have equal value. Simplest form helps comparison without changing that value."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "definition",
+      "title": {
+        "ar": "متى يكون الكسر مختزلًا؟",
+        "en": "When is a fraction reduced?"
+      },
+      "body": {
+        "ar": "يكون كسر من عددين صحيحين موجبين مختزلًا عندما يكون القاسم المشترك الأكبر للبسط والمقام واحدًا.",
+        "en": "A positive-integer fraction is reduced when numerator and denominator have GCD one."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "formula",
+      "title": {
+        "ar": "اقسم الطرفين معًا",
+        "en": "Divide both parts"
+      },
+      "body": {
+        "ar": "نقسم البسط والمقام على القاسم المشترك الأكبر نفسه. طرح العدد نفسه من الطرفين لا يحافظ عمومًا على قيمة الكسر.",
+        "en": "Divide numerator and denominator by the same GCD. Subtracting the same number from both parts does not generally preserve the fraction."
+      },
+      "math": "a/b = (a/g)/(b/g); g = gcd(a,b)",
+      "conditions": [
+        {
+          "ar": "البسط والمقام صحيحان موجبان؛ القاسم المشترك الأكبر موجب.",
+          "en": "Positive integer numerator and denominator; positive GCD."
+        }
+      ]
+    },
+    {
+      "kind": "summary",
+      "title": {
+        "ar": "افحص القيمة وأبسط صورة",
+        "en": "Check value and simplest form"
+      },
+      "body": {
+        "ar": "تحقق بالضرب التبادلي من تساوي القيمتين، ثم تحقق أن القاسم الجديد واحد. قد يكون الكسر مختزلًا منذ البداية.",
+        "en": "Use cross multiplication to check equality, then verify GCD one. A fraction may already be reduced."
+      },
+      "math": "",
+      "conditions": []
+    }
+  ],
+  "examples": [
+    {
+      "id": "fraction-e0",
+      "prompt": {
+        "ar": "اختزل 36/84.",
+        "en": "Reduce 36/84."
+      },
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 36,
+        "denominator": 84
+      },
+      "verifiedResult": "3/7",
+      "steps": [
+        {
+          "math": "gcd(36,84) = 12",
+          "reason": {
+            "ar": "أوجد أكبر قاسم مشترك.",
+            "en": "Find the greatest common divisor."
+          }
+        },
+        {
+          "math": "36/84 = 3/7",
+          "reason": {
+            "ar": "اقسم البسط والمقام عليه. الطرفان الجديدان أوليان فيما بينهما.",
+            "en": "Divide both parts by it; the new parts are coprime."
+          }
+        }
+      ],
+      "check": {
+        "expression": "36/84",
+        "expected": "3/7"
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-e1",
+      "prompt": {
+        "ar": "اختزل 45/105.",
+        "en": "Reduce 45/105."
+      },
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 45,
+        "denominator": 105
+      },
+      "verifiedResult": "3/7",
+      "steps": [
+        {
+          "math": "gcd(45,105) = 15",
+          "reason": {
+            "ar": "أوجد أكبر قاسم مشترك.",
+            "en": "Find the greatest common divisor."
+          }
+        },
+        {
+          "math": "45/105 = 3/7",
+          "reason": {
+            "ar": "اقسم البسط والمقام عليه. الطرفان الجديدان أوليان فيما بينهما.",
+            "en": "Divide both parts by it; the new parts are coprime."
+          }
+        }
+      ],
+      "check": {
+        "expression": "45/105",
+        "expected": "3/7"
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-e2",
+      "prompt": {
+        "ar": "اختزل 28/63.",
+        "en": "Reduce 28/63."
+      },
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 28,
+        "denominator": 63
+      },
+      "verifiedResult": "4/9",
+      "steps": [
+        {
+          "math": "gcd(28,63) = 7",
+          "reason": {
+            "ar": "أوجد أكبر قاسم مشترك.",
+            "en": "Find the greatest common divisor."
+          }
+        },
+        {
+          "math": "28/63 = 4/9",
+          "reason": {
+            "ar": "اقسم البسط والمقام عليه. الطرفان الجديدان أوليان فيما بينهما.",
+            "en": "Divide both parts by it; the new parts are coprime."
+          }
+        }
+      ],
+      "check": {
+        "expression": "28/63",
+        "expected": "4/9"
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "fraction-q0",
+      "kind": "reduced_fraction",
+      "numerator": 36,
+      "denominator": 84,
+      "answer": "3/7",
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 36,
+        "denominator": 84
+      },
+      "prompt": {
+        "ar": "اختزل 36/84 إلى أبسط صورة.",
+        "en": "Reduce 36/84 to simplest form."
+      },
+      "hint": {
+        "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 12.",
+        "en": "Find the GCD; it is 12."
+      },
+      "correction": {
+        "ar": "نقسم الطرفين على 12 فنحصل على 3/7. القاسم الجديد واحد.",
+        "en": "Divide both parts by 12 to obtain 3/7; the new GCD is one."
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-q1",
+      "kind": "reduced_fraction",
+      "numerator": 45,
+      "denominator": 105,
+      "answer": "3/7",
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 45,
+        "denominator": 105
+      },
+      "prompt": {
+        "ar": "اختزل 45/105 إلى أبسط صورة.",
+        "en": "Reduce 45/105 to simplest form."
+      },
+      "hint": {
+        "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 15.",
+        "en": "Find the GCD; it is 15."
+      },
+      "correction": {
+        "ar": "نقسم الطرفين على 15 فنحصل على 3/7. القاسم الجديد واحد.",
+        "en": "Divide both parts by 15 to obtain 3/7; the new GCD is one."
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-q2",
+      "kind": "reduced_fraction",
+      "numerator": 28,
+      "denominator": 63,
+      "answer": "4/9",
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 28,
+        "denominator": 63
+      },
+      "prompt": {
+        "ar": "اختزل 28/63 إلى أبسط صورة.",
+        "en": "Reduce 28/63 to simplest form."
+      },
+      "hint": {
+        "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 7.",
+        "en": "Find the GCD; it is 7."
+      },
+      "correction": {
+        "ar": "نقسم الطرفين على 7 فنحصل على 4/9. القاسم الجديد واحد.",
+        "en": "Divide both parts by 7 to obtain 4/9; the new GCD is one."
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-q3",
+      "kind": "reduced_fraction",
+      "numerator": 64,
+      "denominator": 96,
+      "answer": "2/3",
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 64,
+        "denominator": 96
+      },
+      "prompt": {
+        "ar": "اختزل 64/96 إلى أبسط صورة.",
+        "en": "Reduce 64/96 to simplest form."
+      },
+      "hint": {
+        "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 32.",
+        "en": "Find the GCD; it is 32."
+      },
+      "correction": {
+        "ar": "نقسم الطرفين على 32 فنحصل على 2/3. القاسم الجديد واحد.",
+        "en": "Divide both parts by 32 to obtain 2/3; the new GCD is one."
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-q4",
+      "kind": "reduced_fraction",
+      "numerator": 17,
+      "denominator": 24,
+      "answer": "17/24",
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 17,
+        "denominator": 24
+      },
+      "prompt": {
+        "ar": "اختزل 17/24 إلى أبسط صورة.",
+        "en": "Reduce 17/24 to simplest form."
+      },
+      "hint": {
+        "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 1.",
+        "en": "Find the GCD; it is 1."
+      },
+      "correction": {
+        "ar": "نقسم الطرفين على 1 فنحصل على 17/24. القاسم الجديد واحد.",
+        "en": "Divide both parts by 1 to obtain 17/24; the new GCD is one."
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-q5",
+      "kind": "reduced_fraction",
+      "numerator": 75,
+      "denominator": 125,
+      "answer": "3/5",
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 75,
+        "denominator": 125
+      },
+      "prompt": {
+        "ar": "اختزل 75/125 إلى أبسط صورة.",
+        "en": "Reduce 75/125 to simplest form."
+      },
+      "hint": {
+        "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 25.",
+        "en": "Find the GCD; it is 25."
+      },
+      "correction": {
+        "ar": "نقسم الطرفين على 25 فنحصل على 3/5. القاسم الجديد واحد.",
+        "en": "Divide both parts by 25 to obtain 3/5; the new GCD is one."
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-q6",
+      "kind": "reduced_fraction",
+      "numerator": 81,
+      "denominator": 108,
+      "answer": "3/4",
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 81,
+        "denominator": 108
+      },
+      "prompt": {
+        "ar": "اختزل 81/108 إلى أبسط صورة.",
+        "en": "Reduce 81/108 to simplest form."
+      },
+      "hint": {
+        "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 27.",
+        "en": "Find the GCD; it is 27."
+      },
+      "correction": {
+        "ar": "نقسم الطرفين على 27 فنحصل على 3/4. القاسم الجديد واحد.",
+        "en": "Divide both parts by 27 to obtain 3/4; the new GCD is one."
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    },
+    {
+      "id": "fraction-q7",
+      "kind": "reduced_fraction",
+      "numerator": 26,
+      "denominator": 39,
+      "answer": "2/3",
+      "verification": {
+        "operation": "reduced_fraction",
+        "numerator": 26,
+        "denominator": 39
+      },
+      "prompt": {
+        "ar": "اختزل 26/39 إلى أبسط صورة.",
+        "en": "Reduce 26/39 to simplest form."
+      },
+      "hint": {
+        "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 13.",
+        "en": "Find the GCD; it is 13."
+      },
+      "correction": {
+        "ar": "نقسم الطرفين على 13 فنحصل على 2/3. القاسم الجديد واحد.",
+        "en": "Divide both parts by 13 to obtain 2/3; the new GCD is one."
+      },
+      "sourcePages": {
+        "fromPdf": 14,
+        "toPdf": 15
+      }
+    }
+  ],
+  "checkpoint": {
+    "id": "fraction-q8",
+    "kind": "reduced_fraction",
+    "numerator": 56,
+    "denominator": 98,
+    "answer": "4/7",
+    "verification": {
+      "operation": "reduced_fraction",
+      "numerator": 56,
+      "denominator": 98
+    },
+    "prompt": {
+      "ar": "اختزل 56/98 إلى أبسط صورة.",
+      "en": "Reduce 56/98 to simplest form."
+    },
+    "hint": {
+      "ar": "ابحث عن القاسم المشترك الأكبر؛ قيمته 14.",
+      "en": "Find the GCD; it is 14."
+    },
+    "correction": {
+      "ar": "نقسم الطرفين على 14 فنحصل على 4/7. القاسم الجديد واحد.",
+      "en": "Divide both parts by 14 to obtain 4/7; the new GCD is one."
+    },
+    "sourcePages": {
+      "fromPdf": 14,
+      "toPdf": 15
+    }
+  },
+  "reviews": {
+    "source": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "rights": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "mathematics": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "pedagogy": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "editionAlignment": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    }
+  },
+  "independentEducatorReview": "NOT_PERFORMED",
+  "textbookTextCopied": false,
+  "grantsGems": false,
+  "authoringPack": "g9-u01-v1",
+  "sourceInspection": {
+    "pdfFrom": 14,
+    "pdfTo": 15,
+    "evidence": "docs/QA/g9-phase4-2026-10-30/source-review.json",
+    "scope": "ENGINEERING_SOURCE_INSPECTION_NOT_EDUCATOR_REVIEW"
+  }
+}

@@ -241,7 +241,7 @@ class StudentVideoRegressionTest {
         assertTrue(chrome.contains("visibleEntries.filterNot { it.destination is androidx.navigation.NavGraph }"))
         assertTrue(chrome.contains("saveState = true"))
         assertTrue(chrome.contains("launchSingleTop = true"))
-        assertTrue(chrome.contains("restoreState = destination != Routes.Home"))
+        assertTrue(chrome.contains("restoreState = restoreStudentTabState("))
         assertTrue(chrome.contains("RefTopBar(topTitle, { nav.popBackStack() }"))
     }
 
