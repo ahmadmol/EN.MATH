@@ -40,6 +40,8 @@ class Grade9RuntimeRepairTest {
             "topic/G9-ALG-U01",
             "g9/practice",
             "g9/result/test",
+            NaturePracticeGrader.ROUTE,
+            "g9/nature-result/test",
             "g9/files",
             "g9/file/test",
             "g9/reference/G9-ALG-U01-R01",
@@ -290,6 +292,26 @@ class Grade9RuntimeRepairTest {
             } else if (index % 4 == 3) {
                 assertEquals(0.78f, currBias, 0.001f)
             }
+        }
+    }
+
+    @Test
+    fun naturePracticeBankMatchesStrictlyOnlyTheFirstTopic() {
+        val catalog = SourceCurricula.forStage(StudyStage.G9)
+        val first = catalog.book("G9-ALG")?.units?.firstOrNull()?.researches?.firstOrNull()
+        assertNotNull(first)
+        assertEquals("G9-ALG-U01-L01", first?.id)
+        assertTrue(first?.title?.contains(NaturePracticeBank.PILOT_DISPLAY_TITLE) == true)
+        assertTrue("NaturePracticeBank must match the first topic", NaturePracticeBank.matches(first!!))
+
+        // All other 31 topics in the catalog must return false
+        val otherTopics = catalog.researches.filterNot { it.id == first.id }
+        assertEquals(31, otherTopics.size)
+        otherTopics.forEach { topic ->
+            assertFalse(
+                "NaturePracticeBank must NEVER match non-first topic: ${topic.id} - ${topic.title}",
+                NaturePracticeBank.matches(topic)
+            )
         }
     }
 }

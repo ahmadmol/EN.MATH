@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.ahmadmol.enmath.core.AssignmentSubmissionResult
@@ -72,6 +73,52 @@ fun NavGraphBuilder.studentGraph(
         if(state.user?.studyStage != StudyStage.G9 || state.user?.type == AccountType.Teacher || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
         Grade9GoalScreen(state,(app.repository as? LocalDemoRepository)?.planner,entry.arguments?.getString("id").orEmpty(),::route)
     }
+    // A separate, debug-only, six-question pilot. Existing fractional practice is untouched.
+    composable(NaturePracticeGrader.ROUTE) {
+        val state by app.state.collectAsStateWithLifecycle()
+        val context = LocalContext.current
+        val debuggable = context.applicationInfo.flags and
+            android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0
+        val firstTopic = SourceCurricula.forStage(StudyStage.G9).book("G9-ALG")
+            ?.units?.firstOrNull()?.researches?.firstOrNull()
+        if (!debuggable || state.user?.studyStage != StudyStage.G9 ||
+            state.user?.type == AccountType.Teacher || !state.catalogAvailable ||
+            firstTopic == null || !NaturePracticeBank.matches(firstTopic)) {
+            StageContentUnavailable()
+            return@composable
+        }
+        NaturePracticeScreen(state, (app.repository as? LocalDemoRepository)?.naturePractice,
+            openResult = { attemptId ->
+                nav.navigate("g9/nature-result/$attemptId") {
+                    popUpTo(NaturePracticeGrader.ROUTE) { inclusive = true }
+                    launchSingleTop = true
+                }
+            },
+            goBack = { nav.popBackStack() },
+            openLesson = { nav.navigate("lesson/${Grade9NatureLesson.LESSON_ID}") })
+    }
+    composable("g9/nature-result/{id}") { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        val context = LocalContext.current
+        val debuggable = context.applicationInfo.flags and
+            android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0
+        if (!debuggable || state.user?.studyStage != StudyStage.G9 ||
+            state.user?.type == AccountType.Teacher || !state.catalogAvailable) {
+            StageContentUnavailable()
+            return@composable
+        }
+        NaturePracticeResultScreen(state, (app.repository as? LocalDemoRepository)?.naturePractice,
+            entry.arguments?.getString("id").orEmpty(),
+            backToPath = { nav.navigate(Routes.Home) {
+                popUpTo(Routes.Home) { inclusive = false }
+                launchSingleTop = true
+            } },
+            retry = { nav.navigate(NaturePracticeGrader.ROUTE) {
+                popUpTo("g9/nature-result/{id}") { inclusive = true }
+                launchSingleTop = true
+            } },
+            openLesson = { nav.navigate("lesson/${Grade9NatureLesson.LESSON_ID}") })
+    }
     composable("g9/practice") { entry ->
         val state by app.state.collectAsStateWithLifecycle()
         if (state.user?.studyStage != StudyStage.G9 || !state.catalogAvailable) { StageContentUnavailable(); return@composable }
@@ -120,7 +167,7 @@ fun NavGraphBuilder.studentGraph(
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         val gems = app.gems?.ui?.collectAsStateWithLifecycle()?.value ?: LocalGemsUiState()
-        DualStageHome(state, ::route, gems, (app.repository as? LocalDemoRepository)?.planner, (app.repository as? LocalDemoRepository)?.sourceWorkspace, (app.repository as? LocalDemoRepository)?.grade9Study)
+        DualStageHome(state, ::route, gems, (app.repository as? LocalDemoRepository)?.planner, (app.repository as? LocalDemoRepository)?.sourceWorkspace, (app.repository as? LocalDemoRepository)?.grade9Study, (app.repository as? LocalDemoRepository)?.naturePractice)
     }
     composable(Routes.Study) {
         val state by app.state.collectAsStateWithLifecycle()
@@ -140,7 +187,7 @@ fun NavGraphBuilder.studentGraph(
     composable("review") {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        RecordedProgressScreen(state, ::route, review = true, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study)
+        RecordedProgressScreen(state, ::route, review = true, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study, naturePractice = (app.repository as? LocalDemoRepository)?.naturePractice)
     }
     composable(Routes.Book) { e ->
         val state by app.state.collectAsStateWithLifecycle()
@@ -192,6 +239,19 @@ fun NavGraphBuilder.studentGraph(
         val ticket = LearningRules.sessionOwner(state)
         val id = e.arguments?.getString("id").orEmpty()
         if (state.user?.studyStage == StudyStage.G9 && state.catalogAvailable) {
+            if (id == Grade9NatureLesson.LESSON_ID) {
+                val sourceScope = StudentCatalog.scope(state)
+                LaunchedEffect(sourceScope, id) {
+                    sourceScope?.let { (app.repository as? LocalDemoRepository)?.sourceWorkspace?.visit(it, Grade9NatureLesson.ref) }
+                }
+                NatureLessonScreen(
+                    state = state,
+                    repository = (app.repository as? LocalDemoRepository)?.naturePractice,
+                    open = ::route,
+                    goBack = { nav.popBackStack() }
+                )
+                return@composable
+            }
             if (id == Grade9Pilot.lessonId) {
                 val sourceScope = StudentCatalog.scope(state)
                 LaunchedEffect(sourceScope, id) { sourceScope?.let { (app.repository as? LocalDemoRepository)?.sourceWorkspace?.visit(it, Grade9Pilot.ref) } }
@@ -349,15 +409,15 @@ fun NavGraphBuilder.studentGraph(
     composable(Routes.Progress) {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study)
+        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study, naturePractice = (app.repository as? LocalDemoRepository)?.naturePractice)
     }
     composable("progress/book/{id}") { e ->
         val state by app.state.collectAsStateWithLifecycle()
-        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, bookId = e.arguments?.getString("id"), grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study)
+        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, bookId = e.arguments?.getString("id"), grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study, naturePractice = (app.repository as? LocalDemoRepository)?.naturePractice)
     }
     composable("progress/unit/{id}") { e ->
         val state by app.state.collectAsStateWithLifecycle()
-        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, unitId = e.arguments?.getString("id"), grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study)
+        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, unitId = e.arguments?.getString("id"), grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study, naturePractice = (app.repository as? LocalDemoRepository)?.naturePractice)
     }
     composable("study/review/{id}") { e ->
         val state by app.state.collectAsStateWithLifecycle()

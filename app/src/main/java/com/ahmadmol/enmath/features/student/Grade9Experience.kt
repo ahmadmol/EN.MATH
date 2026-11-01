@@ -1,12 +1,18 @@
 package com.ahmadmol.enmath.features.student
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -21,12 +27,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -49,6 +58,7 @@ import com.ahmadmol.enmath.features.localgems.gemBalanceText
 import com.ahmadmol.enmath.features.planner.PlanSummary
 import com.ahmadmol.enmath.features.reference.CleanBottomBar
 import com.ahmadmol.enmath.features.reference.CleanNavItem
+import kotlinx.coroutines.launch
 
 /** Grade 9 consumes source references; browsing is never evidence of learning. */
 fun grade9Resume(state: LearningState, visitedId: String?): SourceResearch? =
@@ -77,12 +87,22 @@ fun Grade9BottomNav(selected: String?, open: (String) -> Unit) {
 
 /** A saveable lazy list keeps long screens usable at large type sizes and on return from details. */
 @Composable
-fun Grade9Scaffold(tag: String, stateKey: Any? = null, initialIndex: Int = 0, content: LazyListScope.() -> Unit) {
-    val scroll = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
-    LaunchedEffect(stateKey) { if (stateKey != null) scroll.scrollToItem(0) }
+fun Grade9Scaffold(
+    tag: String,
+    stateKey: Any? = null,
+    initialIndex: Int = 0,
+    listState: LazyListState = if (stateKey != null) {
+        rememberSaveable(key = stateKey.toString(), saver = LazyListState.Saver) {
+            LazyListState(firstVisibleItemIndex = initialIndex)
+        }
+    } else {
+        rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
+    },
+    content: LazyListScope.() -> Unit
+) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         LazyColumn(
-            state = scroll,
+            state = listState,
             modifier = Modifier.widthIn(max = 640.dp).fillMaxSize().testTag(tag),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 14.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -131,8 +151,6 @@ private fun ZigzagPathSegment(prevBias: Float, currBias: Float, connectingColor:
     Canvas(modifier = modifier.fillMaxWidth().height(42.dp)) {
         val w = size.width
         val h = size.height
-        // In PathStationNode, the column of width min(200dp, w) is placed with BiasAlignment(horizontalBias = (bias - 0.5f) * 1.5f).
-        // BiasAlignment inverts horizontalBias when isRtl is true.
         val childWidthPx = 200.dp.toPx()
         val availableSpace = (w - childWidthPx).coerceAtLeast(0f)
         val pBias = (prevBias - 0.5f) * 1.5f
@@ -166,7 +184,7 @@ private fun ZigzagPathSegment(prevBias: Float, currBias: Float, connectingColor:
 }
 
 /**
- * An interactive station node on the zigzag learning path.
+ * An interactive station node on the zigzag learning path with smooth touch response.
  */
 @Composable
 fun PathStationNode(
@@ -175,17 +193,38 @@ fun PathStationNode(
     lastVisited: Boolean,
     open: (String) -> Unit,
     bias: Float,
-    prevBias: Float = bias
+    prevBias: Float = bias,
+    progressStatus: LessonProgressStatus = LessonProgressStatus.NOT_STARTED,
+    isSuggested: Boolean = false
 ) {
     val isPilot = research.id == Grade9Pilot.lessonId
-    val tealAccent = EntryTeal
-    val connectingColor = tealAccent.copy(alpha = 0.35f)
+    val inInspection = LocalInspectionMode.current
+    val naturePilotEnabled = inInspection || ((LocalContext.current.applicationInfo.flags and
+        android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+    val isAlgebra = research.id.startsWith("G9-ALG")
+    val defaultAccent = if (isAlgebra) EntryTeal else EntryIndigo
+    val connectingColor = defaultAccent.copy(alpha = 0.35f)
+    val isNaturePilot = naturePilotEnabled && NaturePracticeBank.matches(research)
     val accessibilityLabel = tr("${research.order}. ${research.title}", "${research.order}. ${research.title}") +
         when {
+            isNaturePilot -> when (progressStatus) {
+                LessonProgressStatus.PRACTICE_COMPLETED -> tr(" · Practice completed", " · اكتمل التدريب")
+                LessonProgressStatus.NEEDS_REVIEW -> tr(" · Review recommended", " · يُنصح بالمراجعة")
+                LessonProgressStatus.STARTED -> tr(" · Practice in progress", " · التدريب قيد التقدم")
+                else -> tr(" · Interactive practice available", " · تدريب تفاعلي متاح")
+            }
             isPilot -> tr(" · Original pilot lesson available", " · درس أصلي تجريبي متاح")
             lastVisited -> tr(" · Last visited", " · آخر زيارة")
             else -> tr(" · Source reference under review", " · مرجع مصدر قيد المراجعة")
         }
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val pressScale by animateFloatAsState(
+        targetValue = if (isPressed) 0.92f else 1.0f,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "station-press-scale"
+    )
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (stationIndex > 0) {
@@ -202,31 +241,77 @@ fun PathStationNode(
             ) {
                 // Interactive Station Node Button
                 Surface(
-                    onClick = { open(research.route) },
+                    onClick = {
+                        open(
+                            if (isNaturePilot) NaturePracticeGrader.ROUTE
+                            else research.route
+                        )
+                    },
+                    interactionSource = interactionSource,
                     shape = CircleShape,
                     color = when {
-                        isPilot -> tealAccent
+                        isNaturePilot -> when (progressStatus) {
+                            LessonProgressStatus.PRACTICE_COMPLETED -> Color(0xFF0D9488)
+                            LessonProgressStatus.NEEDS_REVIEW -> Color(0xFF4F46E5)
+                            LessonProgressStatus.STARTED -> defaultAccent
+                            else -> defaultAccent
+                        }
+                        isPilot -> defaultAccent
                         lastVisited -> MaterialTheme.colorScheme.primaryContainer
                         else -> MaterialTheme.colorScheme.surface
                     },
                     border = BorderStroke(
-                        width = if (isPilot) 3.dp else 2.dp,
+                        width = if (isNaturePilot || isPilot || isSuggested) 3.dp else 2.dp,
                         color = when {
+                            isNaturePilot -> when (progressStatus) {
+                                LessonProgressStatus.PRACTICE_COMPLETED -> Color(0xFFF59E0B)
+                                LessonProgressStatus.NEEDS_REVIEW -> Color(0xFF818CF8)
+                                else -> Color.White.copy(alpha = 0.95f)
+                            }
                             isPilot -> Color.White.copy(alpha = 0.95f)
+                            isSuggested -> defaultAccent
                             lastVisited -> MaterialTheme.colorScheme.primary
                             else -> MaterialTheme.colorScheme.outlineVariant
                         }
                     ),
-                    shadowElevation = if (isPilot) 8.dp else 3.dp,
+                    shadowElevation = if (isNaturePilot || isPilot) 8.dp else 3.dp,
                     modifier = Modifier
                         .size(68.dp)
+                        .scale(pressScale)
                         .testTag("station-${research.id}")
                         .semantics {
                             this.contentDescription = accessibilityLabel
                         }
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        if (isPilot) {
+                        if (isNaturePilot) {
+                            when (progressStatus) {
+                                LessonProgressStatus.PRACTICE_COMPLETED -> Icon(
+                                    imageVector = Icons.Outlined.Check,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(36.dp)
+                                )
+                                LessonProgressStatus.NEEDS_REVIEW -> Icon(
+                                    imageVector = Icons.Outlined.Replay,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                                LessonProgressStatus.STARTED -> Icon(
+                                    imageVector = Icons.Outlined.Edit,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                                else -> Icon(
+                                    imageVector = Icons.Outlined.PlayArrow,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(36.dp)
+                                )
+                            }
+                        } else if (isPilot) {
                             Icon(
                                 imageVector = Icons.Outlined.PlayArrow,
                                 contentDescription = null,
@@ -258,6 +343,13 @@ fun PathStationNode(
 
                 // Station Label Card
                 Surface(
+                    onClick = {
+                        open(
+                            if (isNaturePilot) "lesson/${research.id}"
+                            else research.route
+                        )
+                    },
+                    modifier = Modifier.testTag("station-label-${research.id}"),
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.surface,
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f)),
@@ -277,13 +369,24 @@ fun PathStationNode(
                         Spacer(Modifier.height(2.dp))
                         Text(
                             text = when {
+                                isNaturePilot -> when (progressStatus) {
+                                    LessonProgressStatus.PRACTICE_COMPLETED -> tr("Practice completed", "اكتمل التدريب")
+                                    LessonProgressStatus.NEEDS_REVIEW -> tr("Review recommended", "يُنصح بالمراجعة")
+                                    LessonProgressStatus.STARTED -> tr("In progress", "قيد التقدم")
+                                    else -> tr("Interactive practice · Available", "تدريب تفاعلي · متاح")
+                                }
                                 isPilot -> tr("Original pilot · Available", "درس أصلي · متاح")
                                 lastVisited -> tr("Last visited · Under review", "آخر زيارة · قيد المراجعة")
                                 else -> tr("Source reference · Under review", "مرجع مصدر · قيد المراجعة")
                             },
                             style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                             color = when {
-                                isPilot -> tealAccent
+                                isNaturePilot -> when (progressStatus) {
+                                    LessonProgressStatus.PRACTICE_COMPLETED -> Color(0xFF0D9488)
+                                    LessonProgressStatus.NEEDS_REVIEW -> Color(0xFF4F46E5)
+                                    else -> defaultAccent
+                                }
+                                isPilot -> defaultAccent
                                 lastVisited -> MaterialTheme.colorScheme.primary
                                 else -> MaterialTheme.colorScheme.onSurfaceVariant
                             },
@@ -291,6 +394,116 @@ fun PathStationNode(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+/**
+ * Clean, motivating, and child-friendly student learning progress card for Grade 9.
+ * Strictly displays only:
+ * 1. Current section and unit
+ * 2. Truthful available practice progress
+ * 3. Short encouraging phrase
+ * 4. One clear primary action button (min 48dp)
+ * Keeps detailed statistical numbers on the dedicated progress screen to prevent clutter.
+ */
+@Composable
+fun Grade9LearningProgressCard(
+    progress: Grade9LearningProgress,
+    open: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val teal = EntryTeal
+
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("g9-learning-progress-card"),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, teal.copy(alpha = 0.35f))
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            // 1. Current Section and Unit Header
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = teal.copy(alpha = 0.14f),
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Outlined.AutoGraph,
+                            contentDescription = null,
+                            tint = teal,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(
+                        text = tr("Your learning progress", "تقدمك في التعلم"),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Text(
+                        text = "${tr(progress.activeSubject.en, progress.activeSubject.ar)} — ${tr(progress.activeUnit.en, progress.activeUnit.ar)}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = teal
+                    )
+                }
+            }
+
+            // 2. Truthful Available Practice Progress (constant layout height prevents shift)
+            LinearProgressIndicator(
+                progress = { progress.availablePracticeFraction },
+                color = teal,
+                trackColor = teal.copy(alpha = 0.18f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .testTag("g9-home-progress-bar")
+            )
+
+            Text(
+                text = tr(progress.availablePracticeProgressText.en, progress.availablePracticeProgressText.ar),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                minLines = 2,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            // 3. Short Encouraging Phrase
+            Text(
+                text = tr(progress.encouragementMessage.en, progress.encouragementMessage.ar),
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.onSurface,
+                minLines = 2,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            // 4. One Clear Primary Action Button
+            Button(
+                onClick = { open(progress.recommendedRoute) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 48.dp)
+                    .testTag("g9-progress-action"),
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = teal)
+            ) {
+                Text(
+                    text = tr(progress.recommendedNextStep.en, progress.recommendedNextStep.ar),
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                )
             }
         }
     }
@@ -366,6 +579,264 @@ fun CurriculumUnitCard(unit: SourceUnit, open: (String) -> Unit) {
     }
 }
 
+/**
+ * First-time learning subject selection screen for Grade 9 students.
+ * Presents a clear, inspiring, and simple choice between Algebra and Geometry.
+ */
+@Composable
+fun Grade9SubjectPicker(
+    onSelectSubject: (Grade9Subject) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("g9-subject-picker"),
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.surface,
+        border = BorderStroke(1.dp, EntryTeal.copy(alpha = 0.35f)),
+        shadowElevation = 2.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = EntryTeal.copy(alpha = 0.14f),
+                modifier = Modifier.size(64.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Outlined.Explore,
+                        contentDescription = null,
+                        tint = EntryTeal,
+                        modifier = Modifier.size(34.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(14.dp))
+
+            Text(
+                text = tr("Welcome to Grade 9 Math!", "أهلًا بك في رياضيات التاسع!"),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(Modifier.height(6.dp))
+
+            Text(
+                text = tr("Choose your learning path to begin your journey. You can easily switch anytime.",
+                    "اختر مسار التعلم لتبدأ رحلتك. يمكنك التبديل بينهما بسهولة في أي وقت."),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+        // Algebra Option Card
+        Card(
+            onClick = { onSelectSubject(Grade9Subject.ALGEBRA) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("select-algebra"),
+            shape = RoundedCornerShape(22.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = BorderStroke(2.dp, EntryTeal.copy(alpha = 0.5f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = EntryTeal.copy(alpha = 0.15f),
+                    modifier = Modifier.size(52.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Outlined.Calculate,
+                            contentDescription = null,
+                            tint = EntryTeal,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = tr("Algebra", "الجبر"),
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        color = EntryTeal
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = tr("6 units · 19 topics", "6 وحدات · 19 بحثًا"),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                    contentDescription = null,
+                    tint = EntryTeal
+                )
+            }
+        }
+
+        Spacer(Modifier.height(14.dp))
+
+        // Geometry Option Card
+        Card(
+            onClick = { onSelectSubject(Grade9Subject.GEOMETRY) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("select-geometry"),
+            shape = RoundedCornerShape(22.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = BorderStroke(2.dp, EntryIndigo.copy(alpha = 0.5f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = EntryIndigo.copy(alpha = 0.15f),
+                    modifier = Modifier.size(52.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Outlined.SquareFoot,
+                            contentDescription = null,
+                            tint = EntryIndigo,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = tr("Geometry", "الهندسة"),
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        color = EntryIndigo
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = tr("4 units · 13 topics", "4 وحدات · 13 بحثًا"),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                    contentDescription = null,
+                    tint = EntryIndigo
+                )
+            }
+        }
+    }
+    }
+}
+
+/**
+ * Top Segmented Switcher between Algebra and Geometry with smooth transitions.
+ */
+@Composable
+fun Grade9SubjectSwitcher(
+    currentSubject: Grade9Subject,
+    onSelectSubject: (Grade9Subject) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("g9-subject-switcher"),
+        shape = RoundedCornerShape(18.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            val isAlgebra = currentSubject == Grade9Subject.ALGEBRA
+            val isGeometry = currentSubject == Grade9Subject.GEOMETRY
+
+            // Algebra Tab
+            Surface(
+                onClick = { onSelectSubject(Grade9Subject.ALGEBRA) },
+                shape = RoundedCornerShape(14.dp),
+                color = if (isAlgebra) EntryTeal else Color.Transparent,
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = 44.dp)
+                    .testTag("switch-algebra")
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Calculate,
+                        contentDescription = null,
+                        tint = if (isAlgebra) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        text = tr("Algebra (6 Units)", "الجبر (6 وحدات)"),
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                        color = if (isAlgebra) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            // Geometry Tab
+            Surface(
+                onClick = { onSelectSubject(Grade9Subject.GEOMETRY) },
+                shape = RoundedCornerShape(14.dp),
+                color = if (isGeometry) EntryIndigo else Color.Transparent,
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = 44.dp)
+                    .testTag("switch-geometry")
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.SquareFoot,
+                        contentDescription = null,
+                        tint = if (isGeometry) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        text = tr("Geometry (4 Units)", "الهندسة (4 وحدات)"),
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                        color = if (isGeometry) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun Grade9LearningPath(
     state: LearningState,
@@ -374,7 +845,8 @@ fun Grade9LearningPath(
     planner: PlannerRepository?,
     workspace: SourceWorkspaceRepository?,
     grade9Study: Grade9StudyRepository? = null,
-    initialPathIndex: Int = 0
+    initialPathIndex: Int = 0,
+    naturePractice: NaturePracticeRepository? = null
 ) {
     val catalog = SourceCurricula.forState(state)?.takeIf { it.stage == StudyStage.G9 }
     if (catalog == null) { CatalogUnavailable(); return }
@@ -385,211 +857,312 @@ fun Grade9LearningPath(
     val pilotData = (rememberG9Study(state, grade9Study) as? G9StudyRead.Ready)?.data
     val dailyPlan = (rememberG9Plan(state, planner) as? PlanRead.Ready)?.plan ?: StudyPlan()
     val nextStudy = grade9NextStudy(pilotData ?: G9StudyData(), dailyPlan, (read as? SourceWorkspaceRead.Ready)?.workspace?.visitedId, System.currentTimeMillis())
+    val natureChange = naturePractice?.changes?.collectAsState()?.value
+    val natureRead = remember(scope, natureChange) { scope?.let { naturePractice?.read(it) } }
+    val natureData = (natureRead as? NatureRead.Ready)?.data ?: NaturePracticeData()
+    val learningProgress = remember(natureData) {
+        StudentLearningProgressEngine.computeGrade9Progress(natureData)
+    }
     val unread = state.product.notifications.count { !it.teacher && it.id !in state.product.readNotifications }
     val tealAccent = EntryTeal
+    val coroutineScope = rememberCoroutineScope()
 
-    Grade9Scaffold("screen-home", initialIndex = initialPathIndex) {
-        // 1. Compact Student Greeting Card
-        item("greeting") {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(24.dp),
-                border = BorderStroke(1.dp, tealAccent.copy(alpha = 0.35f)),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Brush.horizontalGradient(listOf(tealAccent.copy(alpha = 0.14f), MaterialTheme.colorScheme.surface)))
-                        .padding(16.dp)
+    // Active Subject selection: default to ALGEBRA for existing/seamless workflows, but allow first-time picker if not chosen
+    val activeSubject = pilotData?.activeSubject ?: Grade9Subject.ALGEBRA
+    val hasChosen = pilotData?.subjectChosen == true
+    val showPicker = !hasChosen && pilotData?.activeSubject == null
+
+    val selectedBookId = if (activeSubject == Grade9Subject.ALGEBRA) "G9-ALG" else "G9-GEO"
+    val displayedBook = catalog.books.firstOrNull { it.id == selectedBookId } ?: catalog.books.first()
+    val bookAccent = if (displayedBook.id == "G9-ALG") EntryTeal else EntryIndigo
+
+    // Independent scroll positions preserved across Algebra and Geometry switches
+    val algebraListState = rememberSaveable(
+        key = "g9_home_algebra_scroll_${scope?.ownerId.orEmpty()}",
+        saver = LazyListState.Saver
+    ) {
+        LazyListState(firstVisibleItemIndex = if (activeSubject == Grade9Subject.ALGEBRA) initialPathIndex else 0)
+    }
+    val geometryListState = rememberSaveable(
+        key = "g9_home_geometry_scroll_${scope?.ownerId.orEmpty()}",
+        saver = LazyListState.Saver
+    ) {
+        LazyListState(firstVisibleItemIndex = if (activeSubject == Grade9Subject.GEOMETRY) initialPathIndex else 0)
+    }
+    val activeListState = if (activeSubject == Grade9Subject.ALGEBRA) algebraListState else geometryListState
+
+    Grade9Scaffold("screen-home", listState = activeListState) {
+        if (showPicker) {
+            // First-time Subject Choice: Clean, focused onboarding between Algebra and Geometry
+            item("greeting") {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    border = BorderStroke(1.dp, tealAccent.copy(alpha = 0.35f)),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(14.dp)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Brush.horizontalGradient(listOf(tealAccent.copy(alpha = 0.14f), MaterialTheme.colorScheme.surface)))
+                            .padding(16.dp)
                     ) {
-                        Surface(
-                            shape = CircleShape,
-                            color = tealAccent.copy(alpha = 0.16f),
-                            border = BorderStroke(2.dp, tealAccent.copy(alpha = 0.4f)),
-                            modifier = Modifier.size(52.dp)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
-                            Image(
-                                painter = painterResource(R.drawable.student_g9_transparent),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize().padding(3.dp)
-                            )
-                        }
-                        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(
-                                    text = tr("Hello, ${state.user?.name.orEmpty().ifBlank { tr("Student", "يا بطل") }}", "أهلًا، ${state.user?.name.orEmpty().ifBlank { "يا بطل" }}"),
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                            Surface(
+                                shape = CircleShape,
+                                color = tealAccent.copy(alpha = 0.16f),
+                                border = BorderStroke(2.dp, tealAccent.copy(alpha = 0.4f)),
+                                modifier = Modifier.size(52.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.student_g9_transparent),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize().padding(3.dp)
                                 )
-                                Surface(shape = RoundedCornerShape(8.dp), color = tealAccent.copy(alpha = 0.18f)) {
+                            }
+                            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     Text(
-                                        text = tr("Grade 9", "التاسع"),
-                                        color = tealAccent,
-                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                        text = tr("Hello, ${state.user?.name.orEmpty().ifBlank { tr("Student", "يا بطل") }}", "أهلًا، ${state.user?.name.orEmpty().ifBlank { "يا بطل" }}"),
+                                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
+                                    Surface(shape = RoundedCornerShape(8.dp), color = tealAccent.copy(alpha = 0.18f)) {
+                                        Text(
+                                            text = tr("Grade 9", "التاسع"),
+                                            color = tealAccent,
+                                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = tr("My gems: ", "جواهري: ") + gemBalanceText(gems, LocalGemsPolicy.owner(state.user), state.language),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            IconButton(
+                                onClick = { open("notifications") },
+                                modifier = Modifier.size(48.dp).testTag("g9-notifications")
+                            ) {
+                                BadgedBox(badge = { if (unread > 0) Badge { Text("$unread") } }) {
+                                    Icon(Icons.Outlined.Notifications, tr("Notifications, $unread unread", "الإشعارات، $unread غير مقروءة"), tint = tealAccent)
                                 }
                             }
-                            Text(
-                                text = tr("My gems: ", "جواهري: ") + gemBalanceText(gems, LocalGemsPolicy.owner(state.user), state.language),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
                         }
-                        IconButton(
-                            onClick = { open("notifications") },
-                            modifier = Modifier.size(48.dp).testTag("g9-notifications")
+                    }
+                }
+            }
+
+            item("subject-picker") {
+                Grade9SubjectPicker(
+                    onSelectSubject = { chosen ->
+                        if (scope != null && grade9Study != null) {
+                            coroutineScope.launch {
+                                grade9Study.selectSubject(scope, chosen)
+                            }
+                        }
+                    }
+                )
+            }
+        } else {
+            // 1. Top Section Switcher (Algebra / Geometry)
+            item("subject-switcher") {
+                Grade9SubjectSwitcher(
+                    currentSubject = activeSubject,
+                    onSelectSubject = { nextSubject ->
+                        if (scope != null && grade9Study != null && nextSubject != activeSubject) {
+                            coroutineScope.launch {
+                                grade9Study.selectSubject(scope, nextSubject)
+                            }
+                        }
+                    }
+                )
+            }
+
+            // 2. Compact Student Greeting Card
+            item("greeting") {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    border = BorderStroke(1.dp, tealAccent.copy(alpha = 0.35f)),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Brush.horizontalGradient(listOf(tealAccent.copy(alpha = 0.14f), MaterialTheme.colorScheme.surface)))
+                            .padding(16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
-                            BadgedBox(badge = { if (unread > 0) Badge { Text("$unread") } }) {
-                                Icon(Icons.Outlined.Notifications, tr("Notifications, $unread unread", "الإشعارات، $unread غير مقروءة"), tint = tealAccent)
+                            Surface(
+                                shape = CircleShape,
+                                color = tealAccent.copy(alpha = 0.16f),
+                                border = BorderStroke(2.dp, tealAccent.copy(alpha = 0.4f)),
+                                modifier = Modifier.size(52.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.student_g9_transparent),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize().padding(3.dp)
+                                )
+                            }
+                            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    Text(
+                                        text = tr("Hello, ${state.user?.name.orEmpty().ifBlank { tr("Student", "يا بطل") }}", "أهلًا، ${state.user?.name.orEmpty().ifBlank { "يا بطل" }}"),
+                                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Surface(shape = RoundedCornerShape(8.dp), color = tealAccent.copy(alpha = 0.18f)) {
+                                        Text(
+                                            text = tr("Grade 9", "التاسع"),
+                                            color = tealAccent,
+                                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = tr("My gems: ", "جواهري: ") + gemBalanceText(gems, LocalGemsPolicy.owner(state.user), state.language),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            IconButton(
+                                onClick = { open("notifications") },
+                                modifier = Modifier.size(48.dp).testTag("g9-notifications")
+                            ) {
+                                BadgedBox(badge = { if (unread > 0) Badge { Text("$unread") } }) {
+                                    Icon(Icons.Outlined.Notifications, tr("Notifications, $unread unread", "الإشعارات، $unread غير مقروءة"), tint = tealAccent)
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        // 2. Continue Learning Hero Card
-        item("continue") {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(22.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = BorderStroke(1.dp, tealAccent.copy(alpha = 0.30f))
-            ) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Outlined.PlayCircle, contentDescription = null, tint = tealAccent, modifier = Modifier.size(20.dp))
-                        Text(tr("What should I study now?", "ماذا أدرس الآن؟"), style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
-                    }
-                    Text(nextStudy.title.text(), style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold))
-                    Text(nextStudy.reason.text(), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Button(
-                        onClick = { open(nextStudy.route) },
-                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("g9-continue"),
+            // 3. Learning Progress Card (Single Clear Follow-up Action)
+            item("learning-progress") {
+                Grade9LearningProgressCard(progress = learningProgress, open = open)
+            }
+
+            // Storage warning if workspace read fails
+            if (read == SourceWorkspaceRead.StorageError) {
+                item("workspace-storage-error") {
+                    Surface(
                         shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = tealAccent)
+                        color = MaterialTheme.colorScheme.errorContainer,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(tr("Open suggested next step", "افتح الخطوة المقترحة"))
-                    }
-                    if (read == SourceWorkspaceRead.StorageError) {
                         Text(
                             tr("Your browsing history could not be read. Existing data is preserved.", "تعذّر قراءة سجل التصفح. بياناتك الحالية محفوظة."),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(12.dp)
                         )
                     }
                 }
             }
-        }
 
-        // 3. Status Badge & Source Link
-        item("source") {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+        // 4. Current Subject Header Card
+        item("book-${displayedBook.id}") {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = bookAccent.copy(alpha = 0.12f),
+                border = BorderStroke(1.dp, bookAccent.copy(alpha = 0.25f)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+                    .testTag("book-${displayedBook.id}")
             ) {
-                Text(
-                    tr("32 topics · one original pilot; other topics under preparation", "32 بحثًا · درس أصلي تجريبي واحد؛ والبقية قيد الإعداد"),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                TextButton(onClick = { open(Routes.Grade9Source) }) {
-                    Text(tr("Source and availability", "المصدر والتوفر"), color = tealAccent)
-                }
-            }
-        }
-
-        // 4. Zigzag Learning Journey across Algebra (6 units, 19 topics) and Geometry (4 units, 13 topics)
-        var globalStationIndex = 0
-        catalog.books.forEach { book ->
-            val isAlgebra = book.id == "G9-ALG"
-            val accent = if (isAlgebra) EntryTeal else EntryIndigo
-
-            item("book-${book.id}") {
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = accent.copy(alpha = 0.12f),
-                    border = BorderStroke(1.dp, accent.copy(alpha = 0.25f)),
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (isAlgebra) Icons.Outlined.Calculate else Icons.Outlined.SquareFoot,
-                            contentDescription = null,
-                            tint = accent,
-                            modifier = Modifier.size(24.dp)
+                    Icon(
+                        imageVector = if (displayedBook.id == "G9-ALG") Icons.Outlined.Calculate else Icons.Outlined.SquareFoot,
+                        contentDescription = null,
+                        tint = bookAccent,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Column {
+                        Text(
+                            text = displayedBook.title,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = bookAccent
                         )
-                        Column {
-                            Text(
-                                text = book.title,
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                color = accent
-                            )
-                            Text(
-                                text = tr("${book.units.size} units · ${book.researches.size} indexed topics", "${book.units.size} وحدات · ${book.researches.size} بحثًا مفهرسًا"),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-            }
-
-            book.units.forEach { unit ->
-                item("unit-${unit.id}") {
-                    CurriculumUnitCard(unit, open)
-                }
-
-                unit.researches.forEach { research ->
-                    val index = globalStationIndex++
-                    val prevBias = if (index == 0) 0.5f else when ((index - 1) % 4) {
-                        0 -> 0.5f
-                        1 -> 0.22f
-                        2 -> 0.5f
-                        3 -> 0.78f
-                        else -> 0.5f
-                    }
-                    val currBias = when (index % 4) {
-                        0 -> 0.5f
-                        1 -> 0.22f
-                        2 -> 0.5f
-                        3 -> 0.78f
-                        else -> 0.5f
-                    }
-
-                    item("station-${research.id}") {
-                        PathStationNode(
-                            research = research,
-                            stationIndex = index,
-                            lastVisited = resumed?.id == research.id,
-                            open = open,
-                            bias = currBias,
-                            prevBias = prevBias
+                        Text(
+                            text = tr("${displayedBook.units.size} units · ${displayedBook.researches.size} indexed topics",
+                                "${displayedBook.units.size} وحدات · ${displayedBook.researches.size} بحثًا مفهرسًا"),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
             }
         }
 
-        // 5. Study Plan Summary
+        // 6. Zigzag Learning Journey across the selected subject units and researches
+        var subjectStationIndex = 0
+        displayedBook.units.forEach { unit ->
+            item("unit-${unit.id}") {
+                CurriculumUnitCard(unit, open)
+            }
+
+            unit.researches.forEach { research ->
+                val index = subjectStationIndex++
+                val prevBias = if (index == 0) 0.5f else when ((index - 1) % 4) {
+                    0 -> 0.5f
+                    1 -> 0.22f
+                    2 -> 0.5f
+                    3 -> 0.78f
+                    else -> 0.5f
+                }
+                val currBias = when (index % 4) {
+                    0 -> 0.5f
+                    1 -> 0.22f
+                    2 -> 0.5f
+                    3 -> 0.78f
+                    else -> 0.5f
+                }
+
+                val isNature = NaturePracticeBank.matches(research)
+                val stationProgress = if (isNature) learningProgress.natureLessonStatus else LessonProgressStatus.UNAVAILABLE
+
+                item("station-${research.id}") {
+                    PathStationNode(
+                        research = research,
+                        stationIndex = index,
+                        lastVisited = resumed?.id == research.id,
+                        open = open,
+                        bias = currBias,
+                        prevBias = prevBias,
+                        progressStatus = stationProgress,
+                        isSuggested = nextStudy.route == research.route || (isNature && nextStudy.route == NaturePracticeGrader.ROUTE)
+                    )
+                }
+            }
+        }
+
+        // 7. Study Plan Summary
         item("plan") {
             PlanSummary(state, planner, open)
         }
 
-        // 6. Tools Shortcuts
+        // 8. Tools Shortcuts
         item("tools") {
             Grade9Card {
                 Grade9Heading(tr("Your study tools", "أدوات دراستك"), tr("Available locally", "متاحة محليًا"))
@@ -601,6 +1174,7 @@ fun Grade9LearningPath(
                 Grade9Action(tr("My achievements and activity", "إنجازاتي ونشاطي"), "g9/activity", open)
                 Grade9Action(tr("My gems: ", "جواهري: ") + gemBalanceText(gems, LocalGemsPolicy.owner(state.user), state.language), "gems/wallet", open)
             }
+        }
         }
     }
 }
@@ -693,10 +1267,12 @@ fun Grade9SubjectScreen(state: LearningState, geometry: Boolean, open: (String) 
                     modifier = Modifier.padding(16.dp)
                 )
             }
-        }
-
-        items(units, key = { it.id }) { unit ->
-            CurriculumUnitCard(unit, open)
+        } else {
+            units.forEach { unit ->
+                item("unit-${unit.id}") {
+                    CurriculumUnitCard(unit, open)
+                }
+            }
         }
     }
 }

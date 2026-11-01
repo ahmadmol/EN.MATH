@@ -24,6 +24,7 @@ import androidx.navigation.compose.*
 import androidx.navigation.navigation
 import com.ahmadmol.enmath.core.AppViewModel
 import com.ahmadmol.enmath.core.data.LocalDemoRepository
+import com.ahmadmol.enmath.core.data.NaturePracticeGrader
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.design.tokens.ResourcePackPresentation
 import com.ahmadmol.enmath.core.model.*
@@ -185,6 +186,8 @@ fun ENMathApp(providedNav: NavHostController? = null) {
             when (route) {
                 Routes.Grade9Activity -> tr("My achievements and activity", "إنجازاتي ونشاطي")
                 Routes.Grade9Goal -> tr("Goal details and history", "تفاصيل الهدف وسجله")
+                NaturePracticeGrader.ROUTE -> tr("Nature of numbers", "طبيعة الأعداد")
+                "g9/nature-result/{id}" -> tr("Session result", "نتيجة الجلسة")
                 "g9/practice" -> tr("Practice", "تدريب")
                 "g9/result/{id}" -> tr("Saved result", "النتيجة المحفوظة")
                 "g9/files", "g9/file/{id}" -> tr("My study files", "ملفات دراستي")
@@ -325,7 +328,8 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                         it.book(contentId) != null || it.unit(contentId) != null || it.research(contentId) != null ||
                             (route == Routes.Book && state.user?.studyStage == StudyStage.BAC && com.ahmadmol.enmath.core.data.BacSourceCatalog.book(contentId) != null)
                     } == true
-                val g9PilotScreen = state.user?.studyStage == StudyStage.G9 && route == Routes.Lesson && contentId == com.ahmadmol.enmath.core.data.Grade9Pilot.lessonId
+                val g9PilotScreen = state.user?.studyStage == StudyStage.G9 && route == Routes.Lesson &&
+                    (contentId == com.ahmadmol.enmath.core.data.Grade9Pilot.lessonId || contentId == com.ahmadmol.enmath.core.data.Grade9NatureLesson.LESSON_ID)
                 val hasSelfHeader = !g9PilotScreen && !sourceScreen && (route != Routes.Lesson || state.lesson(contentId) != null) && studentOwnsHeader(route, contentId) &&
                     (teacher || route !in listOf(Routes.Topic, Routes.Progress))
                 val showSubHeader = !isPublic && !inMain && route != null && !hasSelfHeader

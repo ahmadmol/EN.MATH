@@ -297,13 +297,16 @@ import com.ahmadmol.enmath.core.model.*
 }
 
 @Composable fun SourceProgressScreen(state: LearningState, open: (String) -> Unit, planner: PlannerRepository? = null,
-    bookId: String? = null, unitId: String? = null, grade9Study: Grade9StudyRepository? = null) {
+    bookId: String? = null, unitId: String? = null, grade9Study: Grade9StudyRepository? = null,
+    naturePractice: NaturePracticeRepository? = null) {
     val catalog = SourceCurricula.forState(state)
     ScreenPage(Modifier.testTag(if (catalog?.stage == StudyStage.G9) "screen-progress-g9" else "screen-progress")) {
         if (catalog == null || (bookId != null && catalog.book(bookId) == null) || (unitId != null && catalog.unit(unitId) == null)) { CatalogUnavailable(); return@ScreenPage }
         if (catalog.stage == StudyStage.G9 && (bookId == null || bookId == Grade9Pilot.ref.sourceId) &&
-            (unitId == null || unitId == "G9-ALG-U01"))
+            (unitId == null || unitId == "G9-ALG-U01")) {
+            com.ahmadmol.enmath.features.student.Grade9NatureEvidenceSection(state, naturePractice, open)
             com.ahmadmol.enmath.features.student.Grade9EvidenceSection(state, grade9Study, open)
+        }
         StageHero(catalog.stage, tr("My learning evidence", "أدلة تعلّمي"), tr("Indexing, reviewed content and learning are measured separately", "الفهرسة واعتماد المحتوى والتعلّم مؤشرات مستقلة"))
         SourceMetrics(listOf("${catalog.units.size}" to tr("Indexed units", "وحدات مفهرسة"), "${catalog.researches.size}" to tr("Indexed researches", "أبحاث مفهرسة"),
             "${catalog.reviewed}/${catalog.researches.size}" to tr("Published learning", "محتوى معتمد")))

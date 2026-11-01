@@ -103,3 +103,6 @@ docs/visual-polish/review.html
 
 # Generated screenshot test previews and reference captures
 app/src/screenshotTestDebug/
+
+# Host-only Nature QA build junction (generated files live on the QA drive).
+/app/build-nature-qa/

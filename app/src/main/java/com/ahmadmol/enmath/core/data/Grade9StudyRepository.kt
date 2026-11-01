@@ -9,6 +9,11 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
 
+enum class Grade9Subject {
+    ALGEBRA,
+    GEOMETRY
+}
+
 data class G9PracticeDraft(val id: String, val answers: Map<String, String> = emptyMap(),
     val checked: Set<String> = emptySet(), val hints: Set<String> = emptySet(), val index: Int = 0,
     val started: Long = System.currentTimeMillis(), val sequence: Long = 0)
@@ -17,7 +22,8 @@ data class StudentFile(val id: String, val uri: String, val name: String, val mi
     val bytes: Long? = null, val page: Int = 0, val bookId: String? = null, val unitId: String? = null,
     val researchId: String? = null, val favorite: Boolean = false)
 data class G9StudyData(val attempts: List<G9SavedAttempt> = emptyList(), val checkpoint: String? = null,
-    val section: Int = 0, val draft: G9PracticeDraft? = null, val files: List<StudentFile> = emptyList())
+    val section: Int = 0, val draft: G9PracticeDraft? = null, val files: List<StudentFile> = emptyList(),
+    val activeSubject: Grade9Subject? = null, val subjectChosen: Boolean = false)
 sealed interface G9StudyRead {
     data class Ready(val data: G9StudyData) : G9StudyRead
     data object OwnerChanged : G9StudyRead
@@ -84,7 +90,9 @@ class Grade9StudyRepository internal constructor(private val preferences: (Strin
         val checkpoint = if (doc.has("checkpoint")) doc.getString("checkpoint") else null
         require(checkpoint == null || Grade9Pilot.correct(Grade9Pilot.checkpoint, checkpoint))
         val section = doc.getInt("section"); require(section in 0..30)
-        return G9StudyData(attempts, checkpoint, section, draft, files)
+        val activeSubject = doc.optString("activeSubject").takeIf { it.isNotBlank() }?.let { runCatching { Grade9Subject.valueOf(it) }.getOrNull() }
+        val subjectChosen = doc.optBoolean("subjectChosen", activeSubject != null)
+        return G9StudyData(attempts, checkpoint, section, draft, files, activeSubject, subjectChosen)
     }
     @Synchronized fun read(scope: StudentScope): G9StudyRead = if (!accepts(scope)) G9StudyRead.OwnerChanged else
         try { G9StudyRead.Ready(load(scope)) } catch (_: Exception) { G9StudyRead.StorageError }
@@ -93,6 +101,8 @@ class Grade9StudyRepository internal constructor(private val preferences: (Strin
         .put("version", 1).put("owner", scope.ownerId).put("stage", scope.stage.name).put("edition", scope.edition)
         .put("sourceRef", StudentCatalog.referenceKey(Grade9Pilot.ref)).put("revision", Grade9Pilot.revision)
         .put("section", data.section).apply {
+            data.activeSubject?.let { put("activeSubject", it.name) }
+            put("subjectChosen", data.subjectChosen)
             data.checkpoint?.let { put("checkpoint", it) }
             data.draft?.let { d -> put("draft", JSONObject().put("id", d.id).put("answers", JSONObject(d.answers))
                 .put("checked", strings(d.checked)).put("hints", strings(d.hints)).put("index", d.index).put("started", d.started).put("sequence", d.sequence)) }
@@ -117,6 +127,7 @@ class Grade9StudyRepository internal constructor(private val preferences: (Strin
         } catch (_: Exception) { PlanWrite.STORAGE_ERROR }
     }
     fun section(scope: StudentScope, section: Int) = update(scope) { if (section in 0..30) it.copy(section = section) else null }
+    fun selectSubject(scope: StudentScope, subject: Grade9Subject) = update(scope) { it.copy(activeSubject = subject, subjectChosen = true) }
     fun passCheckpoint(scope: StudentScope, answer: String) = update(scope) {
         if (answer.length <= 128 && Grade9Pilot.correct(Grade9Pilot.checkpoint, answer)) it.copy(checkpoint = answer) else null
     }

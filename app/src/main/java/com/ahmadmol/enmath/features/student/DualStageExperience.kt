@@ -20,9 +20,9 @@ import com.ahmadmol.enmath.features.courses.*
 
 @Composable fun studentStageLabel(stage: StudyStage?) = if (stage == StudyStage.G9) tr("Grade 9", "الصف التاسع") else tr("Scientific Baccalaureate", "البكالوريا العلمي")
 
-@Composable fun DualStageHome(state: LearningState, open: (String) -> Unit, gems: LocalGemsUiState, planner: PlannerRepository?, workspace: SourceWorkspaceRepository? = null, grade9Study: Grade9StudyRepository? = null) {
+@Composable fun DualStageHome(state: LearningState, open: (String) -> Unit, gems: LocalGemsUiState, planner: PlannerRepository?, workspace: SourceWorkspaceRepository? = null, grade9Study: Grade9StudyRepository? = null, naturePractice: NaturePracticeRepository? = null) {
     if (state.user?.studyStage == StudyStage.G9) {
-        Grade9LearningPath(state, open, gems, planner, workspace, grade9Study)
+        Grade9LearningPath(state, open, gems, planner, workspace, grade9Study, naturePractice = naturePractice)
     } else {
         BaccalaureateRoadmapHomeScreen(state, open, gems, planner, workspace)
     }
@@ -81,12 +81,13 @@ fun recordedMistakes(state: LearningState): List<RecordedMistake> = StudentCatal
     TextButton({ open("review") }) { Text(tr("Mistake review", "مراجعة الأخطاء")) }
 } }
 
-@Composable fun RecordedProgressScreen(state: LearningState, open: (String) -> Unit, review: Boolean = false, grade9Study: Grade9StudyRepository? = null) {
-    if (!review) { SourceProgressScreen(state, open); return }
+@Composable fun RecordedProgressScreen(state: LearningState, open: (String) -> Unit, review: Boolean = false, grade9Study: Grade9StudyRepository? = null, naturePractice: NaturePracticeRepository? = null) {
+    if (!review) { SourceProgressScreen(state, open, grade9Study = grade9Study, naturePractice = naturePractice); return }
     if (state.user?.studyStage == StudyStage.G9) {
         Grade9Scaffold("screen-review") {
             item("title") { Text(tr("My mistakes", "دفتر أخطائي"), style = MaterialTheme.typography.headlineSmall) }
             if (StudentCatalog.hasUnverifiedHistory(state)) item("older") { ReviewRequiredNotice() }
+            item("evidence-nature") { Grade9NatureEvidenceSection(state, naturePractice, open, mistakes = true) }
             item("evidence") { Grade9EvidenceSection(state, grade9Study, open, mistakes = true) }
             item("plan") { OutlinedButton({ open("planner") }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Plan a review goal", "خطّط لهدف مراجعة")) } }
         }

@@ -19,15 +19,18 @@ class Grade9MainUiContractTest {
     private val state = LearningState(user = User("نور", "", AccountType.Guest,
         localId = "00000000-0000-0000-0000-000000000001", studyStage = StudyStage.G9), product = ProductState())
 
-    @Test fun everyGrade9StationOpensItsExactSourceReference() {
+    @Test fun everyGrade9StationOpensItsExpectedDestination() {
         var opened: String? = null
+        val debuggable = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+            .targetContext.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0
         ui.setContent { ENMathTheme(ThemeMode.Light, Language.Arabic, true, StudyStage.G9) { Surface {
             Grade9LearningPath(state, { opened = it }, LocalGemsUiState(), null, null)
         } } }
         SourceCurricula.forStage(StudyStage.G9).researches.forEach { research ->
             ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("station-${research.id}"))
             ui.onNodeWithTag("station-${research.id}").performClick()
-            ui.runOnIdle { assertEquals(research.route, opened) }
+            val expected = if (debuggable && NaturePracticeBank.matches(research)) NaturePracticeGrader.ROUTE else research.route
+            ui.runOnIdle { assertEquals(expected, opened) }
         }
         ui.onAllNodesWithTag("complete-lesson").assertCountEquals(0)
         ui.onAllNodesWithTag("check-answer").assertCountEquals(0)

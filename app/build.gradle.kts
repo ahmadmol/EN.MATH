@@ -13,6 +13,9 @@ plugins {
 }
 
 val g9Render = providers.gradleProperty("g9Render").orNull == "true"
+val natureHostQa = providers.gradleProperty("natureHostQa").orNull == "true"
+// Keep verification usable on a full workspace drive without deleting existing artifacts.
+providers.gradleProperty("qaBuildDir").orNull?.let { layout.buildDirectory.set(file(it)) }
 
 android {
     if (g9Render) experimentalProperties["android.experimental.enableScreenshotTest"] = true
@@ -22,8 +25,8 @@ android {
         applicationId = "com.ahmadmol.enmath"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "1.0.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,6 +43,11 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true }
+    if (natureHostQa) {
+        testOptions.unitTests.isIncludeAndroidResources = true
+        sourceSets.getByName("testDebug").java.srcDir("src/hostQa/kotlin")
+        sourceSets.getByName("testRelease").java.srcDir("src/hostQaRelease/kotlin")
+    }
     bundle { language { enableSplit = false } }
 }
 
@@ -81,6 +89,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")
+    if (natureHostQa) {
+        testImplementation(composeBom)
+        testImplementation("androidx.compose.ui:ui-test-junit4")
+        testImplementation("org.robolectric:robolectric:4.14.1")
+    }
     androidTestImplementation(composeBom)
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

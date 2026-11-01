@@ -83,7 +83,7 @@ fun grade9GoalChanges(plan: StudyPlan, id: String): List<G9GoalChange> {
         item { Text(tr("My achievements and activity","إنجازاتي ونشاطي"),style=MaterialTheme.typography.headlineSmall) }
         if(data==null || plan==null) {item {G9StudyError(read);if(planRead==PlanRead.StorageError) Text(tr("The plan could not be read; its data is preserved.","تعذرت قراءة الخطة؛ بياناتها محفوظة."))};return@Grade9Scaffold}
         item {G9LearningCard(tr("Recorded evidence only","أدلة محفوظة فقط")) {
-            Text(tr("${data.attempts.size} saved attempts · ${plan.tasks.count { !it.closed && it.isAchieved() }} goals meet their plan criteria","${data.attempts.size} محاولات محفوظة · ${plan.tasks.count { !it.closed && it.isAchieved() }} أهداف تستوفي معايير الخطة"))
+            Text(tr("${data.attempts.size} saved attempts · ${plan.tasks.count { !it.closed && it.isAchieved() }} goals meet their plan criteria","${ArabicPlurals.formatAttempts(data.attempts.size)} محفوظة · ${plan.tasks.count { !it.closed && it.isAchieved() }} أهداف تستوفي معايير الخطة"))
             Text(if(account==null) tr("The reward ledger is unavailable for this profile. Open the wallet to check its status.","سجل المكافآت غير متاح لهذا الملف حاليًا. افتح المحفظة للتحقق من حالته.") else tr("${account.rewards.size} recorded wallet rewards; this is not certification of Grade 9 mastery.","${account.rewards.size} مكافآت محفوظة بالمحفظة؛ ليست شهادة إتقان للتاسع."))
             Text(tr("No new badges or gems are granted here.","لا تُمنح هنا شارات أو جواهر جديدة."))
         }}
