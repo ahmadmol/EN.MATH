@@ -116,7 +116,7 @@ fun recordedMistakes(state: LearningState): List<RecordedMistake> = StudentCatal
             onClick = { open("planner") },
             modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
             shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.ui.graphics.Color(0xFF0066FF))
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Row(
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
@@ -137,8 +137,8 @@ fun recordedMistakes(state: LearningState): List<RecordedMistake> = StudentCatal
             onClick = { open("study/review/all") },
             modifier = Modifier.fillMaxWidth().heightIn(min = 50.dp),
             shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-            border = androidx.compose.foundation.BorderStroke(1.5.dp, androidx.compose.ui.graphics.Color(0xFF0066FF)),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = androidx.compose.ui.graphics.Color(0xFF0066FF))
+            border = androidx.compose.foundation.BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
         ) {
             Row(
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,

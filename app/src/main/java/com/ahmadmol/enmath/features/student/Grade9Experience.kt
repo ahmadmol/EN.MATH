@@ -414,7 +414,7 @@ fun Grade9LearningProgressCard(
     open: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val teal = EntryTeal
+    val teal = MaterialTheme.colorScheme.primary
 
     Card(
         modifier = modifier
@@ -425,7 +425,7 @@ fun Grade9LearningProgressCard(
         border = BorderStroke(1.dp, teal.copy(alpha = 0.35f))
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             // 1. Current Section and Unit Header
@@ -447,7 +447,7 @@ fun Grade9LearningProgressCard(
                         )
                     }
                 }
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(
                         text = tr("Your learning progress", "تقدمك في التعلم"),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
@@ -473,21 +473,19 @@ fun Grade9LearningProgressCard(
 
             Text(
                 text = tr(progress.availablePracticeProgressText.en, progress.availablePracticeProgressText.ar),
+                modifier = Modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                minLines = 2,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                minLines = 2
             )
 
             // 3. Short Encouraging Phrase
             Text(
                 text = tr(progress.encouragementMessage.en, progress.encouragementMessage.ar),
+                modifier = Modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                 color = MaterialTheme.colorScheme.onSurface,
-                minLines = 2,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                minLines = 2
             )
 
             // 4. One Clear Primary Action Button
@@ -781,7 +779,7 @@ fun Grade9SubjectSwitcher(
                 color = if (isAlgebra) EntryTeal else Color.Transparent,
                 modifier = Modifier
                     .weight(1f)
-                    .heightIn(min = 44.dp)
+                    .heightIn(min = Space.touch)
                     .testTag("switch-algebra")
             ) {
                 Row(
@@ -811,7 +809,7 @@ fun Grade9SubjectSwitcher(
                 color = if (isGeometry) EntryIndigo else Color.Transparent,
                 modifier = Modifier
                     .weight(1f)
-                    .heightIn(min = 44.dp)
+                    .heightIn(min = Space.touch)
                     .testTag("switch-geometry")
             ) {
                 Row(
@@ -871,7 +869,7 @@ fun Grade9LearningPath(
     val natureEnabled = LocalInspectionMode.current || (LocalContext.current.applicationInfo.flags and
         android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0)
     val unread = state.product.notifications.count { !it.teacher && it.id !in state.product.readNotifications }
-    val tealAccent = EntryTeal
+    val tealAccent = MaterialTheme.colorScheme.primary
     val coroutineScope = rememberCoroutineScope()
 
     // Active Subject selection: default to ALGEBRA for existing/seamless workflows, but allow first-time picker if not chosen
@@ -1333,7 +1331,7 @@ fun Grade9ExercisesScreen(state: LearningState, open: (String) -> Unit, grade9St
     val book = catalog.book(bookId) ?: catalog.books.first()
     val unit = book.units.find { it.id == unitId }
     val research = unit?.researches?.find { it.id == researchId }
-    val tealAccent = EntryTeal
+    val tealAccent = MaterialTheme.colorScheme.primary
 
     Grade9Scaffold("screen-g9-exercises") {
         item("title") {

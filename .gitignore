@@ -106,3 +106,4 @@ app/src/screenshotTestDebug/
 
 # Host-only Nature QA build junction (generated files live on the QA drive).
 /app/build-nature-qa/
+/app/build-polish-qa/

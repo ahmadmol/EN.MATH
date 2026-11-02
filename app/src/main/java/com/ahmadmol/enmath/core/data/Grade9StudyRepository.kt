@@ -121,7 +121,7 @@ class Grade9StudyRepository internal constructor(private val preferences: (Strin
             if (old == next) return PlanWrite.ALREADY_SAVED
             if (!accepts(scope)) return PlanWrite.OWNER_CHANGED
             val key = key(scope)
-            if (!preferences(key).edit().putString("study", encode(scope, next)).commit()) {
+            if (!runCatching { preferences(key).edit().putString("study", encode(scope, next)).commit() }.getOrDefault(false)) {
                 poisoned += key
                 // Invalidate observers so a failed subject save cannot remain a silent no-op.
                 changed.value += 1

@@ -29,12 +29,11 @@ import com.ahmadmol.enmath.core.design.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-@Composable private fun plannerAccent() = if (LocalStudyStage.current == com.ahmadmol.enmath.core.model.StudyStage.G9)
-    MaterialTheme.colorScheme.primary else Color(0xFF0066FF)
+@Composable private fun plannerAccent() = if (LocalStudentExperience.current) MaterialTheme.colorScheme.primary else Color(0xFF0066FF)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable private fun PlannerPills(g9: Boolean, gap: androidx.compose.ui.unit.Dp, content: @Composable RowScope.() -> Unit) {
-    if (g9 && LocalDensity.current.fontScale > 1.4f) {
+    if (LocalDensity.current.fontScale > 1.4f) {
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap),
             verticalArrangement = Arrangement.spacedBy(8.dp), maxItemsInEachRow = 2) { content() }
     } else Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gap), content = content)

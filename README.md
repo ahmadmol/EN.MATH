@@ -31,9 +31,9 @@ Optional host Compose/Navigation tests use Robolectric without a device:
 python -m unittest discover -s tools -p 'test_*.py' -v
 ```
 
-`-PqaBuildDir=ABSOLUTE_PATH` can redirect generated outputs to another drive. `-Pg9Render=true -Pandroid.experimental.enableScreenshotTest=true` enables the optional Layoutlib preview tasks; rendering dependencies never enter the installed application. Release is unsigned unless an approved signing configuration is supplied securely.
+`-PqaBuildDir=ABSOLUTE_PATH` redirects generated outputs. On Windows, AGP unit-test paths must share the project's drive root; use a local junction to a different drive when needed. `-Pg9Render=true -Pandroid.experimental.enableScreenshotTest=true` enables the optional Layoutlib preview tasks; rendering dependencies never enter the installed application. Release is unsigned unless an approved signing configuration is supplied securely.
 
-Current campaign reports: [execution record](docs/FINAL_STUDENT_COMPLETION_2026-11-02/EXECUTION.md), [final report](docs/FINAL_STUDENT_COMPLETION_2026-11-02/FINAL_REPORT.md). Historical reports are evidence for their recorded builds only. Phone installation, actual upgrade, process death, IME and TalkBack require separate device QA; host tests do not establish those results.
+Current campaign: [student polish 1.0.5 / 6](docs/STUDENT_POLISH_FINAL_2026-11-02/FINAL_REPORT.md), [logic audit](docs/STUDENT_POLISH_FINAL_2026-11-02/LOGIC_AUDIT.md), [UI audit](docs/STUDENT_POLISH_FINAL_2026-11-02/UI_UX_AUDIT.md). Previous handoff: [1.0.4 acceptance](docs/FINAL_STUDENT_COMPLETION_2026-11-02/FINAL_REPORT.md). Historical reports are evidence for their recorded builds only. Phone installation, actual upgrade, process death, IME and TalkBack require separate device QA; host tests do not establish those results.
 
 ## Structure and source rights
 

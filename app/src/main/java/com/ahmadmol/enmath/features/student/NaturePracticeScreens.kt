@@ -11,12 +11,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import com.ahmadmol.enmath.core.data.*
-import com.ahmadmol.enmath.core.design.EntryTeal
+import com.ahmadmol.enmath.core.design.LearningPage
+import com.ahmadmol.enmath.core.design.LearningFeedback
 import com.ahmadmol.enmath.core.design.tr
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -90,16 +93,8 @@ internal fun NaturePracticeContent(
     }
     val safeAction = scope != null && repository != null && bank != null && question != null && !busy
     val isPassed = question?.id in (draft?.passed ?: emptySet())
-    val scroll = key(scope, draft?.id, draft?.position) { rememberScrollState() }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .testTag("screen-g9-nature-practice")
-            .verticalScroll(scroll)
-            .padding(horizontal = 16.dp, vertical = 18.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    LearningPage(Modifier.testTag("screen-g9-nature-practice"), stateKey = draft?.position) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -123,7 +118,7 @@ internal fun NaturePracticeContent(
         Text(
             tr("Nature of numbers · pilot", "طبيعة الأعداد · تدريب تجريبي"),
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-            color = EntryTeal
+            color = MaterialTheme.colorScheme.primary
         )
         Text(
             tr("Original draft exercises — not a mastery certificate or official exam", "تمارين أصلية قيد المراجعة — ليست شهادة إتقان ولا أسئلة وزارية"),
@@ -136,7 +131,7 @@ internal fun NaturePracticeContent(
                 tr("Practice content failed validation; no data was changed.", "تعذر التحقق من ملف الأسئلة؛ لم تتغير بياناتك."),
                 color = MaterialTheme.colorScheme.error
             )
-            return@Column
+            return@LearningPage
         }
         if (read == NatureRead.OwnerChanged || read == NatureRead.StorageError) {
             Text(
@@ -146,11 +141,11 @@ internal fun NaturePracticeContent(
                 ),
                 color = MaterialTheme.colorScheme.error
             )
-            return@Column
+            return@LearningPage
         }
         if (question == null) {
-            CircularProgressIndicator(color = EntryTeal)
-            return@Column
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            return@LearningPage
         }
 
         Text(
@@ -160,8 +155,8 @@ internal fun NaturePracticeContent(
         )
         LinearProgressIndicator(
             progress = { draft.passed.size / 6f },
-            color = EntryTeal,
-            trackColor = EntryTeal.copy(alpha = 0.2f),
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)
@@ -196,7 +191,8 @@ internal fun NaturePracticeContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .heightIn(min = 52.dp)
-                                .testTag("g9-nature-option-$index"),
+                                .testTag("g9-nature-option-$index")
+                                .semantics { selected = input == index.toString() },
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.outlinedButtonColors(
                                 containerColor = if (input == index.toString())
@@ -359,35 +355,12 @@ internal fun NaturePracticeContent(
             }
         }
 
-        if (isPassed) {
-            OutlinedCard(
-                Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-            ) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        tr("Correct. Here is why:", "إجابة صحيحة. إليك التفسير:"),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                    )
-                    Text(naturePracticeProse(question.explanation), modifier = Modifier.testTag("g9-nature-explanation"))
-                }
-            }
-        } else if (evaluation == false) {
-            OutlinedCard(
-                Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        tr("Not yet. Try again; no points or gems are lost.", "ليست صحيحة بعد. حاول مرة أخرى؛ لن تخسر أي نقاط أو جواهر."),
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.testTag("g9-nature-feedback")
-                    )
-                    Text(naturePracticeProse(question.explanation), modifier = Modifier.testTag("g9-nature-explanation"))
-                }
-            }
+        if (isPassed || evaluation == false) {
+            LearningFeedback(isPassed,
+                if (isPassed) tr("Correct. Here is why:", "إجابة صحيحة. إليك التفسير:")
+                else tr("Not yet. Try again; no points or gems are lost.", "ليست صحيحة بعد. حاول مرة أخرى؛ لن تخسر أي نقاط أو جواهر."),
+                naturePracticeProse(question.explanation), Modifier.testTag("g9-nature-feedback"),
+                explanationTag = "g9-nature-explanation")
         }
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -398,7 +371,7 @@ internal fun NaturePracticeContent(
                             val status = withContext(Dispatchers.IO) { repository.move(scope, draft.position - 1) }
                             if (status in listOf(PlanWrite.SAVED, PlanWrite.ALREADY_SAVED)) {
                                 read = withContext(Dispatchers.IO) { repository.read(scope) }
-                            }
+                            } else read = if (status == PlanWrite.OWNER_CHANGED) NatureRead.OwnerChanged else NatureRead.StorageError
                         }
                     },
                     enabled = safeAction,
@@ -413,7 +386,7 @@ internal fun NaturePracticeContent(
                             val status = withContext(Dispatchers.IO) { repository.hint(scope) }
                             if (status in listOf(PlanWrite.SAVED, PlanWrite.ALREADY_SAVED)) {
                                 read = withContext(Dispatchers.IO) { repository.read(scope) }
-                            }
+                            } else read = if (status == PlanWrite.OWNER_CHANGED) NatureRead.OwnerChanged else NatureRead.StorageError
                         }
                     },
                     enabled = safeAction,
@@ -436,7 +409,7 @@ internal fun NaturePracticeContent(
                 },
                 enabled = safeAction && readyResponse,
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = EntryTeal),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp).testTag("g9-nature-check")
             ) {
                 Text(tr("Check answer", "تحقّق من الإجابة"), style = MaterialTheme.typography.titleMedium)
@@ -464,7 +437,7 @@ internal fun NaturePracticeContent(
                 },
                 enabled = safeAction,
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = EntryTeal),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp).testTag("g9-nature-next")
             ) {
                 Text(
@@ -490,18 +463,11 @@ fun NaturePracticeResultScreen(
     val read = remember(scope, id, repository) { scope?.let { repository?.read(it) } }
     val attempt = (read as? NatureRead.Ready)?.data?.attempts?.firstOrNull { it.id == id }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .testTag("screen-g9-nature-result")
-            .verticalScroll(rememberScrollState())
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    LearningPage(Modifier.testTag("screen-g9-nature-result")) {
         Text(
             tr("Session complete", "اكتملت الجلسة"),
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            color = EntryTeal
+            color = MaterialTheme.colorScheme.primary
         )
         if (attempt == null) {
             Text(
@@ -515,14 +481,17 @@ fun NaturePracticeResultScreen(
             ) {
                 Text(tr("Learning path", "المسار الدراسي"))
             }
-            return@Column
+            return@LearningPage
         }
 
+        val metrics = StudentLearningProgressEngine.computeAttemptMetrics(attempt)
+        Text(tr("First-try independent answers: ", "إجابات مستقلة من أول محاولة: ") + metrics.firstTryCorrectCount + "/" + metrics.totalQuestions,
+            modifier = Modifier.testTag("nature-result-first-try"), style = MaterialTheme.typography.titleMedium)
         OutlinedCard(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = BorderStroke(1.dp, EntryTeal.copy(alpha = 0.35f))
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f))
         ) {
             Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
@@ -547,11 +516,22 @@ fun NaturePracticeResultScreen(
             }
         }
 
+        val reviewIds = StudentLearningProgressEngine.ALL_NATURE_IDS.filter { (attempt.missed[it] ?: 0) > 0 || it in attempt.hints }
+        if (reviewIds.isNotEmpty()) {
+            Text(tr("Your next step", "خطوتك التالية"), style = MaterialTheme.typography.titleLarge)
+            Text(tr("Review these questions in the lesson, then try again independently.", "راجع هذه الأسئلة في شرح الدرس، ثم جرّب مجددًا دون مساعدة."))
+            reviewIds.forEach { questionId ->
+                val number = StudentLearningProgressEngine.ALL_NATURE_IDS.indexOf(questionId) + 1
+                Text(tr("Question ", "السؤال ") + number + " · " + tr("Retries: ", "إعادات: ") + (attempt.missed[questionId] ?: 0) +
+                    if (questionId in attempt.hints) tr(" · hint used", " · استُخدم تلميح") else "")
+            }
+        }
+
         Button(
             onClick = backToPath,
             modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
             shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = EntryTeal)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(tr("Back to learning path", "العودة إلى المسار الدراسي"), style = MaterialTheme.typography.titleMedium)
         }

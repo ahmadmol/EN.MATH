@@ -142,8 +142,8 @@ class PlannerRepository internal constructor(private val preferences: (String) -
                 })
             if (!StudentCatalog.accepts(current(), scope)) return PlanWrite.OWNER_CHANGED
             val k = key(scope)
-            if (!preferences(k).edit().putString("plan", o.toString()).commit()) {
-                poisoned += k; PlanWrite.STORAGE_ERROR
+            if (!runCatching { preferences(k).edit().putString("plan", o.toString()).commit() }.getOrDefault(false)) {
+                poisoned += k; _changes.value += 1; PlanWrite.STORAGE_ERROR
             } else { _changes.value += 1; PlanWrite.SAVED }
         } catch (_: IllegalArgumentException) { PlanWrite.INVALID }
         catch (_: Exception) { PlanWrite.STORAGE_ERROR }

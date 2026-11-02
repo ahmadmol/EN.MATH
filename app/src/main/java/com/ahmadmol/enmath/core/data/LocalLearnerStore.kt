@@ -27,8 +27,8 @@ internal class LocalLearnerStore(private val preferences: (String) -> SharedPref
         .put("journals", JSONArray()).put("active", "")
     private fun read(): JSONObject {
         if (poisoned) throw LocalDataWriteFailed()
-        val raw = registry.getString("registry", null) ?: return emptyRegistry()
         return try {
+            val raw = registry.getString("registry", null) ?: return emptyRegistry()
             JSONObject(raw).also { o ->
                 require(o.getInt("version") == 1)
                 if (o.has("guestNotices")) {
@@ -98,9 +98,9 @@ internal class LocalLearnerStore(private val preferences: (String) -> SharedPref
         .put("product", JSONObject(ProductCodec.encode(s.product))).toString()
     fun load(id: String): LearnerSnapshot {
         UUID.fromString(id)
-        val raw = preferences("enmath_learner_$id").getString("snapshot", null)
-            ?: throw CorruptLocalData(IllegalStateException("Missing learner snapshot"))
         return try {
+            val raw = preferences("enmath_learner_$id").getString("snapshot", null)
+                ?: throw IllegalStateException("Missing learner snapshot")
             val o = JSONObject(raw); require(o.getInt("version") == 1)
             require(o.getString("owner") == id)
             val completed = o.getJSONArray("completed")

@@ -59,18 +59,10 @@ fun NatureLessonScreen(
     var selectedOptionIndex by rememberSaveable { mutableIntStateOf(-1) }
     var selfCheckVerified by rememberSaveable { mutableStateOf(false) }
 
-    val tealAccent = EntryTeal
+    val tealAccent = MaterialTheme.colorScheme.primary
     val dark = isDarkTheme()
-    val scroll = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag("screen-g9-nature-lesson")
-            .verticalScroll(scroll)
-            .padding(horizontal = 16.dp, vertical = 18.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    LearningPage(Modifier.testTag("screen-g9-nature-lesson")) {
         // 1. Top Navigation & Stage Breadcrumb
         Row(
             modifier = Modifier.fillMaxWidth(),

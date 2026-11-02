@@ -40,7 +40,12 @@ import com.ahmadmol.enmath.features.localgems.LocalWeeklyReviewScreen
 import com.ahmadmol.enmath.core.localgems.LocalGemsPolicy
 
 private class LocalRepositoryHolder(context: android.content.Context) : androidx.lifecycle.ViewModel() {
-    val result = runCatching { LocalDemoRepository(context.applicationContext) }
+    val result = runCatching { LocalDemoRepository(context.applicationContext) }.recoverCatching { failure ->
+        // Wrong preference types / malformed legacy JSON are storage corruption, not an app crash.
+        if (failure is ClassCastException || failure is org.json.JSONException)
+            throw com.ahmadmol.enmath.core.data.CorruptLocalData(failure)
+        throw failure
+    }
 }
 
 @Composable

@@ -71,8 +71,8 @@ class SourceWorkspaceRepository internal constructor(private val preferences: (S
             doc.put("visitedByBook", JSONObject().apply { next.lastVisitedByBook.forEach { (book, id) -> put(book, encode(id)) } })
             if (!StudentCatalog.accepts(current(), scope)) return PlanWrite.OWNER_CHANGED
             val key = key(scope)
-            if (!preferences(key).edit().putString("workspace", doc.toString()).commit()) {
-                poisoned += key; PlanWrite.STORAGE_ERROR
+            if (!runCatching { preferences(key).edit().putString("workspace", doc.toString()).commit() }.getOrDefault(false)) {
+                poisoned += key; changed.value += 1; PlanWrite.STORAGE_ERROR
             } else { changed.value += 1; PlanWrite.SAVED }
         } catch (_: Exception) { PlanWrite.STORAGE_ERROR }
     }

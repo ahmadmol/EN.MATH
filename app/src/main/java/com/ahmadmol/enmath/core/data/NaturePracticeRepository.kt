@@ -99,8 +99,9 @@ class NaturePracticeRepository internal constructor(
             .put("id", a.id).put("answers", JSONObject(a.answers)).put("missed", JSONObject(a.missed))
             .put("hints", array(a.hints)).put("startedAt", a.startedAt).put("finishedAt", a.finishedAt)) } })
         val key = key(scope)
-        val committed = preferences(key).edit().putString("practice", doc.toString()).commit()
-        if (!committed) poisoned += key else changed.value += 1
+        val committed = runCatching { preferences(key).edit().putString("practice", doc.toString()).commit() }.getOrDefault(false)
+        if (!committed) poisoned += key
+        changed.value += 1 // Also notify observers to read the fail-closed storage state.
         return committed
     }
 

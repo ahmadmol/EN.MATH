@@ -26,6 +26,7 @@ object Space {
     val hero = 48.dp
     val contentMax = 1040.dp
     val formMax = 520.dp
+    val readingMax = 640.dp
     val symbol = 56.dp
     val touch = 48.dp
     val chart = 112.dp
@@ -157,10 +158,14 @@ fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, s
     val typography =
         AppTypography.copy(
             displaySmall = AppTypography.displaySmall.copy(fontFamily = font),
+            displayLarge = AppTypography.displayLarge.copy(fontFamily = font),
+            displayMedium = AppTypography.displayMedium.copy(fontFamily = font),
             headlineLarge = AppTypography.headlineLarge.copy(fontFamily = font),
             headlineMedium = AppTypography.headlineMedium.copy(fontFamily = font),
+            headlineSmall = AppTypography.headlineSmall.copy(fontFamily = font),
             titleLarge = AppTypography.titleLarge.copy(fontFamily = font),
             titleMedium = AppTypography.titleMedium.copy(fontFamily = font),
+            titleSmall = AppTypography.titleSmall.copy(fontFamily = font),
             bodyLarge = AppTypography.bodyLarge.copy(fontFamily = font),
             bodyMedium = AppTypography.bodyMedium.copy(fontFamily = font),
             bodySmall = AppTypography.bodySmall.copy(fontFamily = font),

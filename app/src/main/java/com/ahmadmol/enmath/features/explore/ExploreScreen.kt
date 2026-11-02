@@ -72,11 +72,11 @@ object LabPalette {
 
 fun getFunctionDescription(expression: String, arabic: Boolean = true): String {
     fun text(en: String, ar: String) = if (arabic) ar else en
-    val clean = expression.lowercase().replace(" ", "").removePrefix("y=").removePrefix("f(x)=")
-        .replace("²", "^2").replace("−", "-")
+    val clean = com.ahmadmol.enmath.core.data.MathInput.graphExpression(expression)
+    if (!graphSupported(expression)) return text("Unsupported function; no mathematical conclusion is available.", "دالة غير مدعومة؛ لا يمكن استنتاج خصائصها.")
 
     return when (clean) {
-        "x^2", "x*x" -> text("Root and minimum: (0,0)", "الجذر والقيمة الصغرى: (0,0)")
+        "x^2" -> text("Root and minimum: (0,0)", "الجذر والقيمة الصغرى: (0,0)")
         "sin(x)" -> text("Range: [-1, 1], roots: kπ", "المدى: [-1, 1] ، الجذور: kπ")
         "cos(x)" -> text("Range: [-1, 1], roots: (k+0.5)π", "المدى: [-1, 1] ، الجذور: (k+0.5)π")
         "2x+1", "2*x+1" -> text("y-intercept: 1, root: -0.5", "التقاطع الرأسي: 1 ، الجذر: -0.5")
@@ -86,19 +86,25 @@ fun getFunctionDescription(expression: String, arabic: Boolean = true): String {
         "tan(x)" -> text("Domain: x ≠ (k+0.5)π, roots: kπ", "المجال: x ≠ (k+0.5)π ، الجذور: kπ")
         "abs(x)" -> text("Minimum: (0,0), range: [0, ∞)", "القيمة الصغرى: (0,0) ، المدى: [0, ∞)")
         else -> {
-            val linearMatch = Regex("([+-]?(?:\\d+(?:\\.\\d+)?)?)x([+-]\\d+(?:\\.\\d+)?)?").matchEntire(clean)
+            val linearMatch = Regex("([+-]?(?:\\d+(?:\\.\\d+)?)?)\\*?x([+-]\\d+(?:\\.\\d+)?)?").matchEntire(clean)
             if (linearMatch != null) {
-                val aStr = linearMatch.groupValues[1]
-                val a = when (aStr) { "", "+" -> 1.0; "-" -> -1.0; else -> aStr.toDoubleOrNull() ?: 1.0 }
-                val bStr = linearMatch.groupValues[2]
-                val b = if (bStr.isNotEmpty()) bStr.toDoubleOrNull() ?: 0.0 else 0.0
-                val root = if (a != 0.0) -b / a else Double.NaN
-                val rootStr = if (root.isNaN()) text("None", "لا يوجد") else if (root % 1.0 == 0.0) root.toInt().toString() else "%.2f".format(java.util.Locale.US, root)
-                val bStrFormatted = if (b % 1.0 == 0.0) b.toInt().toString() else "%.2f".format(java.util.Locale.US, b)
-                text("y-intercept: $bStrFormatted, root: $rootStr", "التقاطع الرأسي: $bStrFormatted ، الجذر: $rootStr")
-            } else {
-                text("Interactive mathematical function", "دالة رياضية تفاعلية")
-            }
+                val a = when (val value = linearMatch.groupValues[1]) {
+                    "", "+" -> 1.0
+                    "-" -> -1.0
+                    else -> value.toDouble()
+                }
+                val b = linearMatch.groupValues[2].takeIf { it.isNotEmpty() }?.toDouble() ?: 0.0
+                fun number(value: Double) = java.math.BigDecimal.valueOf(value).stripTrailingZeros().toPlainString()
+                when {
+                    a == 0.0 && b == 0.0 -> text("Zero function: every real number is a root.", "الدالة الصفرية: كل عدد حقيقي جذر لها.")
+                    a == 0.0 -> text("Constant function: no roots; y-intercept: "+number(b), "دالة ثابتة: لا جذور لها؛ التقاطع الرأسي: "+number(b))
+                    else -> {
+                        val root = -b / a
+                        if (!root.isFinite()) text("Root cannot be represented within the supported numeric range.", "الجذر خارج المجال العددي المدعوم.")
+                        else text("y-intercept: "+number(b)+", root ≈ "+number(root), "التقاطع الرأسي: "+number(b)+"، الجذر ≈ "+number(root))
+                    }
+                }
+            } else text("Supported graph; detailed analysis is unavailable.", "الرسم مدعوم؛ التحليل التفصيلي غير متاح.")
         }
     }
 }
@@ -460,7 +466,7 @@ fun FunctionInputRow(
                             Box(contentAlignment = Alignment.CenterStart) {
                                 if (input.isEmpty()) {
                                     Text(
-                                        text = "... sin(x) أو x^2 :مثال",
+                                        text = tr("Example: x^2 or sin(x)", "مثال: x^2 أو sin(x)"),
                                         color = placeholderColor,
                                         fontSize = 13.sp
                                     )
@@ -474,7 +480,7 @@ fun FunctionInputRow(
                 Spacer(Modifier.width(8.dp))
 
                 Text(
-                    text = "الدالة = y",
+                    text = tr("Function = y", "الدالة = y"),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = if (isDark) LabPalette.darkTextSecondary else LabPalette.lightTextSecondary,
                         fontSize = 13.sp,
@@ -491,7 +497,7 @@ fun InteractiveGraphCanvas(
     functions: List<String>,
     hidden: List<String>,
     colors: List<Color>,
-    engine: DemoGraphEngine,
+    engine: GraphEngine,
     zoom: Float,
     pan: Offset,
     grid: Boolean,
@@ -506,6 +512,7 @@ fun InteractiveGraphCanvas(
     val gridColorSubtle = if (LocalStudentExperience.current) MaterialTheme.colorScheme.surfaceVariant else if (isDark) LabPalette.darkGridSubtle else LabPalette.lightGridSubtle
     val axisColor = if (LocalStudentExperience.current) MaterialTheme.colorScheme.onSurface else if (isDark) LabPalette.darkAxis else LabPalette.lightAxis
     val tickTextColor = if (LocalStudentExperience.current) MaterialTheme.colorScheme.onSurfaceVariant else if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)
+    val prepared = remember(engine, functions) { functions.map { engine.prepare(it) } }
     val tickFontPixels = with(LocalDensity.current) { 10.sp.toPx() }
     val axisFontPixels = with(LocalDensity.current) { 12.sp.toPx() }
 
@@ -747,7 +754,7 @@ fun InteractiveGraphCanvas(
 
                     for (px in 0..width.toInt() step 2) {
                         val mathX = viewport.mathX(px.toFloat())
-                        val evalY = engine.evaluate(expr, mathX.toDouble())
+                        val evalY = prepared[index]?.evaluate(mathX.toDouble())
                         val sy = if (evalY == null) Float.NaN else viewport.screenY(evalY.toFloat())
 
                         if (!sy.isFinite() || sy < -height * 2 || sy > height * 3 ||

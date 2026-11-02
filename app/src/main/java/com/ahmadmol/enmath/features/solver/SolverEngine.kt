@@ -9,8 +9,7 @@ interface SolverEngine {
 
 /** Only returns curated worked examples for exact supported inputs. Never guesses. */
 class DemoSolverEngine : SolverEngine {
-    private fun key(value: String) =
-        value.replace(" ", "").replace("−", "-").replace("×", "*").replace("²", "^2").lowercase()
+    private fun key(value: String) = com.ahmadmol.enmath.core.data.MathInput.normalize(value)
 
     override fun solve(expression: String): Solution {
         val steps: List<SolutionStep>
