@@ -188,14 +188,16 @@ import kotlinx.coroutines.launch
                         val inProgress = student?.drafts?.any { it.lessonId == research.id } == true ||
                             (research.id == Grade9Pilot.lessonId && g9?.draft != null) ||
                             (research.id == Grade9NatureLesson.LESSON_ID && bank != null && nature?.draft != null)
+                        val qaSaved = student?.results?.any { it.lessonId == research.id } == true
                         val status = when {
                             done -> tr("Practice completed · review available", "اكتمل التدريب · المراجعة متاحة")
                             inProgress -> tr("Practice in progress", "التدريب قيد التقدم")
+                            qaSaved -> tr("QA session saved · teacher review pending", "جلسة اختبار داخلي محفوظة · مراجعة المعلم معلّقة")
                             available -> if (research.id == Grade9Pilot.lessonId) tr("Original pilot available", "درس أصلي تجريبي متاح") else tr("Interactive practice available · internal draft", "تدريب تفاعلي متاح · مسودة داخلية")
                             research.id in workspace?.savedIds.orEmpty() -> tr("Saved source reference", "مرجع مصدر محفوظ")
                             else -> tr("Content in preparation", "محتوى قيد الإعداد")
                         }
-                        JourneyStation(research, index, student?.selectedAvatarId, status, done, inProgress) {
+                        JourneyStation(research, index, student?.selectedAvatarId, status, done, inProgress, qaSaved) {
                             selectedLesson = research.id
                             if (scope != null) store?.rememberStation(scope, research.id)
                         }
@@ -227,13 +229,22 @@ import kotlinx.coroutines.launch
                 Text(research.summary.ifBlank { tr("Browse this lesson's reference and available activities.", "تصفّح مرجع هذا الدرس والأنشطة المتاحة له.") })
                 val mapping = bank?.mappings?.find { it.sourceId == research.id }
                 mapping?.let { Text(tr("Learning goal", "هدف التعلم"), fontWeight = FontWeight.Bold); MathProse(it.goal) }
+                val qaDraft = student?.drafts?.find { it.lessonId == research.id }
+                val qaSessions = student?.results.orEmpty().filter { it.lessonId == research.id }
+                if (qaDraft != null) Text(tr("Saved QA question ${qaDraft.position + 1} of 6", "السؤال المحفوظ ${qaDraft.position + 1} من 6 في الاختبار الداخلي"))
+                if (qaSessions.isNotEmpty()) {
+                    Text(tr("${qaSessions.size} saved QA sessions · not official mastery", "${qaSessions.size} جلسات اختبار داخلي محفوظة · لا تمثل إتقانًا رسميًا"))
+                    OutlinedButton({ selectedLesson = null; open("qa/result/${qaSessions.last().id}") }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("journey-last-qa-result")) { Text(tr("Open last saved QA result", "افتح آخر نتيجة اختبار محفوظة")) }
+                }
+                if (research.id == Grade9Pilot.lessonId && g9 != null) Text(tr("${g9.attempts.size} saved original practice attempts", "${g9.attempts.size} محاولات تدريب أصلي محفوظة"))
+                if (research.id == Grade9NatureLesson.LESSON_ID && nature != null && bank != null) Text(StudentLearningProgressEngine.computeGrade9Progress(nature).availablePracticeProgressText.text(), Modifier.fillMaxWidth())
                 Text(tr("Browsing references does not grant completion or gems.", "تصفّح المراجع لا يمنح إكمالًا أو جواهر."))
                 PrimaryButton(tr("Open lesson", "افتح الدرس"), { selectedLesson = null; open(research.route) }, Modifier.testTag("journey-open-lesson"))
                 if (research.id == Grade9Pilot.lessonId) OutlinedButton({ selectedLesson = null; open("g9/practice") }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Original fractions practice", "تدريب الكسور الأصلي")) }
                 if (mapping != null) OutlinedButton({ selectedLesson = null
                     open(if (research.id == Grade9NatureLesson.LESSON_ID) NaturePracticeGrader.ROUTE else "qa/practice/${research.id}")
                 }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("journey-qa-practice")) {
-                    Text(tr("Internal QA: 6 unreviewed questions", "اختبار داخلي: 6 أسئلة غير معتمدة"))
+                    Text(if (qaDraft != null) tr("Resume internal QA session", "تابع جلسة الاختبار الداخلي") else tr("Internal QA: 6 unreviewed questions", "اختبار داخلي: 6 أسئلة غير معتمدة"))
                 }
             }
         }
@@ -241,7 +252,7 @@ import kotlinx.coroutines.launch
 }
 
 @Composable private fun JourneyStation(research: SourceResearch, index: Int, avatar: String?, status: String,
-    done: Boolean, started: Boolean, click: () -> Unit) {
+    done: Boolean, started: Boolean, review: Boolean, click: () -> Unit) {
     val density = LocalDensity.current
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val colors = MaterialTheme.colorScheme
@@ -269,7 +280,7 @@ import kotlinx.coroutines.launch
                 contentColor = if (done) colors.onSecondaryContainer else colors.onSurface,
                 border = BorderStroke(2.dp, if (done || started) colors.primary else colors.outlineVariant), shadowElevation = 2.dp) {
                 Box(contentAlignment = Alignment.Center) {
-                    Icon(if (done) Icons.Rounded.Check else if (started) Icons.Rounded.PlayArrow else Icons.AutoMirrored.Rounded.MenuBook, null, Modifier.size(28.dp))
+                    Icon(if (done) Icons.Rounded.Check else if (started) Icons.Rounded.PlayArrow else if (review) Icons.Rounded.History else Icons.AutoMirrored.Rounded.MenuBook, null, Modifier.size(28.dp))
                 }
             }
             Surface(Modifier.clickable(onClick = click).testTag("station-label-${research.id}"), shape = StudentExperienceTokens.compact, color = colors.surface) {

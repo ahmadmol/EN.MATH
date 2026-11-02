@@ -110,6 +110,8 @@ import java.util.TimeZone
         item { StudyAction(tr("My gems", "جواهري"), "", Icons.Rounded.Diamond, "profile-gems") { open("gems/wallet") } }
         item { StudyAction(tr("Achievements and activity", "إنجازاتي ونشاطي"), "", Icons.Rounded.WorkspacePremium, "profile-activity") { open(Routes.Activity) } }
         item { StudyAction(tr("My plan", "خطتي"), "", Icons.AutoMirrored.Rounded.EventNote, "profile-planner") { open("planner") } }
+        item { StudyAction(tr("Notifications", "الإشعارات"), "", Icons.Rounded.Notifications, "profile-notifications") { open("notifications") } }
+        item { StudyAction(tr("More settings", "إعدادات إضافية"), tr("Reminders and notification preferences", "التذكيرات وتفضيلات الإشعارات"), Icons.Rounded.Settings, "profile-settings") { open("settings") } }
         item("preferences") { StudentPanel {
             Text(tr("Preferences", "تفضيلاتي"), style = MaterialTheme.typography.titleLarge)
             OutlinedButton({ language(if (state.language == Language.Arabic) Language.English else Language.Arabic) }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("profile-language")) { Text(tr("العربية", "English")) }

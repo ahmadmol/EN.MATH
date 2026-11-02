@@ -153,6 +153,12 @@ class ModernStudentHostTest {
         assertEquals(1,data.results.size);assertEquals(7,data.results.single().submissions.size)
         assertEquals(3,data.results.single().submissions.count{it.grade==DraftGrade.NEEDS_TEACHER_REVIEW})
         assertEquals(1,data.results.single().hints.size);assertTrue(data.events.isEmpty());assertTrue(repo.state.value.product.pendingGemEvents.isEmpty())
+        ui.runOnIdle { nav.navigate(Routes.Home) }
+        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("home-research-$lesson"))
+        ui.onNodeWithTag("home-research-$lesson").assert(SemanticsMatcher.expectValue(androidx.compose.ui.semantics.SemanticsProperties.StateDescription,"جلسة اختبار داخلي محفوظة · مراجعة المعلم معلّقة"))
+        ui.onNodeWithTag("home-research-$lesson").performClick()
+        ui.onNodeWithTag("journey-last-qa-result").performScrollTo().assertIsDisplayed().performSemanticsAction(SemanticsActions.OnClick) { it() }
+        ui.runOnIdle { assertEquals(data.results.single().id, nav.currentBackStackEntry?.arguments?.getString("id")) }
         ui.runOnIdle { nav.navigate("qa/review") }
         ui.onNodeWithTag("screen-qa-mistakes").performScrollToNode(hasTestTag("qa-mistake-G9-A-U01-L02-Q01"))
         ui.onNodeWithTag("qa-mistake-G9-A-U01-L02-Q01").assertExists()
