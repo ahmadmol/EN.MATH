@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-02",
+  "timezone": "Asia/Damascus",
+  "classification": "STUDENT MVP READY FOR PHONE QA",
+  "full_curriculum_complete": false,
+  "student_complete": false,
+  "tested_code_commit": "91a6f13682be836682d0b82487607f9f7c170c88",
+  "baseline": "96cdd3dce57c48a26be58cd61eeb24cc2ee0a9be",
+  "branch": "feature/ui-refinement",
+  "code_push_verified_remote": "91a6f13682be836682d0b82487607f9f7c170c88",
+  "final_delivery_git_record": "GIT_STATUS.txt outside repository",
+  "jvm": {
+    "Debug": {
+      "tests": 444,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "host": 32,
+      "core": 412,
+      "suites": 54
+    },
+    "Release": {
+      "tests": 413,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "host": 1,
+      "core": 412,
+      "suites": 50
+    }
+  },
+  "python": {
+    "tests": 34,
+    "status": "PASS"
+  },
+  "lint": {
+    "debug": {
+      "counts": {
+        "Warning": 72,
+        "Information": 1
+      },
+      "status": "PASS"
+    },
+    "release": {
+      "counts": {
+        "Warning": 73,
+        "Information": 1
+      },
+      "status": "PASS"
+    }
+  },
+  "current_visual": {
+    "status": "BLOCKED",
+    "requested_cases": 36,
+    "rendered": 0,
+    "reason": "Windows Application Control blocked Layoutlib libandroid_runtime.dll; no policy changes or bypass.",
+    "intended_matrix": "360dp Arabic 100/150/200%; 393dp English 150/200%; 800dp Arabic 200%; Light/Dark selected cases; six production UI scenes."
+  },
+  "phone": "NOT_RUN",
+  "adb": false,
+  "emulator": false,
+  "apks": [
+    {
+      "variant": "debug",
+      "file": "ENMATH-student-qa-v5-debug.apk",
+      "bytes": 34864547,
+      "sha256": "8289c108ff1231eccf973e88ced94b7f780e9fc8904e17f11a11bca408941b75",
+      "demo_bank": true,
+      "crc": "PASS"
+    },
+    {
+      "variant": "release",
+      "file": "ENMATH-student-v5-release-unsigned.apk",
+      "bytes": 25052625,
+      "sha256": "ee75cbf098a00a5547920df4070f998525e63feedffeac540acaf676ad43a43d",
+      "demo_bank": false,
+      "crc": "PASS"
+    }
+  ],
+  "publication_scan": {
+    "files": 516,
+    "forbidden_files": [],
+    "findings": [],
+    "scope": "Known key patterns and prohibited file types; not a proof that all possible secrets are absent."
+  },
+  "backup": {
+    "path": "C:/ENMATH_BACKUPS/STUDENT_FINAL_2026-11-02_before",
+    "bundle_sha256": "b3983e9566dc11a1006ff4910ed479788e46386b69d0c5559a54c05edd8c533b",
+    "tracked_files": 504,
+    "restore_clone_and_fsck": "PASS"
+  }
+}
