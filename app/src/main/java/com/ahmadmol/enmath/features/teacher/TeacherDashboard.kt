@@ -16,11 +16,6 @@ fun TeacherDashboard(state: LearningState, onRoute: (String) -> Unit) {
     val needs =
         state.students.filter { LearningRules.topic(state, "derivatives", it.id).score < 45 }
     ScreenPage(Modifier.testTag("screen-teacher")) {
-        PageHeading(
-            label(TextKey.t_f64fd3a47a),
-            label(TextKey.t_3b34128f7d),
-            label(TextKey.t_9305ec4b3f),
-        )
         OfflineState()
         AdaptivePair(
             first = {

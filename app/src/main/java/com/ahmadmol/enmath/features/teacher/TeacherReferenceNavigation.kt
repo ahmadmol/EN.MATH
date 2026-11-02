@@ -83,13 +83,13 @@ fun TeacherReferenceBottomNav(route: String?, open: (String) -> Unit, dark: Bool
         }
     CleanBottomBar(
         listOf(
-            CleanNavItem(Routes.TeacherHome, refText("الرئيسية", "Home"), Icons.Outlined.Dashboard),
             CleanNavItem(Routes.TeacherClasses, refText("الشعب", "Classes"), Icons.Outlined.Groups),
             CleanNavItem(
                 Routes.TeacherAssignments,
                 refText("الواجبات", "Assignments"),
                 Icons.AutoMirrored.Outlined.Assignment,
             ),
+            CleanNavItem(Routes.TeacherHome, refText("الرئيسية", "Home"), Icons.Outlined.Dashboard),
             CleanNavItem(
                 Routes.TeacherResources,
                 refText("الموارد", "Resources"),
