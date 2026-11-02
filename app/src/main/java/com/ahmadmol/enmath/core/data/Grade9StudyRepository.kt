@@ -122,7 +122,10 @@ class Grade9StudyRepository internal constructor(private val preferences: (Strin
             if (!accepts(scope)) return PlanWrite.OWNER_CHANGED
             val key = key(scope)
             if (!preferences(key).edit().putString("study", encode(scope, next)).commit()) {
-                poisoned += key; PlanWrite.STORAGE_ERROR
+                poisoned += key
+                // Invalidate observers so a failed subject save cannot remain a silent no-op.
+                changed.value += 1
+                PlanWrite.STORAGE_ERROR
             } else { changed.value += 1; PlanWrite.SAVED }
         } catch (_: Exception) { PlanWrite.STORAGE_ERROR }
     }

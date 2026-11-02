@@ -98,7 +98,7 @@ object StudentLearningProgressEngine {
      */
     fun computeDraftMetrics(draft: NatureDraft): SessionProgressMetrics {
         val attempted = ALL_NATURE_IDS.filter { id ->
-            id in draft.passed || (draft.missed[id] ?: 0) > 0 || id in draft.hints || id in draft.answers
+            id in draft.passed || (draft.missed[id] ?: 0) > 0 || id in draft.answers
         }
         val passedCount = draft.passed.size
         val firstTryCorrect = attempted.count { id ->
@@ -151,8 +151,10 @@ object StudentLearningProgressEngine {
      * not a pedagogical diagnosis or proof of student deficit.
      */
     fun computeNatureLessonStatus(data: NaturePracticeData): LessonProgressStatus {
+        // A new saved session must remain resumable even when older sessions are complete.
+        if (data.draft != null) return LessonProgressStatus.STARTED
         if (data.attempts.isEmpty()) {
-            return if (data.draft != null) LessonProgressStatus.STARTED else LessonProgressStatus.NOT_STARTED
+            return LessonProgressStatus.NOT_STARTED
         }
         val latest = data.attempts.last()
         val metrics = computeAttemptMetrics(latest)
@@ -282,6 +284,16 @@ object StudentLearningProgressEngine {
         )
     }
 }
+
+/** Saved retry/hint evidence only. The store does not retain historical wrong-answer text. */
+data class NatureQuestionReview(val questionId: String, val mistakes: Int, val hintedSessions: Int)
+
+fun natureQuestionReview(data: NaturePracticeData): List<NatureQuestionReview> =
+    StudentLearningProgressEngine.ALL_NATURE_IDS.mapNotNull { id ->
+        val mistakes = data.attempts.sumOf { it.missed[id] ?: 0 } + (data.draft?.missed?.get(id) ?: 0)
+        val hints = data.attempts.count { id in it.hints } + if (id in data.draft?.hints.orEmpty()) 1 else 0
+        if (mistakes == 0 && hints == 0) null else NatureQuestionReview(id, mistakes, hints)
+    }
 
 /**
  * Grammatically sound Arabic noun count formatter.

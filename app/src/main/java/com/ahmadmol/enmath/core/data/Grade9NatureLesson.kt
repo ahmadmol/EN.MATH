@@ -6,7 +6,8 @@ import com.ahmadmol.enmath.core.model.Copy
  * Pedagogical content for Syrian Grade 9 Algebra: Unit 1 (Numbers and Fractions), Lesson 1 (Nature of Numbers).
  * Source: Syrian Curriculum, Grade 9 Mathematics (Algebra), 2025–2026 Edition, Pages 6–7.
  *
- * This content is mathematically verified and structured for Grade 9 students (ages 14–15).
+ * Original educational draft structured for Grade 9 students (ages 14–15).
+ * Independent educator approval has not been recorded; the source index is not lesson approval.
  * Strictly labeled as educational draft for learning and formative practice; not an official ministry endorsement.
  */
 object Grade9NatureLesson {

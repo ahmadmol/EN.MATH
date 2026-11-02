@@ -47,6 +47,7 @@ class StudentLearningProgressHostTest {
     @get:Rule val ui = createAndroidComposeRule<ComponentActivity>()
     private lateinit var nav: NavHostController
     private lateinit var repo: LocalDemoRepository
+    private lateinit var files: MutableMap<String, FixturePreferences>
 
     private val good = listOf(
         "2",
@@ -64,7 +65,7 @@ class StudentLearningProgressHostTest {
         else context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE.inv()
         ui.activity.applicationInfo.flags = if (debuggable) ui.activity.applicationInfo.flags or ApplicationInfo.FLAG_DEBUGGABLE
         else ui.activity.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE.inv()
-        val files = mutableMapOf<String, FixturePreferences>()
+        files = mutableMapOf()
         repo = LocalDemoRepository(false) { key -> files.getOrPut(key) { FixturePreferences() }.prefs }
         repo.createLocalProfile("اختبار التقدم", StudyStage.G9, false)
         val s = StudentCatalog.scope(repo.state.value)!!
@@ -87,6 +88,66 @@ class StudentLearningProgressHostTest {
     }
 
     private fun scope() = StudentCatalog.scope(repo.state.value)!!
+
+    @Test fun releaseHomeAndEvidenceNeverOfferBlockedDemoPractice() {
+        mount(false, 2f, debuggable = false)
+        ui.onNodeWithTag("g9-learning-progress-card").assertDoesNotExist()
+        ui.onNodeWithTag("g9-reference-action").performScrollTo().performClick()
+        ui.runOnIdle { assertEquals("g9/reference/{id}", nav.currentDestination?.route) }
+        ui.runOnIdle { nav.navigate(Routes.Progress) }
+        ui.onNodeWithTag("nature-evidence-practice").assertDoesNotExist()
+        ui.onNodeWithText("التدريب التجريبي غير متاح في هذه النسخة. سجلاتك السابقة محفوظة.").assertExists()
+    }
+
+    @Test fun geometryNextStepStaysInsideGeometryInsteadOfStartingAlgebraPractice() {
+        mount(false, 1.5f)
+        ui.runOnIdle { repo.grade9Study.selectSubject(scope(), Grade9Subject.GEOMETRY) }
+        ui.onNodeWithTag("g9-learning-progress-card").assertDoesNotExist()
+        ui.onNodeWithTag("g9-reference-action").performScrollTo().performClick()
+        ui.runOnIdle {
+            assertEquals("g9/reference/{id}", nav.currentDestination?.route)
+            assertTrue(nav.currentBackStackEntry?.arguments?.getString("id").orEmpty().startsWith("G9-GEO"))
+        }
+    }
+
+    @Test fun corruptProgressShowsReadErrorWithoutInventingZeroProgress() {
+        mount(false, 1f)
+        val key = "enmath_g9_nature_pilot_v1_${scope().ownerId}"
+        files.getValue(key).prefs.edit().putString("practice", "corrupt-preserved").commit()
+        // A genuine source switch recomposes Home and re-reads the scoped document.
+        ui.runOnIdle { repo.grade9Study.selectSubject(scope(), Grade9Subject.GEOMETRY) }
+        ui.runOnIdle { nav.navigate(Routes.Progress) }
+        ui.onNodeWithTag("nature-progress-read-error").assertExists()
+        assertEquals("corrupt-preserved", files.getValue(key).prefs.getString("practice", null))
+    }
+
+    @Test fun failedSubjectSaveShowsPreservedDataErrorAndKeepsOriginalDocument() {
+        mount(false, 1f)
+        val store = files.entries.single { it.key.startsWith("enmath_g9_study_v1_") }.value
+        val original = store.file.readBytes()
+        store.fail = true
+        ui.onNodeWithTag("switch-geometry").performScrollTo().performClick()
+        ui.onNodeWithText("تعذّرت قراءة بيانات دراستك المحفوظة.", substring = true).assertExists()
+        ui.onNodeWithTag("g9-learning-progress-card").assertDoesNotExist()
+        assertEquals(G9StudyRead.StorageError, repo.grade9Study.read(scope()))
+        assertArrayEquals(original, store.file.readBytes())
+    }
+
+    @Test fun savedSessionOpensItsExactResultWithoutStartingAnotherDraft() {
+        mount(false, 1f)
+        val s = scope()
+        repo.naturePractice.start(s)
+        for (i in 0..5) {
+            repo.naturePractice.submit(s, id(i), good[i])
+            if (i < 5) repo.naturePractice.move(s, i + 1)
+        }
+        val result = repo.naturePractice.finish(s).resultId!!
+        ui.runOnIdle { nav.navigate(Routes.Progress) }
+        ui.onNodeWithTag("nature-saved-$result").performScrollTo().performClick()
+        ui.runOnIdle { assertEquals(result, nav.currentBackStackEntry?.arguments?.getString("id")) }
+        ui.onNodeWithTag("screen-g9-nature-result").assertExists()
+        assertNull((repo.naturePractice.read(s) as NatureRead.Ready).data.draft)
+    }
 
     @Test
     fun homeProgressCardAppearsAndNavigatesToPractice() {

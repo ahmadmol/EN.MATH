@@ -9,6 +9,7 @@ interface GraphEngine {
 /** Deliberately bounded demo grammar: sums of polynomial monomials and basic trig. No eval. */
 class DemoGraphEngine : GraphEngine {
     override fun evaluate(expression: String, x: Double): Double? {
+        if (!x.isFinite() || expression.length > 120) return null
         val s =
             expression
                 .lowercase()
@@ -31,6 +32,8 @@ class DemoGraphEngine : GraphEngine {
         if (terms.joinToString("") != s) return null
         var sum = 0.0
         for (term in terms) {
+            // An omitted coefficient is valid for x, but a leading '*' has no operand.
+            if (term.removePrefix("+").removePrefix("-").startsWith("*")) return null
             val m = Regex("([+-]?(?:\\d+(?:\\.\\d+)?)?)\\*?x(?:\\^(\\d{1,2}))?").matchEntire(term)
             val value =
                 if (m != null) {

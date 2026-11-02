@@ -854,7 +854,12 @@ fun Grade9LearningPath(
     val change = workspace?.changes?.collectAsState()?.value
     val read = remember(scope, change) { scope?.let { workspace?.read(it) } }
     val resumed = grade9Resume(state, (read as? SourceWorkspaceRead.Ready)?.workspace?.visitedId)
-    val pilotData = (rememberG9Study(state, grade9Study) as? G9StudyRead.Ready)?.data
+    val studyRead = rememberG9Study(state, grade9Study)
+    val pilotData = (studyRead as? G9StudyRead.Ready)?.data
+    if (studyRead == G9StudyRead.StorageError || studyRead == G9StudyRead.OwnerChanged) {
+        Grade9Scaffold("screen-home") { item { G9StudyError(studyRead) } }
+        return
+    }
     val dailyPlan = (rememberG9Plan(state, planner) as? PlanRead.Ready)?.plan ?: StudyPlan()
     val nextStudy = grade9NextStudy(pilotData ?: G9StudyData(), dailyPlan, (read as? SourceWorkspaceRead.Ready)?.workspace?.visitedId, System.currentTimeMillis())
     val natureChange = naturePractice?.changes?.collectAsState()?.value
@@ -863,6 +868,8 @@ fun Grade9LearningPath(
     val learningProgress = remember(natureData) {
         StudentLearningProgressEngine.computeGrade9Progress(natureData)
     }
+    val natureEnabled = LocalInspectionMode.current || (LocalContext.current.applicationInfo.flags and
+        android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0)
     val unread = state.product.notifications.count { !it.teacher && it.id !in state.product.readNotifications }
     val tealAccent = EntryTeal
     val coroutineScope = rememberCoroutineScope()
@@ -1055,7 +1062,24 @@ fun Grade9LearningPath(
 
             // 3. Learning Progress Card (Single Clear Follow-up Action)
             item("learning-progress") {
-                Grade9LearningProgressCard(progress = learningProgress, open = open)
+                if (activeSubject == Grade9Subject.ALGEBRA && natureEnabled) {
+                    if (natureRead is NatureRead.Ready || LocalInspectionMode.current) {
+                        Grade9LearningProgressCard(progress = learningProgress, open = open)
+                    } else {
+                        NatureProgressReadError()
+                    }
+                } else {
+                    G9LearningCard(tr("Your next step", "خطوتك التالية")) {
+                        Text(displayedBook.title)
+                        Text(tr("These topics are indexed references. Browsing does not count as completed learning.",
+                            "هذه الموضوعات مراجع مفهرسة. تصفّحها لا يُحتسب إنجازًا تعليميًا."))
+                        val next = resumed?.takeIf { it in displayedBook.researches } ?: displayedBook.researches.firstOrNull()
+                        if (next != null) OutlinedButton({ open("g9/reference/${next.id}") },
+                            Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("g9-reference-action")) {
+                            Text(tr("Browse reference: ${next.title}", "تصفح المرجع: ${next.title}"))
+                        }
+                    }
+                }
             }
 
             // Storage warning if workspace read fails

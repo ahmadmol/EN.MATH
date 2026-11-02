@@ -341,6 +341,13 @@ class Grade9PracticeViewModel(private val draftIo: CoroutineDispatcher = Dispatc
     }
 }
 
+/** Never turn unreadable or stale-owner data into a zero-progress claim. */
+@Composable fun NatureProgressReadError() {
+    Text(tr("Saved practice progress is unavailable. Your data is preserved. Restart before retrying; do not clear app data.",
+        "تعذّرت قراءة تقدم التدريب المحفوظ. بياناتك محفوظة. أعد التشغيل قبل المحاولة؛ لا تمسح بيانات التطبيق."),
+        Modifier.testTag("nature-progress-read-error"), color = MaterialTheme.colorScheme.error)
+}
+
 @Composable
 fun Grade9NatureEvidenceSection(
     state: LearningState,
@@ -350,190 +357,62 @@ fun Grade9NatureEvidenceSection(
 ) {
     val scope = StudentCatalog.scope(state)
     val change = repository?.changes?.collectAsState()?.value
-    val read = remember(scope, change) { scope?.let { repository?.read(it) } }
-    val data = (read as? NatureRead.Ready)?.data ?: NaturePracticeData()
+    val read = remember(scope, change, repository) { scope?.let { repository?.read(it) } }
+    val data = (read as? NatureRead.Ready)?.data
+    if (data == null) { NatureProgressReadError(); return }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val enabled = context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0
+    val bank = remember(context, enabled) {
+        if (enabled) runCatching { NaturePracticeBank.load(context) }.getOrNull() else null
+    }
     val progress = remember(data) { StudentLearningProgressEngine.computeGrade9Progress(data) }
-
     G9LearningCard(
         if (mistakes) tr("Nature of numbers mistake notebook", "دفتر أخطاء طبيعة الأعداد")
         else tr("Interactive practice evidence — Nature of numbers", "أدلة التدريب التفاعلي — طبيعة الأعداد")
     ) {
         if (!mistakes) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Column(Modifier.padding(8.dp), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
-                        Text(
-                            text = "${progress.completedSessionsCount}",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
-                            color = EntryTeal
-                        )
-                        Text(
-                            text = tr("Sessions", "جلسات"),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                }
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Column(Modifier.padding(8.dp), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
-                        Text(
-                            text = progress.averageFirstAttemptAccuracy?.let { "${it.toInt()}%" } ?: "—",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
-                            color = EntryIndigo
-                        )
-                        Text(
-                            text = tr("First try", "دقة أول محاولة"),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                }
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Column(Modifier.padding(8.dp), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
-                        Text(
-                            text = "${progress.totalMistakesOverTime}",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = tr("Retries", "إعادات"),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                }
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Column(Modifier.padding(8.dp), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
-                        Text(
-                            text = "${progress.totalHintsOverTime}",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = tr("Hints", "تلميحات"),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                }
-            }
-
-            if (progress.availablePracticeFraction > 0f) {
-                LinearProgressIndicator(
-                    progress = { progress.availablePracticeFraction },
-                    color = EntryTeal,
-                    trackColor = EntryTeal.copy(alpha = 0.2f),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                )
-            }
-
-            Text(
-                text = tr(progress.availablePracticeProgressText.en, progress.availablePracticeProgressText.ar),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Text(
-                text = tr(progress.encouragementMessage.en, progress.encouragementMessage.ar),
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
-            )
-
-            if (data.attempts.isNotEmpty()) {
-                Text(
-                    text = tr("Saved practice sessions:", "جلسات التدريب المحفوظة:"),
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
-                )
-                data.attempts.asReversed().forEachIndexed { index, attempt ->
-                    val metrics = StudentLearningProgressEngine.computeAttemptMetrics(attempt)
-                    OutlinedButton(
-                        onClick = { open(NaturePracticeGrader.ROUTE) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 48.dp),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = tr("Session ${data.attempts.size - index}", "جلسة ${data.attempts.size - index}"),
-                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
-                            )
-                            Text(
-                                text = tr(
-                                    "${metrics.firstTryCorrectCount}/6 first-try · ${metrics.retryNeededCount} retries · ${metrics.hintsUsedCount} hints",
-                                    "${metrics.firstTryCorrectCount}/6 من أول محاولة · ${ArabicPlurals.formatAttempts(metrics.retryNeededCount)} إعادة · ${ArabicPlurals.formatHints(metrics.hintsUsedCount)}"
-                                ),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-            } else {
-                Text(
-                    text = tr("No completed practice sessions yet.", "لا توجد جلسات تدريب مكتملة بعد."),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Text(
-                text = tr(
-                    "This evidence reflects interactive pilot practice, not certified mastery or official exams.",
-                    "هذه الأدلة مبنية على تدريب تجريبي تفاعلي، ولا تُعد شهادة إتقان نهائية أو بديلاً عن الامتحانات الرسمية."
-                ),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                TextButton(onClick = { open(NaturePracticeGrader.ROUTE) }) {
-                    Text(tr("Practice again", "تدرّب من جديد"), color = EntryTeal)
-                }
+            // Stacked metrics remain readable at 200% font scale on narrow screens.
+            Text(tr("Sessions", "جلسات")); Text("${progress.completedSessionsCount}")
+            Text(tr("First try", "دقة أول محاولة"))
+            Text(progress.averageFirstAttemptAccuracy?.let { "${it.toInt()}%" } ?: "—")
+            Text(tr("Saved mistakes: ${progress.totalMistakesOverTime}", "أخطاء مسجلة: ${progress.totalMistakesOverTime}"))
+            Text(tr("Hints used: ${progress.totalHintsOverTime}", "تلميحات مستخدمة: ${progress.totalHintsOverTime}"))
+            if (enabled && bank != null) Text(progress.availablePracticeProgressText.text())
+            if (data.attempts.isEmpty()) Text(tr("No completed practice sessions yet.", "لا توجد جلسات تدريب مكتملة بعد."))
+            data.attempts.asReversed().forEachIndexed { index, attempt ->
+                val metrics = StudentLearningProgressEngine.computeAttemptMetrics(attempt)
+                val label = tr("Session ${data.attempts.size - index}", "جلسة ${data.attempts.size - index}") +
+                    " · ${metrics.firstTryCorrectCount}/6 · " + com.ahmadmol.enmath.features.planner.planDate(attempt.finishedAt)
+                if (enabled) OutlinedButton({ open("g9/nature-result/${attempt.id}") },
+                    Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("nature-saved-${attempt.id}")) {
+                    Text(label)
+                } else Text(label)
             }
         } else {
-            val totalMistakes = progress.totalMistakesOverTime
-            if (totalMistakes == 0) {
-                Text(
-                    text = tr("No mistakes recorded in interactive sessions! Outstanding!", "لا توجد أخطاء مسجلة في جلسات التدريب التفاعلي! أداء ممتاز!"),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            } else {
-                Text(
-                    text = tr(
-                        "You had $totalMistakes retry attempts across sessions. Practicing with hints helps master tricky concepts without stress.",
-                        "لديك ${ArabicPlurals.formatMistakes(totalMistakes)} احتاجت إعادة عبر الجلسات. التدريب مع التلميحات يساعدك على إتقان المفاهيم دون قلق."
-                    ),
-                    style = MaterialTheme.typography.bodyMedium
-                )
+            val evidence = natureQuestionReview(data)
+            if (evidence.isEmpty()) Text(if (data.attempts.isEmpty() && data.draft == null)
+                tr("No practice answers recorded yet.", "لم تُسجّل إجابات تدريب بعد.") else
+                tr("No retries or hints recorded in saved practice.", "لا أخطاء أو تلميحات مسجلة في التدريب المحفوظ."))
+            evidence.forEach { item ->
+                val number = StudentLearningProgressEngine.ALL_NATURE_IDS.indexOf(item.questionId) + 1
+                Text(tr("Question $number", "السؤال $number"), Modifier.testTag("nature-review-$number"),
+                    style = MaterialTheme.typography.titleSmall)
+                bank?.find { it.id == item.questionId }?.let { question ->
+                    MathProse(naturePracticeProse(question.prompt))
+                    MathProse(naturePracticeProse(question.explanation))
+                }
+                Text(tr("Recorded mistakes: ${item.mistakes} · Sessions with a hint: ${item.hintedSessions}",
+                    "أخطاء مسجلة: ${item.mistakes} · جلسات استُخدم فيها تلميح: ${item.hintedSessions}"))
             }
-            TextButton(onClick = { open(NaturePracticeGrader.ROUTE) }) {
-                Text(tr("Open interactive practice", "افتح التدريب التفاعلي"), color = EntryTeal)
-            }
+            if (evidence.isNotEmpty()) Text(tr("These are saved retry and hint counts. Earlier wrong-answer text was not retained.",
+                "هذه أعداد الأخطاء والتلميحات المحفوظة. نصوص الإجابات الخاطئة السابقة غير محفوظة."))
         }
+        Text(tr("This is demo practice evidence, not certified curriculum mastery. No gems are awarded.",
+            "هذه أدلة تدريب تجريبي، وليست إتقانًا معتمدًا للمنهج. لا تُمنح جواهر."))
+        if (enabled && bank != null) TextButton({ open(NaturePracticeGrader.ROUTE) },
+            Modifier.heightIn(min = 48.dp).testTag("nature-evidence-practice")) {
+            Text(if (data.draft != null) tr("Resume practice", "أكمل التدريب المحفوظ") else tr("Practice again", "تدرّب من جديد"))
+        } else Text(tr("This demo practice is unavailable in this build. Saved records are preserved.",
+            "التدريب التجريبي غير متاح في هذه النسخة. سجلاتك السابقة محفوظة."))
     }
 }
-

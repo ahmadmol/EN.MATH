@@ -163,17 +163,17 @@ fun NatureLessonScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Icon(Icons.Outlined.Verified, contentDescription = null, tint = tealAccent, modifier = Modifier.size(22.dp))
+                Icon(Icons.Outlined.Info, contentDescription = null, tint = tealAccent, modifier = Modifier.size(22.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(
-                        text = tr("Approved educational lesson model", "نموذج تعليمي معتمد للدرس الأول"),
+                        text = tr("Educational draft · review required", "مسودة تعليمية · تحتاج مراجعة"),
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = tr(
-                            "Syrian curriculum 2025–2026. Interactive formative practice, no artificial mastery claims.",
-                            "منهاج الجمهورية العربية السورية طبعة 2025–2026. تدريب تكويني تفاعلي دون ادعاء إتقان وهمي."
+                            "Linked to the 2025–2026 source index. Independent educational approval has not been recorded.",
+                            "مرتبطة بفهرس المصدر لطبعة 2025–2026. لم يُسجّل اعتماد تربوي مستقل لهذا الشرح."
                         ),
                         style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -417,7 +417,10 @@ fun NatureLessonScreen(
                 }
 
                 Text(
-                    text = when (progress.natureLessonStatus) {
+                    text = if (!debuggable) tr("The six-question demo is unavailable in this build. Check exercise availability for this reference.",
+                        "التدريب التجريبي ذو الأسئلة الستة غير متاح في هذه النسخة. يمكنك مراجعة حالة تدريبات هذا المرجع.")
+                    else if (natureRead !is NatureRead.Ready) tr("Saved practice progress could not be read. Restart before retrying; your data is preserved.",
+                        "تعذّرت قراءة تقدم التدريب المحفوظ. أعد التشغيل قبل المحاولة؛ بياناتك محفوظة.") else when (progress.natureLessonStatus) {
                         LessonProgressStatus.PRACTICE_COMPLETED -> tr(
                             "You have completed the 6 practice activities! You can re-practice to sharpen your skills.",
                             "أكملت الأنشطة الـ6 بنجاح! يمكنك إعادة التدريب في أي وقت لتثبيت المهارات."
@@ -482,7 +485,8 @@ fun NatureLessonScreen(
                         .heightIn(min = 52.dp)
                         .testTag("g9-nature-start-practice"),
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = tealAccent)
+                    colors = ButtonDefaults.buttonColors(containerColor = tealAccent),
+                    enabled = !debuggable || natureRead is NatureRead.Ready
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -490,7 +494,8 @@ fun NatureLessonScreen(
                     ) {
                         Icon(Icons.Outlined.PlayArrow, contentDescription = null, modifier = Modifier.size(20.dp))
                         Text(
-                            text = when (progress.natureLessonStatus) {
+                            text = if (!debuggable) tr("Exercise availability", "حالة التدريبات")
+                            else when (progress.natureLessonStatus) {
                                 LessonProgressStatus.PRACTICE_COMPLETED -> tr("Practice again (6 activities)", "تدرّب من جديد (6 أنشطة)")
                                 LessonProgressStatus.STARTED -> tr("Resume practice session", "أكمل جلسة التدريب")
                                 else -> tr("Start interactive practice (6 activities)", "ابدأ التدريب التفاعلي (6 أنشطة)")
