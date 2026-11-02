@@ -31,11 +31,11 @@ import com.ahmadmol.enmath.core.model.*
         StageHero(stage, tr("Choose your path", "اختر مسارك"),
             if (stage == StudyStage.G9) tr("Algebra and geometry", "رحلة الجبر والهندسة") else tr("Two books, one curriculum", "كتابان ومسار دراسي واحد"))
         catalog.books.forEach { book ->
-            SourceItemCard(book.title, tr("${book.units.size} units · ${book.researches.size} indexed researches · ${book.edition}",
+            SourceItemCard(book.title, tr("${book.units.size} units · ${book.researches.size} lesson references · ${book.edition}",
                 "${book.units.size} وحدات · ${book.researches.size} درسًا · ${book.edition}"),
                 Modifier.testTag("catalog-book-${if (stage == StudyStage.BAC) BacSourceCatalog.book(book.id)?.existingBookId else book.id}")) { open(book.route) }
         }
-        SourceMetrics(listOf("${catalog.units.size}" to tr("Units", "وحدات"), "${catalog.researches.size}" to tr("Indexed researches", "أبحاث مفهرسة"),
+        SourceMetrics(listOf("${catalog.units.size}" to tr("Units", "وحدات"), "${catalog.researches.size}" to tr("Lesson references", "دروس مفهرسة"),
             "${catalog.reviewed}" to tr("Reviewed lessons", "دروس معتمدة")))
         SourceStatusNotice(stage)
         Button(
@@ -68,7 +68,7 @@ import com.ahmadmol.enmath.core.model.*
             }
         }
         if (stage == StudyStage.BAC) SourceItemCard(tr("Demo learning · separate progress", "التجربة التعليمية · تقدم مستقل"),
-            tr("24 preserved demo lessons; not the 63 source researches", "24 درسًا تجريبيًا محفوظًا؛ مستقلة عن أبحاث المصدر الـ63"), Modifier.testTag("bac-legacy-lessons"), Icons.Outlined.Science) { open("study/demo") }
+            tr("24 preserved demo lessons; not the 63 source researches", "24 درسًا تجريبيًا محفوظًا؛ مستقلة عن دروس المصدر الـ63"), Modifier.testTag("bac-legacy-lessons"), Icons.Outlined.Science) { open("study/demo") }
     }
 }
 
@@ -231,7 +231,7 @@ import com.ahmadmol.enmath.core.model.*
             com.ahmadmol.enmath.features.student.Grade9EvidenceSection(state, grade9Study, open)
         }
         StageHero(catalog.stage, tr("My learning evidence", "أدلة تعلّمي"), tr("Indexing, reviewed content and learning are measured separately", "الفهرسة واعتماد المحتوى والتعلّم مؤشرات مستقلة"))
-        SourceMetrics(listOf("${catalog.units.size}" to tr("Indexed units", "وحدات مفهرسة"), "${catalog.researches.size}" to tr("Indexed researches", "أبحاث مفهرسة"),
+        SourceMetrics(listOf("${catalog.units.size}" to tr("Indexed units", "وحدات مفهرسة"), "${catalog.researches.size}" to tr("Lesson references", "دروس مفهرسة"),
             "${catalog.reviewed}/${catalog.researches.size}" to tr("Published learning", "محتوى معتمد")))
         if (catalog.stage == StudyStage.G9) Text(tr("One original pilot is available separately. The source catalog's reviewed-textbook coverage is still 0/32.",
             "يتوفر درس أصلي تجريبي بصورة مستقلة. تغطية الكتاب المعتمدة في فهرس المصدر ما زالت 0/32."))
@@ -240,7 +240,7 @@ import com.ahmadmol.enmath.core.model.*
         catalog.books.filter { bookId == null || it.id == bookId }.forEach { book ->
             SectionTitle(book.title)
             book.units.filter { unitId == null || it.id == unitId }.forEach { unit ->
-                SourceItemCard(unit.title, tr("${unit.researches.size} indexed researches · learning pending", "${unit.researches.size} أبحاث مفهرسة · التعلّم قيد الإعداد"),
+                SourceItemCard(unit.title, tr("${unit.researches.size} lesson references · learning pending", "${unit.researches.size} دروس مفهرسة · التعلّم قيد الإعداد"),
                     Modifier.testTag("g9-progress-${unit.id}"), Icons.Outlined.Insights) { open(if (unitId == null) "progress/unit/${unit.id}" else unit.route) }
             }
         }
@@ -395,7 +395,7 @@ import com.ahmadmol.enmath.core.model.*
     SectionTitle(tr("Saved source references", "مراجع المصدر المحفوظة"))
     val ids = (read as? SourceWorkspaceRead.Ready)?.workspace?.savedIds.orEmpty()
     if (read == SourceWorkspaceRead.StorageError) Text(tr("Saved references could not be read. Previous data is preserved.", "تعذّر قراءة المراجع المحفوظة. البيانات السابقة محفوظة."))
-    else if (ids.isEmpty()) Text(tr("Save a research from its details to find it here.", "احفظ بحثًا من صفحة تفاصيله ليظهر هنا."))
+    else if (ids.isEmpty()) Text(tr("Save a research from its details to find it here.", "احفظ درسًا من صفحة تفاصيله ليظهر هنا."))
     ids.mapNotNull { catalog?.research(it) }.forEach { research -> SourceItemCard(research.title,
         if (catalog?.stage == StudyStage.G9 && research.id == Grade9Pilot.lessonId) tr("Saved reference · original pilot available", "مرجع محفوظ · درس أصلي تجريبي متاح") else
             tr("Saved reference · content pending review", "مرجع محفوظ · المحتوى قيد المراجعة"), Modifier.testTag("source-saved-${research.id}")) { open(research.route) } }
