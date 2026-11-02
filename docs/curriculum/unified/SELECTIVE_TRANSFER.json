@@ -1,0 +1,41 @@
+{
+  "oldHead": "8ba76a65532656c0e2fdccb6ef7a118b46937763",
+  "targetHead": "c8548955751cbfeeb26f08105c2a35a45ccf0703",
+  "backup": "Private recovery archive retained outside version control",
+  "copiedFiles": [
+    {
+      "path": "app/src/main/java/com/ahmadmol/enmath/core/data/G9CatalogData.kt",
+      "originalSha256": "7d86f9f422e736b73e4c03e4639242acbba6ecd54e55e63e6e64e36a8bccea50"
+    },
+    {
+      "path": "app/src/main/java/com/ahmadmol/enmath/features/courses/Grade9CatalogScreens.kt",
+      "originalSha256": "e3b0c6e154b5fdfd5d6c4ec0256f2f67a5cd4c45e06467499b7221f7a77c908f"
+    },
+    {
+      "path": "app/src/main/java/com/ahmadmol/enmath/features/search/Grade9SearchScreen.kt",
+      "originalSha256": "4b817f8921026268da4fd7fd07dbde6d4a095d4c162e5e39103bb2077e700fe2"
+    },
+    {
+      "path": "tools/import_g9_catalog.py",
+      "originalSha256": "eaff9a970eb5ca7ffd5bb1d76b3978d01ee119e0bea169bb0c3e58624a35fb60"
+    },
+    {
+      "path": "docs/curriculum/g9/source/G9_CURRICULUM_CATALOG_INDEX.json",
+      "originalSha256": "657aad881bb5e60f8e3c78f533033550b043ab650ccfc34d167e349328d8eab1"
+    },
+    {
+      "path": "docs/curriculum/g9/source/G9_ORIGINAL_EXERCISE_SEEDS_32.json",
+      "originalSha256": "8e315af65d7ff8edcf9bcd61439f96b3df9e1d5dfac2b09a385a544cbb24117d"
+    },
+    {
+      "path": "docs/curriculum/g9/source/G9_SOURCE_PAGE_MAP_200_PAGES.json",
+      "originalSha256": "1f81890c67424178fa7612f9aec9f861f0555012d9e464708c98cbeb16ca9215"
+    },
+    {
+      "path": "docs/curriculum/g9/source/MANIFEST.json",
+      "originalSha256": "fe4a5573834b0dba006b145d8c5338672ea15928558386f7f3d05096fcc4bdf9"
+    }
+  ],
+  "historyImported": false,
+  "storageImplementationsCopied": false
+}

@@ -1,0 +1,799 @@
+{
+  "schemaVersion": 1,
+  "stage": "G9",
+  "source": {
+    "lessonId": "G9-ALG-U01-L01",
+    "title": "طبيعة الأعداد",
+    "unitId": "G9-ALG-U01",
+    "unitTitle": "الأعداد والكسور",
+    "sourceId": "G9-ALG",
+    "sourceSha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+    "edition": "2025-2026",
+    "pdfFrom": 6,
+    "pdfTo": 7
+  },
+  "contentRevision": "u01-draft-v1",
+  "publication": "DRAFT_ONLY",
+  "author": "EN.MATH original editorial draft prepared with Codex; not an educator signoff",
+  "objectives": [
+    {
+      "ar": "أميّز العدد الصحيح والعدد العادي والعدد العشري والعدد غير العادي.",
+      "en": "Distinguish integers, rational, terminating-decimal and irrational numbers."
+    },
+    {
+      "ar": "أختبر انتهاء الكتابة العشرية بعد اختزال الكسر.",
+      "en": "Test decimal termination after reducing the fraction."
+    }
+  ],
+  "prerequisites": [
+    {
+      "ar": "قسمة الأعداد الصحيحة واختزال الكسور.",
+      "en": "Integer division and equivalent fractions."
+    }
+  ],
+  "sections": [
+    {
+      "kind": "explanation",
+      "title": {
+        "ar": "ابدأ من معنى العدد",
+        "en": "Start with the value"
+      },
+      "body": {
+        "ar": "قد تتغير كتابة العدد من كسر إلى كتابة عشرية دون أن تتغير قيمته. نبحث عن خصائص القيمة، لا عن شكل الكتابة فقط.",
+        "en": "A fraction and its decimal notation can represent the same value. Classify the value, not just its written form."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "definition",
+      "title": {
+        "ar": "الأعداد العادية",
+        "en": "Rational numbers"
+      },
+      "body": {
+        "ar": "العدد العادي يمكن كتابته كحاصل قسمة عددين صحيحين، على ألا يكون المقام صفرًا. كل عدد صحيح عدد عادي، لأننا نستطيع وضعه فوق المقام واحد.",
+        "en": "A rational number is a quotient of two integers with nonzero denominator. Every integer is rational because its denominator can be one."
+      },
+      "math": "a/b; a,b ∈ Z; b ≠ 0",
+      "conditions": []
+    },
+    {
+      "kind": "definition",
+      "title": {
+        "ar": "العشري وغير العادي",
+        "en": "Terminating and irrational"
+      },
+      "body": {
+        "ar": "العدد العشري له كتابة عشرية منتهية، ويمكن كتابته بمقام قوة للعدد عشرة. العدد العادي قد يكون دوريًا غير منتهٍ. العدد غير العادي لا يمكن كتابته ككسر من عددين صحيحين؛ التقريب العشري لا يحوّله إلى عدد عشري منتهٍ.",
+        "en": "A terminating decimal has finitely many decimal places and a power-of-ten denominator. A rational can instead repeat indefinitely. An irrational is not an integer quotient; a finite approximation does not change that classification."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "formula",
+      "title": {
+        "ar": "اختبار الانتهاء",
+        "en": "Termination test"
+      },
+      "body": {
+        "ar": "اختزل الكسر أولًا. تنتهي كتابته العشرية إذا لم يبقَ في المقام أي عامل أولي غير اثنين أو خمسة. هذا معيار مساعد نبرره بتحويل المقام إلى قوة للعشرة.",
+        "en": "Reduce first. Its decimal terminates exactly when the denominator has no prime factors except two and five, because it can then be converted to a power of ten."
+      },
+      "math": "d = 2^m × 5^n",
+      "conditions": [
+        {
+          "ar": "الكسر مختزل؛ المقام موجب؛ الأسّان صحيحان غير سالبين.",
+          "en": "Reduced fraction; positive denominator; nonnegative integer exponents."
+        }
+      ]
+    },
+    {
+      "kind": "summary",
+      "title": {
+        "ar": "كيف أصنّف؟",
+        "en": "Classification steps"
+      },
+      "body": {
+        "ar": "أختزل، وأفحص هل القيمة صحيحة؛ إن لم تكن صحيحة أختبر انتهاء الكتابة العشرية. الكسور الباقية عادية دورية. لا أستنتج أن جذرًا غير عادي من شكله وحده: جذر المربع الكامل صحيح.",
+        "en": "Reduce, test for an integer, then test termination. Remaining rational fractions recur. A radical is not automatically irrational: a perfect-square root is an integer."
+      },
+      "math": "",
+      "conditions": []
+    }
+  ],
+  "examples": [
+    {
+      "id": "nature-e1",
+      "prompt": {
+        "ar": "صنّف الكسر السالب.",
+        "en": "Classify the negative fraction."
+      },
+      "verification": {
+        "operation": "classification",
+        "numerator": -18,
+        "denominator": 8
+      },
+      "verifiedResult": "terminating",
+      "steps": [
+        {
+          "math": "-18/8 = -9/4",
+          "reason": {
+            "ar": "نقسم الطرفين على اثنين.",
+            "en": "Divide both parts by two."
+          }
+        },
+        {
+          "math": "-9/4 = -225/100 = -2.25",
+          "reason": {
+            "ar": "المقام أربعة؛ نحوله إلى مئة. القيمة عشرية غير صحيحة.",
+            "en": "Convert denominator four to one hundred: a terminating noninteger."
+          }
+        }
+      ],
+      "check": {
+        "expression": "-18/8",
+        "expected": "-9/4"
+      },
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-e2",
+      "prompt": {
+        "ar": "هل لهذا الكسر كتابة عشرية منتهية؟",
+        "en": "Does this fraction terminate?"
+      },
+      "verification": {
+        "operation": "classification",
+        "numerator": 7,
+        "denominator": 12
+      },
+      "verifiedResult": "recurring",
+      "steps": [
+        {
+          "math": "gcd(7,12) = 1",
+          "reason": {
+            "ar": "الكسر مختزل.",
+            "en": "The fraction is reduced."
+          }
+        },
+        {
+          "math": "12 = 2^2 × 3",
+          "reason": {
+            "ar": "يوجد العامل ثلاثة؛ إذن العدد عادي دوري وليس عشريًا منتهيًا.",
+            "en": "Factor three remains, so this rational recurs."
+          }
+        }
+      ],
+      "check": {
+        "expression": "7/12",
+        "expected": "7/12"
+      },
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-e3",
+      "prompt": {
+        "ar": "هل كل جذر عدد غير عادي؟",
+        "en": "Is every radical irrational?"
+      },
+      "verification": {
+        "operation": "classification",
+        "radicand": 81
+      },
+      "verifiedResult": "integer",
+      "steps": [
+        {
+          "math": "9^2 = 81",
+          "reason": {
+            "ar": "نتعرف إلى مربع كامل.",
+            "en": "Identify a perfect square."
+          }
+        },
+        {
+          "math": "√81 = 9",
+          "reason": {
+            "ar": "الجذر صحيح، وبالتالي عادي وعشري أيضًا.",
+            "en": "The root is an integer, hence also rational and terminating."
+          }
+        }
+      ],
+      "check": {
+        "expression": "9**2",
+        "expected": "81"
+      },
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "nature-q1",
+      "kind": "choice",
+      "prompt": {
+        "ar": "اختر الوصف الأدق للقيمة 6/3.",
+        "en": "Choose the most specific listed description of 6/3."
+      },
+      "hint": {
+        "ar": "اختزل أولًا، ثم افحص المقام. الأعداد الصحيحة عادية وعشرية أيضًا.",
+        "en": "Reduce first, then inspect the denominator. Integers are also rational and terminating."
+      },
+      "correction": {
+        "ar": "بعد الاختزال تكون القيمة عدد صحيح. وصف «منتهٍ غير صحيح» يستثني الأعداد الصحيحة هنا لتكون الخيارات متمايزة.",
+        "en": "After reduction the value is integer. Here “terminating noninteger” excludes integers so options are disjoint."
+      },
+      "verification": {
+        "operation": "classification",
+        "numerator": 6,
+        "denominator": 3
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "عدد صحيح",
+            "en": "Integer"
+          },
+          "value": "integer"
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "عشري منتهٍ غير صحيح",
+            "en": "Terminating noninteger"
+          },
+          "value": "terminating"
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "عادي دوري غير منتهٍ",
+            "en": "Recurring nonterminating rational"
+          },
+          "value": "recurring"
+        },
+        {
+          "id": "3",
+          "label": {
+            "ar": "غير عادي",
+            "en": "Irrational"
+          },
+          "value": "irrational"
+        }
+      ],
+      "answer": "0",
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-q2",
+      "kind": "choice",
+      "prompt": {
+        "ar": "اختر الوصف الأدق للقيمة -7/4.",
+        "en": "Choose the most specific listed description of -7/4."
+      },
+      "hint": {
+        "ar": "اختزل أولًا، ثم افحص المقام. الأعداد الصحيحة عادية وعشرية أيضًا.",
+        "en": "Reduce first, then inspect the denominator. Integers are also rational and terminating."
+      },
+      "correction": {
+        "ar": "بعد الاختزال تكون القيمة عشري منتهٍ غير صحيح. وصف «منتهٍ غير صحيح» يستثني الأعداد الصحيحة هنا لتكون الخيارات متمايزة.",
+        "en": "After reduction the value is terminating. Here “terminating noninteger” excludes integers so options are disjoint."
+      },
+      "verification": {
+        "operation": "classification",
+        "numerator": -7,
+        "denominator": 4
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "عدد صحيح",
+            "en": "Integer"
+          },
+          "value": "integer"
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "عشري منتهٍ غير صحيح",
+            "en": "Terminating noninteger"
+          },
+          "value": "terminating"
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "عادي دوري غير منتهٍ",
+            "en": "Recurring nonterminating rational"
+          },
+          "value": "recurring"
+        },
+        {
+          "id": "3",
+          "label": {
+            "ar": "غير عادي",
+            "en": "Irrational"
+          },
+          "value": "irrational"
+        }
+      ],
+      "answer": "1",
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-q3",
+      "kind": "choice",
+      "prompt": {
+        "ar": "اختر الوصف الأدق للقيمة 5/6.",
+        "en": "Choose the most specific listed description of 5/6."
+      },
+      "hint": {
+        "ar": "اختزل أولًا، ثم افحص المقام. الأعداد الصحيحة عادية وعشرية أيضًا.",
+        "en": "Reduce first, then inspect the denominator. Integers are also rational and terminating."
+      },
+      "correction": {
+        "ar": "بعد الاختزال تكون القيمة عادي دوري غير منتهٍ. وصف «منتهٍ غير صحيح» يستثني الأعداد الصحيحة هنا لتكون الخيارات متمايزة.",
+        "en": "After reduction the value is recurring. Here “terminating noninteger” excludes integers so options are disjoint."
+      },
+      "verification": {
+        "operation": "classification",
+        "numerator": 5,
+        "denominator": 6
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "عدد صحيح",
+            "en": "Integer"
+          },
+          "value": "integer"
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "عشري منتهٍ غير صحيح",
+            "en": "Terminating noninteger"
+          },
+          "value": "terminating"
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "عادي دوري غير منتهٍ",
+            "en": "Recurring nonterminating rational"
+          },
+          "value": "recurring"
+        },
+        {
+          "id": "3",
+          "label": {
+            "ar": "غير عادي",
+            "en": "Irrational"
+          },
+          "value": "irrational"
+        }
+      ],
+      "answer": "2",
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-q4",
+      "kind": "choice",
+      "prompt": {
+        "ar": "اختر الوصف الأدق للقيمة 13/8.",
+        "en": "Choose the most specific listed description of 13/8."
+      },
+      "hint": {
+        "ar": "اختزل أولًا، ثم افحص المقام. الأعداد الصحيحة عادية وعشرية أيضًا.",
+        "en": "Reduce first, then inspect the denominator. Integers are also rational and terminating."
+      },
+      "correction": {
+        "ar": "بعد الاختزال تكون القيمة عشري منتهٍ غير صحيح. وصف «منتهٍ غير صحيح» يستثني الأعداد الصحيحة هنا لتكون الخيارات متمايزة.",
+        "en": "After reduction the value is terminating. Here “terminating noninteger” excludes integers so options are disjoint."
+      },
+      "verification": {
+        "operation": "classification",
+        "numerator": 13,
+        "denominator": 8
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "عدد صحيح",
+            "en": "Integer"
+          },
+          "value": "integer"
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "عشري منتهٍ غير صحيح",
+            "en": "Terminating noninteger"
+          },
+          "value": "terminating"
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "عادي دوري غير منتهٍ",
+            "en": "Recurring nonterminating rational"
+          },
+          "value": "recurring"
+        },
+        {
+          "id": "3",
+          "label": {
+            "ar": "غير عادي",
+            "en": "Irrational"
+          },
+          "value": "irrational"
+        }
+      ],
+      "answer": "1",
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-q5",
+      "kind": "choice",
+      "prompt": {
+        "ar": "اختر الوصف الأدق للقيمة 0/7.",
+        "en": "Choose the most specific listed description of 0/7."
+      },
+      "hint": {
+        "ar": "اختزل أولًا، ثم افحص المقام. الأعداد الصحيحة عادية وعشرية أيضًا.",
+        "en": "Reduce first, then inspect the denominator. Integers are also rational and terminating."
+      },
+      "correction": {
+        "ar": "بعد الاختزال تكون القيمة عدد صحيح. وصف «منتهٍ غير صحيح» يستثني الأعداد الصحيحة هنا لتكون الخيارات متمايزة.",
+        "en": "After reduction the value is integer. Here “terminating noninteger” excludes integers so options are disjoint."
+      },
+      "verification": {
+        "operation": "classification",
+        "numerator": 0,
+        "denominator": 7
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "عدد صحيح",
+            "en": "Integer"
+          },
+          "value": "integer"
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "عشري منتهٍ غير صحيح",
+            "en": "Terminating noninteger"
+          },
+          "value": "terminating"
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "عادي دوري غير منتهٍ",
+            "en": "Recurring nonterminating rational"
+          },
+          "value": "recurring"
+        },
+        {
+          "id": "3",
+          "label": {
+            "ar": "غير عادي",
+            "en": "Irrational"
+          },
+          "value": "irrational"
+        }
+      ],
+      "answer": "0",
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-q6",
+      "kind": "choice",
+      "prompt": {
+        "ar": "اختر الوصف الأدق للقيمة 10/15.",
+        "en": "Choose the most specific listed description of 10/15."
+      },
+      "hint": {
+        "ar": "اختزل أولًا، ثم افحص المقام. الأعداد الصحيحة عادية وعشرية أيضًا.",
+        "en": "Reduce first, then inspect the denominator. Integers are also rational and terminating."
+      },
+      "correction": {
+        "ar": "بعد الاختزال تكون القيمة عادي دوري غير منتهٍ. وصف «منتهٍ غير صحيح» يستثني الأعداد الصحيحة هنا لتكون الخيارات متمايزة.",
+        "en": "After reduction the value is recurring. Here “terminating noninteger” excludes integers so options are disjoint."
+      },
+      "verification": {
+        "operation": "classification",
+        "numerator": 10,
+        "denominator": 15
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "عدد صحيح",
+            "en": "Integer"
+          },
+          "value": "integer"
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "عشري منتهٍ غير صحيح",
+            "en": "Terminating noninteger"
+          },
+          "value": "terminating"
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "عادي دوري غير منتهٍ",
+            "en": "Recurring nonterminating rational"
+          },
+          "value": "recurring"
+        },
+        {
+          "id": "3",
+          "label": {
+            "ar": "غير عادي",
+            "en": "Irrational"
+          },
+          "value": "irrational"
+        }
+      ],
+      "answer": "2",
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-root0",
+      "kind": "choice",
+      "prompt": {
+        "ar": "صنّف √2.",
+        "en": "Classify √2."
+      },
+      "hint": {
+        "ar": "هل العدد تحت الجذر مربع كامل؟",
+        "en": "Is the radicand a perfect square?"
+      },
+      "correction": {
+        "ar": "جذر مربع كامل صحيح؛ جذر عدد صحيح موجب غير مربع كامل غير عادي.",
+        "en": "A perfect-square root is an integer; the root of a positive nonsquare integer is irrational."
+      },
+      "verification": {
+        "operation": "classification",
+        "radicand": 2
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "عدد صحيح",
+            "en": "Integer"
+          },
+          "value": "integer"
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "عشري منتهٍ غير صحيح",
+            "en": "Terminating noninteger"
+          },
+          "value": "terminating"
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "عادي دوري غير منتهٍ",
+            "en": "Recurring nonterminating rational"
+          },
+          "value": "recurring"
+        },
+        {
+          "id": "3",
+          "label": {
+            "ar": "غير عادي",
+            "en": "Irrational"
+          },
+          "value": "irrational"
+        }
+      ],
+      "answer": "3",
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    },
+    {
+      "id": "nature-root1",
+      "kind": "choice",
+      "prompt": {
+        "ar": "صنّف √49.",
+        "en": "Classify √49."
+      },
+      "hint": {
+        "ar": "هل العدد تحت الجذر مربع كامل؟",
+        "en": "Is the radicand a perfect square?"
+      },
+      "correction": {
+        "ar": "جذر مربع كامل صحيح؛ جذر عدد صحيح موجب غير مربع كامل غير عادي.",
+        "en": "A perfect-square root is an integer; the root of a positive nonsquare integer is irrational."
+      },
+      "verification": {
+        "operation": "classification",
+        "radicand": 49
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "عدد صحيح",
+            "en": "Integer"
+          },
+          "value": "integer"
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "عشري منتهٍ غير صحيح",
+            "en": "Terminating noninteger"
+          },
+          "value": "terminating"
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "عادي دوري غير منتهٍ",
+            "en": "Recurring nonterminating rational"
+          },
+          "value": "recurring"
+        },
+        {
+          "id": "3",
+          "label": {
+            "ar": "غير عادي",
+            "en": "Irrational"
+          },
+          "value": "irrational"
+        }
+      ],
+      "answer": "0",
+      "sourcePages": {
+        "fromPdf": 6,
+        "toPdf": 7
+      }
+    }
+  ],
+  "checkpoint": {
+    "id": "nature-root2",
+    "kind": "choice",
+    "prompt": {
+      "ar": "صنّف √11.",
+      "en": "Classify √11."
+    },
+    "hint": {
+      "ar": "هل العدد تحت الجذر مربع كامل؟",
+      "en": "Is the radicand a perfect square?"
+    },
+    "correction": {
+      "ar": "جذر مربع كامل صحيح؛ جذر عدد صحيح موجب غير مربع كامل غير عادي.",
+      "en": "A perfect-square root is an integer; the root of a positive nonsquare integer is irrational."
+    },
+    "verification": {
+      "operation": "classification",
+      "radicand": 11
+    },
+    "options": [
+      {
+        "id": "0",
+        "label": {
+          "ar": "عدد صحيح",
+          "en": "Integer"
+        },
+        "value": "integer"
+      },
+      {
+        "id": "1",
+        "label": {
+          "ar": "عشري منتهٍ غير صحيح",
+          "en": "Terminating noninteger"
+        },
+        "value": "terminating"
+      },
+      {
+        "id": "2",
+        "label": {
+          "ar": "عادي دوري غير منتهٍ",
+          "en": "Recurring nonterminating rational"
+        },
+        "value": "recurring"
+      },
+      {
+        "id": "3",
+        "label": {
+          "ar": "غير عادي",
+          "en": "Irrational"
+        },
+        "value": "irrational"
+      }
+    ],
+    "answer": "3",
+    "sourcePages": {
+      "fromPdf": 6,
+      "toPdf": 7
+    }
+  },
+  "reviews": {
+    "source": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "rights": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "mathematics": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "pedagogy": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "editionAlignment": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    }
+  },
+  "independentEducatorReview": "NOT_PERFORMED",
+  "textbookTextCopied": false,
+  "grantsGems": false,
+  "authoringPack": "g9-u01-v1",
+  "sourceInspection": {
+    "pdfFrom": 6,
+    "pdfTo": 7,
+    "evidence": "docs/QA/g9-phase4-2026-10-30/source-review.json",
+    "scope": "ENGINEERING_SOURCE_INSPECTION_NOT_EDUCATOR_REVIEW"
+  }
+}

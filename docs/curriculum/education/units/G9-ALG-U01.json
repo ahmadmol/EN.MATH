@@ -1,0 +1,475 @@
+{
+  "schemaVersion": 1,
+  "unitId": "G9-ALG-U01",
+  "lessons": [
+    {
+      "lessonId": "G9-ALG-U01-L01",
+      "objectives": [
+        "أميز العدد النسبي من غير النسبي.",
+        "أفسر الفرق بين الكتابة العشرية المنتهية والدورية."
+      ],
+      "prerequisites": [
+        "الكسور والقسمة."
+      ],
+      "intuition": "يمكن أن يحمل العدد نفسه كتابات مختلفة؛ فالكتابة 0.75 تمثل ثلاثة أرباع. نسأل عن طبيعة العدد نفسه لا عن شكل رمزه: هل يمكن كتابته ككسر من عددين صحيحين؟ الجذر لا يعني دائمًا أن العدد غير نسبي؛ إذ يجب تبسيطه أولًا.",
+      "rules": [
+        "a/b ∈ Q عندما a,b∈Z وb≠0.",
+        "N ⊂ Z ⊂ Q ⊂ R؛ وD مجموعة الأعداد العشرية المنتهية."
+      ],
+      "conditions": [
+        "مقام الكسر غير صفر.",
+        "لا تكفي أرقام قليلة من تقريب عشري للحكم بعدم النسبية."
+      ],
+      "commonMistake": "لا تصنف كل جذر بأنه غير نسبي، ولا تخلط بين العدد وقيمته المقربة.",
+      "examples": [
+        {
+          "prompt": "صنّف √81 ثم اكتبه كعدد صحيح.",
+          "steps": [
+            "نبحث عن العدد غير السالب الذي مربعه 81.",
+            "بما أن 9²=81 فإن √81=9؛ فهو طبيعي وصحيح ونسبي."
+          ],
+          "answer": "9",
+          "check": {
+            "computed": "sqrt(81)",
+            "expected": "9"
+          }
+        },
+        {
+          "prompt": "اكتب العدد 0.375 على هيئة كسر مختزل.",
+          "steps": [
+            "الكتابة منتهية بثلاث خانات؛ إذن 0.375=375/1000.",
+            "نقسم البسط والمقام على 125 فنحصل على 3/8."
+          ],
+          "answer": "3/8",
+          "check": {
+            "computed": "Rational(375,1000)",
+            "expected": "3/8"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "prompt": "احسب القيمة الدقيقة للجذر.",
+          "expression": "√121",
+          "answer": "11",
+          "explanation": "نبحث عن الجذر غير السالب؛ 11²=121، أما −11 فليس قيمة رمز الجذر.",
+          "options": [],
+          "check": {
+            "computed": "sqrt(121)",
+            "expected": "11"
+          },
+          "rubric": [
+            "تحديد المعطيات ومجال صحة القاعدة.",
+            "تطبيق القاعدة مع تبرير العملية.",
+            "التحقق من النتيجة ووحدتها أو احتمالها."
+          ]
+        },
+        {
+          "prompt": "أي كسر يساوي 0.45؟",
+          "expression": "0.45",
+          "answer": "9/20",
+          "explanation": "نكتب 45/100 ثم نقسم الطرفين على 5 لنصل إلى 9/20.",
+          "options": [
+            "9/20",
+            "45/10",
+            "9/2"
+          ],
+          "check": {
+            "computed": "Rational(45,100)",
+            "expected": "9/20"
+          },
+          "rubric": [
+            "تحديد المعطيات ومجال صحة القاعدة.",
+            "تطبيق القاعدة مع تبرير العملية.",
+            "التحقق من النتيجة ووحدتها أو احتمالها."
+          ]
+        }
+      ],
+      "reasoning": [
+        {
+          "prompt": "فسّر لماذا 1/3 نسبي لكنه ليس عشريًا منتهيًا.",
+          "solution": "هو نسبي لأنه كسر من صحيحين ومقامه غير صفر. كتابته العشرية 0.333… دورية؛ ولو كانت منتهية لساوى كسرًا مقامه قوة للعدد 10، وهو مستحيل بعد الاختزال لأن المقام 3 لا يقسم أي قوة للعدد 10.",
+          "rubric": [
+            "تعريف النسبي.",
+            "تمييز المنتهي من الدوري.",
+            "تبرير دور العامل 3 في المقام."
+          ],
+          "automated": false,
+          "independentReview": "HUMAN_REVIEW_REQUIRED",
+          "figureRequired": false
+        }
+      ],
+      "diagram": null,
+      "status": "REVIEW_PENDING",
+      "scientificReview": "PENDING_INDEPENDENT_REVIEW",
+      "rightsReview": "PENDING",
+      "editionReview": "PENDING_2026_2027_COMPARISON",
+      "authoringOrigin": "ORIGINAL_ENMATH_EXPLANATION_AND_EXERCISES",
+      "textbookTextCopied": false,
+      "grantsGems": false,
+      "masteryEligible": false,
+      "stage": "G9",
+      "unitId": "G9-ALG-U01",
+      "title": "طبيعة الأعداد",
+      "sourceId": "G9-ALG",
+      "sourceSha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+      "edition": "2025-2026",
+      "pdfFrom": 6,
+      "pdfTo": 7,
+      "printedFrom": 6,
+      "printedTo": 7,
+      "revision": 1
+    },
+    {
+      "lessonId": "G9-ALG-U01-L02",
+      "objectives": [
+        "أحسب القاسم المشترك الأكبر بخوارزمية إقليدس.",
+        "أستخدمه في مسألة توزيع متساوٍ."
+      ],
+      "prerequisites": [
+        "القسمة الإقليدية والقواسم."
+      ],
+      "intuition": "عند تقسيم مجموعتين إلى أكبر عدد من الحزم المتطابقة دون بقايا، يجب أن يقسم عدد الحزم كلا العددين. نستبدل العدد الكبير بباقي قسمته على الصغير؛ مجموعة القواسم المشتركة لا تتغير لأن كل قاسم لعددين يقسم فرق مضاعفاتهما.",
+      "rules": [
+        "GCD(a,b)=GCD(b,r) إذا a=bq+r.",
+        "آخر باقٍ غير صفري هو القاسم المشترك الأكبر."
+      ],
+      "conditions": [
+        "نستعمل أعدادًا صحيحة موجبة في خوارزمية القسمة.",
+        "الباقي يحقق 0≤r<b."
+      ],
+      "commonMistake": "لا تختَر القاسم المشترك الأصغر؛ المطلوب أكبر قاسم موجب.",
+      "examples": [
+        {
+          "prompt": "احسب GCD(84,126).",
+          "steps": [
+            "126=84×1+42.",
+            "84=42×2+0؛ إذن آخر باقٍ غير صفري 42."
+          ],
+          "answer": "42",
+          "check": {
+            "computed": "gcd(84,126)",
+            "expected": "42"
+          }
+        },
+        {
+          "prompt": "لدينا 72 قلمًا و120 دفترًا. ما أكبر عدد حزم متطابقة دون بقايا؟",
+          "steps": [
+            "عدد الحزم يقسم 72 و120؛ نبحث عن GCD.",
+            "120=72+48، ثم72=48+24، ثم48=2×24؛ إذن24 حزمة، في كل منها3 أقلام و5 دفاتر."
+          ],
+          "answer": "24",
+          "check": {
+            "computed": "gcd(72,120)",
+            "expected": "24"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "prompt": "احسب القاسم المشترك الأكبر.",
+          "expression": "GCD(54,90)",
+          "answer": "18",
+          "explanation": "90=54+36، ثم54=36+18، ثم36=2×18؛ آخر باقٍ غير صفري18.",
+          "options": [],
+          "check": {
+            "computed": "gcd(54,90)",
+            "expected": "18"
+          },
+          "rubric": [
+            "تحديد المعطيات ومجال صحة القاعدة.",
+            "تطبيق القاعدة مع تبرير العملية.",
+            "التحقق من النتيجة ووحدتها أو احتمالها."
+          ]
+        },
+        {
+          "prompt": "كم حزمة متطابقة كحد أقصى من 40 و64 قطعة دون بقايا؟",
+          "expression": "GCD(40,64)",
+          "answer": "8",
+          "explanation": "64=40+24، 40=24+16، 24=16+8، 16=2×8؛ العدد الأقصى8.",
+          "options": [],
+          "check": {
+            "computed": "gcd(40,64)",
+            "expected": "8"
+          },
+          "rubric": [
+            "تحديد المعطيات ومجال صحة القاعدة.",
+            "تطبيق القاعدة مع تبرير العملية.",
+            "التحقق من النتيجة ووحدتها أو احتمالها."
+          ]
+        }
+      ],
+      "reasoning": [
+        {
+          "prompt": "برر أن القواسم المشتركة لـa وb هي نفسها القواسم المشتركة لـb وa−qb.",
+          "solution": "إذا قسم d العددين a وb فإنه يقسم a−qb. وعكسًا، إذا قسم d كلا من b وa−qb فإنه يقسم مجموع a−qb وqb، أي a. إذن المجموعتان متساويتان، ومن ثم أكبر قاسم فيهما واحد.",
+          "rubric": [
+            "الاتجاه الأول.",
+            "الاتجاه العكسي.",
+            "استنتاج مساواة القاسم الأكبر."
+          ],
+          "automated": false,
+          "independentReview": "HUMAN_REVIEW_REQUIRED",
+          "figureRequired": false
+        }
+      ],
+      "diagram": null,
+      "status": "REVIEW_PENDING",
+      "scientificReview": "PENDING_INDEPENDENT_REVIEW",
+      "rightsReview": "PENDING",
+      "editionReview": "PENDING_2026_2027_COMPARISON",
+      "authoringOrigin": "ORIGINAL_ENMATH_EXPLANATION_AND_EXERCISES",
+      "textbookTextCopied": false,
+      "grantsGems": false,
+      "masteryEligible": false,
+      "stage": "G9",
+      "unitId": "G9-ALG-U01",
+      "title": "القواسم المشتركة لعددين صحيحين",
+      "sourceId": "G9-ALG",
+      "sourceSha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+      "edition": "2025-2026",
+      "pdfFrom": 8,
+      "pdfTo": 13,
+      "printedFrom": 8,
+      "printedTo": 13,
+      "revision": 1
+    },
+    {
+      "lessonId": "G9-ALG-U01-L03",
+      "objectives": [
+        "أختزل كسرًا باستعمال القاسم المشترك الأكبر.",
+        "أتحقق أن البسط والمقام أوليان فيما بينهما."
+      ],
+      "prerequisites": [
+        "القواسم المشتركة والكسور المتكافئة."
+      ],
+      "intuition": "الاختزال لا يغيّر قيمة الكسر؛ فهو قسمة البسط والمقام على العدد غير الصفري نفسه. بدل اختزالات متتابعة، نستخدم القاسم المشترك الأكبر مرة واحدة. الكسر المختزل تمامًا لا يملك بسطه ومقامه قاسمًا موجبًا مشتركًا غير1.",
+      "rules": [
+        "a/b=(a/d)/(b/d)، حيث d=GCD(",
+        "a",
+        ",",
+        "b",
+        ")."
+      ],
+      "conditions": [
+        "b≠0 وd≠0.",
+        "ننقل الإشارة السالبة إلى البسط ونختار المقام موجبًا."
+      ],
+      "commonMistake": "لا تختزل حدًا من جمع مع حد في المقام؛ الاختزال يتعلق بعوامل كاملة.",
+      "examples": [
+        {
+          "prompt": "اختزل 126/210.",
+          "steps": [
+            "GCD(126,210)=42.",
+            "126÷42=3 و210÷42=5؛ إذن الكسر3/5."
+          ],
+          "answer": "3/5",
+          "check": {
+            "computed": "Rational(126,210)",
+            "expected": "3/5"
+          }
+        },
+        {
+          "prompt": "اجمع 5/12 و7/18 ثم اختزل.",
+          "steps": [
+            "المقام المشترك36: 5/12=15/36 و7/18=14/36.",
+            "المجموع29/36؛ ولا قاسم مشترك بين29 و36."
+          ],
+          "answer": "29/36",
+          "check": {
+            "computed": "Rational(5,12)+Rational(7,18)",
+            "expected": "29/36"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "prompt": "اختزل الكسر.",
+          "expression": "84/126",
+          "answer": "2/3",
+          "explanation": "القاسم المشترك الأكبر42؛ نقسم84 و126 على42 فنحصل على2/3.",
+          "options": [],
+          "check": {
+            "computed": "Rational(84,126)",
+            "expected": "2/3"
+          },
+          "rubric": [
+            "تحديد المعطيات ومجال صحة القاعدة.",
+            "تطبيق القاعدة مع تبرير العملية.",
+            "التحقق من النتيجة ووحدتها أو احتمالها."
+          ]
+        },
+        {
+          "prompt": "احسب المجموع بقيمة دقيقة.",
+          "expression": "1/6+5/12",
+          "answer": "7/12",
+          "explanation": "نحوّل1/6 إلى2/12 ثم نجمع البسطين2 و5، فيكون الناتج7/12.",
+          "options": [],
+          "check": {
+            "computed": "Rational(1,6)+Rational(5,12)",
+            "expected": "7/12"
+          },
+          "rubric": [
+            "تحديد المعطيات ومجال صحة القاعدة.",
+            "تطبيق القاعدة مع تبرير العملية.",
+            "التحقق من النتيجة ووحدتها أو احتمالها."
+          ]
+        }
+      ],
+      "reasoning": [
+        {
+          "prompt": "هل (a+b)/a=1+b دائمًا؟ صحح وفسر.",
+          "solution": "عندما a≠0 نقسم كل حد في البسط على a فنحصل على1+b/a، وليس1+b عمومًا. مثلًا a=2 وb=6 يعطي الطرف الأصلي4، بينما1+b=7؛ فلا يجوز إلغاء a داخل جمع.",
+          "rubric": [
+            "شرط عدم انعدام المقام.",
+            "الصيغة الصحيحة.",
+            "مثال مضاد محدد."
+          ],
+          "automated": false,
+          "independentReview": "HUMAN_REVIEW_REQUIRED",
+          "figureRequired": false
+        }
+      ],
+      "diagram": null,
+      "status": "REVIEW_PENDING",
+      "scientificReview": "PENDING_INDEPENDENT_REVIEW",
+      "rightsReview": "PENDING",
+      "editionReview": "PENDING_2026_2027_COMPARISON",
+      "authoringOrigin": "ORIGINAL_ENMATH_EXPLANATION_AND_EXERCISES",
+      "textbookTextCopied": false,
+      "grantsGems": false,
+      "masteryEligible": false,
+      "stage": "G9",
+      "unitId": "G9-ALG-U01",
+      "title": "كسور مختزلة",
+      "sourceId": "G9-ALG",
+      "sourceSha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+      "edition": "2025-2026",
+      "pdfFrom": 14,
+      "pdfTo": 15,
+      "printedFrom": 14,
+      "printedTo": 15,
+      "revision": 1
+    },
+    {
+      "lessonId": "G9-ALG-U01-L04",
+      "objectives": [
+        "أبسط جذورًا تربيعية وأحسب بها.",
+        "أميز √(a²) من a وأطبق شروط الجذر."
+      ],
+      "prerequisites": [
+        "المربعات والجداء والعدد غير السالب."
+      ],
+      "intuition": "الجذر التربيعي لعدد موجب هو العدد غير السالب الذي يعيد ذلك العدد عند تربيعه. نفكك ما تحت الجذر إلى مربع كامل وعامل باقٍ، ثم نجمع الجذور المتشابهة فقط. تعريف الجذر يفسر لماذا تكون قيمة √(a²) هي القيمة المطلقة لـa.",
+      "rules": [
+        "√(ab)=√a√b عندما a,b≥0.",
+        "√(a²)=",
+        "a",
+        "؛ ولا يساوي √(a+b) عادة √a+√b."
+      ],
+      "conditions": [
+        "الجذر الحقيقي يتطلب مقدارًا غير سالب.",
+        "في قسمة الجذور يجب أن يكون المقام موجبًا."
+      ],
+      "commonMistake": "لا توزع الجذر على جمع، ولا تنسَ القيمة المطلقة عند جذر مربع.",
+      "examples": [
+        {
+          "prompt": "بسّط √72.",
+          "steps": [
+            "72=36×2.",
+            "√72=√36×√2=6√2؛ والعامل تحت الجذر لم يعد يحوي مربعًا كاملًا."
+          ],
+          "answer": "6*sqrt(2)",
+          "check": {
+            "computed": "sqrt(72)",
+            "expected": "6*sqrt(2)"
+          }
+        },
+        {
+          "prompt": "احسب (√5+2)(√5−2).",
+          "steps": [
+            "هذا جداء مجموع عددين في فرقهما.",
+            "نطبق فرق مربعين: (√5)²−2²=5−4=1."
+          ],
+          "answer": "1",
+          "check": {
+            "computed": "(sqrt(5)+2)*(sqrt(5)-2)",
+            "expected": "1"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "prompt": "احسب فرق الجذرين.",
+          "expression": "√98−√32",
+          "answer": "3*sqrt(2)",
+          "explanation": "√98=7√2 و√32=4√2؛ الفرق3√2. اكتب 3*sqrt(2).",
+          "options": [],
+          "check": {
+            "computed": "sqrt(98)-sqrt(32)",
+            "expected": "3*sqrt(2)"
+          },
+          "rubric": [
+            "تحديد المعطيات ومجال صحة القاعدة.",
+            "تطبيق القاعدة مع تبرير العملية.",
+            "التحقق من النتيجة ووحدتها أو احتمالها."
+          ]
+        },
+        {
+          "prompt": "ما قيمة √((-7)²)؟",
+          "expression": "√49",
+          "answer": "7",
+          "explanation": "رمز الجذر يعطي القيمة غير السالبة؛ √((-7)²)=|−7|=7.",
+          "options": [
+            "7",
+            "-7",
+            "49"
+          ],
+          "check": {
+            "computed": "sqrt((-7)**2)",
+            "expected": "7"
+          },
+          "rubric": [
+            "تحديد المعطيات ومجال صحة القاعدة.",
+            "تطبيق القاعدة مع تبرير العملية.",
+            "التحقق من النتيجة ووحدتها أو احتمالها."
+          ]
+        }
+      ],
+      "reasoning": [
+        {
+          "prompt": "أثبت أن √2 غير نسبي باستعمال زوجية المربعات.",
+          "solution": "نفترض √2=p/q بكسر مختزل ومقام غير صفر. إذنp²=2q² فيكونp زوجيًا؛ نكتبp=2k فنحصل علىq²=2k²، فيكونq زوجيًا أيضًا. تناقض لأن الكسر مفروض مختزلًا؛ إذن√2 غير نسبي.",
+          "rubric": [
+            "فرض كسر مختزل.",
+            "استنتاج زوجية البسط ثم المقام.",
+            "بيان التناقض."
+          ],
+          "automated": false,
+          "independentReview": "HUMAN_REVIEW_REQUIRED",
+          "figureRequired": false
+        }
+      ],
+      "diagram": null,
+      "status": "REVIEW_PENDING",
+      "scientificReview": "PENDING_INDEPENDENT_REVIEW",
+      "rightsReview": "PENDING",
+      "editionReview": "PENDING_2026_2027_COMPARISON",
+      "authoringOrigin": "ORIGINAL_ENMATH_EXPLANATION_AND_EXERCISES",
+      "textbookTextCopied": false,
+      "grantsGems": false,
+      "masteryEligible": false,
+      "stage": "G9",
+      "unitId": "G9-ALG-U01",
+      "title": "الجذر التربيعي لعدد موجب",
+      "sourceId": "G9-ALG",
+      "sourceSha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+      "edition": "2025-2026",
+      "pdfFrom": 16,
+      "pdfTo": 21,
+      "printedFrom": 16,
+      "printedTo": 21,
+      "revision": 1
+    }
+  ]
+}

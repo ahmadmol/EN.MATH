@@ -19,7 +19,12 @@ enum class AccountType {
     Guest,
 }
 
-data class User(val name: String, val email: String, val type: AccountType)
+enum class StudyStage { G9, BAC }
+
+/** Local identity is separate from contact details and any future authenticated account link. */
+data class User(val name: String, val email: String, val type: AccountType,
+    val localId: String? = null, val studyStage: StudyStage? = null,
+    val legacyWalletKey: String? = null)
 
 data class Lesson(
     val id: String,

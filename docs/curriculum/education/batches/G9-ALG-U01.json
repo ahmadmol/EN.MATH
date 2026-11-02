@@ -1,0 +1,13 @@
+{
+  "unitId": "G9-ALG-U01",
+  "lessonCount": 4,
+  "symbolicChecks": 16,
+  "failures": 0,
+  "checkEngine": "SymPy 1.14.0",
+  "unitSha256": "0a7681f375d771dc581a9943b883ead7a481c174ca0ba22f61edf4bf25065f7d",
+  "checkedAtUtc": "2026-10-27T13:15:39.926723+00:00",
+  "previousValidatedBatches": [],
+  "scientificApproval": false,
+  "rightsApproval": false,
+  "status": "AUTHORED_AND_MACHINE_CHECKED_REVIEW_PENDING"
+}

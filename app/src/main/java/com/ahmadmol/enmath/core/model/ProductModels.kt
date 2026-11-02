@@ -34,6 +34,9 @@ data class Attempt(
     val total: Int,
     val seconds: Int,
     val timestamp: Long,
+    val edition: String? = null,
+    val stage: StudyStage? = null,
+    val commandId: String? = null,
 ) {
     val accuracy
         get() = if (total == 0) 0f else correct.toFloat() / total
@@ -131,6 +134,9 @@ data class HistoryItem(
 
 data class ActivityItem(val id: String, val title: Copy, val timestamp: Long, val minutes: Int)
 
+data class PendingGemEvent(val id: String, val owner: String, val kind: String,
+    val contentId: String, val answers: Map<String, String>, val at: Long)
+
 data class ProductState(
     val questions: List<Question> = emptyList(),
     val attempts: List<Attempt> = emptyList(),
@@ -147,6 +153,11 @@ data class ProductState(
     val activity: List<ActivityItem> = emptyList(),
     val notificationsEnabled: Boolean = true,
     val reminder: String = "18:00",
+    val learningCommands: Set<String> = emptySet(),
+    val completionRefs: Map<String, String> = emptyMap(),
+    val commandReceipts: Map<String, String> = emptyMap(),
+    val verifiedLessons: Map<String, String> = emptyMap(),
+    val pendingGemEvents: List<PendingGemEvent> = emptyList(),
 )
 
 data class ProductStats(

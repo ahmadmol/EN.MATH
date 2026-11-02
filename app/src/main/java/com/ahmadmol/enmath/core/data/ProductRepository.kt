@@ -9,24 +9,53 @@ import org.json.JSONObject
 
 fun ProductState.question(id: String) = questions.find { it.id == id } ?: ProductSeed.question(id)
 
+val LearningState.activeStudentId: String
+    get() = LearningRules.activeStudentId(this)
+
 object LearningRules {
-    fun correct(question: Question, answer: String): Boolean {
-        fun normalized(s: String) =
-            s.trim().lowercase(Locale.ROOT).replace(" ", "").replace("−", "-").replace("²", "^2")
-        fun number(s: String): Double? {
-            val text = s.trim()
-            val parts = text.split("/")
-            return if (parts.size == 2) {
-                val a = parts[0].toDoubleOrNull()
-                val b = parts[1].toDoubleOrNull()
-                if (a != null && b != null && b != 0.0) a / b else null
-            } else text.toDoubleOrNull()
-        }
-        val actual = number(answer)
-        val expected = number(question.answer)
-        return if (actual != null && expected != null) kotlin.math.abs(actual - expected) < 1e-6
-        else normalized(answer) == normalized(question.answer)
+    /** Provenance for learning only; Guest has no Gems owner. Legacy student IDs stay intact. */
+    fun commandOwner(state: LearningState): String? = when (state.user?.type) {
+        AccountType.Student -> state.user.localId ?: state.user.email.trim().lowercase(Locale.ROOT).takeIf { it.isNotEmpty() }
+        AccountType.Guest -> state.user.localId ?: state.localGuestId
+        else -> null
     }
+
+    fun acceptsCommand(state: LearningState, startedBy: String?): Boolean =
+        startedBy != null && startedBy == (if (state.user?.localId != null) sessionOwner(state) else commandOwner(state))
+
+    /** UI captures a generation ticket so A -> B -> A rejects the first A session. */
+    fun sessionOwner(state: LearningState): String? = commandOwner(state)?.let {
+        if (state.user?.localId == null) it else "$it|${state.generation}|${state.user.studyStage?.name}|${StudentCatalog.scope(state)?.edition}"
+    }
+
+    val historyTopicIds = listOf("all", "limits", "derivatives", "integrals", "matrices", "probability")
+
+    fun solutionHistory(history: List<HistoryItem>, topicId: String, query: String): List<HistoryItem> {
+        val topic = topicId.takeIf { it in historyTopicIds } ?: "all"
+        val term = search(query)
+        return history.filter { search(it.expression).contains(term) && (topic == "all" || it.topicId == topic) }
+    }
+
+    fun activeStudentId(state: LearningState): String {
+        val u = state.user ?: return "anonymous"
+        u.localId?.let { return it }
+        if (u.type == AccountType.Guest) return "guest"
+        val email = u.email.trim().lowercase(Locale.ROOT)
+        val canonical = "${u.type.name.lowercase(Locale.ROOT)}:$email"
+        val account = if (u.type == AccountType.Student && email == "ahmed@example.com") "ahmed" else canonical
+        if (u.type == AccountType.Student && email.isNotBlank()) {
+            state.studentRecordId?.takeIf {
+                it.isNotBlank() && state.studentRecordOwners[it] == account
+            }?.let { return it }
+        }
+        // Only the explicit seeded account maps to demo classroom data.
+        if (u.type == AccountType.Student && email == "ahmed@example.com" &&
+            state.studentRecordOwners["ahmed"].let { it == null || it == account }) return "ahmed"
+        if (email.isNotBlank()) return canonical
+        return "unidentified:${u.type.name.lowercase(Locale.ROOT)}"
+    }
+
+    fun correct(question: Question, answer: String): Boolean = MathAnswer.matches(question.answer, answer)
 
     fun mastery(topic: Topic, completed: Set<String>, accuracy: Float, quiz: Float): TopicMastery {
         val done = topic.lessons.count { it.id in completed }
@@ -47,16 +76,21 @@ object LearningRules {
         return TopicMastery(score, stage, done, accuracy, quiz)
     }
 
-    fun topic(state: LearningState, id: String, studentId: String = "ahmed"): TopicMastery {
-        val t = DemoContent.topic(id) ?: return TopicMastery(0, Mastery.NotStarted, 0, 0f, 0f)
-        val s = ProductSeed.students.find { it.id == studentId }
-        val completed = if (studentId == "ahmed") state.completed else s?.completed.orEmpty()
+    fun topic(state: LearningState, id: String, studentId: String = state.activeStudentId): TopicMastery {
+        val t = state.topic(id) ?: return TopicMastery(0, Mastery.NotStarted, 0, 0f, 0f)
+        val targetStudentId = if (studentId.isBlank()) state.activeStudentId else studentId
+        val s = ProductSeed.students.find { it.id == targetStudentId }
+        val isCurrentStudent = targetStudentId == state.activeStudentId
+        val record = state.studentRecords[targetStudentId]
+        val completed = if (isCurrentStudent) state.completed else record?.completed ?: s?.completed.orEmpty()
         val attempts =
-            if (studentId == "ahmed")
+            if (isCurrentStudent)
                 state.product.attempts.filter {
                     ProductSeed.sets.find { set -> set.id == it.setId }?.topicId == id
                 }
-            else emptyList()
+            else record?.product?.attempts.orEmpty().filter {
+                ProductSeed.sets.find { set -> set.id == it.setId }?.topicId == id
+            }
         val accuracy =
             attempts.lastOrNull { !it.setId.endsWith("quiz") }?.accuracy
                 ?: if (completed.any { it.startsWith("$id-") }) (s?.practiceAccuracy ?: 0f) else 0f
@@ -79,10 +113,10 @@ object LearningRules {
         val attempts = state.product.attempts
         val total = attempts.sumOf { it.total }
         val accuracy =
-            if (total == 0) ProductSeed.students.first().practiceAccuracy
+            if (total == 0) { if (state.user?.localId != null) 0f else ProductSeed.students.first().practiceAccuracy }
             else attempts.sumOf { it.correct }.toFloat() / total
         return ProductStats(
-            state.completed.size.toFloat() / DemoContent.books.sumOf { it.lessons.size },
+            state.lessons.count { it.id in state.completed }.toFloat() / state.lessons.size.coerceAtLeast(1),
             total,
             accuracy,
             state.product.activity.sumOf { it.minutes },
@@ -108,27 +142,29 @@ object LearningRules {
 /**
  * Versioned local JSON store, distinct from UI. A backend adapter may implement the same actions.
  */
+class CorruptLocalData(cause: Throwable) : IllegalStateException("Local data needs recovery; original product_v1 preserved", cause)
+class LocalDataWriteFailed : IllegalStateException("Local data save was not acknowledged")
+
 internal object ProductCodec {
     private fun copy(v: Copy) = JSONObject().put("en", v.en).put("ar", v.ar)
 
     private fun c(o: JSONObject, key: String): Copy =
-        o.optJSONObject(key)?.let { Copy(it.optString("en"), it.optString("ar")) } ?: Copy("", "")
+        o.getJSONObject(key).let { Copy(it.getString("en"), it.getString("ar")) }
 
     private fun strings(o: JSONObject, key: String) =
-        o.optJSONArray(key)?.let { a -> (0 until a.length()).map { a.getString(it) } }.orEmpty()
+        o.getJSONArray(key).let { a -> (0 until a.length()).map { a.getString(it) } }
 
     private fun maps(o: JSONObject, key: String): Map<String, String> =
-        o.optJSONObject(key)
-            ?.let { m -> m.keys().asSequence().associateWith { m.getString(it) } }
-            .orEmpty()
+        o.getJSONObject(key)
+            .let { m -> m.keys().asSequence().associateWith { m.getString(it) } }
 
     private fun objects(o: JSONObject, key: String) =
-        o.optJSONArray(key)?.let { a -> (0 until a.length()).map { a.getJSONObject(it) } }.orEmpty()
+        o.getJSONArray(key).let { a -> (0 until a.length()).map { a.getJSONObject(it) } }
 
     private fun array(values: Iterable<JSONObject>) =
         JSONArray().apply { values.forEach { put(it) } }
 
-    fun save(prefs: SharedPreferences, p: ProductState) {
+    fun encode(p: ProductState): String {
         val o = JSONObject().put("version", 1)
         o.put(
             "questions",
@@ -153,6 +189,7 @@ internal object ProductCodec {
                 p.attempts.map {
                     JSONObject()
                         .put("set", it.setId)
+                        .put("edition", it.edition).put("stage", it.stage?.name).put("command", it.commandId)
                         .put("answers", JSONObject(it.answers))
                         .put("correct", it.correct)
                         .put("total", it.total)
@@ -267,13 +304,39 @@ internal object ProductCodec {
             .put("searches", JSONArray(p.searches))
             .put("enabled", p.notificationsEnabled)
             .put("reminder", p.reminder)
-        prefs.edit().putString("product_v1", o.toString()).apply()
+            .put("learning_commands", JSONArray(p.learningCommands.toList()))
+            .put("command_receipts", JSONObject(p.commandReceipts))
+            .put("completion_refs", JSONObject(p.completionRefs))
+            .put("verified_lessons", JSONObject(p.verifiedLessons))
+            .put("pending_gems", array(p.pendingGemEvents.map {
+                JSONObject().put("id", it.id).put("owner", it.owner).put("kind", it.kind)
+                    .put("content", it.contentId).put("answers", JSONObject(it.answers)).put("at", it.at)
+            }))
+        return o.toString()
+    }
+
+    fun save(prefs: SharedPreferences, p: ProductState) {
+        load(prefs)
+        val editor = prefs.edit()
+        // Additive recovery snapshot. Never replace the first preserved version.
+        prefs.getString("product_v1", null)?.let { original ->
+            if (!prefs.contains("product_v1_recovery")) editor.putString("product_v1_recovery", original)
+        }
+        if (!editor.putString("product_v1", encode(p)).commit()) throw LocalDataWriteFailed()
     }
 
     fun load(prefs: SharedPreferences): ProductState {
         val raw = prefs.getString("product_v1", null) ?: return ProductSeed.seed()
+        return decode(raw)
+    }
+
+    fun decode(raw: String): ProductState {
         return runCatching {
                 val o = JSONObject(raw)
+                require(o.getInt("version") == 1) { "Unsupported product schema" }
+                listOf("questions", "attempts", "classes", "assignments", "submissions", "resources",
+                    "notes", "history", "activity", "read", "lessons", "problems", "searches")
+                    .forEach { o.getJSONArray(it) }
                 ProductState(
                     questions =
                         objects(o, "questions").map {
@@ -298,6 +361,9 @@ internal object ProductCodec {
                                 it.getInt("total"),
                                 it.getInt("seconds"),
                                 it.getLong("time"),
+                                it.optString("edition").takeIf(String::isNotBlank),
+                                it.optString("stage").takeIf(String::isNotBlank)?.let(StudyStage::valueOf),
+                                it.optString("command").takeIf(String::isNotBlank),
                             )
                         },
                     classes =
@@ -385,8 +451,16 @@ internal object ProductCodec {
                     searches = strings(o, "searches"),
                     notificationsEnabled = o.optBoolean("enabled", true),
                     reminder = o.optString("reminder", "18:00"),
+                    learningCommands = if (o.has("learning_commands")) strings(o, "learning_commands").toSet() else emptySet(),
+                    completionRefs = if (o.has("completion_refs")) maps(o, "completion_refs") else emptyMap(),
+                    commandReceipts = if (o.has("command_receipts")) maps(o, "command_receipts") else emptyMap(),
+                    verifiedLessons = if (o.has("verified_lessons")) maps(o, "verified_lessons") else emptyMap(),
+                    pendingGemEvents = if (o.has("pending_gems")) objects(o, "pending_gems").map {
+                        PendingGemEvent(it.getString("id"), it.getString("owner"), it.getString("kind"),
+                            it.getString("content"), maps(it, "answers"), it.getLong("at"))
+                    } else emptyList(),
                 )
             }
-            .getOrElse { ProductSeed.seed() }
+            .getOrElse { throw CorruptLocalData(it) }
     }
 }
