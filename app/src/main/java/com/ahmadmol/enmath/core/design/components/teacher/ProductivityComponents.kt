@@ -28,7 +28,12 @@ fun TeacherSummary(name: String, students: Int, classes: Int, average: Int) {
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Text(name, style = MaterialTheme.typography.headlineSmall)
+                Text(
+                    name,
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        textDirection = androidx.compose.ui.text.style.TextDirection.ContentOrRtl
+                    )
+                )
                 Text(
                     tr("See clearly. Choose your next action.", "رؤية واضحة، ثم إجراء مناسب."),
                     style = MaterialTheme.typography.bodySmall,

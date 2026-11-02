@@ -1,0 +1,1532 @@
+{
+  "previousFindings": 37,
+  "fixedAndTested": 36,
+  "verifiedSharedPageReclassifications": 1,
+  "unresolvedPreviousFindings": 0,
+  "newlyDetectedRawInventoryFindings": [
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:165"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "165",
+          "printed_page": "164",
+          "unit_id": "bac-1-u05",
+          "unit_ar": "التابع اللوغاريتمي النيبري",
+          "page_kind_estimated_from_toc": "LESSON",
+          "section_ids": "bac-1-u05-l04 | bac-1-u05-l05",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u05-l05"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH"
+        ]
+      },
+      "disposition": "RAW_ANCHORS_STALE_REGENERATED_FROM_CORRECTED_CATALOG"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:166"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "166",
+          "printed_page": "165",
+          "unit_id": "bac-1-u05",
+          "unit_ar": "التابع اللوغاريتمي النيبري",
+          "page_kind_estimated_from_toc": "LESSON",
+          "section_ids": "bac-1-u05-l04 | bac-1-u05-l05",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u05-l05"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH"
+        ]
+      },
+      "disposition": "RAW_ANCHORS_STALE_REGENERATED_FROM_CORRECTED_CATALOG"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:167"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "167",
+          "printed_page": "166",
+          "unit_id": "bac-1-u05",
+          "unit_ar": "التابع اللوغاريتمي النيبري",
+          "page_kind_estimated_from_toc": "LESSON",
+          "section_ids": "bac-1-u05-l04 | bac-1-u05-l05",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u05-l05"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH"
+        ]
+      },
+      "disposition": "RAW_ANCHORS_STALE_REGENERATED_FROM_CORRECTED_CATALOG"
+    },
+    {
+      "code": "PAGE_INVENTORY_CONFLICT",
+      "ids": [
+        "bac_sci_math_part1:page:168"
+      ],
+      "detail": {
+        "raw": {
+          "book": "1",
+          "pdf_page": "168",
+          "printed_page": "167",
+          "unit_id": "bac-1-u05",
+          "unit_ar": "التابع اللوغاريتمي النيبري",
+          "page_kind_estimated_from_toc": "LESSON",
+          "section_ids": "bac-1-u05-l04 | bac-1-u05-l05",
+          "manual_page_content_reviewed": "False"
+        },
+        "candidateIds": [
+          "bac-1-u05-l05"
+        ],
+        "issues": [
+          "INVENTORY_ANCHOR_MISMATCH"
+        ]
+      },
+      "disposition": "RAW_ANCHORS_STALE_REGENERATED_FROM_CORRECTED_CATALOG"
+    }
+  ],
+  "regeneratedAnchorsCorrected": 4,
+  "remainingDetailedSourceReviews": [
+    {
+      "lessonId": "bac-1-u05-l05",
+      "field": "source_page_end",
+      "retainedValue": 167,
+      "status": "DETAILED_BOUNDARY_REVIEW_PENDING"
+    }
+  ],
+  "findings": [
+    {
+      "previousFinding": {
+        "code": "INVALID_UNIT_RANGE",
+        "ids": [
+          "bac-1-u07"
+        ],
+        "detail": {
+          "printed": [
+            217,
+            216
+          ],
+          "pdf": [
+            218,
+            217
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": [
+        217,
+        250,
+        218,
+        251
+      ]
+    },
+    {
+      "previousFinding": {
+        "code": "INVALID_SECTION_RANGE",
+        "ids": [
+          "bac-1-u07-exercise"
+        ],
+        "detail": {
+          "printed": [
+            244,
+            216
+          ],
+          "pdf": [
+            245,
+            217
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": [
+        244,
+        250,
+        245,
+        251
+      ]
+    },
+    {
+      "previousFinding": {
+        "code": "OVERLAPPING_LESSON_RANGE",
+        "ids": [
+          "bac-1-u05-l04",
+          "bac-1-u05-l05"
+        ],
+        "detail": [
+          164,
+          168
+        ],
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "RECLASSIFIED_VERIFIED_SHARED_START_NOT_MERGED",
+      "verifiedAfter": {
+        "lessonIds": [
+          "bac-1-u05-l04",
+          "bac-1-u05-l05"
+        ],
+        "printedPage": 163,
+        "pdfPage": 164,
+        "status": "VERIFIED_SHARED_START_PAGE",
+        "evidence": "BAC_SOURCE_VERIFIED_ERRATA.md",
+        "remainingReview": "bac-1-u05-l05 end page 167 retained; detailed boundary review pending"
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:218"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "218",
+            "printed_page": "217",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "218",
+        "printed_page": "217",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "UNIT_OPENING",
+        "section_ids": "",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:219"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "219",
+            "printed_page": "218",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "219",
+        "printed_page": "218",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "UNIT_INTRODUCTION",
+        "section_ids": "",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:220"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "220",
+            "printed_page": "219",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l01"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "220",
+        "printed_page": "219",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l01",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l01",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:221"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "221",
+            "printed_page": "220",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l01"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "221",
+        "printed_page": "220",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l01",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l01",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:222"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "222",
+            "printed_page": "221",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l01"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "222",
+        "printed_page": "221",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l01",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l01",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:223"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "223",
+            "printed_page": "222",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l01"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "223",
+        "printed_page": "222",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l01",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l01",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:224"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "224",
+            "printed_page": "223",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l02"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "224",
+        "printed_page": "223",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l02",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l02",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:225"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "225",
+            "printed_page": "224",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l02"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "225",
+        "printed_page": "224",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l02",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l02",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:226"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "226",
+            "printed_page": "225",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l02"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "226",
+        "printed_page": "225",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l02",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l02",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:227"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "227",
+            "printed_page": "226",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l02"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "227",
+        "printed_page": "226",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l02",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l02",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:228"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "228",
+            "printed_page": "227",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l02"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "228",
+        "printed_page": "227",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l02",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l02",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:229"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "229",
+            "printed_page": "228",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "229",
+        "printed_page": "228",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:230"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "230",
+            "printed_page": "229",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "230",
+        "printed_page": "229",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:231"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "231",
+            "printed_page": "230",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "231",
+        "printed_page": "230",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:232"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "232",
+            "printed_page": "231",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "232",
+        "printed_page": "231",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:233"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "233",
+            "printed_page": "232",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "233",
+        "printed_page": "232",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:234"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "234",
+            "printed_page": "233",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "234",
+        "printed_page": "233",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:235"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "235",
+            "printed_page": "234",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "235",
+        "printed_page": "234",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:236"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "236",
+            "printed_page": "235",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "236",
+        "printed_page": "235",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:237"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "237",
+            "printed_page": "236",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l03"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "237",
+        "printed_page": "236",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l03",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l03",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:238"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "238",
+            "printed_page": "237",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l04"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "238",
+        "printed_page": "237",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l04",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l04",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:239"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "239",
+            "printed_page": "238",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l04"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "239",
+        "printed_page": "238",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l04",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l04",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:240"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "240",
+            "printed_page": "239",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l04"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "240",
+        "printed_page": "239",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l04",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l04",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:241"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "241",
+            "printed_page": "240",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l04"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "241",
+        "printed_page": "240",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l04",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l04",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:242"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "242",
+            "printed_page": "241",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-l04"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "242",
+        "printed_page": "241",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "LESSON",
+        "section_ids": "bac-1-u07-l04",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-l04",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:243"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "243",
+            "printed_page": "242",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-activity"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "243",
+        "printed_page": "242",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "ACTIVITY",
+        "section_ids": "bac-1-u07-activity",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-activity",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:244"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "244",
+            "printed_page": "243",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [
+            "bac-1-u07-activity"
+          ],
+          "issues": [
+            "INVENTORY_ANCHOR_MISMATCH",
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "244",
+        "printed_page": "243",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "ACTIVITY",
+        "section_ids": "bac-1-u07-activity",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-activity",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:245"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "245",
+            "printed_page": "244",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "245",
+        "printed_page": "244",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "EXERCISE",
+        "section_ids": "bac-1-u07-exercise",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-exercise",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:246"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "246",
+            "printed_page": "245",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "246",
+        "printed_page": "245",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "EXERCISE",
+        "section_ids": "bac-1-u07-exercise",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-exercise",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:247"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "247",
+            "printed_page": "246",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "247",
+        "printed_page": "246",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "EXERCISE",
+        "section_ids": "bac-1-u07-exercise",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-exercise",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:248"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "248",
+            "printed_page": "247",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "248",
+        "printed_page": "247",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "EXERCISE",
+        "section_ids": "bac-1-u07-exercise",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-exercise",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:249"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "249",
+            "printed_page": "248",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "249",
+        "printed_page": "248",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "EXERCISE",
+        "section_ids": "bac-1-u07-exercise",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-exercise",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:250"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "250",
+            "printed_page": "249",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "250",
+        "printed_page": "249",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "EXERCISE",
+        "section_ids": "bac-1-u07-exercise",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-exercise",
+        "source_issues": ""
+      }
+    },
+    {
+      "previousFinding": {
+        "code": "PAGE_INVENTORY_CONFLICT",
+        "ids": [
+          "bac_sci_math_part1:page:251"
+        ],
+        "detail": {
+          "raw": {
+            "book": "1",
+            "pdf_page": "251",
+            "printed_page": "250",
+            "unit_id": "",
+            "unit_ar": "",
+            "page_kind_estimated_from_toc": "FRONT_MATTER",
+            "section_ids": "",
+            "manual_page_content_reviewed": "False"
+          },
+          "candidateIds": [],
+          "issues": [
+            "INVENTORY_AFTER_INVALID_UNIT_BOUNDARY"
+          ]
+        },
+        "disposition": "PRESERVE_RAW_BLOCK_PENDING_SOURCE_REVIEW"
+      },
+      "disposition": "FIXED_AND_TESTED",
+      "verifiedAfter": {
+        "book": "1",
+        "pdf_page": "251",
+        "printed_page": "250",
+        "unit_id": "bac-1-u07",
+        "page_kind_estimated_from_toc": "EXERCISE",
+        "section_ids": "bac-1-u07-exercise",
+        "manual_page_content_reviewed": "False",
+        "raw_section_ids": "bac-1-u07-exercise",
+        "source_issues": ""
+      }
+    }
+  ],
+  "manualPageContentReviewed": 0,
+  "approvedLessons": 0
+}

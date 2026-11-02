@@ -73,4 +73,37 @@ class LocalGemsSQLiteTest(unittest.TestCase):
         with closing(self.db()) as db:
             tables={r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             self.assertEqual({'gem_accounts','gem_exclusions','gem_rewards','gem_unlocks','gem_lessons','gem_assessments'},tables)
+    def test_legacy_owner_activation_and_owned_access_preserve_all_six_tables(self):
+        owner='legacy-owner@example.test'
+        tables=('gem_accounts','gem_exclusions','gem_rewards','gem_unlocks','gem_lessons','gem_assessments')
+        with closing(self.db()) as db:
+            db.execute('INSERT INTO gem_accounts VALUES(?,?,?)',(owner,1000,40))
+            for i in range(4):
+                db.execute('INSERT INTO gem_rewards VALUES(?,?,?,?,?,?,?)',
+                    (owner,'LESSON:legacy-'+str(i),'LESSON',10,1000,'2026-10-20','2026-10-19'))
+            db.execute('INSERT INTO gem_exclusions VALUES(?,?)',(owner,'LESSON:baseline'))
+            db.execute('INSERT INTO gem_lessons VALUES(?,?)',(owner,'legacy-lesson'))
+            db.execute('INSERT INTO gem_assessments VALUES(?,?,?,?,?)',(owner,'legacy-attempt','limits',0,1.0))
+        self.assertEqual('UNLOCKED',self.spend(owner=owner))
+        def snapshot(db):
+            return {table:db.execute('SELECT * FROM '+table+' ORDER BY rowid').fetchall() for table in tables}
+        with closing(self.db()) as db:before=snapshot(db)
+        with closing(self.db()) as db:
+            # Same INSERT IGNORE activation contract as Android; existing ownership is unchanged.
+            db.execute('INSERT OR IGNORE INTO gem_accounts VALUES(?,?,?)',(owner,9999,0))
+            self.assertEqual((0,),db.execute('SELECT balance FROM gem_accounts WHERE owner=?',(owner,)).fetchone())
+            self.assertEqual(('limits-guide-v1',40),db.execute('SELECT item,price FROM gem_unlocks WHERE owner=?',(owner,)).fetchone())
+            self.assertEqual(before,snapshot(db))
+        self.assertEqual('OWNED',self.spend(owner=owner))
+        with closing(self.db()) as db:self.assertEqual(before,snapshot(db))
+    def test_historical_weekly_reward_and_balance_survive_reopen_unchanged(self):
+        owner='historical-weekly@example.test'
+        with closing(self.db()) as db:
+            db.execute('INSERT INTO gem_accounts VALUES(?,?,?)',(owner,1000,15))
+            db.execute('INSERT INTO gem_rewards VALUES(?,?,?,?,?,?,?)',
+                (owner,'WEEKLY:2026-10-19','WEEKLY',15,1000,'2026-10-20','2026-10-19'))
+        with closing(self.db()) as db:
+            self.assertEqual((15,),db.execute('SELECT balance FROM gem_accounts WHERE owner=?',(owner,)).fetchone())
+            self.assertEqual(('WEEKLY:2026-10-19','WEEKLY',15),
+                db.execute('SELECT achievement,kind,units FROM gem_rewards WHERE owner=?',(owner,)).fetchone())
 if __name__=='__main__':unittest.main(verbosity=2)

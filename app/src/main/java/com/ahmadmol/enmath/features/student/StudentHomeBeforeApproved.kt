@@ -23,6 +23,8 @@ import com.ahmadmol.enmath.core.design.components.student.ProgressFeedback
 import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions as D
 import com.ahmadmol.enmath.features.courses.interactive.LimitsLessonSequence
 
+import com.ahmadmol.enmath.core.data.activeStudentId
+
 /** S01 presentation only. Route actions and data selection match the retained legacy Home. */
 @Composable
 fun StudentHomeBeforeApproved(state: LearningState, open: (String) -> Unit) {
@@ -30,9 +32,9 @@ fun StudentHomeBeforeApproved(state: LearningState, open: (String) -> Unit) {
     val assignment =
         state.product.assignments
             .filter { a ->
-                state.product.classes.any { it.id == a.classId && "ahmed" in it.studentIds } &&
+                state.product.classes.any { it.id == a.classId && state.activeStudentId in it.studentIds } &&
                     state.product.submissions.none {
-                        it.assignmentId == a.id && it.studentId == "ahmed"
+                        it.assignmentId == a.id && it.studentId == state.activeStudentId
                     } &&
                     a.due >= System.currentTimeMillis()
             }
@@ -58,10 +60,12 @@ fun StudentHomeBeforeApproved(state: LearningState, open: (String) -> Unit) {
                 Column(Modifier.weight(1f)) {
                     Text(
                         tr(
-                            "Hello, ${state.user?.name.orEmpty()}",
-                            "أهلاً، ${state.user?.name.orEmpty()}",
+                            "Hello, \u2068${state.user?.name.orEmpty()}\u2069",
+                            "أهلاً، \u2068${state.user?.name.orEmpty()}\u2069",
                         ),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            textDirection = androidx.compose.ui.text.style.TextDirection.ContentOrRtl
+                        ),
                     )
                     Text(
                         tr("A little understanding, every day", "فهم أعمق، كل يوم"),

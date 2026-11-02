@@ -1,0 +1,716 @@
+{
+  "schemaVersion": 1,
+  "stage": "G9",
+  "source": {
+    "lessonId": "G9-ALG-U01-L04",
+    "title": "الجذر التربيعي لعدد موجب",
+    "unitId": "G9-ALG-U01",
+    "unitTitle": "الأعداد والكسور",
+    "sourceId": "G9-ALG",
+    "sourceSha256": "b6a2d13da67f90afbc6df0ffde60de2827d9359021f2ce1924d2961fa1aed59f",
+    "edition": "2025-2026",
+    "pdfFrom": 16,
+    "pdfTo": 21
+  },
+  "contentRevision": "u01-draft-v1",
+  "publication": "DRAFT_ONLY",
+  "author": "EN.MATH original editorial draft prepared with Codex; not an educator signoff",
+  "objectives": [
+    {
+      "ar": "أحسب الجذر الرئيسي وأميز بينه وبين حل معادلة تربيعية.",
+      "en": "Compute the principal root and distinguish it from solving a squared equation."
+    },
+    {
+      "ar": "أبسّط الجذور وأجمع الحدود المتشابهة وأنطق مقامًا بسيطًا ضمن الشروط.",
+      "en": "Simplify radicals, combine like terms and rationalize a simple denominator within the domain."
+    }
+  ],
+  "prerequisites": [
+    {
+      "ar": "المربعات والضرب والكسور وتوزيع الضرب.",
+      "en": "Squares, multiplication, fractions and distributivity."
+    }
+  ],
+  "sections": [
+    {
+      "kind": "explanation",
+      "title": {
+        "ar": "الجذر الرئيسي غير سالب",
+        "en": "The principal root is nonnegative"
+      },
+      "body": {
+        "ar": "جذر عدد غير سالب هو العدد غير السالب الذي مربعه يساوي ذلك العدد. إشارة الجذر تعطي قيمة واحدة؛ حل معادلة يكون مربع المجهول فيها عددًا موجبًا يعطي حلين متعاكسين.",
+        "en": "The principal root is the nonnegative number whose square is the radicand. A radical denotes one value; a squared-unknown equation with positive right side has two opposite solutions."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "definition",
+      "title": {
+        "ar": "المجال والإشارة",
+        "en": "Domain and sign"
+      },
+      "body": {
+        "ar": "لا يوجد جذر تربيعي حقيقي لعدد سالب. جذر الصفر صفر. عند تربيع عدد سالب ثم أخذ جذره لا نعيد الإشارة السالبة؛ نحصل على قيمته المطلقة.",
+        "en": "Negative numbers have no real square root. The root of zero is zero. Squaring a negative then taking the root gives its absolute value, not the negative input."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "formula",
+      "title": {
+        "ar": "قواعد الجذر",
+        "en": "Root identities"
+      },
+      "body": {
+        "ar": "نستعمل قاعدة الجداء والقسمة مع أعداد غير سالبة. لا توجد قاعدة مماثلة لتوزيع الجذر على جمع عددين.",
+        "en": "Product and quotient identities hold on the nonnegative domain. A square root does not distribute over addition."
+      },
+      "math": "(√a)^2 = a; √(x^2) = |x|; √(ab) = √a × √b; √(a/b) = √a/√b",
+      "conditions": [
+        {
+          "ar": "a,b ≥ 0 في الجداء؛ a ≥ 0 وb > 0 في القسمة؛ x عدد حقيقي.",
+          "en": "a,b ≥ 0 for products; a ≥ 0 and b > 0 for quotients; x real."
+        }
+      ]
+    },
+    {
+      "kind": "explanation",
+      "title": {
+        "ar": "أخرج المربع الكامل",
+        "en": "Extract a square factor"
+      },
+      "body": {
+        "ar": "حلل العدد تحت الجذر إلى مربع كامل مضروب في عدد لا يحتوي عاملًا مربعًا أكبر من واحد. اجمع معاملات الجذور ذات الجزء الجذري نفسه فقط.",
+        "en": "Factor out a perfect square, leaving a squarefree radicand. Combine coefficients only when the remaining radical parts agree."
+      },
+      "math": "",
+      "conditions": []
+    },
+    {
+      "kind": "formula",
+      "title": {
+        "ar": "مقام دون جذر",
+        "en": "Rationalize a denominator"
+      },
+      "body": {
+        "ar": "اضرب البسط والمقام في الجذر نفسه؛ هذا ضرب في واحد ولا يغير القيمة. لا يجوز أن يكون المقام صفرًا.",
+        "en": "Multiply both numerator and denominator by the same root: multiplying by one preserves the value. The denominator must not be zero."
+      },
+      "math": "c/√b = c√b/b",
+      "conditions": [
+        {
+          "ar": "b > 0؛ والمقام الأصلي غير صفر.",
+          "en": "b > 0; original denominator nonzero."
+        }
+      ]
+    },
+    {
+      "kind": "summary",
+      "title": {
+        "ar": "ثلاثة فحوص",
+        "en": "Three checks"
+      },
+      "body": {
+        "ar": "افحص المجال والإشارة أولًا، ثم استخرج المربعات الكاملة، ثم اجمع المتشابه فقط. أبقِ الجواب دقيقًا ولا تستبدل الجذر بتقريب إلا إذا طُلب ذلك.",
+        "en": "Check domain and sign, extract square factors, then combine like terms only. Keep exact answers unless an approximation is requested."
+      },
+      "math": "",
+      "conditions": []
+    }
+  ],
+  "examples": [
+    {
+      "id": "root-e1",
+      "prompt": {
+        "ar": "بسّط √45.",
+        "en": "Simplify √45."
+      },
+      "verification": {
+        "operation": "radical",
+        "radicand": 45
+      },
+      "verifiedResult": [
+        "3",
+        5
+      ],
+      "steps": [
+        {
+          "math": "45 = 9 × 5",
+          "reason": {
+            "ar": "نستخرج أكبر مربع كامل.",
+            "en": "Extract the largest square factor."
+          }
+        },
+        {
+          "math": "√45 = 3√5",
+          "reason": {
+            "ar": "الخمسة لا تحوي عاملًا مربعًا أكبر من واحد.",
+            "en": "Five has no nontrivial square factor."
+          }
+        }
+      ],
+      "check": {
+        "expression": "3**2*5",
+        "expected": "45"
+      },
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-e2",
+      "prompt": {
+        "ar": "احسب جذر مربع عدد سالب.",
+        "en": "Compute the root of a negative number squared."
+      },
+      "verification": {
+        "operation": "sqrt_square",
+        "value": -6
+      },
+      "verifiedResult": "6",
+      "steps": [
+        {
+          "math": "(-6)^2 = 36",
+          "reason": {
+            "ar": "التربيع يعطي عددًا موجبًا.",
+            "en": "Squaring gives a positive value."
+          }
+        },
+        {
+          "math": "√36 = 6",
+          "reason": {
+            "ar": "الجذر الرئيسي غير سالب؛ ليس سالب ستة.",
+            "en": "The principal root is nonnegative, not negative six."
+          }
+        }
+      ],
+      "check": {
+        "expression": "6**2",
+        "expected": "36"
+      },
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-e3",
+      "prompt": {
+        "ar": "اجمع √12 و√27.",
+        "en": "Add √12 and √27."
+      },
+      "verification": {
+        "operation": "combine_radicals",
+        "left": 12,
+        "right": 27,
+        "rightSign": 1
+      },
+      "verifiedResult": [
+        "5",
+        3
+      ],
+      "steps": [
+        {
+          "math": "√12 = 2√3; √27 = 3√3",
+          "reason": {
+            "ar": "نبسّط الحدين أولًا.",
+            "en": "Simplify each term first."
+          }
+        },
+        {
+          "math": "2√3 + 3√3 = 5√3",
+          "reason": {
+            "ar": "الجزء الجذري نفسه؛ نجمع المعاملين.",
+            "en": "The radical parts agree, so add coefficients."
+          }
+        }
+      ],
+      "check": {
+        "expression": "2+3",
+        "expected": "5"
+      },
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-e4",
+      "prompt": {
+        "ar": "أنطق مقام 6/√3.",
+        "en": "Rationalize 6/√3."
+      },
+      "verification": {
+        "operation": "rationalize",
+        "numerator": 6,
+        "radicand": 3
+      },
+      "verifiedResult": [
+        "2",
+        3
+      ],
+      "steps": [
+        {
+          "math": "6/√3 = 6√3/3",
+          "reason": {
+            "ar": "نضرب البسط والمقام في جذر ثلاثة.",
+            "en": "Multiply both parts by the root of three."
+          }
+        },
+        {
+          "math": "6√3/3 = 2√3",
+          "reason": {
+            "ar": "نختزل المعامل، والقيمة محفوظة.",
+            "en": "Reduce the coefficient, preserving the value."
+          }
+        }
+      ],
+      "check": {
+        "expression": "6/3",
+        "expected": "2"
+      },
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "root-perfect0",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "احسب √0.",
+        "en": "Compute √0."
+      },
+      "hint": {
+        "ar": "ابحث عن عدد غير سالب مربعه يساوي العدد تحت الجذر.",
+        "en": "Find a nonnegative number whose square is the radicand."
+      },
+      "correction": {
+        "ar": "الجذر الرئيسي هو 0 لأن مربعه 0.",
+        "en": "The principal root is 0 because its square is 0."
+      },
+      "verification": {
+        "operation": "sqrt",
+        "radicand": 0
+      },
+      "answer": "0",
+      "check": {
+        "expression": "0",
+        "expected": "0"
+      },
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-perfect1",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "احسب √121.",
+        "en": "Compute √121."
+      },
+      "hint": {
+        "ar": "ابحث عن عدد غير سالب مربعه يساوي العدد تحت الجذر.",
+        "en": "Find a nonnegative number whose square is the radicand."
+      },
+      "correction": {
+        "ar": "الجذر الرئيسي هو 11 لأن مربعه 121.",
+        "en": "The principal root is 11 because its square is 121."
+      },
+      "verification": {
+        "operation": "sqrt",
+        "radicand": 121
+      },
+      "answer": "11",
+      "check": {
+        "expression": "11",
+        "expected": "11"
+      },
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-perfect2",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "احسب √225.",
+        "en": "Compute √225."
+      },
+      "hint": {
+        "ar": "ابحث عن عدد غير سالب مربعه يساوي العدد تحت الجذر.",
+        "en": "Find a nonnegative number whose square is the radicand."
+      },
+      "correction": {
+        "ar": "الجذر الرئيسي هو 15 لأن مربعه 225.",
+        "en": "The principal root is 15 because its square is 225."
+      },
+      "verification": {
+        "operation": "sqrt",
+        "radicand": 225
+      },
+      "answer": "15",
+      "check": {
+        "expression": "15",
+        "expected": "15"
+      },
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-sign",
+      "kind": "exact_number",
+      "prompt": {
+        "ar": "احسب √((-8)^2).",
+        "en": "Compute √((-8)^2)."
+      },
+      "hint": {
+        "ar": "الجذر الرئيسي غير سالب.",
+        "en": "The principal root is nonnegative."
+      },
+      "correction": {
+        "ar": "الجواب ثمانية، وهو القيمة المطلقة لسالب ثمانية.",
+        "en": "The answer is eight, the absolute value of negative eight."
+      },
+      "verification": {
+        "operation": "sqrt_square",
+        "value": -8
+      },
+      "answer": "8",
+      "check": {
+        "expression": "8",
+        "expected": "8"
+      },
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-simplify",
+      "kind": "choice",
+      "prompt": {
+        "ar": "بسّط √75.",
+        "en": "Simplify √75."
+      },
+      "hint": {
+        "ar": "استخرج المربعات الكاملة، ثم تحقق من المجال وتكافؤ القيمة.",
+        "en": "Extract square factors, then check the domain and equality."
+      },
+      "correction": {
+        "ar": "خمسة وعشرون مربع كامل؛ نخرج جذره خمسة ويبقى جذر ثلاثة.",
+        "en": "Extract the root of twenty-five, leaving five times the root of three."
+      },
+      "verification": {
+        "operation": "radical",
+        "radicand": 75
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "5√3",
+            "en": "5√3"
+          },
+          "value": [
+            "5",
+            3
+          ]
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "3√5",
+            "en": "3√5"
+          },
+          "value": [
+            "3",
+            5
+          ]
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "25√3",
+            "en": "25√3"
+          },
+          "value": [
+            "25",
+            3
+          ]
+        }
+      ],
+      "answer": "0",
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-add",
+      "kind": "choice",
+      "prompt": {
+        "ar": "بسّط √8 + √18.",
+        "en": "Simplify √8 + √18."
+      },
+      "hint": {
+        "ar": "استخرج المربعات الكاملة، ثم تحقق من المجال وتكافؤ القيمة.",
+        "en": "Extract square factors, then check the domain and equality."
+      },
+      "correction": {
+        "ar": "نبسّط إلى معاملين اثنين وثلاثة مع جذر اثنين، فيصبح المعامل خمسة.",
+        "en": "The coefficients become two and three with root two, giving coefficient five."
+      },
+      "verification": {
+        "operation": "combine_radicals",
+        "left": 8,
+        "right": 18,
+        "rightSign": 1
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "5√2",
+            "en": "5√2"
+          },
+          "value": [
+            "5",
+            2
+          ]
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "1√26",
+            "en": "1√26"
+          },
+          "value": [
+            "1",
+            26
+          ]
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "6√2",
+            "en": "6√2"
+          },
+          "value": [
+            "6",
+            2
+          ]
+        }
+      ],
+      "answer": "0",
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-subtract",
+      "kind": "choice",
+      "prompt": {
+        "ar": "بسّط √50 − √8.",
+        "en": "Simplify √50 − √8."
+      },
+      "hint": {
+        "ar": "استخرج المربعات الكاملة، ثم تحقق من المجال وتكافؤ القيمة.",
+        "en": "Extract square factors, then check the domain and equality."
+      },
+      "correction": {
+        "ar": "بعد التبسيط نطرح اثنين من خمسة؛ يبقى ثلاثة أمثال جذر اثنين.",
+        "en": "After simplifying subtract two from five, leaving three times root two."
+      },
+      "verification": {
+        "operation": "combine_radicals",
+        "left": 50,
+        "right": 8,
+        "rightSign": -1
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "7√2",
+            "en": "7√2"
+          },
+          "value": [
+            "7",
+            2
+          ]
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "3√2",
+            "en": "3√2"
+          },
+          "value": [
+            "3",
+            2
+          ]
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "1√42",
+            "en": "1√42"
+          },
+          "value": [
+            "1",
+            42
+          ]
+        }
+      ],
+      "answer": "1",
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    },
+    {
+      "id": "root-denominator",
+      "kind": "choice",
+      "prompt": {
+        "ar": "أنطق مقام 4/√2.",
+        "en": "Rationalize 4/√2."
+      },
+      "hint": {
+        "ar": "استخرج المربعات الكاملة، ثم تحقق من المجال وتكافؤ القيمة.",
+        "en": "Extract square factors, then check the domain and equality."
+      },
+      "correction": {
+        "ar": "نضرب الطرفين في جذر اثنين ثم نقسم أربعة على اثنين.",
+        "en": "Multiply both parts by root two, then divide four by two."
+      },
+      "verification": {
+        "operation": "rationalize",
+        "numerator": 4,
+        "radicand": 2
+      },
+      "options": [
+        {
+          "id": "0",
+          "label": {
+            "ar": "4√2",
+            "en": "4√2"
+          },
+          "value": [
+            "4",
+            2
+          ]
+        },
+        {
+          "id": "1",
+          "label": {
+            "ar": "2√2",
+            "en": "2√2"
+          },
+          "value": [
+            "2",
+            2
+          ]
+        },
+        {
+          "id": "2",
+          "label": {
+            "ar": "2√4",
+            "en": "2√4"
+          },
+          "value": [
+            "2",
+            4
+          ]
+        }
+      ],
+      "answer": "1",
+      "sourcePages": {
+        "fromPdf": 16,
+        "toPdf": 21
+      }
+    }
+  ],
+  "checkpoint": {
+    "id": "root-check",
+    "kind": "exact_number",
+    "prompt": {
+      "ar": "احسب √(9 + 16).",
+      "en": "Compute √(9 + 16)."
+    },
+    "hint": {
+      "ar": "اجمع داخل الجذر أولًا؛ لا توزع الجذر على الجمع.",
+      "en": "Add inside the radical first; do not distribute the root over addition."
+    },
+    "correction": {
+      "ar": "المجموع خمسة وعشرون وجذره خمسة. جمع الجذرين منفصلين يعطي سبعة، وهو جواب لمسألة أخرى.",
+      "en": "The sum is twenty-five, whose root is five. Separately adding the roots gives seven, answering a different question."
+    },
+    "verification": {
+      "operation": "sqrt",
+      "radicand": 25
+    },
+    "answer": "5",
+    "check": {
+      "expression": "5",
+      "expected": "5"
+    },
+    "sourcePages": {
+      "fromPdf": 16,
+      "toPdf": 21
+    }
+  },
+  "reviews": {
+    "source": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "rights": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "mathematics": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "pedagogy": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    },
+    "editionAlignment": {
+      "status": "PENDING",
+      "reviewer": "",
+      "reviewedAt": "",
+      "evidence": ""
+    }
+  },
+  "independentEducatorReview": "NOT_PERFORMED",
+  "textbookTextCopied": false,
+  "grantsGems": false,
+  "authoringPack": "g9-u01-v1",
+  "sourceInspection": {
+    "pdfFrom": 16,
+    "pdfTo": 21,
+    "evidence": "docs/QA/g9-phase4-2026-10-30/source-review.json",
+    "scope": "ENGINEERING_SOURCE_INSPECTION_NOT_EDUCATOR_REVIEW"
+  }
+}

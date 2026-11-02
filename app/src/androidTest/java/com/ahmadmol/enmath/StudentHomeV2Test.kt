@@ -155,7 +155,7 @@ class StudentHomeV2Test {
                     textFits()
                     if (ui.onAllNodesWithTag("home-upcoming-assignment").fetchSemanticsNodes().isNotEmpty()) touch("home-upcoming-assignment")
                     touch("home-all-progress"); textFits(); shot("progress")
-                    ui.onNodeWithText(if (lang == Language.Arabic) "تعلمك الأخير" else "Recent learning").performScrollTo()
+                    ui.onNodeWithText(if (lang == Language.Arabic) "اكتشف نظام الجواهر" else "Discover Gems System").performScrollTo()
                     textFits(); shot("recent")
                     rows += "$size,$mode,$lang,$scale,true"
                 } catch (error: Throwable) {
@@ -189,7 +189,7 @@ class StudentHomeV2Test {
         touch("home-all-progress")
         textFits()
         shot("progress")
-        ui.onNodeWithText(if (language == Language.Arabic) "تعلمك الأخير" else "Recent learning")
+        ui.onNodeWithText(if (language == Language.Arabic) "اكتشف نظام الجواهر" else "Discover Gems System")
             .performScrollTo()
         textFits()
         shot("recent")

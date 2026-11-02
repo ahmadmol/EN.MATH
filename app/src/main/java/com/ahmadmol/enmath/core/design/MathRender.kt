@@ -27,10 +27,13 @@ import androidx.compose.ui.unit.dp
 
 /** Native, selectable-direction-safe equation surface; no HTML/WebView or calculation changes. */
 @Composable
-fun MathRender(value: String, style: TextStyle = MaterialTheme.typography.titleLarge) {
+fun MathRender(value: String, style: TextStyle = MaterialTheme.typography.titleLarge,
+    surfaceColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surfaceContainerLow,
+    alignment: Alignment = Alignment.Center,
+    contentPadding: PaddingValues = PaddingValues(Space.lg)) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Surface(
-            color = MaterialTheme.colorScheme.surfaceContainerLow,
+            color = surfaceColor,
             shape = MaterialTheme.shapes.medium,
             modifier =
                 Modifier.fillMaxWidth().testTag("math-render").semantics {
@@ -38,7 +41,7 @@ fun MathRender(value: String, style: TextStyle = MaterialTheme.typography.titleL
                     contentDescription = value
                 },
         ) {
-            Box(Modifier.fillMaxWidth().padding(Space.lg), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxWidth().padding(contentPadding), contentAlignment = alignment) {
                 Row(
                     Modifier.horizontalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.CenterVertically,

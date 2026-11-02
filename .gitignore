@@ -68,3 +68,62 @@ docs/visual-polish/evidence/
 docs/visual-polish/DELIVERY.json
 docs/visual-polish/SCREENSHOT_SHA256.csv
 docs/visual-polish/review.html
+
+# Local user databases and transaction sidecars
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Private machine recovery reports and design-only screen references
+/docs/CONSOLIDATION_2026-10-28.md
+/docs/CONSOLIDATION_RESULTS_2026-10-28.json
+/app/src/main/res/drawable-nodpi/bac_snake_path_reference_only.png
+/app/src/main/res/drawable-nodpi/concept_book_logo_transparent_reference.png
+/app/src/main/res/drawable-nodpi/g9_snake_path_reference_only.png
+/app/src/main/res/drawable-nodpi/reference_bac_footer.png
+/app/src/main/res/drawable-nodpi/reference_bac_full.png
+/app/src/main/res/drawable-nodpi/reference_bac_header.png
+/app/src/main/res/drawable-nodpi/reference_bac_path_first.png
+/app/src/main/res/drawable-nodpi/reference_bac_path_last.png
+/app/src/main/res/drawable-nodpi/reference_bac_path_middle.png
+/app/src/main/res/drawable-nodpi/reference_g9_footer.png
+/app/src/main/res/drawable-nodpi/reference_g9_full.png
+/app/src/main/res/drawable-nodpi/reference_g9_header.png
+/app/src/main/res/drawable-nodpi/reference_g9_path_first.png
+/app/src/main/res/drawable-nodpi/reference_g9_path_last.png
+/app/src/main/res/drawable-nodpi/reference_g9_path_middle.png
+
+# Generated screenshot test previews and reference captures
+app/src/screenshotTestDebug/
+
+# Host-only Nature QA build junction (generated files live on the QA drive).
+/app/build-nature-qa/
+/app/build-polish-qa/
+
+# Local recovery archives, editor state, and private working documents
+*.bundle
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.bak
+*.tmp
+.vscode/
+Thumbs.db
+Desktop.ini
+*.pdf
+*.doc
+*.docx
+*.xlsx
+/private/
+/backups/
+/publication-audit/

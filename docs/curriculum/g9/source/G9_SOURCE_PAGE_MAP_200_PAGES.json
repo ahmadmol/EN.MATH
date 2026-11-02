@@ -1,0 +1,2006 @@
+{
+  "schemaVersion": "0.1.0",
+  "meaning": "page-level structural anchoring, NOT transcribed book content",
+  "pageIndex": [
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 1,
+      "unitId": null,
+      "lessonId": null,
+      "pageRole": "front_matter",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 2,
+      "unitId": null,
+      "lessonId": null,
+      "pageRole": "front_matter",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 3,
+      "unitId": null,
+      "lessonId": null,
+      "pageRole": "front_matter",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 4,
+      "unitId": "G9-ALG-U01",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 5,
+      "unitId": "G9-ALG-U01",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 6,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 7,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 8,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 9,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 10,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 11,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 12,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 13,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 14,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 15,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 16,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 17,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 18,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 19,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 20,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 21,
+      "unitId": "G9-ALG-U01",
+      "lessonId": "G9-ALG-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 22,
+      "unitId": "G9-ALG-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 23,
+      "unitId": "G9-ALG-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 24,
+      "unitId": "G9-ALG-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 25,
+      "unitId": "G9-ALG-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 26,
+      "unitId": "G9-ALG-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 27,
+      "unitId": "G9-ALG-U02",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 28,
+      "unitId": "G9-ALG-U02",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 29,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 30,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 31,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 32,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 33,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 34,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 35,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 36,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 37,
+      "unitId": "G9-ALG-U02",
+      "lessonId": "G9-ALG-U02-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 38,
+      "unitId": "G9-ALG-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 39,
+      "unitId": "G9-ALG-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 40,
+      "unitId": "G9-ALG-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 41,
+      "unitId": "G9-ALG-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 42,
+      "unitId": "G9-ALG-U03",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 43,
+      "unitId": "G9-ALG-U03",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 44,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 45,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 46,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 47,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 48,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 49,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 50,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 51,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 52,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 53,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 54,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 55,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 56,
+      "unitId": "G9-ALG-U03",
+      "lessonId": "G9-ALG-U03-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 57,
+      "unitId": "G9-ALG-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 58,
+      "unitId": "G9-ALG-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 59,
+      "unitId": "G9-ALG-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 60,
+      "unitId": "G9-ALG-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 61,
+      "unitId": "G9-ALG-U04",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 62,
+      "unitId": "G9-ALG-U04",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 63,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 64,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 65,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 66,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 67,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 68,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 69,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 70,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 71,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 72,
+      "unitId": "G9-ALG-U04",
+      "lessonId": "G9-ALG-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 73,
+      "unitId": "G9-ALG-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 74,
+      "unitId": "G9-ALG-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 75,
+      "unitId": "G9-ALG-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 76,
+      "unitId": "G9-ALG-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 77,
+      "unitId": "G9-ALG-U05",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 78,
+      "unitId": "G9-ALG-U05",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 79,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 80,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 81,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 82,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 83,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 84,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 85,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 86,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 87,
+      "unitId": "G9-ALG-U05",
+      "lessonId": "G9-ALG-U05-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 88,
+      "unitId": "G9-ALG-U05",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 89,
+      "unitId": "G9-ALG-U05",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 90,
+      "unitId": "G9-ALG-U05",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 91,
+      "unitId": "G9-ALG-U05",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 92,
+      "unitId": "G9-ALG-U05",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 93,
+      "unitId": "G9-ALG-U05",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 94,
+      "unitId": "G9-ALG-U06",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 95,
+      "unitId": "G9-ALG-U06",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 96,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 97,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 98,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 99,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 100,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 101,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 102,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 103,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 104,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 105,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 106,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 107,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 108,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 109,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 110,
+      "unitId": "G9-ALG-U06",
+      "lessonId": "G9-ALG-U06-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 111,
+      "unitId": "G9-ALG-U06",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 112,
+      "unitId": "G9-ALG-U06",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 113,
+      "unitId": "G9-ALG-U06",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 114,
+      "unitId": "G9-ALG-U06",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 115,
+      "unitId": "G9-ALG-U06",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-ALG",
+      "pdfPageNumberOneBased": 116,
+      "unitId": "G9-ALG-U06",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 1,
+      "unitId": null,
+      "lessonId": null,
+      "pageRole": "front_matter",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 2,
+      "unitId": "G9-GEO-U01",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 3,
+      "unitId": "G9-GEO-U01",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 4,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 5,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 6,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 7,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 8,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 9,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 10,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 11,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 12,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 13,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 14,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 15,
+      "unitId": "G9-GEO-U01",
+      "lessonId": "G9-GEO-U01-L04",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 16,
+      "unitId": "G9-GEO-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 17,
+      "unitId": "G9-GEO-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 18,
+      "unitId": "G9-GEO-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 19,
+      "unitId": "G9-GEO-U01",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 20,
+      "unitId": "G9-GEO-U02",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 21,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 22,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 23,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 24,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 25,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 26,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 27,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 28,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 29,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 30,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 31,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 32,
+      "unitId": "G9-GEO-U02",
+      "lessonId": "G9-GEO-U02-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 33,
+      "unitId": "G9-GEO-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 34,
+      "unitId": "G9-GEO-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 35,
+      "unitId": "G9-GEO-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 36,
+      "unitId": "G9-GEO-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 37,
+      "unitId": "G9-GEO-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 38,
+      "unitId": "G9-GEO-U02",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 39,
+      "unitId": "G9-GEO-U03",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 40,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 41,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 42,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 43,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 44,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 45,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 46,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 47,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 48,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 49,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 50,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 51,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 52,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 53,
+      "unitId": "G9-GEO-U03",
+      "lessonId": "G9-GEO-U03-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 54,
+      "unitId": "G9-GEO-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 55,
+      "unitId": "G9-GEO-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 56,
+      "unitId": "G9-GEO-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 57,
+      "unitId": "G9-GEO-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 58,
+      "unitId": "G9-GEO-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 59,
+      "unitId": "G9-GEO-U03",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 60,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 61,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "unit_introduction",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 62,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 63,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 64,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 65,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L01",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 66,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 67,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 68,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 69,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L02",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 70,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 71,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 72,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 73,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 74,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 75,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 76,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 77,
+      "unitId": "G9-GEO-U04",
+      "lessonId": "G9-GEO-U04-L03",
+      "pageRole": "lesson_material_and_inlesson_activities",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 78,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 79,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 80,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 81,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 82,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 83,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    },
+    {
+      "sourceBookId": "G9-GEO",
+      "pdfPageNumberOneBased": 84,
+      "unitId": "G9-GEO-U04",
+      "lessonId": null,
+      "pageRole": "end_of_unit_exercises",
+      "fullTextReviewed": false,
+      "figuresReviewed": false,
+      "exerciseItemsTranscribed": false
+    }
+  ]
+}

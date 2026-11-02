@@ -1,0 +1,28 @@
+﻿book,unit,id,kind,title_ar,printed_start,printed_end,pdf_start,pdf_end,individual_items_extracted,student_visibility
+1,1,bac-1-u01-exercise,exercise,تمرينات ومسائل الوحدة,22,26,23,27,False,LOCKED_SOURCE_REVIEW
+1,2,bac-1-u02-activity,activity,أنشطة الوحدة,64,66,65,67,False,LOCKED_SOURCE_REVIEW
+1,2,bac-1-u02-exercise,exercise,تمرينات ومسائل الوحدة,67,76,68,77,False,LOCKED_SOURCE_REVIEW
+1,3,bac-1-u03-activity,activity,أنشطة الوحدة,98,103,99,104,False,LOCKED_SOURCE_REVIEW
+1,3,bac-1-u03-exercise,exercise,تمرينات ومسائل الوحدة,104,112,105,113,False,LOCKED_SOURCE_REVIEW
+1,4,bac-1-u04-activity,activity,أنشطة الوحدة,135,136,136,137,False,LOCKED_SOURCE_REVIEW
+1,4,bac-1-u04-exercise,exercise,تمرينات ومسائل الوحدة,137,146,138,147,False,LOCKED_SOURCE_REVIEW
+1,5,bac-1-u05-activity,activity,أنشطة الوحدة,168,170,169,171,False,LOCKED_SOURCE_REVIEW
+1,5,bac-1-u05-exercise,exercise,تمرينات ومسائل الوحدة,171,180,172,181,False,LOCKED_SOURCE_REVIEW
+1,6,bac-1-u06-activity,activity,أنشطة الوحدة,208,208,209,209,False,LOCKED_SOURCE_REVIEW
+1,6,bac-1-u06-exercise,exercise,تمرينات ومسائل الوحدة,209,216,210,217,False,LOCKED_SOURCE_REVIEW
+1,7,bac-1-u07-activity,activity,أنشطة الوحدة,242,243,243,244,False,LOCKED_SOURCE_REVIEW
+1,7,bac-1-u07-exercise,exercise,تمرينات ومسائل الوحدة,244,250,245,251,False,LOCKED_SOURCE_REVIEW
+2,1,bac-2-u01-activity,activity,أنشطة الوحدة,33,34,33,34,False,LOCKED_SOURCE_REVIEW
+2,1,bac-2-u01-exercise,exercise,تمرينات ومسائل الوحدة,35,44,35,44,False,LOCKED_SOURCE_REVIEW
+2,2,bac-2-u02-activity,activity,أنشطة الوحدة,61,63,61,63,False,LOCKED_SOURCE_REVIEW
+2,2,bac-2-u02-exercise,exercise,تمرينات ومسائل الوحدة,64,72,64,72,False,LOCKED_SOURCE_REVIEW
+2,3,bac-2-u03-activity,activity,أنشطة الوحدة,92,93,92,93,False,LOCKED_SOURCE_REVIEW
+2,3,bac-2-u03-exercise,exercise,تمرينات ومسائل الوحدة,94,98,94,98,False,LOCKED_SOURCE_REVIEW
+2,4,bac-2-u04-activity,activity,أنشطة الوحدة,120,121,120,121,False,LOCKED_SOURCE_REVIEW
+2,4,bac-2-u04-exercise,exercise,تمرينات ومسائل الوحدة,122,126,122,126,False,LOCKED_SOURCE_REVIEW
+2,5,bac-2-u05-activity,activity,أنشطة الوحدة,138,139,138,139,False,LOCKED_SOURCE_REVIEW
+2,5,bac-2-u05-exercise,exercise,تمرينات ومسائل الوحدة,140,146,140,146,False,LOCKED_SOURCE_REVIEW
+2,6,bac-2-u06-activity,activity,أنشطة الوحدة,161,163,161,163,False,LOCKED_SOURCE_REVIEW
+2,6,bac-2-u06-exercise,exercise,تمرينات ومسائل الوحدة,164,168,164,168,False,LOCKED_SOURCE_REVIEW
+2,7,bac-2-u07-activity,activity,أنشطة الوحدة,194,197,194,197,False,LOCKED_SOURCE_REVIEW
+2,7,bac-2-u07-exercise,exercise,تمرينات ومسائل الوحدة,198,204,198,204,False,LOCKED_SOURCE_REVIEW

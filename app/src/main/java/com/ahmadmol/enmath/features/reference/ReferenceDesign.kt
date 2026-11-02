@@ -179,20 +179,20 @@ fun RefIcon(icon: ImageVector, color: Color = RefPalette.violet, size: Int = 14)
 fun RefBottomNav(route: String?, open: (String) -> Unit, dark: Boolean = true) {
     CleanBottomBar(
         listOf(
-            CleanNavItem(Routes.Home, refText("الرئيسية", "Home"), Icons.Outlined.Home),
             CleanNavItem(
                 Routes.Study,
-                refText("المنهج", "Study"),
+                refText("المنهاج", "Curriculum"),
                 Icons.AutoMirrored.Outlined.MenuBook,
             ),
             CleanNavItem(
                 Routes.Solver,
-                refText("الحل المفصل", "Solution"),
+                refText("الحل", "Solution"),
                 Icons.Outlined.Calculate,
             ),
+            CleanNavItem(Routes.Home, refText("الرئيسية", "Home"), Icons.Outlined.Home),
             CleanNavItem(
                 "explore",
-                refText("المختبر", "Lab"),
+                refText("المختبر", "Math Lab"),
                 Icons.AutoMirrored.Outlined.ShowChart,
             ),
             CleanNavItem(Routes.Profile, refText("حسابي", "Profile"), Icons.Outlined.PersonOutline),

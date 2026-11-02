@@ -1,0 +1,19 @@
+title = "EN.MATH publication secret scan"
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+[[rules.allowlists]]
+description = "Reviewed prose describing missing or revoked source documents"
+condition = "AND"
+regexTarget = "line"
+paths = ['''docs/FINAL_STUDENT_COMPLETION_2026-11-02/KNOWN_LIMITATIONS\.md''']
+regexes = ['''Android document-provider access, missing/revoked/corrupt real documents and external Word viewing need phone QA\.''']
+
+[[rules.allowlists]]
+description = "Reviewed SHA-256 checksums of two test files, not credentials"
+condition = "AND"
+regexTarget = "secret"
+paths = ['''docs/curriculum/unified/MODERN_TESTS_BASELINE\.json''']
+regexes = ['''^(43992bf7494c817635ce832f4a5b5e9ab80a4f1194a78231fff3d9ad02baaae2|a0e578a50eaa081de82fa7ea0b6d355a9e3f4c73725078f3fe102be15bbc62e2)$''']

@@ -1,78 +1,44 @@
 # EN.MATH
 
-Android mathematics learning demo built with Kotlin, Jetpack Compose and Material 3. Arabic RTL is the default; English LTR and System/Light/Dark themes are supported. Student and teacher experiences have separate five-tab navigation, with a navigation rail on wide displays and adaptive two-column content.
+Native Android mathematics application built with Kotlin, Jetpack Compose and Material 3. Arabic RTL, English LTR, mathematical LTR, light/dark themes and local offline storage are supported.
 
-## Build and run
+## Current student scope
 
-Open this folder in Android Studio, select JDK 17 for Gradle, install Android SDK 35, and run `app` on API 24 or later.
+- Separate local student profiles and guests for Grade 9 and scientific Baccalaureate; UUID, stage and session generation guard student data. Returning to a guest preserves that guest's records. Local profiles are not cloud accounts.
+- Grade 9 source index: algebra (6 units / 19 researches), geometry (4 units / 13 researches). Counts are derived from the catalog in the application.
+- Baccalaureate source index: two books, 14 units, 63 researches. The source editions are 2023–2024 and 2021–2022; no 2026–2027 approval is claimed.
+- Source indexes are separate from published lessons. No full official curriculum is certified. An original reduced-fractions pilot, a Nature of Numbers educational draft, and 24 preserved Baccalaureate demo lessons provide limited learning experiences.
+- The six-question Nature of Numbers bank is an unapproved QA demo bundled only in Debug / w1Qa. Release blocks its routes and excludes its asset. Opening a source reference does not grant progress, mastery or Gems.
+- Weekly achievement goals are the planner default. Existing daily/monthly/time/hybrid goals remain supported; edits, confirmed deletion, progress, history and duplicate-command protection persist per profile.
+- Search, bookmarks, learning history, local Gems ledger, solver history and settings persist locally. Grade 9 personal PDF/Word links use Android's document picker; documents remain private and are not copied into the public repository. Missing or revoked files report an error.
+- The solver handles seven curated input examples and explicitly rejects unsupported problems. The graph engine supports bounded polynomials and a small set of elementary functions, not arbitrary symbolic mathematics.
+- Teacher/demo functionality is retained. Development account tools are restricted to debuggable builds. Firebase Authentication, backend accounts, email/OTP delivery and remote synchronization are not implemented.
 
-```sh
-./gradlew :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+## Build and validation
+
+Use JDK 21, Android SDK 35 and the existing Gradle wrapper. AGP 8.9.2, Kotlin 2.1.20 and Gradle 8.11.1 are retained. Bytecode targets Java 17; minSdk is 24. The application ID remains `com.ahmadmol.enmath`.
+
+Configure the ignored `local.properties` for the SDK. Use a Gradle cache containing the dependencies, or allow dependency downloads. Do not commit signing keys or local configuration.
+
+```powershell
+./gradlew.bat :app:testDebugUnitTest :app:testReleaseUnitTest :app:lintDebug :app:lintRelease :app:assembleDebug :app:assembleRelease
 ```
 
-Windows: use `gradlew.bat`. AGP 8.9.2, Kotlin 2.1.20, Gradle 8.11.1, Compose BOM 2025.04.01, Navigation 2.8.9 and Lifecycle 2.8.7 are retained.
+Optional host Compose/Navigation tests use Robolectric without a device:
 
-```sh
-adb devices
-adb -s DEVICE_SERIAL install -r app/build/outputs/apk/debug/app-debug.apk
-adb -s DEVICE_SERIAL shell am start -n com.ahmadmol.enmath/.MainActivity
+```powershell
+./gradlew.bat :app:testDebugUnitTest :app:testReleaseUnitTest -PnatureHostQa=true
+python -m unittest discover -s tools -p 'test_*.py' -v
 ```
 
-## Demo walkthrough
+`-PqaBuildDir=ABSOLUTE_PATH` redirects generated outputs. On Windows, AGP unit-test paths must share the project's drive root; use a local junction to a different drive when needed. `-Pg9Render=true -Pandroid.experimental.enableScreenshotTest=true` enables the optional Layoutlib preview tasks; rendering dependencies never enter the installed application. Release is unsigned unless an approved signing configuration is supplied securely.
 
-- Login accepts a valid email and an eight-character password. OTP is **123456**. Registration/recovery validate input but do not create real accounts or send mail.
-- Student main tabs: Home, Study, Solver, Function Lab, Profile. Profile opens progress, assignments, library and settings. The curriculum's “Browse all lessons” action opens the complete local catalog, lessons, practice and mini quizzes.
-- Practice supports choice, numeric, expression and true/false answers, hints, retry, explanation and results. Mastery is a transparent demo calculation: 40% completed lessons + 40% practice accuracy + 20% best quiz.
-- Solver has cursor insertion, undo/delete/clear, six math-key groups, live offline KaTeX preview, seven curated examples, step explanations, methods, bookmarks and persisted history. Unrecognized problems explicitly remain unsupported.
-- Explore graphs safe polynomials and basic trigonometric functions, including x^2, sin(x) and 2x+1; axes, grid, pan, zoom, visibility, known intercepts and a value table are available.
-- Assignments support upcoming/completed/overdue lists, work, confirmed submission and results with teacher feedback.
-- Teacher: Dashboard, Classes, Assignments, Resources, Profile. Create a class/invite code, inspect students, publish assignments through four steps, inspect responses, add feedback, and create/share resources to a class.
-- Sign out and switch demo roles to see Ahmed's latest progress, submissions and teacher-shared resources reflected consistently across both roles.
-- Search, library, inbox, reminder preferences, language, theme and local data persist on the device.
+Current campaign: [student polish 1.0.5 / 6](docs/STUDENT_POLISH_FINAL_2026-11-02/FINAL_REPORT.md), [logic audit](docs/STUDENT_POLISH_FINAL_2026-11-02/LOGIC_AUDIT.md), [UI audit](docs/STUDENT_POLISH_FINAL_2026-11-02/UI_UX_AUDIT.md). Previous handoff: [1.0.4 acceptance](docs/FINAL_STUDENT_COMPLETION_2026-11-02/FINAL_REPORT.md). Historical reports are evidence for their recorded builds only. Phone installation, actual upgrade, process death, IME and TalkBack require separate device QA; host tests do not establish those results.
 
-## Clean UI update
+## Structure and source rights
 
-Student and teacher main tabs share a native Material 3 bottom bar with selected states and standard touch targets. Login adapts to the selected role; registration, verification and password recovery remain local demo workflows. Teacher dashboard statistics read the local classes and student progress, and its actions open class management, assignment publishing, curriculum, solver and function lab. Both profiles offer role switching and confirmed sign out without clearing learning data.
+Application code lives in `app/src/main/java/com/ahmadmol/enmath/`: `core/data` owns catalogs and persistence, `core/localgems` owns the existing wallet, `core/navigation` owns routing and stage guards, and `features` owns Compose screens. Tests live in `src/test`, optional `src/hostQa` / `src/hostQaRelease`, and `src/androidTest`.
 
-See [Clean UI validation report](docs/clean-ui/REPORT.md) for the exact checks and remaining prototype limitations. This update does not introduce a backend or change Gradle/Kotlin/AGP versions.
+Curriculum source metadata and authoring/review gates live in `docs/curriculum/`. Educational drafts do not become approved content merely by being indexed or passing code tests. Bundled third-party font/KaTeX licenses are in `docs/licenses/`; asset provenance is in `docs/ui/ENTRY_ASSET_PROVENANCE.json` and `docs/vendor-assets.json`. No PDFs or private student databases are published. Physics helper files, if supplied with clear publication rights, must remain free and must not receive a Gems lock.
 
-## Architecture
-
-### Role UX pilot
-
-The current Home/Study flow pilots a Learn → Interact → Answer → Feedback → Understand sequence for the guided limits lesson and practice/result. Teacher Home/Class/Student Details pilot a separate See → Understand → Act presentation. Both reuse the existing theme, repositories, curriculum and learning rules. Other features and reference screens are retained; the pilot is not generalized across the app yet. See [role experience audit and validation](docs/role-experience/REPORT.md).
-
-Source: `app/src/main/java/com/ahmadmol/enmath/`.
-
-| Area | Responsibility |
-| --- | --- |
-| core/model | Typed catalog, session, classroom, question, attempt, submission and resource models |
-| core/data | Seed data, repository, versioned local persistence, grading/mastery/statistics |
-| core/AppViewModel.kt | Session and repository-backed actions shared across features |
-| core/design | Theme, typography, spacing, components, localized keys and offline math rendering |
-| core/navigation | Public/student/teacher graphs, role guards, adaptive navigation |
-| features/onboarding, features/auth | Entry and validated demo account workflows |
-| features/courses, features/practice | Study, lessons, checkpoints, practice, quizzes/results |
-| features/solver, features/explore | Replaceable SolverEngine and GraphEngine implementations |
-| Student hub features | Home, progress, assignments, library, search, notifications, profile/settings |
-| features/teacher | Dashboard, classrooms/students, assignment builder/results, resources |
-
-Screen state comes from the repository; UI does not invent separate statistics. LearningRules is shared between student and teacher views. ProductCodec persists user-generated demo records. Repository and engine interfaces are boundaries for future services; curriculum is seeded locally.
-
-Static UI strings are in `res/values/ui_strings.xml` and `res/values-ar/ui_strings.xml`, accessed through typed TextKey values. Bilingual lesson/seed content is modeled as data. `tools/localize.py` maintains resources. Fonts and KaTeX are bundled offline; licenses and hashes are in `docs/licenses/` and `docs/vendor-assets.json`.
-
-## Dataset and limits
-
-Two books, eight topics, 24 representative lessons, 48 mixed questions, 16 practice/quiz sets, Ahmed plus 24 classmates, two classes, seeded assignments/submissions, four-week Ahmed activity, notifications and teacher resources form one consistent local demo.
-
-This is a functional prototype with simulated accounts and a shared local persona, not production authentication or user isolation. There is no backend, AI/general solver, real OCR, email delivery, remote enrollment or scheduled/push notification service. Camera/upload recognition and external sharing are explicit placeholders. Lessons demonstrate the structure rather than a verified complete official syllabus. Graph parsing is limited. Backend schema/access guidance is documented, not provisioned.
-
-## Validation and documentation
-
-- DemoLogicTest and ProductRulesTest cover answers, unsupported inputs, validation, curriculum consistency, mastery and grading.
-- AppFlowTest and DataPersistenceTest cover accounts/navigation, study/practice, assignments, teacher publishing/resources/feedback, solver/history/scan/graphs, preferences and persistence.
-- Instrumentation resets local demo preferences: use a dedicated emulator rather than a phone whose data must be retained.
-- [Audit](docs/AUDIT.md), [routes](docs/ROUTES.md), [backend plan](docs/BACKEND.md), [implementation report](docs/IMPLEMENTATION-REPORT.md).
-- Build/UI logs and screenshots: docs/qa and docs/screenshots.
-
-Generated packages, local configuration, signing material and local QA evidence are excluded from Git.
+APKs, build caches, local settings, credentials, signing material, personal documents and student databases are excluded from Git. Recovery archives and delivery packages remain outside the repository.

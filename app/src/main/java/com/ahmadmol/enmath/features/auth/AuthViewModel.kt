@@ -2,6 +2,9 @@ package com.ahmadmol.enmath.features.auth
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.ahmadmol.enmath.core.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +21,7 @@ object DemoAuthRules {
 }
 
 /** UI demo validation only: no backend, tokens or real account creation. */
-class AuthViewModel(private val saved: SavedStateHandle) : ViewModel() {
+class AuthViewModel(private val saved: SavedStateHandle, val demoAllowed: Boolean = false) : ViewModel() {
     val role = saved.getStateFlow("role", AccountType.Student.name)
     val name = saved.getStateFlow("name", "")
     val email = saved.getStateFlow("email", "")
@@ -53,6 +56,7 @@ class AuthViewModel(private val saved: SavedStateHandle) : ViewModel() {
     }
 
     fun validate(register: Boolean): Boolean {
+        if (!demoAllowed) { saved["error"] = "demo_disabled"; return false }
         val failure =
             when {
                 register && name.value.trim().length < 2 -> "name"
@@ -74,6 +78,7 @@ class AuthViewModel(private val saved: SavedStateHandle) : ViewModel() {
     }
 
     fun beginReset(): Boolean {
+        if (!demoAllowed) { saved["error"] = "demo_disabled"; return false }
         if (!DemoAuthRules.validEmail(email.value)) {
             saved["error"] = "email"
             return false
@@ -85,12 +90,14 @@ class AuthViewModel(private val saved: SavedStateHandle) : ViewModel() {
     }
 
     fun verify(): Boolean {
+        if (!demoAllowed) { saved["error"] = "demo_disabled"; return false }
         val valid = code.value == DemoAuthRules.verificationCode
         saved["error"] = if (valid) "" else "code"
         return valid
     }
 
     fun newPassword(): Boolean {
+        if (!demoAllowed) { saved["error"] = "demo_disabled"; return false }
         val valid =
             DemoAuthRules.validPassword(password.value) && password.value == confirmation.value
         saved["error"] = if (valid) "" else "match"
@@ -117,5 +124,11 @@ class AuthViewModel(private val saved: SavedStateHandle) : ViewModel() {
         listOf("name", "email", "subject", "experience", "institution").forEach { saved[it] = "" }
         saved["accepted"] = false
         saved["reset"] = false
+    }
+
+    companion object {
+        fun factory(demoAllowed: Boolean) = viewModelFactory {
+            initializer { AuthViewModel(createSavedStateHandle(), demoAllowed) }
+        }
     }
 }

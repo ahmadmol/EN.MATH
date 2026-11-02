@@ -1,16 +1,26 @@
 package com.ahmadmol.enmath.features.onboarding
 
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import com.ahmadmol.enmath.core.design.*
 import com.ahmadmol.enmath.core.design.tokens.ResourceDimensions
 import com.ahmadmol.enmath.core.model.*
@@ -34,110 +44,46 @@ private val pages =
 @Composable
 fun SplashScreen(onReady: () -> Unit) {
     val callback by rememberUpdatedState(onReady)
-    LaunchedEffect(Unit) {
-        delay(900)
-        callback()
-    }
-    Box(Modifier.fillMaxSize().testTag("screen-splash"), contentAlignment = Alignment.Center) {
-        EntryWaves(Modifier.fillMaxSize())
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Space.xl),
-        ) {
-            BookLogo(Modifier.size(Space.chart))
-            Text("EN.MATH", style = MaterialTheme.typography.displaySmall)
-            LinearProgressIndicator(
-                modifier = Modifier.width(Space.chart),
-                color = MaterialTheme.colorScheme.secondary,
-            )
-            Text(label(TextKey.t_2e3ea6aca1), color = MaterialTheme.colorScheme.onSurfaceVariant)
+    LaunchedEffect(Unit) { withFrameNanos { }; callback() }
+    EntryBackdrop(com.ahmadmol.enmath.R.drawable.entry_bg_splash) {
+        Column(Modifier.fillMaxSize().testTag("screen-splash").padding(24.dp), horizontalAlignment=Alignment.CenterHorizontally,
+            verticalArrangement=Arrangement.SpaceEvenly) {
+            androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(com.ahmadmol.enmath.R.drawable.ic_enmath), null, Modifier.size(110.dp))
+            Text("EN.MATH", color=entryInk(), fontWeight=FontWeight.ExtraBold, style=MaterialTheme.typography.displaySmall)
+            Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_44), color=entryInk(), textAlign=TextAlign.Center)
+            androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(com.ahmadmol.enmath.R.drawable.entry_student_grade9_cutout), null,
+                Modifier.fillMaxWidth().weight(1f).padding(top=24.dp), contentScale=androidx.compose.ui.layout.ContentScale.Fit)
+            Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_45), Modifier.padding(vertical=20.dp), color=entryInk(), textAlign=TextAlign.Center)
         }
     }
 }
-
 @Composable
-fun OnboardingScreen(onDone: () -> Unit) {
-    val pager = rememberPagerState(pageCount = { pages.size })
-    val scope = rememberCoroutineScope()
-    Column(Modifier.fillMaxSize().testTag("screen-onboarding")) {
-        Row(
-            Modifier.fillMaxWidth().padding(Space.xl),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                "EN.MATH",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.weight(1f),
-            )
-            TextButton(onClick = onDone, modifier = Modifier.testTag("intro-skip")) {
-                Text(label(TextKey.t_485c964fc7))
-            }
-        }
-        HorizontalPager(state = pager, modifier = Modifier.weight(1f)) { index ->
-            val page = pages[index]
-            ScreenPage(narrow = true) {
-                LearningArtwork(page.symbol, Modifier.height(ResourceDimensions.entryArtwork))
-                Text(
-                    page.title.text(),
-                    Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                )
-                Text(
-                    page.body.text(),
-                    Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        }
-        Column(
-            Modifier.widthIn(max = Space.formMax)
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
-                .padding(Space.xl),
-            verticalArrangement = Arrangement.spacedBy(Space.lg),
-        ) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                pages.indices.forEach { i ->
-                    Surface(
-                        modifier =
-                            Modifier.padding(Space.xs)
-                                .size(
-                                    width = if (i == pager.currentPage) Space.xl else Space.sm,
-                                    height = Space.sm,
-                                ),
-                        shape = MaterialTheme.shapes.small,
-                        color =
-                            if (i == pager.currentPage) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.outlineVariant,
-                    ) {}
-                }
-            }
-            PrimaryButton(
-                if (pager.currentPage == pages.lastIndex) label(TextKey.t_df60f8d791)
-                else label(TextKey.t_704198b924),
-                onClick = {
-                    if (pager.currentPage == pages.lastIndex) onDone()
-                    else scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
-                },
-                modifier = Modifier.testTag("intro-next"),
-            )
-        }
-    }
-}
+fun OnboardingScreen(onDone: () -> Unit) { com.ahmadmol.enmath.features.auth.LocalOnboarding(onDone = onDone) }
 
 @Composable
 fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
     ScreenPage(Modifier.testTag("screen-started"), narrow = true) {
-        BrandMark()
-        Spacer(Modifier.height(Space.lg))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Space.xs)
+        ) {
+            MnLogoMark(Modifier.size(72.dp))
+            Text(
+                "EN.MATH",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.15.em
+                )
+            )
+        }
+
         PageHeading(
-            label(TextKey.t_dbce05439f),
-            label(TextKey.t_c9c7136316),
-            label(TextKey.t_479e114db0),
+            eyebrow = label(TextKey.t_dbce05439f),
+            title = label(TextKey.t_c9c7136316),
+            subtitle = label(TextKey.t_479e114db0),
         )
+
         AppCard(
             onClick = { onRole(AccountType.Student) },
             tonal = true,
@@ -147,14 +93,42 @@ fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Space.lg),
             ) {
-                Icon(
-                    Icons.Outlined.School,
-                    null,
-                    Modifier.size(Space.hero),
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-                Column(Modifier.weight(1f)) {
-                    Text(label(TextKey.t_4f567e1c20), style = MaterialTheme.typography.titleLarge)
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.size(56.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Outlined.School,
+                            contentDescription = null,
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            label(TextKey.t_4f567e1c20),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Surface(
+                            shape = MaterialTheme.shapes.small,
+                            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f)
+                        ) {
+                            Text(
+                                entryText(com.ahmadmol.enmath.R.string.entry_copy_46),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(horizontal = Space.sm, vertical = 2.dp)
+                            )
+                        }
+                    }
                     Text(
                         label(TextKey.t_51d2fe6071),
                         style = MaterialTheme.typography.bodyMedium,
@@ -163,6 +137,7 @@ fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
                 }
             }
         }
+
         AppCard(
             onClick = { onRole(AccountType.Teacher) },
             modifier = Modifier.testTag("role-teacher"),
@@ -171,14 +146,42 @@ fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Space.lg),
             ) {
-                Icon(
-                    Icons.Outlined.CoPresent,
-                    null,
-                    Modifier.size(Space.hero),
-                    tint = MaterialTheme.colorScheme.tertiary,
-                )
-                Column(Modifier.weight(1f)) {
-                    Text(label(TextKey.t_0f82bcf371), style = MaterialTheme.typography.titleLarge)
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    modifier = Modifier.size(56.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Outlined.CoPresent,
+                            contentDescription = null,
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.tertiary,
+                        )
+                    }
+                }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.xs)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            label(TextKey.t_0f82bcf371),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Surface(
+                            shape = MaterialTheme.shapes.small,
+                            color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.7f)
+                        ) {
+                            Text(
+                                entryText(com.ahmadmol.enmath.R.string.entry_copy_47),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                modifier = Modifier.padding(horizontal = Space.sm, vertical = 2.dp)
+                            )
+                        }
+                    }
                     Text(
                         label(TextKey.t_44c7ecd060),
                         style = MaterialTheme.typography.bodyMedium,
@@ -187,12 +190,32 @@ fun GetStartedScreen(onRole: (AccountType) -> Unit, onGuest: () -> Unit) {
                 }
             }
         }
+
         OutlinedButton(
             onClick = onGuest,
-            modifier = Modifier.fillMaxWidth().heightIn(min = Space.touch).testTag("guest"),
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = Space.touch)
+                .testTag("guest"),
+            shape = MaterialTheme.shapes.small,
+            contentPadding = PaddingValues(horizontal = Space.lg, vertical = Space.md)
         ) {
-            Text(label(TextKey.t_bb13a814b0))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(Space.sm),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Outlined.Explore,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    label(TextKey.t_bb13a814b0),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
         }
+
         DemoNotice()
     }
 }

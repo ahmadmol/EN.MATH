@@ -1,19 +1,41 @@
+// Opt-in host rendering only. No screenshot engine enters the installed application.
+buildscript {
+    if (gradle.startParameter.projectProperties["g9Render"] == "true") {
+        repositories { google(); mavenCentral() }
+        dependencies { classpath("com.android.compose.screenshot:screenshot-test-gradle-plugin:0.0.1-alpha16") }
+    }
+}
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+val g9Render = providers.gradleProperty("g9Render").orNull == "true"
+val natureHostQa = providers.gradleProperty("natureHostQa").orNull == "true"
+// Keep verification usable on a full workspace drive without deleting existing artifacts.
+providers.gradleProperty("qaBuildDir").orNull?.let { layout.buildDirectory.set(file(it)) }
+
 android {
+    if (g9Render) experimentalProperties["android.experimental.enableScreenshotTest"] = true
     namespace = "com.ahmadmol.enmath"
     compileSdk = 35
     defaultConfig {
         applicationId = "com.ahmadmol.enmath"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 6
+        versionName = "1.0.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        create("w1Qa") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".w1qa"
+            versionNameSuffix = "-w1qa"
+            matchingFallbacks += listOf("debug")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -21,7 +43,37 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true }
+    if (natureHostQa) {
+        testOptions.unitTests.isIncludeAndroidResources = true
+        sourceSets.getByName("testDebug").java.srcDir("src/hostQa/kotlin")
+        sourceSets.getByName("testRelease").java.srcDir("src/hostQaRelease/kotlin")
+    }
     bundle { language { enableSplit = false } }
+}
+
+if (g9Render) apply(plugin = "com.android.compose.screenshot")
+
+if (g9Render) {
+    // AGP 8.9 exposes the SDK stub jar as bootClasspath. The current standalone renderer
+    // needs Layoutlib's rewritten framework classes (_Original_Build etc.) ahead of it.
+    val framework = configurations.create("g9RenderFramework")
+    dependencies.add(framework.name, "com.android.tools.layoutlib:layoutlib:16.1.0-jdk17")
+    tasks.matching { it.name.endsWith("ScreenshotTest") }.configureEach {
+        val getter = javaClass.methods.find { it.name == "getTestEngineInput" && it.parameterCount == 0 }
+        if (getter != null) {
+            val input = getter.invoke(this)
+            val files = input.javaClass.getMethod("getLayoutlibClassPath").invoke(input) as org.gradle.api.file.ConfigurableFileCollection
+            val existing = files.from.toList()
+            files.setFrom(framework, existing)
+        }
+    }
+}
+
+// QA-only version codes allow an isolated baseline -> final upgrade without uninstalling.
+androidComponents.onVariants(androidComponents.selector().withBuildType("w1Qa")) { variant ->
+    variant.outputs.forEach { output ->
+        output.versionCode.set(providers.gradleProperty("w1QaVersionCode").map(String::toInt).orElse(2))
+    }
 }
 
 dependencies {
@@ -36,10 +88,17 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303")
+    if (natureHostQa) {
+        testImplementation(composeBom)
+        testImplementation("androidx.compose.ui:ui-test-junit4")
+        testImplementation("org.robolectric:robolectric:4.14.1")
+    }
     androidTestImplementation(composeBom)
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test:runner:1.6.2")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.compose.ui:ui-tooling")
+    if (g9Render) add("screenshotTestImplementation", "com.android.tools.screenshot:screenshot-validation-api:0.0.1-alpha16")
 }

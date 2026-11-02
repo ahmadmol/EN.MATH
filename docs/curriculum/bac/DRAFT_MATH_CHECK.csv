@@ -1,0 +1,29 @@
+id,unitId,independentValue,proposedValue,numericalProposalCheck,method,educatorReview,wordingReview,figureReview,checkerApproval,publication,grantsGems
+bac-1-u01-original-draft-01,bac-1-u01,17,17,PASS,u_n=u_1+(n-1)d,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u01-original-draft-02,bac-1-u01,15,15,PASS,finite integer sum,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u02-original-draft-01,bac-1-u02,0,0,PASS,reciprocal tends to zero at positive infinity,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u02-original-draft-02,bac-1-u02,4,4,PASS,"cancel x-2 for x!=2, evaluate x+2",PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u03-original-draft-01,bac-1-u03,14,14,PASS,derivative of x^3+2x is 3x^2+2,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u03-original-draft-02,bac-1-u03,2,2,PASS,"vertex -b/(2a), a>0",PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u04-original-draft-01,bac-1-u04,0,0,PASS,reciprocal sequence tends to zero,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u04-original-draft-02,bac-1-u04,2,2,PASS,ratio of leading coefficients,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u05-original-draft-01,bac-1-u05,3,3,PASS,ln(exp(t))=t for real t,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u05-original-draft-02,bac-1-u05,5,5,PASS,positive product logarithm identity,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u06-original-draft-01,bac-1-u06,1,1,PASS,nonzero base to zero power,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u06-original-draft-02,bac-1-u06,7,7,PASS,exp(ln(t))=t for t>0,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u07-original-draft-01,bac-1-u07,8,8,PASS,integrate 3x^2 to x^3,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-1-u07-original-draft-02,bac-1-u07,9,9,PASS,integrate 2x to x^2,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u01-original-draft-01,bac-2-u01,5,5,PASS,"Euclidean distance, radicand 25",PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u01-original-draft-02,bac-2-u01,1,1,PASS,midpoint first coordinate,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u02-original-draft-01,bac-2-u02,0,0,PASS,three-coordinate scalar product,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u02-original-draft-02,bac-2-u02,4,4,PASS,three-coordinate scalar product,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u03-original-draft-01,bac-2-u03,5,5,PASS,parametric first coordinate at t=2,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u03-original-draft-02,bac-2-u03,3,3,PASS,intersection fixes third coordinate at 3,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u04-original-draft-01,bac-2-u04,5,5,PASS,"complex modulus, radicand 25",PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u04-original-draft-02,bac-2-u04,5,5,PASS,product of complex conjugates,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u05-original-draft-01,bac-2-u05,1,1,PASS,"quarter turn maps (x,y) to (-y,x)",PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u05-original-draft-02,bac-2-u05,1,1,PASS,translation adds second coordinates,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u06-original-draft-01,bac-2-u06,10,10,PASS,unordered selection of two from five,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u06-original-draft-02,bac-2-u06,24,24,PASS,factorial definition,PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u07-original-draft-01,bac-2-u07,1/2,1/2,PASS,"conditional probability, denominator nonzero",PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False
+bac-2-u07-original-draft-02,bac-2-u07,1/2,1/2,PASS,"binomial mass n=2,k=1,p=1/2",PENDING,PENDING,UNKNOWN,PENDING,DRAFT_NEEDS_MATH_EDUCATOR_REVIEW,False

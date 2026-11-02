@@ -157,7 +157,7 @@ object ProductSeed {
                 "Identify the applicable rule, then substitute carefully.",
                 "حدّد القاعدة المناسبة ثم عوّض بدقة.",
             ),
-            explain,
+            ExerciseExplanations.forQuestion(topic, index, explain),
         )
 
     private val basic =
