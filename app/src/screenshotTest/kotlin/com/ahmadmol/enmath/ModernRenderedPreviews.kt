@@ -27,10 +27,11 @@ import com.ahmadmol.enmath.features.student.*
     LaunchedEffect(language) { repository.setLanguage(language) }
     val state by repository.state.collectAsState()
     val wide = configuration.screenWidthDp >= 768
+    val selected = when (scene) { "tools" -> Routes.Tools; "profile" -> Routes.Profile; else -> Routes.Home }
     ENMathTheme(ThemeMode.System, language, true, stage, "lama") {
-        Scaffold(bottomBar = { if (!wide) ModernStudentNavigation(Routes.Home) {} }) { padding ->
+        Scaffold(bottomBar = { if (!wide) ModernStudentNavigation(selected) {} }) { padding ->
             Row(Modifier.fillMaxSize().padding(padding)) {
-                if (wide) ModernStudentRail(Routes.Home) {}
+                if (wide) ModernStudentRail(selected) {}
                 Box(Modifier.weight(1f)) {
                     when (scene) {
                         "tools" -> ModernToolsScreen(state) {}

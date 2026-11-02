@@ -59,10 +59,12 @@ class ModernStudentHostTest {
             CompositionLocalProvider(LocalDensity provides Density(1f,o.scale)) {
                 ENMathTheme(if(o.dark)ThemeMode.Dark else ThemeMode.Light,o.language,true,s.user?.studyStage,avatar) {
                     nav=rememberNavController()
+                    val entry by nav.currentBackStackEntryAsState()
+                    val selected = Routes.selectedTab(entry?.destination?.route) ?: Routes.Home
                     val wide = LocalConfiguration.current.screenWidthDp >= 768
-                    Scaffold(bottomBar={if(bar && !wide) ModernStudentNavigation(Routes.Home){nav.navigate(it)}}) { padding ->
+                    Scaffold(bottomBar={if(bar && !wide) ModernStudentNavigation(selected){nav.navigate(it)}}) { padding ->
                         Row(Modifier.fillMaxSize().padding(padding)) {
-                            if(bar && wide) ModernStudentRail(Routes.Home){nav.navigate(it)}
+                            if(bar && wide) ModernStudentRail(selected){nav.navigate(it)}
                             Box(Modifier.weight(1f).fillMaxHeight()) {
                             NavHost(nav,startDestination=start) {
                                 studentGraph(nav,app,solver,{nav.navigate(it)},{},{it()},null)
@@ -107,6 +109,22 @@ class ModernStudentHostTest {
     @Test fun matrix360()=matrix()
     @Test @Config(qualifiers="en-w393dp-h850dp") fun matrix393()=matrix()
     @Test @Config(qualifiers="en-w800dp-h1200dp") fun matrix800()=matrix()
+
+    @Test fun everyRootHasAReadableSelectedStateAt200PercentInBothLanguages() {
+        options.value=Options(2f,Language.Arabic,true)
+        mount(bar=true)
+        for(language in Language.entries) {
+            ui.runOnIdle { repo.setLanguage(language);options.value=Options(2f,language,true) }
+            for(route in Routes.modernStudentTabs) {
+                ui.onNodeWithTag("nav-$route").performClick().assertIsSelected()
+                val label=if(language==Language.Arabic) mapOf("study" to "المنهج","tools" to "الأدوات","home" to "الرئيسية","progress" to "تقدمي","profile" to "حسابي").getValue(route)
+                    else mapOf("study" to "Curriculum","tools" to "Tools","home" to "Home","progress" to "Progress","profile" to "Profile").getValue(route)
+                val layouts=mutableListOf<TextLayoutResult>()
+                ui.onNodeWithText(label).performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(layouts) }
+                assertTrue(layouts.isNotEmpty() && layouts.none { it.hasVisualOverflow })
+            }
+        }
+    }
 
     @Test fun avatarSelectionPersistsAcrossHomeProfileAndASecondAccount() {
         mount(Routes.Avatar)

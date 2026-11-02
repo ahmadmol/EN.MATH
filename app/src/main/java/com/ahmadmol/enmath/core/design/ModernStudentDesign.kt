@@ -89,9 +89,9 @@ val LocalStudentAvatarId = staticCompositionLocalOf<String?> { null }
     val density = LocalDensity.current
     val measurer = rememberTextMeasurer()
     BoxWithConstraints(Modifier.fillMaxWidth().navigationBarsPadding()) {
-        val labelStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, lineHeight = 15.sp, lineBreak = LineBreak.Paragraph, hyphens = Hyphens.Auto)
+        val labelStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, lineHeight = 15.sp, lineBreak = LineBreak.Heading, hyphens = Hyphens.Auto)
         val widthPx = with(density) { (maxWidth / items.size - 8.dp).roundToPx().coerceAtLeast(1) }
-        val measured = items.maxOf { measurer.measure(it.title, style = labelStyle, constraints = Constraints(maxWidth = widthPx)).size.height }
+        val measured = items.maxOf { measurer.measure(it.title, style = labelStyle.copy(fontWeight = FontWeight.Bold), constraints = Constraints(maxWidth = widthPx)).size.height }
         val labelHeight = with(density) { measured.toDp() }
         val barHeight = maxOf(76.dp, labelHeight + 64.dp)
         val total = StudentExperienceTokens.floatAboveBar + barHeight
