@@ -117,9 +117,9 @@ class StudentFirstFixBatchTest {
     @Test
     fun routesSelectedTabMapsDeepDestinationsToParentTabs() {
         assertEquals(Routes.Study, Routes.selectedTab("study/catalog"))
-        assertEquals(Routes.Profile, Routes.selectedTab("gems/wallet"))
-        assertEquals(Routes.Profile, Routes.selectedTab("gems/review"))
-        assertEquals("explore", Routes.selectedTab("explore"))
+        assertEquals(Routes.Tools, Routes.selectedTab("gems/wallet"))
+        assertEquals(Routes.Tools, Routes.selectedTab("gems/review"))
+        assertEquals(Routes.Tools, Routes.selectedTab("explore"))
     }
 
     @Test

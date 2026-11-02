@@ -6,6 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.unit.Density
@@ -83,6 +84,7 @@ class NaturePracticeHostRuntimeTest {
         ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(station))
         val before = ui.onNodeWithTag(station).fetchSemanticsNode().boundsInRoot
         ui.onNodeWithTag(station).performClick()
+        ui.onNodeWithTag("journey-qa-practice").performScrollTo().assertIsDisplayed().performSemanticsAction(SemanticsActions.OnClick) { it() }
         ui.runOnIdle { assertEquals(NaturePracticeGrader.ROUTE, nav.currentDestination?.route) }
         ui.waitUntil(10000) { snapshot().draft != null }
         ui.onNodeWithTag("screen-g9-nature-practice").assertExists()

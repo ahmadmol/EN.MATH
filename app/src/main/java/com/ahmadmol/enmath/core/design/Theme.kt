@@ -146,7 +146,7 @@ fun tr(en: String, ar: String) = if (LocalLanguage.current == Language.Arabic) a
 @Composable fun Copy.text() = tr(en, ar)
 
 @Composable
-fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, stage: StudyStage? = null, content: @Composable () -> Unit) {
+fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, stage: StudyStage? = null, avatarId: String? = null, content: @Composable () -> Unit) {
     val dark =
         when (mode) {
             ThemeMode.System -> isSystemInDarkTheme()
@@ -186,6 +186,7 @@ fun ENMathTheme(mode: ThemeMode, language: Language, student: Boolean = false, s
         LocalLanguage provides language,
         LocalIsDarkTheme provides dark,
         LocalStudentExperience provides student,
+        LocalStudentAvatarId provides avatarId,
         LocalStudyStage provides if (student) stage else null,
         LocalLayoutDirection provides
             if (language == Language.Arabic) LayoutDirection.Rtl else LayoutDirection.Ltr,

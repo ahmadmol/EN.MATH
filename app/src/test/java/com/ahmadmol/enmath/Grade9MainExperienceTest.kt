@@ -16,8 +16,8 @@ class Grade9MainExperienceTest {
     }
 
     @Test fun grade9NavigationIsDistinctAndFocusScreensNeverShowTabsDuringTransitions() {
-        assertEquals(listOf("g9/algebra", "g9/geometry", "home", "g9/exercises", "profile"), Routes.studentTabs(StudyStage.G9))
-        assertEquals(Routes.tabs, Routes.studentTabs(StudyStage.BAC))
+        assertEquals(listOf("study", "tools", "home", "progress", "profile"), Routes.studentTabs(StudyStage.G9))
+        assertEquals(Routes.modernStudentTabs, Routes.studentTabs(StudyStage.BAC))
         assertEquals(Routes.tabs, Routes.studentTabs(null))
         Routes.grade9Tabs.forEach { tab ->
             assertTrue(showStudentNavigation(tab, listOf(tab), true, StudyStage.G9))
@@ -54,7 +54,7 @@ class Grade9MainExperienceTest {
 
     @Test fun grade9RestoresTheLongHomeWhileBacAndTeacherKeepTheirExistingPolicy() {
         Routes.grade9Tabs.forEach { assertTrue(restoreStudentTabState(StudyStage.G9, it, false)) }
-        assertFalse(restoreStudentTabState(StudyStage.BAC, Routes.Home, false))
+        assertTrue(restoreStudentTabState(StudyStage.BAC, Routes.Home, false))
         assertFalse(restoreStudentTabState(null, Routes.Home, false))
         assertFalse(restoreStudentTabState(null, Routes.TeacherHome, true))
         assertFalse(restoreStudentTabState(StudyStage.G9, Routes.TeacherHome, true))

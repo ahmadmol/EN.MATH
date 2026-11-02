@@ -107,6 +107,7 @@ app/src/screenshotTestDebug/
 # Host-only Nature QA build junction (generated files live on the QA drive).
 /app/build-nature-qa/
 /app/build-polish-qa/
+/app/build-modern-qa/
 
 # Local recovery archives, editor state, and private working documents
 *.bundle

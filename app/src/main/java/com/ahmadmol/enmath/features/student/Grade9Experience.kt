@@ -75,14 +75,7 @@ fun grade9SubjectUnits(geometry: Boolean, query: String = ""): List<SourceUnit> 
 
 @Composable
 fun Grade9BottomNav(selected: String?, open: (String) -> Unit) {
-    // Compose mirrors this logical order in Arabic: Algebra starts at the right; Home stays central.
-    CleanBottomBar(listOf(
-        CleanNavItem(Routes.Grade9Algebra, tr("Algebra", "الجبر"), Icons.Outlined.Calculate),
-        CleanNavItem(Routes.Grade9Geometry, tr("Geometry", "الهندسة"), Icons.Outlined.SquareFoot),
-        CleanNavItem(Routes.Home, tr("Home", "الرئيسية"), Icons.Outlined.Home),
-        CleanNavItem(Routes.Grade9Exercises, tr("Exercises", "التمارين"), Icons.Outlined.EditNote),
-        CleanNavItem(Routes.Profile, tr("Profile", "حسابي"), Icons.Outlined.PersonOutline),
-    ), selected, "nav-", dark = false, accessibleCenter = true, open = open)
+    ModernStudentNavigation(selected, open)
 }
 
 /** A saveable lazy list keeps long screens usable at large type sizes and on return from details. */

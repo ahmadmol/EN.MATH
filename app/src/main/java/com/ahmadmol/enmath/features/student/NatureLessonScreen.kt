@@ -63,6 +63,7 @@ fun NatureLessonScreen(
     val dark = isDarkTheme()
 
     LearningPage(Modifier.testTag("screen-g9-nature-lesson")) {
+        com.ahmadmol.enmath.core.design.StudentAvatar(pose = com.ahmadmol.enmath.core.data.AvatarPose.ENCOURAGING)
         // 1. Top Navigation & Stage Breadcrumb
         Row(
             modifier = Modifier.fillMaxWidth(),

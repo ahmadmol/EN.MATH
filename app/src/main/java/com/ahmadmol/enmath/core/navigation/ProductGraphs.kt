@@ -37,6 +37,18 @@ import com.ahmadmol.enmath.features.solver.*
 import com.ahmadmol.enmath.features.student.*
 import com.ahmadmol.enmath.features.teacher.*
 
+/** Shared with host QA so the wallet destination uses its real production component. */
+fun NavGraphBuilder.localGemsGraph(app: AppViewModel, back: () -> Unit, logout: () -> Unit) {
+    composable("gems/wallet") {
+        val state by app.state.collectAsStateWithLifecycle()
+        app.gems?.let { LocalGemsScreen(state, it, logout) }
+    }
+    composable("gems/review") {
+        val state by app.state.collectAsStateWithLifecycle()
+        app.gems?.let { LocalWeeklyReviewScreen(state, it, back) }
+    }
+}
+
 fun NavGraphBuilder.studentGraph(
     nav: NavHostController,
     app: AppViewModel,
@@ -60,6 +72,44 @@ fun NavGraphBuilder.studentGraph(
     fun solve(expression: String, topic: String, owner: String?) {
         val id = app.history(expression, topic, owner)
         if (id.isNotEmpty()) route("solver/solution/$id")
+    }
+    composable(Routes.Tools) {
+        val state by app.state.collectAsStateWithLifecycle()
+        ModernToolsScreen(state, ::route)
+    }
+    composable(Routes.Avatar) {
+        val state by app.state.collectAsStateWithLifecycle()
+        AvatarSelectionScreen(state, (app.repository as? LocalDemoRepository)?.studentExperience) { nav.popBackStack() }
+    }
+    composable(Routes.Streak) {
+        val state by app.state.collectAsStateWithLifecycle()
+        ModernStreakScreen(state, app.repository as? LocalDemoRepository, ::route)
+    }
+    composable(Routes.Activity) {
+        val state by app.state.collectAsStateWithLifecycle()
+        ModernProgressScreen(state, app.repository as? LocalDemoRepository, ::route, activity = true)
+    }
+    composable("training") {
+        val state by app.state.collectAsStateWithLifecycle()
+        ModernTrainingHub(state, ::route)
+    }
+    listOf("content/status", "student/privacy", "student/help").forEach { page ->
+        composable(page) {
+            val state by app.state.collectAsStateWithLifecycle()
+            StudentInformationScreen(state, page.substringAfter('/'), ::route)
+        }
+    }
+    composable("qa/practice/{id}") { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        OriginalDraftPracticeScreen(state, (app.repository as? LocalDemoRepository)?.studentExperience, entry.arguments?.getString("id").orEmpty(), ::route)
+    }
+    composable("qa/result/{id}") { entry ->
+        val state by app.state.collectAsStateWithLifecycle()
+        OriginalDraftPracticeScreen(state, (app.repository as? LocalDemoRepository)?.studentExperience, entry.arguments?.getString("id").orEmpty(), ::route, result = true)
+    }
+    composable("qa/review") {
+        val state by app.state.collectAsStateWithLifecycle()
+        OriginalDraftReviewScreen(state, (app.repository as? LocalDemoRepository)?.studentExperience, ::route)
     }
     composable(Routes.Grade9Activity) {
         val state by app.state.collectAsStateWithLifecycle()
@@ -167,7 +217,8 @@ fun NavGraphBuilder.studentGraph(
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         val gems = app.gems?.ui?.collectAsStateWithLifecycle()?.value ?: LocalGemsUiState()
-        DualStageHome(state, ::route, gems, (app.repository as? LocalDemoRepository)?.planner, (app.repository as? LocalDemoRepository)?.sourceWorkspace, (app.repository as? LocalDemoRepository)?.grade9Study, (app.repository as? LocalDemoRepository)?.naturePractice)
+        if (state.user?.localId != null) ModernJourneyHome(state, ::route, gems, app.repository as? LocalDemoRepository)
+        else DualStageHome(state, ::route, gems, (app.repository as? LocalDemoRepository)?.planner, (app.repository as? LocalDemoRepository)?.sourceWorkspace, (app.repository as? LocalDemoRepository)?.grade9Study, (app.repository as? LocalDemoRepository)?.naturePractice)
     }
     composable(Routes.Study) {
         val state by app.state.collectAsStateWithLifecycle()
@@ -187,7 +238,14 @@ fun NavGraphBuilder.studentGraph(
     composable("review") {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
-        RecordedProgressScreen(state, ::route, review = true, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study, naturePractice = (app.repository as? LocalDemoRepository)?.naturePractice)
+        val context = LocalContext.current
+        val qaAvailable = remember(context) { OriginalDraftBank.loadQa(context) != null }
+        Column(Modifier.fillMaxSize()) {
+            if (qaAvailable && state.user?.studyStage == StudyStage.G9) OutlinedButton({ route("qa/review") }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("review-qa-mistakes")) { Text(tr("Internal QA mistake notebook", "دفتر أخطاء الاختبار الداخلي")) }
+            Box(Modifier.weight(1f)) {
+                RecordedProgressScreen(state, ::route, review = true, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study, naturePractice = (app.repository as? LocalDemoRepository)?.naturePractice)
+            }
+        }
     }
     composable(Routes.Book) { e ->
         val state by app.state.collectAsStateWithLifecycle()
@@ -409,6 +467,11 @@ fun NavGraphBuilder.studentGraph(
     composable(Routes.Progress) {
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
+        if (state.user?.localId != null) { ModernProgressScreen(state, app.repository as? LocalDemoRepository, ::route); return@composable }
+        SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study, naturePractice = (app.repository as? LocalDemoRepository)?.naturePractice)
+    }
+    composable("progress/coverage") {
+        val state by app.state.collectAsStateWithLifecycle()
         SourceProgressScreen(state, ::route, (app.repository as? LocalDemoRepository)?.planner, grade9Study = (app.repository as? LocalDemoRepository)?.grade9Study, naturePractice = (app.repository as? LocalDemoRepository)?.naturePractice)
     }
     composable("progress/book/{id}") { e ->
@@ -569,6 +632,7 @@ fun NavGraphBuilder.studentGraph(
         val state by app.state.collectAsStateWithLifecycle()
         val ticket = LearningRules.sessionOwner(state)
         val gems = app.gems?.ui?.collectAsStateWithLifecycle()?.value ?: LocalGemsUiState()
+        if (state.user?.localId != null) { ModernProfileScreen(state, app.repository as? LocalDemoRepository, gems, open, logout, app::language, app::theme); return@composable }
         ProductProfileScreen(state, false, open, logout, switchRole, app::language, gems, (app.repository as? LocalDemoRepository)?.planner)
     }
     composable("settings") {

@@ -15,10 +15,10 @@ class Grade9RuntimeRepairTest {
         assertEquals(5, g9Tabs.size)
         assertEquals(
             listOf(
-                Routes.Grade9Algebra,
-                Routes.Grade9Geometry,
+                Routes.Study,
+                Routes.Tools,
                 Routes.Home,
-                Routes.Grade9Exercises,
+                Routes.Progress,
                 Routes.Profile
             ),
             g9Tabs

@@ -17,6 +17,10 @@ object Routes {
     const val Solver = "solver"
     const val Progress = "progress"
     const val Profile = "profile"
+    const val Tools = "tools"
+    const val Avatar = "profile/avatar"
+    const val Streak = "progress/streak"
+    const val Activity = "progress/activity"
     const val Book = "book/{id}"
     const val Topic = "topic/{id}"
     const val Lesson = "lesson/{id}"
@@ -29,9 +33,10 @@ object Routes {
     const val Grade9Help = "g9/help"
     const val Grade9Activity = "g9/activity"
     const val Grade9Goal = "g9/goal/{id}"
-    val grade9Tabs = listOf(Grade9Algebra, Grade9Geometry, Home, Grade9Exercises, Profile)
+    val modernStudentTabs = listOf(Study, Tools, Home, Progress, Profile)
+    val grade9Tabs = modernStudentTabs
     fun studentTabs(stage: com.ahmadmol.enmath.core.model.StudyStage?) =
-        if (stage == com.ahmadmol.enmath.core.model.StudyStage.G9) grade9Tabs else tabs
+        if (stage != null) modernStudentTabs else tabs
     const val TeacherMain = "teacher-main"
     const val TeacherHome = "teacher"
     const val TeacherClasses = "teacher/classes"
@@ -52,6 +57,10 @@ object Routes {
 
     fun selectedTab(route: String?) =
         when {
+            route == Progress || route == Streak || route == Activity || route == "review" || route?.startsWith("progress/") == true -> Progress
+            route == Tools || route == Grade9Exercises || route in listOf("planner", "library", "explore", "gems/wallet", "gems/review") || route == Solver || route?.startsWith("solver/") == true -> Tools
+            route == Grade9Algebra || route == Grade9Geometry || route == Grade9Source -> Study
+            route == Avatar -> Profile
             route == Book ||
                 route == Topic ||
                 route == Lesson ||

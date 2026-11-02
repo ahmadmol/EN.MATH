@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.unit.Density
@@ -156,7 +157,9 @@ class NatureLessonHostRuntimeTest {
         awaitTag("screen-home").assertExists()
 
         // Clicking the station label card navigates directly to lesson explanation
+        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("station-label-${Grade9NatureLesson.LESSON_ID}"))
         clickTag("station-label-${Grade9NatureLesson.LESSON_ID}")
+        ui.onNodeWithTag("journey-open-lesson").performScrollTo().assertIsDisplayed().performSemanticsAction(SemanticsActions.OnClick) { it() }
         ui.runOnIdle {
             assertEquals(Routes.Lesson, nav.currentDestination?.route)
             assertEquals(Grade9NatureLesson.LESSON_ID, nav.currentBackStackEntry?.arguments?.getString("id"))
@@ -164,38 +167,16 @@ class NatureLessonHostRuntimeTest {
         awaitTag("screen-g9-nature-lesson").assertExists()
     }
 
-    // 4. Switching Subject Preserves Independent Scroll Positions
-    @Test
-    fun algebraAndGeometryPreserveIndependentScrollPositions() {
-        mount(dark = false, scale = 1.0f)
-        awaitTag("screen-home").assertExists()
 
-        // Initially in Algebra
-        val algebraNode = ui.onNodeWithTag("station-G9-ALG-U01-L01")
-        algebraNode.assertExists()
-
-        // Switch to Geometry
-        clickTag("switch-geometry")
-        ui.waitForIdle()
-
-        // Geometry stations appear
-        val geoNode = ui.onNodeWithTag("station-G9-GEO-U01-L01")
-        geoNode.assertExists()
-
-        // Switch back to Algebra
-        clickTag("switch-algebra")
-        ui.waitForIdle()
-
-        // Algebra stations appear back
-        ui.onNodeWithTag("station-G9-ALG-U01-L01").assertExists()
-
-        // Switch to Geometry and back again (multi-switch idempotency)
-        clickTag("switch-geometry")
-        ui.waitForIdle()
-        ui.onNodeWithTag("station-G9-GEO-U01-L01").assertExists()
-
-        clickTag("switch-algebra")
-        ui.waitForIdle()
-        ui.onNodeWithTag("station-G9-ALG-U01-L01").assertExists()
+    @Test fun oneJourneyKeepsStationGeometryStableAcrossBookSections() {
+        mount(dark=false,scale=1f)
+        val a="station-G9-ALG-U01-L01"; val g="station-G9-GEO-U01-L01"
+        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(a))
+        val before=ui.onNodeWithTag(a).fetchSemanticsNode().boundsInRoot.left
+        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(g))
+        ui.onNodeWithTag(g).assertExists()
+        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(a))
+        assertEquals(before,ui.onNodeWithTag(a).fetchSemanticsNode().boundsInRoot.left,.01f)
+        assertTrue(StudentCatalog.completed(repo.state.value).isEmpty())
     }
 }

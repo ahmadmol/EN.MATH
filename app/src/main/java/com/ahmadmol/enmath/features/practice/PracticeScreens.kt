@@ -148,6 +148,7 @@ fun PracticeResultScreen(
     val attempt = state.product.attempts.lastOrNull { it.setId == setId }
     val set = state.practiceSets.find { it.id == setId }
     ScreenPage(Modifier.testTag("screen-practice-result")) {
+        com.ahmadmol.enmath.core.design.StudentAvatar(pose = com.ahmadmol.enmath.core.data.AvatarPose.COMPLETED)
         RefHeroCard(
             title = label(TextKey.t_1d32c31329),
             subtitle = label(TextKey.t_1ce0bc63cd),

@@ -72,6 +72,7 @@ fun LimitsPracticeResult(state: LearningState, retry: () -> Unit, topic: () -> U
     val attempt = state.product.attempts.lastOrNull { it.setId == LimitsLessonSequence.practiceId }
     val mastery = LearningRules.topic(state, "limits")
     ScreenPage(Modifier.testTag("screen-practice-result")) {
+        StudentAvatar(pose = AvatarPose.COMPLETED)
         RefHeroCard(tr("Your practice result", "نتيجة تدريبك"),
             tr("Reflect, then continue", "افهم نتيجتك، ثم تابع"), artwork = { QuestionHeroArtwork() })
         if (attempt == null) {
