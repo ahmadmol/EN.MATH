@@ -1,0 +1,11 @@
+# Remaining limitations and reasons
+
+- Raster visual acceptance is BLOCKED. All 108 current preview cases failed because Windows Application Control blocked Layoutlib's native DLL; zero current images were produced/approved. The security policy was respected. A compatible authorized render environment is needed for pixel review.
+- Phone/emulator/ADB/install/uninstall/data-clear operations were explicitly excluded and not performed. Physical upgrade retention, process death, Activity recreation, IME/insets, gestures, TalkBack, external providers and hardware failure remain NOT_RUN. No request to start phone testing is part of this campaign.
+- Release signing material was not supplied. The Release artifact is unsigned; the Debug artifact uses the existing local debug certificate. No production-signing claim is made.
+- Curriculum scientific/rights approval is incomplete. The Nature bank stays an unapproved Debug QA demo; Release guards and asset exclusion remain. Full official curriculum, official exams and general symbolic solving are outside the available content.
+- Prior wrong-answer strings were never stored by Nature; only accepted answers, retry counts and hint evidence can be reported. The campaign does not reconstruct missing historical data or certify unsent keystrokes across process death.
+- Host file fixtures demonstrate contracts, not Android power-loss durability. No destructive recovery or schema migration was used. Broader persistence architecture changes were avoided to protect existing records.
+- The graph sampling benchmark is a host microbenchmark; no device FPS, memory reduction or cold-start improvement is claimed. New parsing reuse is also checked structurally in the production Compose canvas.
+- Arabic and English chrome are retained where supported; Arabic textbook titles and the draft bank are not presented as a fully translated curriculum. The audit is not an independent complete editorial/scientific review of every sentence.
+- Lint warnings and earlier failed/superseded build attempts are recorded in QA_RESULTS.md. Toolchain versions were retained. On Windows, cross-drive AGP test outputs require a same-drive path/junction; this environment issue is documented rather than patched in third-party tooling.

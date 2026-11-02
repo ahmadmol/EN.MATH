@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-28",
+  "path": "D:\\ENMATH\\EN.MATH",
+  "head": "03ded3debe3930a272b5399142723111e362250e",
+  "baseline": {
+    "tests": 264,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "JVM": {
+    "Debug": {
+      "tests": 286,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "Release": {
+      "tests": 286,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "W1Qa": {
+      "tests": 286,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "preserved_original_test_files": 44,
+  "preserved_storage_teacher_source_files": 41,
+  "SQLite": {
+    "tests": 10,
+    "result": "PASS"
+  },
+  "source_validation": {
+    "tests": 6,
+    "result": "PASS"
+  },
+  "lint": {
+    "Error": 0,
+    "Fatal": 0,
+    "Warning": 64,
+    "Information": 1
+  },
+  "lint_warning_categories": {
+    "OldTargetApi": 1,
+    "ModifierParameter": 1,
+    "DataExtractionRules": 1,
+    "UnusedResources": 53,
+    "IconDuplicates": 2,
+    "UseKtx": 6
+  },
+  "reference_screens": 92,
+  "screen_states": {
+    "PRESERVED": 17,
+    "IMPLEMENTED": 46,
+    "GATED_WITH_REASON": 23,
+    "IMPLEMENTED_CONTENT_GATED": 6
+  },
+  "phone_visual_QA": "NOT_RUN",
+  "compose_runtime_UI": "NOT_RUN",
+  "visual_comparison": "VISUAL_NOT_VERIFIED",
+  "performance_on_device": "NOT_MEASURED",
+  "apk_sha256": "e075dc0cb69a69c35342e551e544badbe529a5d8fceab03ef57b01968db2d7da",
+  "snapshot_sha256": "dc47f005e256813d77cbc781d5a2e4570ecf326008451e996e81c25aa64755c4",
+  "changed_files": [
+    "app/src/androidTest/java/com/ahmadmol/enmath/SourceStudentUiContractTest.kt",
+    "app/src/debug/java/com/ahmadmol/enmath/StudentSourcePreviews.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/AppViewModel.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/LocalDemoRepository.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/PlannerRepository.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/SourceCurriculum.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/SourceWorkspaceRepository.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/StudentCatalog.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/design/StudentSourceDesign.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/design/Theme.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/navigation/ENMathApp.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/navigation/ProductGraphs.kt",
+    "app/src/main/java/com/ahmadmol/enmath/core/navigation/Routes.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/BacSourceScreens.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/CourseScreens.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/Grade9CatalogScreens.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/SourceCurriculumScreens.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/interactive/InteractiveLimitsScreen.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/explore/ExploreScreen.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/planner/PlannerScreen.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/planner/SourceReferencePicker.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/practice/PracticeScreens.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/profile/ProductProfileScreens.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/search/SearchScreen.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/search/SourceSearchScreen.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/student/DualStageExperience.kt",
+    "app/src/main/java/com/ahmadmol/enmath/features/student/StudentRoadmapScreens.kt",
+    "app/src/test/java/com/ahmadmol/enmath/SourceStudentExperienceTest.kt",
+    "app/src/test/java/com/ahmadmol/enmath/StudentFinalRepairRegressionTest.kt",
+    "docs/IMPLEMENTATION/ENMATH_FINAL_G9_BAC_STUDENT_UI_LOGIC_QA_2026-10-28.md",
+    "docs/IMPLEMENTATION/ENMATH_FINAL_G9_BAC_VERIFICATION_2026-10-28.json",
+    "docs/IMPLEMENTATION/SCREEN_IMPLEMENTATION_MATRIX.csv",
+    "docs/IMPLEMENTATION/USER_PHONE_QA_CHECKLIST.md",
+    "tools/verify_final_student_delivery.py"
+  ],
+  "file_sha256": {
+    "app/src/androidTest/java/com/ahmadmol/enmath/SourceStudentUiContractTest.kt": "cb25783e9b5eba25b8579e704af6a32a898174cf350aafbe4044a19af487388f",
+    "app/src/debug/java/com/ahmadmol/enmath/StudentSourcePreviews.kt": "e42cb161b541343f0976c7a1d267942bbbfd7462bf893a7affca6bc185273016",
+    "app/src/main/java/com/ahmadmol/enmath/core/AppViewModel.kt": "a64b4d624b8f5052338e02b6e653d91f8082679a15e1908c1d93e9bd1f4127c8",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/LocalDemoRepository.kt": "a669405e2a538714014e2ad117e48c0244526b419d035bce03fcba31d6406f78",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/PlannerRepository.kt": "98b473f01766bf68ed59721ee7c9052d9b99897cac1498a0322922cc07e7b6c0",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/SourceCurriculum.kt": "147ee2398eac878802224dee814a8ace419919e4b6bf7a66412404e15aff140a",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/SourceWorkspaceRepository.kt": "5960a8418d29b52912ef52b5204dc9a765eb31fe0b3e3e5a8d6cd54af5147494",
+    "app/src/main/java/com/ahmadmol/enmath/core/data/StudentCatalog.kt": "081d4ec62913d2a244c4f912e0bd716e69ad78fab54d8a7eb60c513901e2fa10",
+    "app/src/main/java/com/ahmadmol/enmath/core/design/StudentSourceDesign.kt": "67194ee5a43d9f6718baead7628d8e941be3a0c939a06d7dc845b33110f483d6",
+    "app/src/main/java/com/ahmadmol/enmath/core/design/Theme.kt": "d1ada1ad5018b368b7c631fdd96237fa6b290f31f8e74dcfdb4b1d9f51ea7036",
+    "app/src/main/java/com/ahmadmol/enmath/core/navigation/ENMathApp.kt": "5c67403bc32ee3810887692801c22cc1807b64b4d6e3ba75ae6faa13a67f1862",
+    "app/src/main/java/com/ahmadmol/enmath/core/navigation/ProductGraphs.kt": "138b1475bc86da5d517a56af9172f69bc2c8cadd9eb2f9a3ea447278f8b774ce",
+    "app/src/main/java/com/ahmadmol/enmath/core/navigation/Routes.kt": "070f5e186702d218d03ef273419f495508a86cffb1e475014ceaa502b54a36f9",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/BacSourceScreens.kt": "530f8b8081f47b40440aa2318f6f2817f3ac4f037c2da998103fa87bf9cbcc75",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/CourseScreens.kt": "0df4af354b6063ccf67c10b9c1e227a2536a16a75608ca366d66c19e1441c784",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/Grade9CatalogScreens.kt": "68bc50d970cb8f78f8dc9f92b87f5cf0f74093449d80c9645877ad7e6cd7f3c6",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/SourceCurriculumScreens.kt": "49b2161a3988c44a0abab94d57cf1633713a4402df2644cfe84f7f67fceb792c",
+    "app/src/main/java/com/ahmadmol/enmath/features/courses/interactive/InteractiveLimitsScreen.kt": "476f299d23a604ab72f981bfb2969bc911af7561aa22129b5d18e8ca40014f26",
+    "app/src/main/java/com/ahmadmol/enmath/features/explore/ExploreScreen.kt": "062bbec16a862d0bd8366f9ae07ee232c9a0fa39da38f249620672b6e8aa652e",
+    "app/src/main/java/com/ahmadmol/enmath/features/planner/PlannerScreen.kt": "99f6048686285bd4931e136f4788f4fe874ed742feda62f9ed96db49b570261e",
+    "app/src/main/java/com/ahmadmol/enmath/features/planner/SourceReferencePicker.kt": "f4975d2810b39988aeec8fccbadc5ff0bc8efda9cf7d091d3104cde9c2f6bb82",
+    "app/src/main/java/com/ahmadmol/enmath/features/practice/PracticeScreens.kt": "838dd5629e3ffeb030b77dab0c08e6e1f0cb81d3792a3851b723e1291090d7a0",
+    "app/src/main/java/com/ahmadmol/enmath/features/profile/ProductProfileScreens.kt": "42c518beab9e32b80ebe04471ed400a7f5716327ad09897449d9b07fd6ed4078",
+    "app/src/main/java/com/ahmadmol/enmath/features/search/SearchScreen.kt": "0fcae7113762f248999ab46bfdc0ee443ee311c3291cb590e87431feefc349c3",
+    "app/src/main/java/com/ahmadmol/enmath/features/search/SourceSearchScreen.kt": "0ca64aee1c18cc82b962bae11f4392bfac70a6450af3b0b48f45a5d88589c022",
+    "app/src/main/java/com/ahmadmol/enmath/features/student/DualStageExperience.kt": "30d69f3b74d72454dbb8c0a372f85894ffed9ad8d7866dd97ab80a7be1064c97",
+    "app/src/main/java/com/ahmadmol/enmath/features/student/StudentRoadmapScreens.kt": "4f1a86bf6c6f797fa2e7bdc03ff4ed16e705f71a6d385190e1fb86634d28f201",
+    "app/src/test/java/com/ahmadmol/enmath/SourceStudentExperienceTest.kt": "6789ef2737a49d4f7de7d60c1a8a89d19a7a01b1cbc77d77bf5f39aba75d87d2",
+    "app/src/test/java/com/ahmadmol/enmath/StudentFinalRepairRegressionTest.kt": "20c886a6c76b6299e0a0048884f0be7fb69bf811feb099e29dd6fded3099543b",
+    "docs/IMPLEMENTATION/ENMATH_FINAL_G9_BAC_STUDENT_UI_LOGIC_QA_2026-10-28.md": "9337f183144e0a03718b2f6bb33e94fa4c29a9c8d1949a9aa7ff1d2f37375ed1",
+    "docs/IMPLEMENTATION/SCREEN_IMPLEMENTATION_MATRIX.csv": "a6602e3014b7b0b8290ce46e7db1b519befd6a967e5871663a6f7354d5e36131",
+    "docs/IMPLEMENTATION/USER_PHONE_QA_CHECKLIST.md": "20941acbb826f214d89547523fd0ac657344d65707ca1f4c43876315d81240ca",
+    "tools/verify_final_student_delivery.py": "a8899e2dfbc78bd092ce8c03b1e5e466b4e2ff722ea64efaac6a470e2e080c2b"
+  }
+}

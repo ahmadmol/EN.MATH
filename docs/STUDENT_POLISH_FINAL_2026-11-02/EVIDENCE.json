@@ -1,0 +1,1689 @@
+{
+  "date": "2026-11-02",
+  "head": "1ff95eb4877fc910ea5ee07fe8933dc3c567c76e",
+  "branch": "codex/student-polish-final-2026-11-02",
+  "tests": {
+    "Debug": {
+      "totals": {
+        "tests": 468,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "name": "com.ahmadmol.enmath.AssignmentSubmissionVerificationTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BaccalaureateJourneyHostTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BacSourceIntegrationTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BottomNavigationLayoutTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.CatalogAcceptanceTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.CurriculumPresentationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.DemoLogicTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2BoundaryTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2NavigationKeyTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2PersistenceTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.FinalStudentRegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.GemsIntegrationReviewTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9CatalogIntegrationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9JourneyHostRuntimeTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9MainExperienceTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase10LearningUnitTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase3RegressionTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase5RegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase6RegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase7RegressionTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase9JourneyTest",
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9PilotLearningTest",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9RuntimeRepairTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.GraphPreparationHostTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.InteractiveLessonSessionTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LessonSequenceTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LimitExplorationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LocalGemsCoordinatorTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LocalGemsPolicyTest",
+          "tests": 28,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NativeEquationFormattingTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NatureLessonHostRuntimeTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeFinalVerificationTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeGraderTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeHostRuntimeTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeIntegrationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Phase1ArchitectureFixesTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.PlannerStageModeMatrixTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.ProductRulesTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.ProfileGemsPresentationTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.SourceStudentExperienceTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentBoundaryRegressionTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentCampaignRegressionTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentCompletionRegressionTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentFinalRepairRegressionTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentFirstFixBatchTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningCycleTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningProgressHostTest",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningProgressTest",
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentPlannerTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentPolishHostTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentPolishRegressionTest",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentVideoRegressionTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1AuthBoundaryTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1CompletionIdentityTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1IdentityIsolationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1ProductRecoveryTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.WeeklyGemCardPresentationTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    "Release": {
+      "totals": {
+        "tests": 428,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "name": "com.ahmadmol.enmath.AssignmentSubmissionVerificationTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BacSourceIntegrationTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BottomNavigationLayoutTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.CatalogAcceptanceTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.CurriculumPresentationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.DemoLogicTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2BoundaryTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2NavigationKeyTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2PersistenceTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.FinalStudentRegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.GemsIntegrationReviewTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9CatalogIntegrationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9MainExperienceTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase10LearningUnitTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase3RegressionTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase5RegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase6RegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase7RegressionTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase9JourneyTest",
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9PilotLearningTest",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9RuntimeRepairTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.InteractiveLessonSessionTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LessonSequenceTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LimitExplorationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LocalGemsCoordinatorTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LocalGemsPolicyTest",
+          "tests": 28,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NativeEquationFormattingTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeFinalVerificationTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeGraderTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeIntegrationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeReleaseHostTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Phase1ArchitectureFixesTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.PlannerStageModeMatrixTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.ProductRulesTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.ProfileGemsPresentationTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.SourceStudentExperienceTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentBoundaryRegressionTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentCampaignRegressionTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentCompletionRegressionTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentFinalRepairRegressionTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentFirstFixBatchTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningCycleTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningProgressTest",
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentPlannerTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentPolishRegressionTest",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentVideoRegressionTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1AuthBoundaryTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1CompletionIdentityTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1IdentityIsolationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1ProductRecoveryTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.WeeklyGemCardPresentationTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "lint": {
+    "debug": {
+      "counts": {
+        "Warning": 72,
+        "Information": 1
+      },
+      "status": "PASS"
+    },
+    "release": {
+      "counts": {
+        "Warning": 73,
+        "Information": 1
+      },
+      "status": "PASS"
+    }
+  },
+  "apks": [
+    {
+      "variant": "debug",
+      "file": "app\\build-polish-qa\\outputs\\apk\\debug\\app-debug.apk",
+      "bytes": 34465801,
+      "sha256": "21bb64791a4c54520efd647d9810a26afce02cf72996c1ece32d95014101c50b",
+      "crc": "PASS",
+      "demo_bank": true,
+      "demo_gate": "PASS",
+      "forbidden_entries": []
+    },
+    {
+      "variant": "release",
+      "file": "app\\build-polish-qa\\outputs\\apk\\release\\app-release-unsigned.apk",
+      "bytes": 25036241,
+      "sha256": "6ce423ecfa4d88eea16cf4cc791ab2e4be3f6f10d72482242f295252d42846b5",
+      "crc": "PASS",
+      "demo_bank": false,
+      "demo_gate": "PASS",
+      "forbidden_entries": []
+    }
+  ],
+  "publication_scan": {
+    "files": 533,
+    "forbidden_files": [],
+    "findings": [],
+    "scope": "Known key patterns and prohibited file types; not a proof that all possible secrets are absent."
+  },
+  "phone_QA": "NOT_RUN",
+  "emulator": false,
+  "adb": false,
+  "baseline_head": "2b86f000b906c6e61f436fa846c77512bc68f4a9",
+  "baseline_tests": {
+    "Debug": {
+      "totals": {
+        "tests": 444,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "name": "com.ahmadmol.enmath.AssignmentSubmissionVerificationTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BaccalaureateJourneyHostTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BacSourceIntegrationTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BottomNavigationLayoutTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.CatalogAcceptanceTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.CurriculumPresentationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.DemoLogicTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2BoundaryTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2NavigationKeyTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2PersistenceTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.FinalStudentRegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.GemsIntegrationReviewTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9CatalogIntegrationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9JourneyHostRuntimeTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9MainExperienceTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase10LearningUnitTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase3RegressionTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase5RegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase6RegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase7RegressionTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase9JourneyTest",
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9PilotLearningTest",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9RuntimeRepairTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.InteractiveLessonSessionTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LessonSequenceTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LimitExplorationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LocalGemsCoordinatorTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LocalGemsPolicyTest",
+          "tests": 28,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NativeEquationFormattingTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NatureLessonHostRuntimeTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeFinalVerificationTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeGraderTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeHostRuntimeTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeIntegrationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Phase1ArchitectureFixesTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.PlannerStageModeMatrixTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.ProductRulesTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.ProfileGemsPresentationTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.SourceStudentExperienceTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentBoundaryRegressionTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentCampaignRegressionTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentCompletionRegressionTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentFinalRepairRegressionTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentFirstFixBatchTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningCycleTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningProgressHostTest",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningProgressTest",
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentPlannerTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentVideoRegressionTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1AuthBoundaryTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1CompletionIdentityTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1IdentityIsolationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1ProductRecoveryTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.WeeklyGemCardPresentationTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "status": "PASS"
+    },
+    "Release": {
+      "totals": {
+        "tests": 413,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "name": "com.ahmadmol.enmath.AssignmentSubmissionVerificationTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BacSourceIntegrationTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.BottomNavigationLayoutTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.CatalogAcceptanceTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.CurriculumPresentationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.DemoLogicTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2BoundaryTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2NavigationKeyTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Execution2PersistenceTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.FinalStudentRegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.GemsIntegrationReviewTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9CatalogIntegrationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9MainExperienceTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase10LearningUnitTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase3RegressionTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase5RegressionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase6RegressionTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase7RegressionTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9Phase9JourneyTest",
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9PilotLearningTest",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Grade9RuntimeRepairTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.InteractiveLessonSessionTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LessonSequenceTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LimitExplorationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LocalGemsCoordinatorTest",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.LocalGemsPolicyTest",
+          "tests": 28,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NativeEquationFormattingTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeFinalVerificationTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeGraderTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeIntegrationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.NaturePracticeReleaseHostTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.Phase1ArchitectureFixesTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.PlannerStageModeMatrixTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.ProductRulesTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.ProfileGemsPresentationTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.SourceStudentExperienceTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentBoundaryRegressionTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentCampaignRegressionTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentCompletionRegressionTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentFinalRepairRegressionTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentFirstFixBatchTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningCycleTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentLearningProgressTest",
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentPlannerTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.StudentVideoRegressionTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1AuthBoundaryTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1CompletionIdentityTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1IdentityIsolationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.W1ProductRecoveryTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "com.ahmadmol.enmath.WeeklyGemCardPresentationTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "new_regression_tests": {
+    "Debug": [
+      {
+        "name": "com.ahmadmol.enmath.GraphPreparationHostTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.ahmadmol.enmath.StudentPolishHostTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.ahmadmol.enmath.StudentPolishRegressionTest",
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "Release": [
+      {
+        "name": "com.ahmadmol.enmath.StudentPolishRegressionTest",
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "new_unique_regressions": 24,
+  "before_fix_proof": {
+    "totals": {
+      "tests": 10,
+      "failures": 9,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suites": [
+      {
+        "name": "com.ahmadmol.enmath.StudentPolishRegressionTest",
+        "tests": 10,
+        "failures": 9,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "status": "NOT_PASS"
+  },
+  "sampling_microbenchmark": [
+    {
+      "variant": "Debug",
+      "samples": 4000,
+      "direct_ns": 32475700,
+      "prepared_ns": 1205000
+    },
+    {
+      "variant": "Release",
+      "samples": 4000,
+      "direct_ns": 55313600,
+      "prepared_ns": 1179200
+    }
+  ],
+  "raster": {
+    "totals": {
+      "tests": 108,
+      "failures": 108,
+      "errors": 0,
+      "skipped": 0
+    },
+    "status": "BLOCKED",
+    "current_images_verified": 0,
+    "policy_bypass": false
+  },
+  "lint_categories": {
+    "debug": {
+      "OldTargetApi": 1,
+      "ModifierParameter": 1,
+      "DataExtractionRules": 1,
+      "UnusedResources": 55,
+      "IconDuplicates": 2,
+      "UseKtx": 12
+    },
+    "release": {
+      "OldTargetApi": 1,
+      "ModifierParameter": 1,
+      "DataExtractionRules": 1,
+      "UnusedResources": 55,
+      "MonochromeLauncherIcon": 1,
+      "IconDuplicates": 2,
+      "UseKtx": 12
+    }
+  },
+  "protected_source_changes": [],
+  "build_log_success": true,
+  "version": {
+    "name": "1.0.5",
+    "code": 6,
+    "application_id": "com.ahmadmol.enmath"
+  }
+}
