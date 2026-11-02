@@ -139,8 +139,8 @@ import kotlinx.coroutines.launch
                 StudentPanel(Modifier.testTag("g9-learning-progress-card")) {
                     Text(tr("Your learning progress", "تقدمك في التعلم"), style = MaterialTheme.typography.titleLarge)
                     Text(if (completed == null) tr("Saved learning is unavailable", "تعذرت قراءة التعلم المحفوظ")
-                        else tr("$completed saved practice sessions", "$completed جلسات تدريب محفوظة"), style = MaterialTheme.typography.headlineSmall)
-                    if (bank != null && qaCompleted != null) Text(tr("$qaCompleted internal QA sessions · separate from published learning", "$qaCompleted جلسات اختبار داخلي · مستقلة عن التعلم المنشور"))
+                        else tr("$completed saved practice sessions", "جلسات التدريب المحفوظة: $completed"), style = MaterialTheme.typography.headlineSmall)
+                    if (bank != null && qaCompleted != null) Text(tr("$qaCompleted internal QA sessions · separate from published learning", "جلسات الاختبار الداخلي: $qaCompleted · مستقلة عن التعلم المنشور"))
                     Text(tr("Practice evidence describes available activities. It is not mastery of the whole curriculum.", "تصف أدلة التدريب الأنشطة المتاحة؛ ولا تمثل إتقان المنهج كاملًا."))
                     if (catalog.stage == StudyStage.G9 && bank != null && nature != null) {
                         val progress = StudentLearningProgressEngine.computeGrade9Progress(nature)
@@ -156,7 +156,7 @@ import kotlinx.coroutines.launch
             item("selector") {
                 StudentPanel {
                     Text(tr("Your whole journey", "رحلتك كاملة"), style = MaterialTheme.typography.titleLarge)
-                    Text(tr("${catalog.books.size} books · ${catalog.units.size} units · ${catalog.researches.size} lessons", "${catalog.books.size} كتابان · ${catalog.units.size} وحدات · ${catalog.researches.size} درسًا"))
+                    Text(tr("${catalog.books.size} books · ${catalog.units.size} units · ${catalog.researches.size} lessons", "كتابان · ${catalog.units.size} ${if (catalog.units.size in 3..10) "وحدات" else "وحدة"} · ${catalog.researches.size} درسًا"))
                     catalog.books.forEach { book ->
                         OutlinedButton({ selectedBook = book.id; picker = true }, Modifier.fillMaxWidth().heightIn(min = 52.dp)
                             .testTag("journey-select-${book.id}")) {
