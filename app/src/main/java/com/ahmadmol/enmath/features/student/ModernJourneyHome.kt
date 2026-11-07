@@ -18,6 +18,8 @@ import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
@@ -110,14 +112,11 @@ import kotlinx.coroutines.launch
         LazyColumn(Modifier.widthIn(max = StudentExperienceTokens.contentWidth).fillMaxSize().testTag("screen-home"),
             state = list, contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             item("status") {
-                FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    AssistChip(onClick = { open(Routes.Study) }, label = { Text(studentStageLabel(catalog.stage)) })
-                    AssistChip(onClick = { open(Routes.Streak) }, leadingIcon = { Icon(Icons.Rounded.LocalFireDepartment, null) },
-                        label = { Text(student?.let { "${LearningStreak.current(it.events, System.currentTimeMillis(), it.zone)}" } ?: "—") }, modifier = Modifier.testTag("home-streak"))
-                    AssistChip(onClick = { open("gems/wallet") }, leadingIcon = { Icon(Icons.Rounded.Diamond, null) },
-                        label = { Text(gemBalanceText(gems, LocalGemsPolicy.owner(state.user), state.language)) }, modifier = Modifier.testTag("home-gems-badge"))
-                    AssistChip(onClick = { open(Routes.Streak) }, leadingIcon = { Icon(Icons.Rounded.Bolt, null) },
-                        label = { Text(when (energy.mode) { EnergyMode.UNLIMITED -> tr("∞ Energy", "∞ طاقة") }) }, modifier = Modifier.testTag("home-unlimited-energy"))
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    StatusChip(studentStageLabel(catalog.stage)) { open(Routes.Study) }
+                    StatusChip(student?.let { "${LearningStreak.current(it.events, System.currentTimeMillis(), it.zone)}" } ?: "—", Icons.Rounded.LocalFireDepartment, "home-streak") { open(Routes.Streak) }
+                    StatusChip(gemBalanceText(gems, LocalGemsPolicy.owner(state.user), state.language), Icons.Rounded.Diamond, "home-gems-badge") { open("gems/wallet") }
+                    StatusChip(when (energy.mode) { EnergyMode.UNLIMITED -> tr("∞ Energy", "∞ طاقة") }, Icons.Rounded.Bolt, "home-unlimited-energy") { open(Routes.Streak) }
                 }
             }
             item("greeting") {
@@ -247,6 +246,16 @@ import kotlinx.coroutines.launch
                     Text(if (qaDraft != null) tr("Resume internal QA session", "تابع جلسة الاختبار الداخلي") else tr("Internal QA: 6 unreviewed questions", "اختبار داخلي: 6 أسئلة غير معتمدة"))
                 }
             }
+        }
+    }
+}
+
+@Composable private fun StatusChip(label: String, icon: ImageVector? = null, tag: String? = null, click: () -> Unit) {
+    Surface(onClick = click, shape = StudentExperienceTokens.compact, color = MaterialTheme.colorScheme.surfaceContainerLow,
+        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).then(if (tag == null) Modifier else Modifier.testTag(tag))) {
+        Row(Modifier.padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (icon != null) Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
+            Text(label, Modifier.weight(1f).then(if (tag == null) Modifier else Modifier.testTag("$tag-label")), style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
