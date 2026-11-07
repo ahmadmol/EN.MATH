@@ -22,8 +22,8 @@ import com.ahmadmol.enmath.core.design.*
             return@ScreenPage
         }
         StageHero(catalog.stage, tr("Search my curriculum", "ابحث في منهجي"),
-            tr("Books, units and exact research references", "الكتب والوحدات ومراجع الأبحاث الفعلية"))
-        RefSearchBar(query, { query = it }, tr("Book, unit or research", "كتاب أو وحدة أو بحث"))
+            tr("Books, units and exact lesson references", "الكتب والوحدات ومراجع الدروس الفعلية"))
+        RefSearchBar(query, { query = it }, tr("Book, unit or lesson", "كتاب أو وحدة أو درس"))
         OutlinedButton({ onSearch(query) }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("save-search"), enabled = query.isNotBlank()) { Text(tr("Save this search", "حفظ البحث")) }
         if (query.isBlank()) {
             if (state.product.searches.isNotEmpty()) {
@@ -32,7 +32,7 @@ import com.ahmadmol.enmath.core.design.*
             }
             SectionTitle(tr("Browse the source", "تصفّح المصدر"))
             catalog.books.forEach { book -> SourceItemCard(book.title,
-                tr("${book.units.size} units · ${book.researches.size} indexed researches", "${book.units.size} وحدات · ${book.researches.size} أبحاث مفهرسة")) { open(book.route) } }
+                tr("${book.units.size} units · ${book.researches.size} indexed lessons", "${book.units.size} وحدات · ${book.researches.size} دروس مفهرسة")) { open(book.route) } }
         } else {
             val results = catalog.search(query)
             SectionTitle(tr("Source index · ${results.size} matches", "فهرس المصدر · ${results.size} نتائج"))
@@ -48,7 +48,7 @@ import com.ahmadmol.enmath.core.design.*
             val demo = state.lessons.filter { LearningRules.search(it.title.en + " " + it.title.ar).contains(term) }
             if (demo.isNotEmpty()) {
                 SectionTitle(tr("Demo lessons · separate learning", "الدروس التجريبية · تعلّم مستقل"))
-                demo.forEach { lesson -> SourceItemCard(lesson.title.text(), tr("Preserved demo · not a textbook source research", "تجربة محفوظة · ليست بحثًا من فهرس الكتاب"),
+                demo.forEach { lesson -> SourceItemCard(lesson.title.text(), tr("Preserved demo · not a textbook lesson", "تجربة محفوظة · ليست درسًا من فهرس الكتاب"),
                     icon = Icons.Outlined.Science) { onSearch(query); open("lesson/${lesson.id}") } }
             }
             val questions = state.questions.filter { StudentCatalog.practiceForQuestion(state, it.id) != null &&

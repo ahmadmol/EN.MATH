@@ -51,8 +51,8 @@ import com.ahmadmol.enmath.core.model.StudyStage
     if (state.user?.studyStage != StudyStage.BAC || !state.catalogAvailable) return
     AppCard(Modifier.testTag("bac-source-coverage")) {
         Text(tr("Textbook source index", "فهرس مصدر الكتابين"), style = MaterialTheme.typography.titleLarge)
-        Text(tr("14 units · 63 lessons · 27 activity/exercise sections · 470 page records", "14 وحدة · 63 بحثًا · 27 قسم أنشطة وتمارين · 470 سجل صفحة"))
-        Text(tr("Reviewed source lessons: 0/63 (0%). Page content reviewed: 0/470.", "أبحاث المصدر المعتمدة: 0/63 (0٪). الصفحات المدققة المحتوى: 0/470."))
+        Text(tr("14 units · 63 lessons · 27 activity/exercise sections · 470 page records", "14 وحدة · 63 درسًا · 27 قسم أنشطة وتمارين · 470 سجل صفحة"))
+        Text(tr("Reviewed source lessons: 0/63 (0%). Page content reviewed: 0/470.", "دروس المصدر المعتمدة: 0/63 (0٪). الصفحات المدققة المحتوى: 0/470."))
         Text(tr("Existing demo progress remains separate.", "تقدم الدروس التجريبية السابقة محفوظ بصورة مستقلة."))
     }
 }

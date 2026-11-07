@@ -28,6 +28,10 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
                 (grade9Study.read(scope) as? G9StudyRead.Ready)?.data?.attempts?.forEach {
                     if (it.record.answers.values.any(String::isNotBlank)) put("g9-pilot:${it.record.commandId}", it.record.timestamp)
                 }
+                // Finished Nature sessions only. Drafts, source visits and unapproved QA stay out.
+                (naturePractice.read(scope) as? NatureRead.Ready)?.data?.attempts?.forEach { attempt ->
+                    if (attempt.answers.values.any(String::isNotBlank)) put("nature:${attempt.id}", attempt.finishedAt)
+                }
             }
         }
     }

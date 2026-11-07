@@ -551,11 +551,11 @@ fun CurriculumUnitCard(unit: SourceUnit, open: (String) -> Unit) {
                 )
                 Text(
                     text = if (hasPilot)
-                        tr("${unit.researches.size} indexed topics · one original pilot available",
-                            "${unit.researches.size} أبحاث مفهرسة · درس أصلي تجريبي متاح")
+                        tr("${unit.researches.size} indexed lessons · one original pilot available",
+                            "${unit.researches.size} دروس مفهرسة · درس أصلي تجريبي متاح")
                     else
-                        tr("${unit.researches.size} indexed topics · content under review",
-                            "${unit.researches.size} أبحاث مفهرسة · المحتوى قيد المراجعة"),
+                        tr("${unit.researches.size} indexed lessons · content under review",
+                            "${unit.researches.size} دروس مفهرسة · المحتوى قيد المراجعة"),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -669,7 +669,7 @@ fun Grade9SubjectPicker(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = tr("6 units · 19 topics", "6 وحدات · 19 بحثًا"),
+                        text = tr("6 units · 19 lessons", "6 وحدات · 19 درسًا"),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -723,7 +723,7 @@ fun Grade9SubjectPicker(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = tr("4 units · 13 topics", "4 وحدات · 13 بحثًا"),
+                        text = tr("4 units · 13 lessons", "4 وحدات · 13 درسًا"),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1120,8 +1120,8 @@ fun Grade9LearningPath(
                             color = bookAccent
                         )
                         Text(
-                            text = tr("${displayedBook.units.size} units · ${displayedBook.researches.size} indexed topics",
-                                "${displayedBook.units.size} وحدات · ${displayedBook.researches.size} بحثًا مفهرسًا"),
+                            text = tr("${displayedBook.units.size} units · ${displayedBook.researches.size} indexed lessons",
+                                "${displayedBook.units.size} وحدات · ${displayedBook.researches.size} درسًا مفهرسًا"),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1207,8 +1207,8 @@ fun Grade9SubjectScreen(state: LearningState, geometry: Boolean, open: (String) 
             StageHero(
                 stage = StudyStage.G9,
                 title = book.title,
-                subtitle = tr("${book.units.size} units · ${book.researches.size} indexed topics",
-                    "${book.units.size} وحدات · ${book.researches.size} بحثًا مفهرسًا"),
+                subtitle = tr("${book.units.size} units · ${book.researches.size} indexed lessons",
+                    "${book.units.size} وحدات · ${book.researches.size} درسًا مفهرسًا"),
                 badgeIcon = if (geometry) Icons.Outlined.SquareFoot else Icons.Outlined.Calculate
             )
         }
@@ -1237,7 +1237,7 @@ fun Grade9SubjectScreen(state: LearningState, geometry: Boolean, open: (String) 
                         text = if (geometry)
                             tr("Geometry content is under preparation. Browsing the index is not completed learning.", "محتوى الهندسة قيد الإعداد. تصفح الفهرس ليس تعلّمًا مكتملًا.")
                         else
-                            tr("An original reduced-fractions pilot is available. The other Algebra topics remain under preparation.", "يتوفر درس أصلي تجريبي للكسور المختزلة. بقية أبحاث الجبر قيد الإعداد."),
+                            tr("An original reduced-fractions pilot is available. The other Algebra topics remain under preparation.", "يتوفر درس أصلي تجريبي للكسور المختزلة. بقية دروس الجبر قيد الإعداد."),
                         style = MaterialTheme.typography.bodyMedium
                     )
                     if (!geometry) {
@@ -1276,7 +1276,7 @@ fun Grade9SubjectScreen(state: LearningState, geometry: Boolean, open: (String) 
         if (units.isEmpty()) {
             item("empty") {
                 Text(
-                    tr("No matching units or topics. Try another title.", "لا وحدات أو أبحاث مطابقة. جرّب عنوانًا آخر."),
+                    tr("No matching units or topics. Try another title.", "لا وحدات أو دروس مطابقة. جرّب عنوانًا آخر."),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(16.dp)
@@ -1411,8 +1411,8 @@ fun Grade9ExercisesScreen(state: LearningState, open: (String) -> Unit, grade9St
                 ReferenceFilter(tr("Unit", "الوحدة"), unit?.title ?: tr("All units", "كل الوحدات"),
                     listOf("" to tr("All units", "كل الوحدات")) + book.units.map { it.id to it.title }) { unitId = it; researchId = "" }
                 if (unit != null) {
-                    ReferenceFilter(tr("Topic", "البحث"), research?.title ?: tr("All topics", "كل الأبحاث"),
-                        listOf("" to tr("All topics", "كل الأبحاث")) + unit.researches.map { it.id to it.title }) { researchId = it }
+                    ReferenceFilter(tr("Lesson", "الدرس"), research?.title ?: tr("All lessons", "كل الدروس"),
+                        listOf("" to tr("All lessons", "كل الدروس")) + unit.researches.map { it.id to it.title }) { researchId = it }
                 }
             }
         }
@@ -1470,7 +1470,7 @@ fun Grade9SourceScreen() {
             Grade9Card {
                 Text(book.title, style = MaterialTheme.typography.titleLarge)
                 Text(tr("Source edition ${book.edition} · ${book.pages} PDF pages", "طبعة المصدر ${book.edition} · ${book.pages} صفحة PDF"))
-                Text(tr("${book.units.size} units · ${book.researches.size} indexed topics", "${book.units.size} وحدات · ${book.researches.size} بحثًا مفهرسًا"))
+                Text(tr("${book.units.size} units · ${book.researches.size} indexed lessons", "${book.units.size} وحدات · ${book.researches.size} درسًا مفهرسًا"))
             }
         }
         item {
@@ -1497,7 +1497,7 @@ fun Grade9HelpScreen(open: (String) -> Unit) {
             Grade9Card {
                 Text(tr("Where do I start?", "من أين أبدأ؟"), style = MaterialTheme.typography.titleLarge)
                 Text(tr("Explore the path on Home or choose Algebra or Geometry. Open a topic to see its source pages, save it to your library or add it to your plan.",
-                    "تصفح المسار في الرئيسية أو اختر الجبر أو الهندسة. افتح البحث لمعرفة صفحات المصدر وحفظه في مكتبتك أو إضافته إلى خطتك."))
+                    "تصفح المسار في الرئيسية أو اختر الجبر أو الهندسة. افتح الدرس لمعرفة صفحات المصدر وحفظه في مكتبتك أو إضافته إلى خطتك."))
                 Text(tr("What does under review mean?", "ماذا تعني قيد المراجعة؟"), style = MaterialTheme.typography.titleMedium)
                 Text(tr("The title is indexed. A checked explanation and exercise set are not yet available. It is not counted as completed learning.",
                     "العنوان مفهرس، لكن الشرح والتمارين المعتمدة غير متاحة بعد. لا يُحسب هذا تعلّمًا مكتملًا."))

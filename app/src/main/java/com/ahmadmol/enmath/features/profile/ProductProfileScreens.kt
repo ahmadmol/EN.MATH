@@ -267,7 +267,7 @@ private fun ProfileHeroCard(
             StageHero(stage, state.user?.name.orEmpty(), if (state.user?.type == AccountType.Guest)
                 tr("Guest · saved locally", "زائر · محفوظ محليًا") else tr("Local student file · no cloud account", "ملف طالب محلي · دون حساب سحابي"))
             SourceMetrics(listOf("${catalog.units.size}" to tr("Indexed units", "وحدات مفهرسة"),
-                "${catalog.researches.size}" to tr("Indexed researches", "أبحاث مفهرسة"),
+                "${catalog.researches.size}" to tr("Indexed lessons", "دروس مفهرسة"),
                 "${catalog.reviewed}" to tr("Reviewed lessons", "دروس معتمدة")))
             Text(tr("Source learning evidence is not available yet. Demo evidence is shown separately in Progress.",
                 "أدلة تعلّم المصدر غير متاحة بعد. تُعرض أدلة التجربة بصورة مستقلة في التقدم."))

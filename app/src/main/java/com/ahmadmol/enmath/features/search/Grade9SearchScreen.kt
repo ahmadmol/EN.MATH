@@ -14,7 +14,7 @@ fun Grade9SearchScreen(state: LearningState, onSearch: (String) -> Unit, open: (
     var query by rememberSaveable(state.activeStudentId) { mutableStateOf("") }
     ScreenPage(Modifier.testTag("screen-search-g9")) {
         PageHeading(tr("Grade 9 mathematics", "رياضيات التاسع"), tr("Search the index", "البحث في الفهرس"))
-        RefSearchBar(query, { query = it }, tr("Book, unit or lesson", "كتاب أو وحدة أو بحث"))
+        RefSearchBar(query, { query = it }, tr("Book, unit or lesson", "كتاب أو وحدة أو درس"))
         val results = G9SourceCatalog.search(query)
         if (query.isBlank()) {
             state.product.searches.forEach { saved -> TextButton({ query = saved }) { Text(saved) } }

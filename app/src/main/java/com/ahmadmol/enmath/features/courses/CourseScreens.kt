@@ -278,7 +278,7 @@ fun LessonScreen(
                 backTag = "nav-back", searchTag = "header-search", notificationsTag = "header-notifications")
             // 2. Lesson Overview Card
             StudentAvatar(pose = com.ahmadmol.enmath.core.data.AvatarPose.ENCOURAGING)
-            EducationalInfoBanner(tr("Demo lesson · not a reviewed source research", "درس تجريبي · ليس بحثًا معتمدًا من المصدر"))
+            EducationalInfoBanner(tr("Demo lesson · not a reviewed textbook lesson", "درس تجريبي · ليس درسًا معتمدًا من فهرس الكتاب"))
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()

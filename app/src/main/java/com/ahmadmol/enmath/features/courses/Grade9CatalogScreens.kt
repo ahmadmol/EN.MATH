@@ -78,7 +78,7 @@ fun Grade9LibraryLinks(state: LearningState, planner: PlannerRepository?, open: 
     val scope = StudentCatalog.scope(state)
     val changed = planner?.changes?.collectAsState()?.value
     val plan = remember(scope, changed) { scope?.let { (planner?.read(it) as? PlanRead.Ready)?.plan } }
-    Text(tr("Grade 9 source index · 10 units · 32 lessons", "فهرس مصدر التاسع · 10 وحدات · 32 بحثًا"))
+    Text(tr("Grade 9 source index · 10 units · 32 lessons", "فهرس مصدر التاسع · 10 وحدات · 32 درسًا"))
     OutlinedButton({ open("study") }) { Text(tr("Browse the source index", "تصفح فهرس المصدر")) }
     plan?.tasks?.mapNotNull { it.lesson }?.filter { it.kind == ContentKind.SOURCE_INDEX && StudentCatalog.acceptsReference(state, it) }
         ?.distinct()?.forEach { ref -> CatalogRow(StudentCatalog.sourceTitle(ref).orEmpty(),

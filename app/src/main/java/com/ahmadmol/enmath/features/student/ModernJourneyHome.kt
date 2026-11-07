@@ -77,7 +77,7 @@ import kotlinx.coroutines.launch
     var saveError by remember(scope) { mutableStateOf(false) }
     val pickerSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val lessonSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    LaunchedEffect(scope, state.product.attempts, g9Change) { if (scope != null) store?.refreshLearningDays(scope) }
+    LaunchedEffect(scope, state.product.attempts, g9Change, natureChange) { if (scope != null) store?.refreshLearningDays(scope) }
     LaunchedEffect(scope, student?.resumeLesson) {
         if (!restored && student != null) {
             restored = true

@@ -151,7 +151,7 @@ fun grade9LatestMistakes(data: G9StudyData): List<Pair<G9FractionQuestion, G9Sav
                 if (data.checkpoint != null) Text(tr("Your checkpoint pass is saved. This is not certification of mastery.", "اجتيازك لنقطة التحقّق محفوظ. هذا ليس شهادة إتقان."))
                 G9WriteMessage(result)
             } }
-            item("practice") { Button({ open("g9/practice") }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Practice this topic", "تدرّب على هذا البحث")) } }
+            item("practice") { Button({ open("g9/practice") }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Practice this lesson", "تدرّب على هذا الدرس")) } }
         }
         item("navigation") {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {

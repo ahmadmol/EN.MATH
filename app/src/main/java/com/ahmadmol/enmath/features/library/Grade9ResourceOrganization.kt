@@ -38,7 +38,7 @@ fun G9ResourceSelection.matches(ref:SourceResearch):Boolean {
     val emptyLabel=if(unclassified) tr("Unclassified","غير مصنف") else tr("All","الكل")
     G9ResourceChoice(tr("Book","الكتاب"),value.book,catalog.books.map {it.id to it.title},emptyLabel) {change(G9ResourceSelection(book=it))}
     G9ResourceChoice(tr("Unit","الوحدة"),value.unit,catalog.units.filter {it.bookId==value.book}.map{it.id to it.title},emptyLabel) {change(value.copy(unit=it,research=null))}
-    G9ResourceChoice(tr("Topic","البحث"),value.research,catalog.researches.filter {it.unitId==value.unit}.map{it.id to it.title},emptyLabel) {change(value.copy(research=it))}
+    G9ResourceChoice(tr("Lesson","الدرس"),value.research,catalog.researches.filter {it.unitId==value.unit}.map{it.id to it.title},emptyLabel) {change(value.copy(research=it))}
 }
 @Composable fun G9OrganizeFileDialog(file:StudentFile,scope:StudentScope?,repository:Grade9StudyRepository?,dismiss:()->Unit) {
     var selection by rememberSaveable(scope,file.id,stateSaver=G9ResourceSelectionSaver) {mutableStateOf(G9ResourceSelection(file.bookId,file.unitId,file.researchId))}
@@ -67,7 +67,7 @@ fun G9ResourceSelection.matches(ref:SourceResearch):Boolean {
     Text(tr("Saved source favorites","مراجع المصدر المفضلة"),style=MaterialTheme.typography.titleMedium)
     if(read !is SourceWorkspaceRead.Ready) {Text(tr("The current saved references could not be read. Existing data is preserved.","تعذرت قراءة المراجع المحفوظة الحالية. بياناتها محفوظة."));return}
     OutlinedTextField(query,{query=it},Modifier.fillMaxWidth(),label={Text(tr("Search favorites","بحث في المفضلة"))})
-    TextButton({expanded=!expanded}) {Text(tr("Filter book, unit and topic","تصفية الكتاب والوحدة والبحث"))}
+    TextButton({expanded=!expanded}) {Text(tr("Filter book, unit and lesson","تصفية الكتاب والوحدة والدرس"))}
     if(expanded) G9ReferenceFilters(selection){selection=it}
     val words=LearningRules.search(query).split(Regex("\\s+")).filter(String::isNotBlank)
     val refs=SourceCurricula.forStage(StudyStage.G9).researches.filter {it.id in read.workspace.savedIds && selection.matches(it) && words.all {word->LearningRules.search(it.title).contains(word)}}

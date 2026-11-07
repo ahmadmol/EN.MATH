@@ -253,7 +253,7 @@ import java.util.TimeZone
                 Text(tr("${catalog?.units?.size ?: 0} indexed units · ${catalog?.researches?.size ?: 0} lesson references", "${catalog?.units?.size ?: 0} وحدات مفهرسة · ${catalog?.researches?.size ?: 0} مراجع دروس"))
                 Text(tr("Textbook explanations and exercises require mathematical, edition and publication-rights review. Source browsing is not completed learning.", "تحتاج شروحات الكتاب وتدريباته اعتماد الرياضيات والطبعة وحقوق النشر. تصفح المصدر ليس تعلّمًا مكتملًا."))
                 if (state.user?.studyStage == StudyStage.G9) Text(tr("192 original questions remain drafts; six were already integrated. Only internal Debug QA includes the draft bank. Release contains no draft bank.", "192 سؤالًا أصليًا ما زالت مسودات؛ ستة منها كانت مدمجة سابقًا. يحتوي Debug الداخلي فقط على البنك التجريبي. لا يتضمن Release بنك المسودات."))
-                else Text(tr("2 books · 14 units · 63 researches. The 27 activity/exercise sections are an index, not extracted questions. The 24 existing demo lessons remain separate.", "كتابان · 14 وحدة · 63 درسًا. أقسام الأنشطة والتمارين الـ27 فهرس وليست أسئلة مستخرجة. الدروس التجريبية الـ24 مستقلة."))
+                else Text(tr("2 books · 14 units · 63 lessons. The 27 activity/exercise sections are an index, not extracted questions. The ${DemoContent.preservedLessonCount} existing demo lessons remain separate.", "كتابان · 14 وحدة · 63 درسًا. أقسام الأنشطة والتمارين الـ27 فهرس وليست أسئلة مستخرجة. الدروس التجريبية الـ${DemoContent.preservedLessonCount} مستقلة."))
             }
         }
         OutlinedButton({ open(Routes.Tools) }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("My study tools", "أدوات دراستي")) }

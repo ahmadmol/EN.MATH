@@ -234,4 +234,65 @@ class ModernStudentExperienceTest {
         f.modern.startQa(f.scope,lesson,bank); f.modern.answerQa(f.scope,lesson,bank,WorkedDraftResponse.encode(parts)); f.restart()
         assertEquals(parts,WorkedDraftResponse.decode(f.data().drafts.single().answers.values.single()))
     }
+    private fun finishNature(f: Fixture) {
+        val answers = listOf("2", "٣/٨", "true", "غير منتهية|دورية", "٥|integer",
+            "-3=integer|2/5=decimal|π=irrational|√49=integer|√2=irrational")
+        assertTrue(f.repo.naturePractice.start(f.scope) is NatureRead.Ready)
+        answers.forEachIndexed { index, answer ->
+            val id = "G9-A-U01-L01-Q${(index + 1).toString().padStart(2, '0')}"
+            assertEquals(PlanWrite.SAVED, f.repo.naturePractice.submit(f.scope, id, answer).status)
+            if (index < 5) assertEquals(PlanWrite.SAVED, f.repo.naturePractice.move(f.scope, index + 1))
+        }
+        assertEquals(PlanWrite.SAVED, f.repo.naturePractice.finish(f.scope).status)
+    }
+    @Test fun finishedNaturePracticeCreditsOneLearningDayWithoutGemsOrDuplicates() {
+        val f = Fixture()
+        val ref = Grade9NatureLesson.ref
+        f.repo.sourceWorkspace.visit(f.scope, ref)
+        assertEquals(ModernWrite.ALREADY_SAVED, f.repo.studentExperience.refreshLearningDays(f.scope))
+        assertTrue((f.repo.studentExperience.read(f.scope) as ModernRead.Ready).data.events.isEmpty())
+        finishNature(f)
+        val gems = f.repo.state.value.product.pendingGemEvents
+        assertEquals(ModernWrite.SAVED, f.repo.studentExperience.refreshLearningDays(f.scope))
+        val saved = (f.repo.studentExperience.read(f.scope) as ModernRead.Ready).data
+        assertEquals(1, saved.events.size)
+        assertEquals(1, LearningStreak.current(saved.events, System.currentTimeMillis(), saved.zone))
+        assertEquals(PlanWrite.INVALID, f.repo.naturePractice.finish(f.scope).status)
+        assertEquals(ModernWrite.ALREADY_SAVED, f.repo.studentExperience.refreshLearningDays(f.scope))
+        f.restart()
+        val restored = (f.repo.studentExperience.read(f.scope) as ModernRead.Ready).data
+        assertEquals(1, restored.events.size)
+        assertEquals(ModernWrite.ALREADY_SAVED, f.repo.studentExperience.refreshLearningDays(f.scope))
+        assertEquals(1, (f.repo.studentExperience.read(f.scope) as ModernRead.Ready).data.events.size)
+        assertEquals(gems, f.repo.state.value.product.pendingGemEvents)
+    }
+    @Test fun natureLearningDaysStayInsideTheStudentWhoFinished() {
+        val f = Fixture(); val first = f.scope.ownerId
+        finishNature(f)
+        assertEquals(ModernWrite.SAVED, f.repo.studentExperience.refreshLearningDays(f.scope))
+        f.repo.createLocalProfile("Other", StudyStage.G9, false)
+        assertEquals(ModernWrite.ALREADY_SAVED, f.repo.studentExperience.refreshLearningDays(f.scope))
+        assertTrue((f.repo.studentExperience.read(f.scope) as ModernRead.Ready).data.events.isEmpty())
+        f.repo.selectLocalProfile(first)
+        assertEquals(1, (f.repo.studentExperience.read(f.scope) as ModernRead.Ready).data.events.size)
+    }
+    @Test fun preservedDemoLessonsAreEightTopicsWithThreeLessonsEach() {
+        val lessons = DemoContent.books.flatMap { it.lessons }
+        assertEquals(24, DemoContent.preservedLessonCount)
+        assertEquals(24, lessons.size)
+        assertEquals(8, DemoContent.books.flatMap { it.topics }.size)
+        assertTrue(lessons.any { it.id.endsWith("-applications") })
+    }
+    @Test fun cylinderBlankStoresTheCoefficientWhileTheExplanationKeepsTheFullVolume() {
+        val q = bank().questions.single { it.id == "G9-H-U04-L01-Q04" }
+        assertTrue(q.prompt.contains("...π"))
+        assertEquals("20", q.answer)
+        assertTrue(q.explanation.contains("20π"))
+        assertEquals("structured_or_teacher_review_required", q.gradingMode)
+        assertEquals(DraftGrade.NEEDS_TEACHER_REVIEW, OriginalDraftGrader.grade(q, "20"))
+        val manual = bank().questions.filter { it.gradingMode == "structured_or_teacher_review_required" }
+        assertEquals(96, manual.size)
+        assertTrue(manual.all { OriginalDraftGrader.grade(it, it.answer) == DraftGrade.NEEDS_TEACHER_REVIEW })
+        assertTrue(manual.none { it.reviewStatus != "draft_needs_teacher_review" })
+    }
 }

@@ -67,8 +67,11 @@ import com.ahmadmol.enmath.core.model.*
                 Text(tr("Review and exam preparation", "المراجعة والاستعداد للامتحان"), fontWeight = FontWeight.Bold, fontSize = 16.sp)
             }
         }
-        if (stage == StudyStage.BAC) SourceItemCard(tr("Demo learning · separate progress", "التجربة التعليمية · تقدم مستقل"),
-            tr("24 preserved demo lessons; not the 63 source researches", "24 درسًا تجريبيًا محفوظًا؛ مستقلة عن دروس المصدر الـ63"), Modifier.testTag("bac-legacy-lessons"), Icons.Outlined.Science) { open("study/demo") }
+        if (stage == StudyStage.BAC) {
+            val demoLessons = DemoContent.preservedLessonCount
+            SourceItemCard(tr("Demo learning · separate progress", "التجربة التعليمية · تقدم مستقل"),
+            tr("$demoLessons preserved demo lessons; not the 63 source lessons", "$demoLessons درسًا تجريبيًا محفوظًا؛ مستقلة عن دروس المصدر الـ63"), Modifier.testTag("bac-legacy-lessons"), Icons.Outlined.Science) { open("study/demo") }
+        }
     }
 }
 
@@ -81,6 +84,11 @@ import com.ahmadmol.enmath.core.model.*
     ScreenPage(Modifier.testTag(if (stage == StudyStage.G9) "screen-book-g9" else "screen-book")) {
         if (book == null) { CatalogUnavailable(); return@ScreenPage }
         StageHero(stage, book.title, tr("${book.units.size} units · ${book.researches.size} lessons", "${book.units.size} وحدات · ${book.researches.size} درسًا"))
+        saved?.lastVisitedByBook?.get(book.id)?.let(catalog::research)?.let { last ->
+            OutlinedButton({ open(last.route) }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("book-continue-${book.id}")) {
+                Text(tr("Continue this reference: ${last.title}", "تابع مرجع هذا الدرس: ${last.title}"))
+            }
+        }
         SectionTitle(tr("Book units", "وحدات الكتاب"))
         book.units.forEach { unit ->
             SourceItemCard("${unit.order}. ${unit.title}", tr("${unit.researches.size} lessons", "${unit.researches.size} دروس"), Modifier.testTag("book-topic-${unit.id}")) { open(unit.route) }
