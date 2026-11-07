@@ -98,7 +98,12 @@ class ModernStudentHostTest {
                     val layouts=mutableListOf<TextLayoutResult>()
                     ui.onNodeWithText(label).performSemanticsAction(SemanticsActions.GetTextLayoutResult){it(layouts)}
                     assertTrue("$stage/$language/$dark/$scale/$label " + layouts.joinToString { "size=${it.size}, constraints=${it.layoutInput.constraints}, width=${it.didOverflowWidth}, height=${it.didOverflowHeight}" },layouts.isNotEmpty() && layouts.none {it.hasVisualOverflow})
+                    if (scale >= 2f && ui.activity.resources.configuration.screenWidthDp < 768) assertEquals("$label", 1, layouts.first().lineCount)
                 }
+                val gemLayouts = mutableListOf<TextLayoutResult>()
+                ui.onNodeWithTag("home-gems-badge-label", useUnmergedTree = true)
+                    .performSemanticsAction(SemanticsActions.GetTextLayoutResult) { it(gemLayouts) }
+                assertTrue(gemLayouts.joinToString { "lines=${it.lineCount} w=${it.didOverflowWidth} h=${it.didOverflowHeight} max=${it.layoutInput.constraints.maxWidth}" }, gemLayouts.isNotEmpty() && gemLayouts.none { it.hasVisualOverflow })
                 ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("g9-learning-progress-card"))
                 assertTrue(StudentCatalog.completed(repo.state.value).isEmpty())
                 assertTrue(repo.state.value.product.pendingGemEvents.isEmpty())

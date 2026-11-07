@@ -153,8 +153,9 @@ fun ENMathApp(providedNav: NavHostController? = null) {
         app.replayPendingGems()
     }
     val experienceRead = com.ahmadmol.enmath.features.student.rememberModernStudent(state, repository.studentExperience)
-    val selectedAvatar = (experienceRead as? com.ahmadmol.enmath.core.data.ModernRead.Ready)?.data?.selectedAvatarId
-    ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher, stage = state.user?.studyStage, avatarId = selectedAvatar) {
+    val modernData = (experienceRead as? com.ahmadmol.enmath.core.data.ModernRead.Ready)?.data
+    val selectedAvatar = modernData?.selectedAvatarId
+    ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher, stage = state.user?.studyStage, avatarId = selectedAvatar, reducedMotion = modernData?.reducedMotion == true) {
         if (state.storageIssue != null) AlertDialog(onDismissRequest = {},
             title = { Text(tr("Storage needs attention", "التخزين يحتاج مراجعة")) },
             text = { Text(tr("The latest operation was not acknowledged. Restart before retrying; do not clear app data.",

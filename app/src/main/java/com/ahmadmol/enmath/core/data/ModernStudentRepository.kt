@@ -12,7 +12,11 @@ import java.util.UUID
 enum class AvatarPose { IDLE, WELCOME, THINKING, CORRECT, TRY_AGAIN, COMPLETED, CELEBRATING, ENCOURAGING, STREAK }
 object StudentAvatars {
     val ids = listOf("muadh", "waseem", "lama")
-    /** Approved concept identities lack individual production portraits. Every pose keeps its owner. */
+    /**
+     * Saved account ids stay muadh, waseem, and lama. Adam, Yousef, Karim, Sara, Lina, and Noor
+     * exist only as labeled preview boards and are intentionally not mapped onto these ids.
+     * Every pose keeps the saved owner; missing artwork falls back to that same portrait.
+     */
     fun poseOwner(id: String?, pose: AvatarPose): String? = id?.takeIf { it in ids }
 }
 data class LearningDayEvent(val id: String, val at: Long, val day: Long)
