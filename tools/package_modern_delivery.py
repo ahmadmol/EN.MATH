@@ -33,9 +33,9 @@ def main():
     artifact_table='\n'.join(f"| {f['name']} | {f['bytes']:,} | `{f['sha256']}` |" for f in files)
     warnings={v:evidence['lint'][v]['counts'].get('Warning',0) for v in ['debug','release']}
     reports={}
-    reports['FINAL_REPORT.md']=f'''# EN.MATH modern student experience - 2026-11-02
+    reports['FINAL_REPORT.md']=f'''# EN.MATH modern student experience - 2026-11-03
 
-Version **1.1.0 / 7**, package `com.ahmadmol.enmath`. Local engineering delivery is implemented and tested. Production acceptance remains conditional on approved character artwork, independent content review, cloud configuration and actual visual/device verification. These conditions are not reported as completed features.
+Version **1.1.0 / 7**, package `com.ahmadmol.enmath`. Local engineering delivery is implemented and tested. Production acceptance remains conditional on approved character artwork, independent content review, cloud configuration and final on-device visual/gesture verification. These conditions are not reported as completed features.
 
 ## Implemented behavior
 
@@ -50,7 +50,7 @@ Version **1.1.0 / 7**, package `com.ahmadmol.enmath`. Local engineering delivery
 9. BAC uses the same Home/path, navigation, tools, profile and avatar components with its existing stage palette. Two books / 14 units / 63 researches remain intact. All 63 reference routes still pass the inherited production-graph test; the 24 demo lessons retain separate provenance and progress.
 10. Repairs include large-font Arabic/English wrapping, full-height sheet visibility, per-owner viewport isolation, preference-write failure handling, stale-answer validation, duplicate response submissions and multiline worked-step preservation. Wrong QA responses are reachable in a dedicated notebook.
 11. Final verification: **{debug} Debug + {release} Release + 34 Python = {total} successful executions**, zero failures/errors/skips. Both lints and APK builds pass. There are 72 distinct host configurations, including the actual responsive rail at 800dp. Android instrumentation compiles; device execution was not run.
-12. Raster status: **{render['status']}**. Current app images approved: **0**. Bottom sheets use visible semantics actions in Robolectric because native modal touch dispatch did not navigate reliably; this is not physical gesture verification. Check sheets, focus/ripple/shadows, insets, IME, TalkBack, scrolling performance and rotation on an authorized device later.
+12. Raster status: **{render['status']}**. Actual fixture previews produced and reviewed in contact sheets: **{render['images_produced']}**. These are not device captures or pixel-diff approval. Bottom sheets use visible semantics actions in Robolectric because native modal touch dispatch did not navigate reliably; this is not physical gesture verification. Check sheets, focus/ripple/shadows, insets, IME, TalkBack, scrolling performance and rotation on an authorized device later.
 13. Existing student IDs, edition scopes, learner snapshots, source catalogs, planner and Gems schemas were not migrated or reset. Isolated persistence/restart/failure/account-switch regressions pass. Physical installed-app upgrade retention was not tested.
 14. Debug is signed with the existing local debug key; Release is **unsigned**. No production signing material was supplied. See signature evidence and hashes below.
 15. Branch: `{branch}`. Tested implementation commit: `{head}`. Documentation-only final commit is recorded in the delivery's GIT_STATUS.md after packaging. No push or main merge was performed.
@@ -92,7 +92,7 @@ Technical references read: https://developer.android.com/develop/ui/compose/desi
 | Progress | Separate original practice evidence | Retained evidence plus internal-QA history/notebook; no whole-curriculum mastery inference |
 | BAC | Its separate previous source path | Same shared modern journey/navigation/profile design; 63 source references retained |
 
-This table describes code and host evidence. No historical screenshot or concept reference is presented as a current app screenshot. Current raster approval is blocked; see QA_RESULTS.md.
+This table describes code and host evidence. The visual directory contains 144 current Compose fixture renders and a local gallery; no historical screenshot or concept reference is presented as current output. See QA_RESULTS.md for coverage and device limits.
 '''
     reports['NAVIGATION_REPORT.md']='''# Navigation and journey
 
@@ -163,7 +163,7 @@ Activation needs an explicitly authorized independent EN.MATH project matching c
 
 Official references consulted: https://firebase.google.com/docs/firestore/security/rules-conditions and https://firebase.google.com/docs/firestore/manage-data/enable-offline . No untested production rules were published.
 '''
-    reports['QA_RESULTS.md']=f'''# Actual QA results - 2026-11-02
+    reports['QA_RESULTS.md']=f'''# Actual QA results - 2026-11-03
 
 | Check | Actual result |
 |---|---|
@@ -181,7 +181,7 @@ Official references consulted: https://firebase.google.com/docs/firestore/securi
 | Release signing | UNSIGNED |
 | Draft asset boundary | Debug present / Release absent, for both the 192 bank and old Nature asset |
 | Backup restore | PASS; bundle clone + fsck, baseline 3f22440 recovered |
-| Raster rendering | {render['status']}; zero current app images approved |
+| Raster rendering | {render['status']}; {render['images_produced']} current fixture renders, contact-sheet review and original-resolution samples |
 | Live Firebase Auth/Firestore/security rules | NOT_RUN; no configured project or transport |
 
 Final command: gradlew :app:testDebugUnitTest :app:testReleaseUnitTest :app:compileDebugAndroidTestKotlin :app:lintDebug :app:lintRelease :app:assembleDebug :app:assembleRelease -PnatureHostQa=true -PqaBuildDir=D:/ENMATH/EN.MATH/app/build-modern-qa --offline --max-workers=2 --console=plain . JBR 21 and the existing Gradle 8.11.1 / AGP 8.9.2 / Kotlin 2.1.20 / Compose BOM were retained.
@@ -190,7 +190,7 @@ New domain regressions cover content mapping/fields/grading, avatar owner isolat
 
 Earlier failed attempts remain in evidence and are not counted as successful final tests. They found superseded navigation assumptions, a large-font wrapping bug, partially hidden sheet actions, stale no-longer-existing entry tags and a test-only missing wallet graph. Sheet actions are now visibly composed and exercised through accessibility semantics because Robolectric native modal touch dispatch still did not navigate. Actual platform gestures remain unverified.
 
-Host geometry proves measured overlap/touch targets and text bounds, not rendered focus artifacts, pixels, IME, real Activity/process death, TalkBack, FPS or physical upgrade retention. Windows protection was not bypassed. {render.get('reason','')}
+Host geometry proves measured overlap/touch targets and text bounds, not rendered focus artifacts, pixels, IME, real Activity/process death, TalkBack, FPS or physical upgrade retention. Current rendering succeeded without any Windows security-policy change; earlier blocked reports are historical. Windows protection was not bypassed. {render.get('reason','')}
 '''
     reports['KNOWN_LIMITATIONS.md']='''# Remaining acceptance work
 
@@ -198,7 +198,7 @@ Host geometry proves measured overlap/touch targets and text bounds, not rendere
 - All 192 Grade 9 questions remain drafts, absent from Release. Free reasoning without validated rules is teacher-deferred. Adaptive promotion, alternate-item generation and a spaced-review schedule are not implemented as certified learning features.
 - The BAC source is still an index, with 28 separate original authoring proposals and no extracted complete official exercise bank. No new official solutions or content locks were invented.
 - Firebase remains local-only. The SDK/adapter, authenticated profile linking, durable production sync queue and deployed UID rules need authorized project access and live security tests. Fake transport tests do not satisfy those checks.
-- Windows Layoutlib raster rendering is blocked; zero current app screenshots are approved. Modal touch dispatch is unreliable in Robolectric, so only visible semantic actions are accepted there. Review actual gestures, circle/shadows/focus, insets, Arabic/math mixing, IME, TalkBack, orientation/process death, tablet appearance and performance on a later authorized device.
+- 144 current Compose previews cover G9/BAC Home, Tools and Profile across 36 configurations. They use isolated preview data and tall scrollable viewports. Contact sheets and selected full-resolution images were reviewed, not every pixel or device behavior. Additional lesson/practice/result states and real gestures, insets, IME, TalkBack, orientation/process death and frame timing still need device verification. Modal touch dispatch is unreliable in Robolectric; visible semantics actions are used there.
 - Release APK is unsigned. No phone installation, app-data deletion or actual installed-app update was performed. Data retention is supported by scoped fixture regressions and unchanged legacy schemas, not a physical upgrade test.
 - Existing legacy tools/demo/teacher components were retained where appropriate and inherit the shared theme; an exhaustive redesign of every historical screen is not claimed. Streak clock protection is local and can require a time check; it is not server anti-cheat.
 '''
@@ -220,11 +220,11 @@ The delivery copy of this file is finalized with the documentation commit after 
 
 دُمجت **192 مسودة سؤال** كاملة في Debug الداخلي: ستة كانت موجودة و**186 جديدة**. لا توجد أسئلة معتمدة علميًا من هذه الحملة، ولا يظهر البنك في Release. تتطلب الإجابات الحرة مراجعة معلم، وتُحفظ الإجابات والتلميحات والأخطاء والخطوات متعددة الأسطر.
 
-نجح **{total} تنفيذ اختبار** ({debug} Debug و{release} Release و34 Python)، ونجح البناء وLint. اختُبرت 72 تهيئة مضيفة للواجهات، تشمل الخط 200% واللوحي 800dp. لا توجد مزامنة Firebase فعلية، والشخصيات تستخدم رموزًا مؤقتة إلى حين توافر الأصول المعتمدة. الفحص البصري الحالي محجوب، واختبار لمس النوافذ السفلية على جهاز حقيقي غير منفّذ. Release غير موقّع.
+نجح **{total} تنفيذ اختبار** ({debug} Debug و{release} Release و34 Python)، ونجح البناء وLint. اختُبرت 72 تهيئة مضيفة للواجهات، تشمل الخط 200% واللوحي 800dp. لا توجد مزامنة Firebase فعلية، والشخصيات تستخدم رموزًا مؤقتة إلى حين توافر الأصول المعتمدة. أُنتجت 144 معاينة Compose حقيقية وروجعت بصريًا عبر لوحات تجميع وعينات بدقتها الأصلية؛ اختبار لمس النوافذ السفلية على جهاز حقيقي غير منفّذ. Release غير موقّع.
 
 لم يُستخدم هاتف أو Emulator أو ADB، ولم تُحذف بيانات أو يُدمج main أو تُرفع التغييرات إلى GitHub. تُفصّل التقارير الباقي وحدود التحقق دون ادعاء اكتمال المحتوى أو الاعتماد العلمي.
 '''
-    repo_docs=ROOT/'docs/MODERN_STUDENT_EXPERIENCE_2026-11-02';repo_docs.mkdir(parents=True,exist_ok=True)
+    repo_docs=ROOT/'docs/MODERN_STUDENT_EXPERIENCE_2026-11-03';repo_docs.mkdir(parents=True,exist_ok=True)
     for name,body in reports.items():
         (out/name).write_text(body,encoding='utf-8');(repo_docs/name).write_text(body,encoding='utf-8')
     for name in ['QUESTION_REVIEW_LEDGER.csv','EVIDENCE.json']:

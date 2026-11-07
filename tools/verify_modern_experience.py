@@ -38,7 +38,9 @@ def main():
     evidence['baseline']=BASE
     evidence['version']=dict(name='1.1.0',code=7,package='com.ahmadmol.enmath')
     evidence['cloud']=dict(connected=False,sdk_installed=False,live_auth_tests='NOT_RUN',live_firestore_tests='NOT_RUN',local_contract_tests_only=True)
-    evidence['raster_visual_approval']='BLOCKED_OR_PENDING_SEPARATE_RENDER_EVIDENCE'
+    evidence['date']='2026-11-03'
+    render_path=args.build_dir.parent/'render-status.json'
+    evidence['raster_visual_approval']=json.loads(render_path.read_text(encoding='utf-8')) if render_path.exists() else dict(status='PENDING')
     assert all(v['status']=='PASS' for v in evidence['tests'].values())
     assert all(v['status']=='PASS' for v in evidence['lint'].values())
     assert len(evidence['apks'])==2 and all(a['crc']==a['demo_gate']=='PASS' and not a['forbidden_entries'] for a in evidence['apks'])
