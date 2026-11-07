@@ -72,6 +72,10 @@ fun CleanBottomBar(
     open: (String) -> Unit,
     accessibleCenter: Boolean = false,
 ) {
+    if (LocalStudentExperience.current) {
+        com.ahmadmol.enmath.core.design.ModernStudentBottomBar(items, selected, tagPrefix, open)
+        return
+    }
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val student = LocalStudentExperience.current
     val g9 = LocalStudyStage.current == StudyStage.G9

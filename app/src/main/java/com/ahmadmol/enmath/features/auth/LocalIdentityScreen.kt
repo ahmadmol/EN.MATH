@@ -21,7 +21,7 @@ fun LocalIdentityScreen(state: LearningState, create: (String, StudyStage, Boole
     var stageName by rememberSaveable { mutableStateOf<String?>(null) }
     var page by rememberSaveable { mutableStateOf("stage") }
     var name by rememberSaveable { mutableStateOf("") }
-    var error by remember { mutableStateOf(false) }
+    var error by rememberSaveable { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
     val stage = stageName?.let { runCatching { StudyStage.valueOf(it) }.getOrNull() }
     fun attempt(action: () -> Unit) {
@@ -60,10 +60,11 @@ fun LocalIdentityScreen(state: LearningState, create: (String, StudyStage, Boole
                     }
                     "create" -> {
                         EntryBrand(); EntryTitle(entryText(com.ahmadmol.enmath.R.string.entry_copy_25))
+                        Text(tr("Step 2 of 3 · Your local profile", "الخطوة 2 من 3 · ملفك المحلي"))
                         EducationalInfoBanner(entryText(com.ahmadmol.enmath.R.string.entry_copy_33))
-                        OutlinedTextField(name, { name = it.take(100) }, label = { Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_34)) }, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(name, { name = it.take(100) }, label = { Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_34)) }, modifier = Modifier.fillMaxWidth(), singleLine = true, isError = name.isNotEmpty() && name.isBlank())
                         Text(entryText(com.ahmadmol.enmath.R.string.entry_copy_35))
-                        PrimaryButton(entryText(com.ahmadmol.enmath.R.string.entry_copy_36), { stage?.let { attempt { create(name, it, false) } } }, Modifier.testTag("local-create-student"), !busy)
+                        PrimaryButton(entryText(com.ahmadmol.enmath.R.string.entry_copy_36), { stage?.let { attempt { create(name.trim(), it, false) } } }, Modifier.testTag("local-create-student"), !busy && name.isNotBlank())
                     }
                     "profiles" -> {
                         EntryBrand(); EntryTitle(entryText(com.ahmadmol.enmath.R.string.entry_copy_27))

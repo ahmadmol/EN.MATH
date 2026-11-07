@@ -35,7 +35,10 @@ import com.ahmadmol.enmath.core.model.QuestionKind
 fun LessonPage(tag: String, content: @Composable ColumnScope.() -> Unit) {
     if (LocalStudentExperience.current) {
         Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.TopCenter) {
-            Box(Modifier.widthIn(max = 640.dp).fillMaxSize()) { ExperiencePage(tag, content = content) }
+            Box(Modifier.widthIn(max = 640.dp).fillMaxSize()) { ExperiencePage(tag) {
+                StudentAvatar(pose = com.ahmadmol.enmath.core.data.AvatarPose.THINKING)
+                content()
+            } }
         }
         return
     }

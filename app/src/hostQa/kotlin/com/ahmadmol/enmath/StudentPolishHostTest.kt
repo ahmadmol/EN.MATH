@@ -104,6 +104,7 @@ class StudentPolishHostTest {
         ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(first))
         assertEquals(left, ui.onNodeWithTag(first).fetchSemanticsNode().boundsInRoot.left, .01f)
         ui.onNodeWithTag(first).performClick()
+        ui.onNodeWithTag("journey-open-lesson").performScrollTo().assertIsDisplayed().performSemanticsAction(SemanticsActions.OnClick) { it() }
         ui.runOnIdle { assertEquals(researches.first().id, nav.currentBackStackEntry?.arguments?.getString("id")) }
     }
     @Test fun g9ProgressCopyWrapsCompletelyAt200Percent() {

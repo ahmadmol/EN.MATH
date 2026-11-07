@@ -21,7 +21,7 @@ import com.ahmadmol.enmath.core.design.*
         Text(if (ref.kind == ContentKind.SOURCE_INDEX) StudentCatalog.sourceTitle(ref).orEmpty() else state.lesson(ref.lessonId)?.title?.text().orEmpty())
         TextButton({ select(null) }, Modifier.heightIn(min = 48.dp)) { Text(tr("Remove link", "إلغاء الربط")) }
     }
-    OutlinedTextField(query, { query = it }, label = { Text(tr("Find a book, unit or research", "ابحث عن كتاب أو وحدة أو بحث")) },
+    OutlinedTextField(query, { query = it }, label = { Text(tr("Find a book, unit or lesson", "ابحث عن كتاب أو وحدة أو درس")) },
         modifier = Modifier.fillMaxWidth().testTag("plan-source-search"))
     if (catalog != null && query.isNotBlank()) {
         val matches = catalog.search(query).map { it.second }.toSet()

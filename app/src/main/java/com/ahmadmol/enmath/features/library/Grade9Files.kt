@@ -99,7 +99,7 @@ import java.util.UUID
             }
         }
         item {
-            TextButton({showClassification = !showClassification}) {Text(tr("Filter book, unit and topic", "تصفية الكتاب والوحدة والبحث"))}
+            TextButton({showClassification = !showClassification}) {Text(tr("Filter book, unit and lesson", "تصفية الكتاب والوحدة والدرس"))}
             if (showClassification) G9ReferenceFilters(classification) {classification=it}
             FilterChip(favoritesOnly, {favoritesOnly=!favoritesOnly}, label={Text(tr("Favorites only", "المفضلة فقط"))})
             if (fileWriteFailure) Text(tr("Changes were not saved for the current profile.", "لم تُحفظ التعديلات للملف الشخصي الحالي."),color=MaterialTheme.colorScheme.error)

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.unit.Density
@@ -71,145 +72,66 @@ class Grade9JourneyHostRuntimeTest {
     private fun currentScope(): StudentScope = StudentCatalog.scope(repo.state.value)!!
     private fun studyData(): G9StudyData = (repo.grade9Study.read(currentScope()) as G9StudyRead.Ready).data
 
-    // 1. New student sees Subject Picker cleanly, NOT the path or progress card
-    @Test
-    fun newStudentSeesSubjectPickerCleanly() {
-        mount()
 
-        // Greeting card and Subject Picker exist
-        ui.onNodeWithTag("g9-subject-picker").assertExists()
-        ui.onNodeWithText("أهلًا بك في رياضيات التاسع!").assertExists()
-        ui.onNodeWithTag("select-algebra").assertExists()
-        ui.onNodeWithTag("select-geometry").assertExists()
-
-        // Path items and progress card DO NOT exist prior to choice
-        ui.onNodeWithTag("g9-learning-progress-card").assertDoesNotExist()
-        ui.onNodeWithTag("switch-algebra").assertDoesNotExist()
-        ui.onNodeWithTag("switch-geometry").assertDoesNotExist()
-        ui.onNodeWithTag("station-G9-ALG-U01-L01").assertDoesNotExist()
-        ui.onNodeWithTag("g9-continue").assertDoesNotExist()
-    }
-
-    // 2. Selecting Algebra transitions immediately to Algebra path and saves state
-    @Test
-    fun selectingAlgebraTransitionsToAlgebraPath() {
-        mount()
-
-        // Click Algebra card
-        ui.onNodeWithTag("select-algebra").performScrollTo().performClick()
+    private fun scroll(tag: String) = ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(tag))
+    private fun jump(book: String, unit: String) {
+        scroll("journey-select-$book")
+        ui.onNodeWithTag("journey-select-$book").performClick()
+        ui.onNodeWithTag("journey-unit-picker").performScrollToNode(hasTestTag("journey-jump-$unit"))
+        ui.onNodeWithTag("journey-jump-$unit").assertIsDisplayed().performSemanticsAction(SemanticsActions.OnClick) { it() }
         ui.waitForIdle()
-
-        // Picker disappears
-        ui.onNodeWithTag("g9-subject-picker").assertDoesNotExist()
-
-        // Top Switcher and Progress Card appear
-        ui.onNodeWithTag("switch-algebra").assertExists()
+        ui.onNodeWithTag("home-unit-$unit").assertIsDisplayed()
+    }
+    @Test fun newStudentSeesOneJourneyWithoutARequiredSubjectGate() {
+        mount()
+        ui.onNodeWithTag("home-unlimited-energy").assertExists()
+        scroll("g9-learning-progress-card")
         ui.onNodeWithTag("g9-learning-progress-card").assertExists()
-
-        // Algebra units and stations are now visible
-        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("station-G9-ALG-U01-L01"))
-        ui.onNodeWithTag("book-G9-ALG").assertExists()
+        scroll("station-G9-ALG-U01-L01")
         ui.onNodeWithTag("station-G9-ALG-U01-L01").assertExists()
-
-        // Verify persistent store
-        assertEquals(Grade9Subject.ALGEBRA, studyData().activeSubject)
-        assertTrue(studyData().subjectChosen)
-    }
-
-    // 3. Selecting Geometry transitions immediately to Geometry path and saves state
-    @Test
-    fun selectingGeometryTransitionsToGeometryPath() {
-        mount()
-
-        // Click Geometry card
-        ui.onNodeWithTag("select-geometry").performScrollTo().performClick()
-        ui.waitForIdle()
-
-        // Picker disappears
-        ui.onNodeWithTag("g9-subject-picker").assertDoesNotExist()
-
-        // Geometry units and stations appear
-        ui.onNodeWithTag("switch-geometry").assertExists()
-        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("station-G9-GEO-U01-L01"))
-        ui.onNodeWithTag("book-G9-GEO").assertExists()
-        ui.onNodeWithTag("station-G9-GEO-U01-L01").assertExists()
-
-        // Verify persistent store
-        assertEquals(Grade9Subject.GEOMETRY, studyData().activeSubject)
-        assertTrue(studyData().subjectChosen)
-    }
-
-    // 4. Switching between Algebra and Geometry dynamically toggles paths
-    @Test
-    fun switchingBetweenAlgebraAndGeometryTogglesPaths() {
-        mount()
-        // Start by choosing Algebra
-        ui.onNodeWithTag("select-algebra").performScrollTo().performClick()
-        ui.waitForIdle()
-        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("book-G9-ALG"))
-        ui.onNodeWithTag("book-G9-ALG").assertExists()
-
-        // Switch to Geometry via tab
-        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("switch-geometry"))
-        ui.onNodeWithTag("switch-geometry").performClick()
-        ui.waitForIdle()
-        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("book-G9-GEO"))
-        ui.onNodeWithTag("book-G9-GEO").assertExists()
-        assertEquals(Grade9Subject.GEOMETRY, studyData().activeSubject)
-
-        // Switch back to Algebra
-        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("switch-algebra"))
-        ui.onNodeWithTag("switch-algebra").performClick()
-        ui.waitForIdle()
-        ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("book-G9-ALG"))
-        ui.onNodeWithTag("book-G9-ALG").assertExists()
-        assertEquals(Grade9Subject.ALGEBRA, studyData().activeSubject)
-    }
-
-    // 5. Scroll and Subject Isolation: changing student creates clean state
-    @Test
-    fun studentSwitchingDoesNotCarryOverSubjectState() {
-        mount(initialProfileName = "الطالب أ")
-        val studentAId = repo.state.value.user?.localId!!
-
-        // Student A chooses Geometry
-        ui.onNodeWithTag("select-geometry").performScrollTo().performClick()
-        ui.waitForIdle()
-        assertEquals(Grade9Subject.GEOMETRY, studyData().activeSubject)
-
-        // Switch to new Student B
-        repo.createLocalProfile("الطالب ب", StudyStage.G9, false)
-        ui.waitForIdle()
-
-        // Student B must see the Subject Picker, not Student A's Geometry path
-        ui.onNodeWithTag("g9-subject-picker").assertExists()
         assertNull(studyData().activeSubject)
-        assertFalse(studyData().subjectChosen)
-
-        // Switch back to Student A
-        repo.selectLocalProfile(studentAId)
-        ui.waitForIdle()
-        assertEquals(Grade9Subject.GEOMETRY, studyData().activeSubject)
     }
-
-    // 6. Single clear primary follow-up button on Home without competing actions
-    @Test
-    fun singlePrimaryActionButtonOnHome() {
+    @Test fun choosingAlgebraUnitJumpsInsideTheSameHome() {
+        mount(); jump("G9-ALG", "G9-ALG-U06")
+        ui.runOnIdle { assertEquals(Routes.Home, nav.currentDestination?.route) }
+        assertTrue(repo.state.value.completed.isEmpty())
+    }
+    @Test fun geometryPickerContainsFourUnitsAndJumpsToTheFourth() {
+        mount(); jump("G9-GEO", "G9-GEO-U04")
+        scroll("station-G9-GEO-U04-L03")
+        ui.onNodeWithTag("station-G9-GEO-U04-L03").assertExists()
+        assertEquals(4,SourceCurricula.forStage(StudyStage.G9).book("G9-GEO")!!.units.size)
+    }
+    @Test fun all32StationsAndTenUnitsRemainInTheSameLazyJourney() {
         mount()
-        ui.onNodeWithTag("select-algebra").performScrollTo().performClick()
-        ui.waitForIdle()
-
-        // One primary action button exists in progress card
-        ui.onNodeWithTag("g9-progress-action").assertExists().assertHeightIsAtLeast(48.dp)
-
-        // Competing continue button DOES NOT exist
-        ui.onNodeWithTag("g9-continue").assertDoesNotExist()
-
-        // Essential tools and plan remain accessible
-        ui.onNodeWithTag("screen-home").performScrollToNode(hasText("أدوات دراستك"))
-        ui.onNodeWithText("المكتبة والمراجع المحفوظة").assertExists()
-        ui.onNodeWithText("الحل الرياضي").assertExists()
-        ui.onNodeWithText("مختبر الرسم").assertExists()
-        ui.onNodeWithText("التمارين وحالة التوفر").assertExists()
+        val catalog=SourceCurricula.forStage(StudyStage.G9)
+        catalog.units.forEach { unit ->
+            scroll("home-unit-${unit.id}"); ui.onNodeWithTag("home-unit-${unit.id}").assertExists()
+            unit.researches.forEach { research -> scroll("station-${research.id}"); ui.onNodeWithTag("station-${research.id}").assertExists() }
+        }
+        assertEquals(32,catalog.researches.size); assertTrue(repo.state.value.product.pendingGemEvents.isEmpty())
+    }
+    @Test fun studentSwitchingKeepsAvatarAndViewportOwnedByEachStudent() {
+        mount(initialProfileName="A"); val a=currentScope().ownerId
+        repo.studentExperience.selectAvatar(currentScope(),"muadh")
+        jump("G9-GEO","G9-GEO-U04")
+        scroll("station-G9-GEO-U04-L03")
+        ui.runOnIdle { repo.createLocalProfile("B",StudyStage.G9,false) }
+        ui.onNodeWithTag("home-unlimited-energy").assertExists()
+        assertNull((repo.studentExperience.read(currentScope()) as ModernRead.Ready).data.selectedAvatarId)
+        ui.runOnIdle { repo.selectLocalProfile(a) }
+        assertEquals("muadh",(repo.studentExperience.read(currentScope()) as ModernRead.Ready).data.selectedAvatarId)
+    }
+    @Test fun homeHasOneNextActionAndToolsHaveTheirDedicatedScreen() {
+        mount()
+        scroll("student-continue")
+        ui.onAllNodesWithTag("student-continue").assertCountEquals(1)
+        ui.onNodeWithTag("student-continue").assertHeightIsAtLeast(48.dp)
+        ui.onNodeWithTag("tools-solver").assertDoesNotExist()
+        ui.runOnIdle { nav.navigate(Routes.Tools) }
+        ui.onNodeWithTag("screen-tools").assertExists()
+        ui.onNodeWithTag("screen-tools").performScrollToNode(hasTestTag("tools-solver"))
+        ui.onNodeWithTag("tools-solver").performClick()
+        ui.runOnIdle { assertEquals(Routes.Solver,nav.currentDestination?.route) }
     }
 }

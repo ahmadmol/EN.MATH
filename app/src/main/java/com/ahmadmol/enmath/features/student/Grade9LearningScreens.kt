@@ -108,6 +108,7 @@ fun grade9LatestMistakes(data: G9StudyData): List<Pair<G9FractionQuestion, G9Sav
     var checked by rememberSaveable(scope?.ownerId) { mutableStateOf(false) }
     var result by remember { mutableStateOf<PlanWrite?>(null) }
     Grade9Scaffold("screen-g9-lesson", section) {
+        item("student-companion") { StudentAvatar(pose = AvatarPose.ENCOURAGING) }
         item("title") {
             Text(Grade9Pilot.title.text(), style = MaterialTheme.typography.headlineSmall)
             Text(tr("Original learning pilot · no gems", "درس أصلي تجريبي · دون جواهر"), style = MaterialTheme.typography.bodySmall)
@@ -150,7 +151,7 @@ fun grade9LatestMistakes(data: G9StudyData): List<Pair<G9FractionQuestion, G9Sav
                 if (data.checkpoint != null) Text(tr("Your checkpoint pass is saved. This is not certification of mastery.", "اجتيازك لنقطة التحقّق محفوظ. هذا ليس شهادة إتقان."))
                 G9WriteMessage(result)
             } }
-            item("practice") { Button({ open("g9/practice") }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Practice this topic", "تدرّب على هذا البحث")) } }
+            item("practice") { Button({ open("g9/practice") }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Practice this lesson", "تدرّب على هذا الدرس")) } }
         }
         item("navigation") {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -246,6 +247,7 @@ class Grade9PracticeViewModel(private val draftIo: CoroutineDispatcher = Dispatc
     var confirmSkip by rememberSaveable(scope, d?.index) { mutableStateOf(false) }
     val keyboard = LocalSoftwareKeyboardController.current
     Grade9Scaffold("screen-g9-practice", d?.index) {
+        item("student-companion") { StudentAvatar(pose = AvatarPose.THINKING) }
         item { Text(tr("Reduced fractions · practice", "كسور مختزلة · تدريب"), style = MaterialTheme.typography.headlineSmall) }
         if (error) { item { G9StudyError(G9StudyRead.StorageError) }; return@Grade9Scaffold }
         if (d == null) { item { Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -292,6 +294,7 @@ class Grade9PracticeViewModel(private val draftIo: CoroutineDispatcher = Dispatc
     val read = rememberG9Study(state, repository)
     val attempt = (read as? G9StudyRead.Ready)?.data?.attempts?.find { it.record.commandId == id }
     Grade9Scaffold("screen-g9-result") {
+        item("student-companion") { StudentAvatar(pose = AvatarPose.COMPLETED) }
         item { Text(tr("Saved practice result", "نتيجة التدريب المحفوظة"), style = MaterialTheme.typography.headlineSmall) }
         if (attempt == null) { item { Text(tr("No saved result for this file and attempt.", "لا توجد نتيجة محفوظة لهذا الملف وهذه المحاولة.")); if (read !is G9StudyRead.Ready) G9StudyError(read) }; return@Grade9Scaffold }
         item { G9LearningCard(tr("This attempt only · not an exam or mastery score", "هذه المحاولة فقط · ليست امتحانًا أو درجة إتقان")) {

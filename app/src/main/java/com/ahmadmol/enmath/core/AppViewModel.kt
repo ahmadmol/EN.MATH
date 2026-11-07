@@ -127,9 +127,9 @@ class AppViewModel(val repository: LearningRepository, context: Context? = null)
         }
     }
 
-    fun theme(mode: ThemeMode) = repository.setTheme(mode)
+    fun theme(mode: ThemeMode) { safely { repository.setTheme(mode); true } }
 
-    fun language(value: Language) = repository.setLanguage(value)
+    fun language(value: Language) { safely { repository.setLanguage(value); true } }
 
     fun product(startedBy: String? = LearningRules.sessionOwner(state.value), change: (ProductState) -> ProductState): Boolean {
         if (state.value.user?.type != AccountType.Teacher && !LearningRules.acceptsCommand(state.value, startedBy)) return false

@@ -12,7 +12,7 @@ internal fun showStudentNavigation(
 /** G9's long Home path must retain its scroll when a student switches tabs. */
 internal fun restoreStudentTabState(
     stage: com.ahmadmol.enmath.core.model.StudyStage?, destination: String, teacher: Boolean,
-): Boolean = (stage == com.ahmadmol.enmath.core.model.StudyStage.G9 && !teacher) ||
+): Boolean = (stage != null && !teacher) ||
     (destination != Routes.Home && destination != Routes.TeacherHome)
 
 /** Never restore a learner's NavController/ViewModels into another owner or process session. */

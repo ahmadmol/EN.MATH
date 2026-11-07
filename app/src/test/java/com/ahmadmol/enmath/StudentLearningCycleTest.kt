@@ -58,8 +58,8 @@ class StudentLearningCycleTest {
         assertEquals(listOf("study", "solver", "home", "explore", "profile"), Routes.tabs)
         for (route in listOf("planner", "review", "practice/{id}/result", "lesson/{id}"))
             assertFalse(showStudentNavigation(route, listOf(route), true))
-        assertEquals(Routes.Profile, Routes.selectedTab("planner"))
-        assertEquals(Routes.Profile, Routes.selectedTab("review"))
+        assertEquals(Routes.Tools, Routes.selectedTab("planner"))
+        assertEquals(Routes.Progress, Routes.selectedTab("review"))
     }
     @Test fun priorCompletionDoesNotRetroactivelyCreditNewOrCarriedGoals() {
         val r = Stores().repo(); r.createLocalProfile("A", StudyStage.BAC, true); r.recordScopedLearning(StudentCatalog.scope(r.state.value)!!, StudentCatalog.ref(r.state.value, "limits-practice"), "fixture-complete") { it }

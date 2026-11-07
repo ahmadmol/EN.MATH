@@ -92,18 +92,26 @@ fun ENMathApp(providedNav: NavHostController? = null) {
         return
     }
     var demoEntry by rememberSaveable { mutableStateOf(false) }
+    var avatarOnboarding by rememberSaveable { mutableStateOf(false) }
     var renderedProfileId by rememberSaveable { mutableStateOf<String?>(null) }
     var renderedSession by rememberSaveable { mutableStateOf<String?>(null) }
     if (state.user?.localId == null && state.user?.type != AccountType.Teacher && (!demoEntry || state.user != null)) {
         ENMathTheme(state.theme, state.language, student = true) {
             LocalIdentityScreen(state,
-                create = { name, stage, guest -> repository.createLocalProfile(name, stage, guest); app.refreshIdentity() },
+                create = { name, stage, guest -> repository.createLocalProfile(name, stage, guest); app.refreshIdentity(); avatarOnboarding = true },
                 select = { id -> repository.selectLocalProfile(id); app.refreshIdentity() },
                 importLegacy = { source, stage, name -> repository.importConfirmedLegacy(source, stage, name); app.refreshIdentity() },
                 acknowledgeGuest = repository::acknowledgeGuestNotice,
                 debugEntry = if (demoAllowed) ({
                     if (app.logout()) { auth.chooseRole(AccountType.Teacher); demoEntry = true }
                 }) else null)
+        }
+        return
+    }
+    if (avatarOnboarding && state.user?.localId != null) {
+        ENMathTheme(state.theme, state.language, student = true, stage = state.user?.studyStage) {
+            androidx.activity.compose.BackHandler { avatarOnboarding = false }
+            com.ahmadmol.enmath.features.student.AvatarSelectionScreen(state, repository.studentExperience) { avatarOnboarding = false }
         }
         return
     }
@@ -144,7 +152,9 @@ fun ENMathApp(providedNav: NavHostController? = null) {
         app.gems?.refresh(app.state.value)
         app.replayPendingGems()
     }
-    ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher, stage = state.user?.studyStage) {
+    val experienceRead = com.ahmadmol.enmath.features.student.rememberModernStudent(state, repository.studentExperience)
+    val selectedAvatar = (experienceRead as? com.ahmadmol.enmath.core.data.ModernRead.Ready)?.data?.selectedAvatarId
+    ENMathTheme(state.theme, state.language, student = state.user?.type != AccountType.Teacher, stage = state.user?.studyStage, avatarId = selectedAvatar) {
         if (state.storageIssue != null) AlertDialog(onDismissRequest = {},
             title = { Text(tr("Storage needs attention", "التخزين يحتاج مراجعة")) },
             text = { Text(tr("The latest operation was not acknowledged. Restart before retrying; do not clear app data.",
@@ -212,6 +222,16 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                 Routes.Solver -> label(TextKey.t_28fd8d2a78)
                 Routes.Progress -> label(TextKey.t_693fec8aa7)
                 Routes.Profile -> label(TextKey.t_e269f67032)
+                Routes.Tools -> tr("My study tools", "أدوات دراستي")
+                Routes.Avatar -> tr("My companion", "شخصيتي")
+                Routes.Streak -> tr("Learning days", "أيام التعلم")
+                Routes.Activity -> tr("My activity", "نشاطي")
+                "training" -> tr("Practice", "التدريبات")
+                "content/status" -> tr("Content status", "حالة المحتوى")
+                "student/privacy" -> tr("Privacy", "الخصوصية")
+                "student/help" -> tr("Help", "المساعدة")
+                "qa/practice/{id}" -> tr("Internal QA practice", "تدريب اختبار داخلي")
+                "qa/result/{id}" -> tr("Saved QA result", "نتيجة اختبار محفوظة")
                 Routes.Book -> label(TextKey.t_66df4d3113)
                 Routes.Topic -> label(TextKey.t_686ffa1014)
                 Routes.Lesson -> label(TextKey.t_553359b746)
@@ -393,7 +413,8 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                         }
                         Row(Modifier.weight(1f).fillMaxWidth()) {
                             if (inMain && wide && !reference && (teacher || studentNavigationVisible)) {
-                                NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
+                                if (!teacher) com.ahmadmol.enmath.features.student.ModernStudentRail(selectedTab, ::tab)
+                                else NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
                                     Spacer(Modifier.height(Space.xl))
                                     tabs.forEach { destination ->
                                         NavigationRailItem(
@@ -505,12 +526,7 @@ fun ENMathApp(providedNav: NavHostController? = null) {
                                     }
                                 }
                             }
-                            composable("gems/wallet") {
-                                app.gems?.let { LocalGemsScreen(state, it) { logout() } }
-                            }
-                            composable("gems/review") {
-                                app.gems?.let { LocalWeeklyReviewScreen(state, it) { nav.popBackStack() } }
-                            }
+                            localGemsGraph(app, { nav.popBackStack() }, ::logout)
                             navigation(startDestination = Routes.Home, route = Routes.Main) {
                                 studentGraph(
                                     nav,
@@ -559,6 +575,7 @@ private fun tabLabel(route: String) =
         Routes.Home -> label(TextKey.t_b5a4c86040)
         Routes.Study -> label(TextKey.t_30593f37e9)
         Routes.Solver -> label(TextKey.t_6e8911a0d6)
+        Routes.Tools -> tr("Tools", "الأدوات")
         Routes.Progress -> label(TextKey.t_693fec8aa7)
         "explore" -> label(TextKey.t_a0fc50de5a)
         Routes.Profile -> label(TextKey.t_e269f67032)
@@ -578,6 +595,7 @@ private fun tabIcon(route: String): ImageVector =
         Routes.Home -> Icons.Outlined.Home
         Routes.Study -> Icons.Outlined.School
         Routes.Solver -> Icons.Outlined.Calculate
+        Routes.Tools -> Icons.Outlined.Widgets
         Routes.Progress -> Icons.AutoMirrored.Outlined.TrendingUp
         "explore" -> Icons.AutoMirrored.Outlined.ShowChart
         Routes.Profile -> Icons.Outlined.Person

@@ -31,11 +31,11 @@ import com.ahmadmol.enmath.core.model.*
         StageHero(stage, tr("Choose your path", "اختر مسارك"),
             if (stage == StudyStage.G9) tr("Algebra and geometry", "رحلة الجبر والهندسة") else tr("Two books, one curriculum", "كتابان ومسار دراسي واحد"))
         catalog.books.forEach { book ->
-            SourceItemCard(book.title, tr("${book.units.size} units · ${book.researches.size} indexed researches · ${book.edition}",
-                "${book.units.size} وحدات · ${book.researches.size} بحثًا مفهرسًا · ${book.edition}"),
+            SourceItemCard(book.title, tr("${book.units.size} units · ${book.researches.size} lesson references · ${book.edition}",
+                "${book.units.size} وحدات · ${book.researches.size} درسًا · ${book.edition}"),
                 Modifier.testTag("catalog-book-${if (stage == StudyStage.BAC) BacSourceCatalog.book(book.id)?.existingBookId else book.id}")) { open(book.route) }
         }
-        SourceMetrics(listOf("${catalog.units.size}" to tr("Units", "وحدات"), "${catalog.researches.size}" to tr("Indexed researches", "أبحاث مفهرسة"),
+        SourceMetrics(listOf("${catalog.units.size}" to tr("Units", "وحدات"), "${catalog.researches.size}" to tr("Lesson references", "دروس مفهرسة"),
             "${catalog.reviewed}" to tr("Reviewed lessons", "دروس معتمدة")))
         SourceStatusNotice(stage)
         Button(
@@ -67,8 +67,11 @@ import com.ahmadmol.enmath.core.model.*
                 Text(tr("Review and exam preparation", "المراجعة والاستعداد للامتحان"), fontWeight = FontWeight.Bold, fontSize = 16.sp)
             }
         }
-        if (stage == StudyStage.BAC) SourceItemCard(tr("Demo learning · separate progress", "التجربة التعليمية · تقدم مستقل"),
-            tr("24 preserved demo lessons; not the 63 source researches", "24 درسًا تجريبيًا محفوظًا؛ مستقلة عن أبحاث المصدر الـ63"), Modifier.testTag("bac-legacy-lessons"), Icons.Outlined.Science) { open("study/demo") }
+        if (stage == StudyStage.BAC) {
+            val demoLessons = DemoContent.preservedLessonCount
+            SourceItemCard(tr("Demo learning · separate progress", "التجربة التعليمية · تقدم مستقل"),
+            tr("$demoLessons preserved demo lessons; not the 63 source lessons", "$demoLessons درسًا تجريبيًا محفوظًا؛ مستقلة عن دروس المصدر الـ63"), Modifier.testTag("bac-legacy-lessons"), Icons.Outlined.Science) { open("study/demo") }
+        }
     }
 }
 
@@ -80,17 +83,19 @@ import com.ahmadmol.enmath.core.model.*
     val saved = remember(scope, change) { scope?.let { (workspace?.read(it) as? SourceWorkspaceRead.Ready)?.workspace } }
     ScreenPage(Modifier.testTag(if (stage == StudyStage.G9) "screen-book-g9" else "screen-book")) {
         if (book == null) { CatalogUnavailable(); return@ScreenPage }
-        StageHero(stage, book.title, tr("Source edition ${book.edition} · ${book.pages} PDF pages", "طبعة المصدر ${book.edition} · ${book.pages} صفحة PDF"))
-        SourceMetrics(listOf("${book.units.size}" to tr("Units", "وحدات"), "${book.researches.size}" to tr("Indexed researches", "أبحاث مفهرسة")))
-        SourceStatusNotice(stage)
+        StageHero(stage, book.title, tr("${book.units.size} units · ${book.researches.size} lessons", "${book.units.size} وحدات · ${book.researches.size} درسًا"))
         saved?.lastVisitedByBook?.get(book.id)?.let(catalog::research)?.let { last ->
-            PrimaryButton(tr("Continue browsing: ${last.title}", "تابع التصفح: ${last.title}"), { open(last.route) })
+            OutlinedButton({ open(last.route) }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("book-continue-${book.id}")) {
+                Text(tr("Continue this reference: ${last.title}", "تابع مرجع هذا الدرس: ${last.title}"))
+            }
         }
         SectionTitle(tr("Book units", "وحدات الكتاب"))
         book.units.forEach { unit ->
-            SourceItemCard("${unit.order}. ${unit.title}", sourcePageSpan(unit.pages, stage == StudyStage.G9) + " · " +
-                tr("${unit.researches.size} researches", "${unit.researches.size} أبحاث"), Modifier.testTag("book-topic-${unit.id}")) { open(unit.route) }
+            SourceItemCard("${unit.order}. ${unit.title}", tr("${unit.researches.size} lessons", "${unit.researches.size} دروس"), Modifier.testTag("book-topic-${unit.id}")) { open(unit.route) }
         }
+        var details by remember(id) { mutableStateOf(false) }
+        TextButton({ details = !details }, Modifier.heightIn(min = 48.dp)) { Text(tr("Source details", "تفاصيل المرجع")) }
+        if (details) { SourceStatusNotice(stage); Text(tr("Source edition ${book.edition} · ${book.pages} PDF pages", "طبعة المصدر ${book.edition} · ${book.pages} صفحة PDF")) }
         OutlinedButton(
             onClick = { open("study/review/${book.id}") },
             modifier = Modifier.fillMaxWidth().heightIn(min = 50.dp),
@@ -123,15 +128,15 @@ import com.ahmadmol.enmath.core.model.*
     ScreenPage(Modifier.testTag(if (stage == StudyStage.G9) "screen-topic-g9" else "screen-topic")) {
         if (unit == null) { CatalogUnavailable(); return@ScreenPage }
         StageHero(stage, unit.title, catalog.book(unit.bookId)?.title.orEmpty())
-        Text(sourcePageSpan(unit.pages, stage == StudyStage.G9))
-        SourceStatusNotice(stage)
-        if (stage == StudyStage.G9) unitAction()
-        SectionTitle(tr("${unit.researches.size} source researches", "${unit.researches.size} أبحاث من المصدر"))
+        SectionTitle(tr("${unit.researches.size} lessons", "${unit.researches.size} دروس"))
         unit.researches.forEach { research ->
-            SourceItemCard("${research.order}. ${research.title}", sourcePageSpan(research.pages, stage == StudyStage.G9) + " · " +
-                if (stage == StudyStage.G9 && research.id == Grade9Pilot.lessonId) tr("Original learning pilot available", "درس أصلي تجريبي متاح") else tr("Pending content review", "قيد مراجعة المحتوى"),
+            SourceItemCard("${research.order}. ${research.title}",
+                if (stage == StudyStage.G9 && research.id == Grade9Pilot.lessonId) tr("Original learning pilot available", "درس أصلي تجريبي متاح") else tr("Reference and available activities", "المرجع والأنشطة المتاحة"),
                 Modifier.testTag("topic-lesson-${research.id}")) { open(research.route) }
         }
+        var details by remember(id) { mutableStateOf(false) }
+        TextButton({ details = !details }, Modifier.heightIn(min = 48.dp)) { Text(tr("Source and planning", "المرجع والخطة")) }
+        if (details) { Text(sourcePageSpan(unit.pages, stage == StudyStage.G9)); SourceStatusNotice(stage); if (stage == StudyStage.G9) unitAction() }
         if (stage == StudyStage.G9) {
             val original = requireNotNull(G9SourceCatalog.unit(id))
             SourceItemCard(tr("Unit exercises and problems", "تمارين ومسائل الوحدة"),
@@ -156,7 +161,6 @@ import com.ahmadmol.enmath.core.model.*
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable fun SourceResearchScreen(id: String, state: LearningState, planner: PlannerRepository?,
     workspace: SourceWorkspaceRepository?, open: (String) -> Unit) {
     val catalog = SourceCurricula.forState(state); val research = catalog?.research(id)
@@ -165,117 +169,44 @@ import com.ahmadmol.enmath.core.model.*
     val reading = remember(scope, change) { scope?.let { workspace?.read(it) } }
     val saved = (reading as? SourceWorkspaceRead.Ready)?.workspace?.savedIds?.contains(id) == true
     var result by remember(id, scope) { mutableStateOf<PlanWrite?>(null) }
+    var details by remember(id) { mutableStateOf(false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val bank = remember(context, catalog?.stage) { if (catalog?.stage == StudyStage.G9) OriginalDraftBank.loadQa(context) else null }
     LaunchedEffect(scope, id) { if (scope != null && research != null) result = workspace?.visit(scope, research.ref)?.takeIf { it !in setOf(PlanWrite.SAVED, PlanWrite.ALREADY_SAVED) } }
-    val dark = isDarkTheme()
     ScreenPage(Modifier.testTag(if (catalog?.stage == StudyStage.G9) "screen-lesson-g9" else "screen-lesson")) {
         if (catalog == null || research == null) { CatalogUnavailable(); return@ScreenPage }
         val unit = requireNotNull(catalog.unit(research.unitId)); val book = requireNotNull(catalog.book(unit.bookId))
         StageHero(catalog.stage, research.title, "${book.title} · ${unit.title}")
-
-        // Metadata badges row matching Image 8
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Surface(
-                shape = CircleShape,
-                color = if (dark) Color(0xFF1E2D4E) else Color(0xFFEBF3FF),
-                border = BorderStroke(1.dp, if (dark) Color(0xFF2E416B) else Color(0xFFD2E3FC)),
-                modifier = Modifier.testTag(if (catalog.stage == StudyStage.G9) "g9-source-pages" else "bac-source-pages")
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(Icons.Outlined.Description, null, Modifier.size(16.dp), tint = sourceAccent())
-                    Text(
-                        text = sourcePageSpan(research.pages, catalog.stage == StudyStage.G9),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = if (dark) Color.White else Color(0xFF0F172A)
-                    )
-                }
-            }
-
-            Surface(
-                shape = CircleShape,
-                color = if (dark) Color(0xFF1E2D4E) else Color(0xFFEBF3FF),
-                border = BorderStroke(1.dp, if (dark) Color(0xFF2E416B) else Color(0xFFD2E3FC))
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(Icons.Outlined.CheckCircle, null, Modifier.size(16.dp), tint = sourceAccent())
-                    Text(
-                        text = tr("Source edition ${research.ref.edition}", "طبعة المصدر ${research.ref.edition}"),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = if (dark) Color.White else Color(0xFF0F172A)
-                    )
-                }
-            }
+        StudentAvatar(pose = AvatarPose.ENCOURAGING)
+        StudentPanel {
+            Text(tr("Learning goal", "هدف التعلم"), style = MaterialTheme.typography.titleLarge)
+            val objective = G9SourceCatalog.lesson(id)?.draftObjective ?: research.summary
+            MathProse(objective.ifBlank { tr("Explore this lesson's reference and related activities.", "استكشف مرجع هذا الدرس والأنشطة المرتبطة به.") })
+            Text(tr("Explanations and worked examples will appear after content review. You can save the reference and plan a learning goal now.", "ستظهر الشروحات والأمثلة المحلولة بعد مراجعة المحتوى. يمكنك الآن حفظ المرجع والتخطيط لهدف تعلم."))
         }
-
-        SourceStatusNotice(catalog.stage)
-        if (research.summary.isNotBlank()) AppCard {
-            Text(tr("Index description", "وصف الفهرس"), style = MaterialTheme.typography.titleMedium)
-            Text(research.summary)
+        bank?.mappings?.find { it.sourceId == id }?.let {
+            PrimaryButton(tr("Internal QA practice · 6 draft questions", "تدريب اختبار داخلي · 6 أسئلة مسودة"),
+                { open(if (id == Grade9NatureLesson.LESSON_ID) NaturePracticeGrader.ROUTE else "qa/practice/$id") }, Modifier.testTag("source-qa-practice"))
         }
-        if (research.needsBoundaryReview) EducationalInfoBanner(tr("The source page boundary still requires manual review.", "حدود صفحات المصدر ما زالت تحتاج تحققًا يدويًا."))
-        if (id in listOf("bac-1-u05-l04", "bac-1-u05-l05")) EducationalInfoBanner(tr("Two distinct researches share the verified start: printed 163 / PDF 164.", "بحثان منفصلان لهما بداية مشتركة موثقة: المطبوع 163 / PDF 164."))
-        if (catalog.stage == StudyStage.G9 && id == Grade9Pilot.lessonId) {
-            SourceItemCard(tr("Original EN.MATH learning pilot", "درس EN.MATH أصلي تجريبي"),
-                tr("Source checked on pages 14–15. Not official 2026–2027 certification.", "تم التحقّق من المصدر في ص 14–15. ليس اعتمادًا رسميًا لسنة 2026–2027.")) { open("lesson/$id") }
-        } else SourcePendingCard(tr("Learning content under review", "المحتوى التعليمي قيد المراجعة"),
-            tr("Explanations, worked examples, proofs and scored exercises are not published for this reference yet.", "لم تُنشر شروحات وأمثلة محلولة وبراهين وتمارين معتمدة لهذا المرجع بعد."))
-        if (catalog.stage == StudyStage.G9) G9SourceCatalog.lesson(id)?.let { lesson -> G9SourceCatalog.visibleElements(lesson.ref).forEach { ReviewedBookElementCard(it) } }
-
-        Button(
-            onClick = {
-                if (scope != null && planner != null) result = planner.pinSource(scope, research.ref)
-            },
-            enabled = scope != null && planner != null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 52.dp)
-                .testTag(if (catalog.stage == StudyStage.G9) "g9-plan-lesson" else "bac-plan-source"),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = sourceAccent())
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Icon(Icons.Outlined.Add, null, modifier = Modifier.size(20.dp))
-                Text(tr("Add reference to my plan", "أضف المرجع إلى خطتي"), fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            }
-        }
-
-        if (workspace != null) {
-            OutlinedButton(
-                onClick = { if (scope != null) result = workspace.bookmark(scope, research.ref, !saved) },
-                enabled = scope != null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 50.dp)
-                    .testTag("source-bookmark"),
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.5.dp, sourceAccent()),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = sourceAccent())
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Icon(if (saved) Icons.Outlined.BookmarkRemove else Icons.Outlined.BookmarkBorder, null, modifier = Modifier.size(20.dp))
-                    Text(if (saved) tr("Remove from my library", "إزالة من مكتبتي") else tr("Save in my library", "حفظ في مكتبتي"), fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                }
-            }
-        }
-
-        result?.let { Text(if (it in setOf(PlanWrite.SAVED, PlanWrite.ALREADY_SAVED)) tr("Saved on this device", "حُفظ على هذا الجهاز")
-            else tr("Save unconfirmed. Previous data is preserved; reopen before retrying.", "لم يُؤكّد الحفظ. البيانات السابقة محفوظة؛ أعد الفتح قبل المحاولة.")) }
-        OutlinedButton({ open(if (catalog.stage == StudyStage.G9 && id == Grade9Pilot.lessonId) "g9/practice" else "practice/$id") }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("g9-practice-status")) { Text(tr("Exercise availability", "حالة التدريبات")) }
-        OutlinedButton({ open("planner") }, Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(tr("Open my plan", "افتح خطتي")) }
         if (catalog.stage == StudyStage.BAC) BacSourceCatalog.relatedLegacy(id).forEach { demo ->
             SourceItemCard(demo.title.text(), tr("Related demo · separate completion", "تجربة ذات صلة · إكمال مستقل"), Modifier.testTag("bac-related-${demo.id}"), Icons.Outlined.Science) { open("lesson/${demo.id}") }
         }
+        if (catalog.stage == StudyStage.G9) G9SourceCatalog.lesson(id)?.let { lesson -> G9SourceCatalog.visibleElements(lesson.ref).forEach { ReviewedBookElementCard(it) } }
+        OutlinedButton({ if (scope != null && planner != null) result = planner.pinSource(scope, research.ref) },
+            Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag(if (catalog.stage == StudyStage.G9) "g9-plan-lesson" else "bac-plan-source"), enabled = scope != null && planner != null) { Text(tr("Add reference to my plan", "أضف المرجع إلى خطتي")) }
+        if (workspace != null) OutlinedButton({ if (scope != null) result = workspace.bookmark(scope, research.ref, !saved) },
+            Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("source-bookmark"), enabled = scope != null) { Text(if (saved) tr("Remove from my library", "إزالة من مكتبتي") else tr("Save in my library", "حفظ في مكتبتي")) }
+        result?.let { Text(if (it in setOf(PlanWrite.SAVED, PlanWrite.ALREADY_SAVED)) tr("Saved on this device", "حُفظ على هذا الجهاز")
+            else tr("Save unconfirmed. Previous data is preserved; reopen before retrying.", "لم يُؤكّد الحفظ. البيانات السابقة محفوظة؛ أعد الفتح قبل المحاولة.")) }
+        Text(sourcePageSpan(research.pages, catalog.stage == StudyStage.G9), Modifier.testTag(if (catalog.stage == StudyStage.G9) "g9-source-pages" else "bac-source-pages"), style = MaterialTheme.typography.bodySmall)
+        TextButton({ details = !details }, Modifier.heightIn(min = 48.dp)) { Text(tr("About this source", "حول المرجع")) }
+        if (details) {
+            SourceStatusNotice(catalog.stage)
+            Text(tr("Source edition ${research.ref.edition}", "طبعة المصدر ${research.ref.edition}"))
+            if (research.needsBoundaryReview) Text(tr("The source page boundary still requires manual review.", "حدود صفحات المصدر ما زالت تحتاج تحققًا يدويًا."))
+            if (id in listOf("bac-1-u05-l04", "bac-1-u05-l05")) Text(tr("Two distinct researches share the verified start: printed 163 / PDF 164.", "درسان منفصلان لهما بداية مشتركة موثقة: المطبوع 163 / PDF 164."))
+        }
+        OutlinedButton({ open("practice/$id") }, Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("g9-practice-status")) { Text(tr("Textbook exercise availability", "حالة تمارين الكتاب")) }
     }
 }
 
@@ -308,7 +239,7 @@ import com.ahmadmol.enmath.core.model.*
             com.ahmadmol.enmath.features.student.Grade9EvidenceSection(state, grade9Study, open)
         }
         StageHero(catalog.stage, tr("My learning evidence", "أدلة تعلّمي"), tr("Indexing, reviewed content and learning are measured separately", "الفهرسة واعتماد المحتوى والتعلّم مؤشرات مستقلة"))
-        SourceMetrics(listOf("${catalog.units.size}" to tr("Indexed units", "وحدات مفهرسة"), "${catalog.researches.size}" to tr("Indexed researches", "أبحاث مفهرسة"),
+        SourceMetrics(listOf("${catalog.units.size}" to tr("Indexed units", "وحدات مفهرسة"), "${catalog.researches.size}" to tr("Lesson references", "دروس مفهرسة"),
             "${catalog.reviewed}/${catalog.researches.size}" to tr("Published learning", "محتوى معتمد")))
         if (catalog.stage == StudyStage.G9) Text(tr("One original pilot is available separately. The source catalog's reviewed-textbook coverage is still 0/32.",
             "يتوفر درس أصلي تجريبي بصورة مستقلة. تغطية الكتاب المعتمدة في فهرس المصدر ما زالت 0/32."))
@@ -317,7 +248,7 @@ import com.ahmadmol.enmath.core.model.*
         catalog.books.filter { bookId == null || it.id == bookId }.forEach { book ->
             SectionTitle(book.title)
             book.units.filter { unitId == null || it.id == unitId }.forEach { unit ->
-                SourceItemCard(unit.title, tr("${unit.researches.size} indexed researches · learning pending", "${unit.researches.size} أبحاث مفهرسة · التعلّم قيد الإعداد"),
+                SourceItemCard(unit.title, tr("${unit.researches.size} lesson references · learning pending", "${unit.researches.size} دروس مفهرسة · التعلّم قيد الإعداد"),
                     Modifier.testTag("g9-progress-${unit.id}"), Icons.Outlined.Insights) { open(if (unitId == null) "progress/unit/${unit.id}" else unit.route) }
             }
         }
@@ -472,7 +403,7 @@ import com.ahmadmol.enmath.core.model.*
     SectionTitle(tr("Saved source references", "مراجع المصدر المحفوظة"))
     val ids = (read as? SourceWorkspaceRead.Ready)?.workspace?.savedIds.orEmpty()
     if (read == SourceWorkspaceRead.StorageError) Text(tr("Saved references could not be read. Previous data is preserved.", "تعذّر قراءة المراجع المحفوظة. البيانات السابقة محفوظة."))
-    else if (ids.isEmpty()) Text(tr("Save a research from its details to find it here.", "احفظ بحثًا من صفحة تفاصيله ليظهر هنا."))
+    else if (ids.isEmpty()) Text(tr("Save a research from its details to find it here.", "احفظ درسًا من صفحة تفاصيله ليظهر هنا."))
     ids.mapNotNull { catalog?.research(it) }.forEach { research -> SourceItemCard(research.title,
         if (catalog?.stage == StudyStage.G9 && research.id == Grade9Pilot.lessonId) tr("Saved reference · original pilot available", "مرجع محفوظ · درس أصلي تجريبي متاح") else
             tr("Saved reference · content pending review", "مرجع محفوظ · المحتوى قيد المراجعة"), Modifier.testTag("source-saved-${research.id}")) { open(research.route) } }

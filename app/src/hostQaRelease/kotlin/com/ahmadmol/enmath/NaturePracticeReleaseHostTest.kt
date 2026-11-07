@@ -2,6 +2,7 @@ package com.ahmadmol.enmath
 
 import android.content.pm.ApplicationInfo
 import com.ahmadmol.enmath.core.data.NaturePracticeBank
+import com.ahmadmol.enmath.core.data.OriginalDraftBank
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,5 +20,7 @@ class NaturePracticeReleaseHostTest {
         assertEquals(0, context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE)
         assertThrows(IOException::class.java) { NaturePracticeBank.load(context) }
         assertFalse(context.assets.list("content/g9").orEmpty().contains("nature_numbers_pilot.json"))
+        assertNull(OriginalDraftBank.loadQa(context))
+        assertThrows(IOException::class.java) { context.assets.open(OriginalDraftBank.ASSET) }
     }
 }

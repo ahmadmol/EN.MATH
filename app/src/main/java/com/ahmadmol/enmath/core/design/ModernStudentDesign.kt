@@ -1,0 +1,132 @@
+package com.ahmadmol.enmath.core.design
+
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.ahmadmol.enmath.core.data.AvatarPose
+import com.ahmadmol.enmath.core.data.StudentAvatars
+import com.ahmadmol.enmath.features.reference.CleanNavItem
+
+object StudentExperienceTokens {
+    val panel = RoundedCornerShape(28.dp)
+    val compact = RoundedCornerShape(18.dp)
+    val circle = 64.dp
+    val floatAboveBar = circle / 2
+    val contentWidth = 640.dp
+    val touch = 48.dp
+}
+val LocalStudentAvatarId = staticCompositionLocalOf<String?> { null }
+
+@Composable fun avatarName(id: String?) = when (id) {
+    "muadh" -> tr("Muadh", "معاذ")
+    "waseem" -> tr("Waseem", "وسيم")
+    "lama" -> tr("Lama", "لمى")
+    else -> tr("Choose your companion", "اختر رفيق رحلتك")
+}
+
+/** Neutral portrait until consistent individual character art is supplied. No collage is shipped. */
+@Composable fun StudentAvatar(id: String? = LocalStudentAvatarId.current, pose: AvatarPose = AvatarPose.IDLE,
+    size: Dp = 64.dp, modifier: Modifier = Modifier) {
+    val owner = StudentAvatars.poseOwner(id, pose)
+    val colors = MaterialTheme.colorScheme
+    val tint = when (owner) { "waseem" -> colors.secondaryContainer; "lama" -> colors.tertiaryContainer; else -> colors.primaryContainer }
+    val ink = when (owner) { "waseem" -> colors.onSecondaryContainer; "lama" -> colors.onTertiaryContainer; else -> colors.onPrimaryContainer }
+    val description = avatarName(owner) + " · " + tr("temporary portrait", "رمز مؤقت")
+    Surface(modifier.size(size).testTag("student-avatar-${owner ?: "neutral"}").semantics { contentDescription = description },
+        shape = CircleShape, color = tint, contentColor = ink, border = BorderStroke(1.dp, ink.copy(alpha = .15f))) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(Icons.Rounded.Person, null, Modifier.size(size * .58f))
+            if (owner != null) Text(when (owner) { "muadh" -> "م"; "waseem" -> "و"; else -> "ل" },
+                Modifier.align(Alignment.BottomCenter), style = MaterialTheme.typography.labelSmall)
+        }
+    }
+}
+
+@Composable fun StudentPanel(modifier: Modifier = Modifier, emphasized: Boolean = false,
+    content: @Composable ColumnScope.() -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    Surface(modifier.fillMaxWidth(), shape = StudentExperienceTokens.panel,
+        color = colors.surface, border = BorderStroke(1.dp, colors.outlineVariant.copy(alpha = .7f)),
+        tonalElevation = if (emphasized) 2.dp else 0.dp) {
+        Column(Modifier.fillMaxWidth().background(Brush.linearGradient(listOf(
+            if (emphasized) colors.primaryContainer.copy(alpha = .6f) else colors.surface,
+            colors.surface))).padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp), content = content)
+    }
+}
+
+/** Circle center is exactly on the bar's top edge. Its entire touch target is measured. */
+@Composable fun ModernStudentBottomBar(items: List<CleanNavItem>, selected: String?, tagPrefix: String, open: (String) -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    val density = LocalDensity.current
+    val measurer = rememberTextMeasurer()
+    BoxWithConstraints(Modifier.fillMaxWidth().navigationBarsPadding()) {
+        val labelStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, lineHeight = 15.sp, lineBreak = LineBreak.Heading, hyphens = Hyphens.Auto)
+        val widthPx = with(density) { (maxWidth / items.size - 8.dp).roundToPx().coerceAtLeast(1) }
+        val measured = items.maxOf { measurer.measure(it.title, style = labelStyle.copy(fontWeight = FontWeight.Bold), constraints = Constraints(maxWidth = widthPx)).size.height }
+        val labelHeight = with(density) { measured.toDp() }
+        val barHeight = maxOf(76.dp, labelHeight + 64.dp)
+        val total = StudentExperienceTokens.floatAboveBar + barHeight
+        Surface(Modifier.padding(top = StudentExperienceTokens.floatAboveBar).fillMaxWidth().height(barHeight).testTag("student-nav-surface"),
+            shape = RoundedCornerShape(topStart = 26.dp, topEnd = 26.dp), color = colors.surfaceContainer,
+            tonalElevation = 3.dp, shadowElevation = 3.dp) {}
+        Row(Modifier.fillMaxWidth().height(total).selectableGroup(), verticalAlignment = Alignment.Top) {
+            items.forEachIndexed { index, item ->
+                val active = item.route == selected
+                val tint by animateColorAsState(if (active) colors.primary else colors.onSurfaceVariant, label = "navigation-tint")
+                if (index == 2) {
+                    Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(Modifier.size(StudentExperienceTokens.circle).shadow(6.dp, CircleShape)
+                            .clip(CircleShape).background(Brush.linearGradient(listOf(colors.primary, colors.secondary)))
+                            .selectable(active, onClick = { open(item.route) }, role = Role.Tab)
+                            .testTag(tagPrefix + item.route).semantics { contentDescription = item.title }, contentAlignment = Alignment.Center) {
+                            Icon(item.icon, null, Modifier.size(28.dp), tint = colors.onPrimary)
+                        }
+                        Text(item.title, Modifier.fillMaxWidth().padding(top = 6.dp, start = 4.dp, end = 4.dp), color = tint,
+                            style = labelStyle, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                    }
+                } else {
+                    Column(Modifier.weight(1f).padding(top = StudentExperienceTokens.floatAboveBar)
+                        .height(barHeight).clip(StudentExperienceTokens.compact)
+                        .selectable(active, onClick = { open(item.route) }, role = Role.Tab,
+                            interactionSource = remember { MutableInteractionSource() }, indication = ripple())
+                        .testTag(tagPrefix + item.route).padding(horizontal = 4.dp, vertical = 12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Box(Modifier.size(40.dp, 28.dp).background(if (active) colors.primaryContainer else colors.surfaceContainer, CircleShape), contentAlignment = Alignment.Center) {
+                            Icon(item.icon, null, Modifier.size(24.dp), tint = tint)
+                        }
+                        Text(item.title, Modifier.fillMaxWidth(), color = tint, style = labelStyle, fontWeight = if (active) FontWeight.Bold else FontWeight.Medium, textAlign = TextAlign.Center)
+                    }
+                }
+            }
+        }
+    }
+}

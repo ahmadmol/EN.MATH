@@ -94,6 +94,8 @@ object DemoContent {
                             )
                 )
             }
+    /** Foundations + guided practice + applications for each of the eight demo topics. */
+    val preservedLessonCount get() = books.sumOf { it.lessons.size }
     val books =
         listOf(
             Book(

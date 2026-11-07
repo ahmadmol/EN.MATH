@@ -177,6 +177,10 @@ fun RefIcon(icon: ImageVector, color: Color = RefPalette.violet, size: Int = 14)
 
 @Composable
 fun RefBottomNav(route: String?, open: (String) -> Unit, dark: Boolean = true) {
+    if (com.ahmadmol.enmath.core.design.LocalStudentExperience.current) {
+        com.ahmadmol.enmath.features.student.ModernStudentNavigation(route, open)
+        return
+    }
     CleanBottomBar(
         listOf(
             CleanNavItem(

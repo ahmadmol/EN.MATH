@@ -6,6 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.unit.Density
@@ -89,25 +90,25 @@ class StudentLearningProgressHostTest {
 
     private fun scope() = StudentCatalog.scope(repo.state.value)!!
 
+    private fun homeScroll(tag: String) = ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(tag))
     @Test fun releaseHomeAndEvidenceNeverOfferBlockedDemoPractice() {
-        mount(false, 2f, debuggable = false)
-        ui.onNodeWithTag("g9-learning-progress-card").assertDoesNotExist()
-        ui.onNodeWithTag("g9-reference-action").performScrollTo().performClick()
-        ui.runOnIdle { assertEquals("g9/reference/{id}", nav.currentDestination?.route) }
-        ui.runOnIdle { nav.navigate(Routes.Progress) }
+        mount(false,2f,debuggable=false)
+        homeScroll("g9-learning-progress-card")
+        homeScroll("g9-learning-progress-card")
+        ui.onNodeWithTag("g9-learning-progress-card").assertExists()
+        homeScroll("student-continue"); ui.onNodeWithTag("student-continue").performClick()
+        ui.runOnIdle { assertEquals(Routes.Lesson,nav.currentDestination?.route); assertEquals(Grade9Pilot.lessonId,nav.currentBackStackEntry?.arguments?.getString("id")); nav.navigate(Routes.Progress) }
+        ui.onNodeWithTag("screen-progress-g9").performScrollToNode(hasText("التدريب التجريبي غير متاح في هذه النسخة. سجلاتك السابقة محفوظة."))
         ui.onNodeWithTag("nature-evidence-practice").assertDoesNotExist()
         ui.onNodeWithText("التدريب التجريبي غير متاح في هذه النسخة. سجلاتك السابقة محفوظة.").assertExists()
     }
-
-    @Test fun geometryNextStepStaysInsideGeometryInsteadOfStartingAlgebraPractice() {
-        mount(false, 1.5f)
-        ui.runOnIdle { repo.grade9Study.selectSubject(scope(), Grade9Subject.GEOMETRY) }
-        ui.onNodeWithTag("g9-learning-progress-card").assertDoesNotExist()
-        ui.onNodeWithTag("g9-reference-action").performScrollTo().performClick()
-        ui.runOnIdle {
-            assertEquals("g9/reference/{id}", nav.currentDestination?.route)
-            assertTrue(nav.currentBackStackEntry?.arguments?.getString("id").orEmpty().startsWith("G9-GEO"))
-        }
+    @Test fun geometryStationOpensItsReferenceInsideTheSingleJourney() {
+        mount(false,1.5f)
+        val id="G9-GEO-U01-L01"
+        homeScroll("station-$id"); ui.onNodeWithTag("station-$id").performClick()
+        ui.onNodeWithTag("journey-open-lesson").performScrollTo().assertIsDisplayed().performSemanticsAction(SemanticsActions.OnClick) { it() }
+        ui.runOnIdle { assertEquals(id,nav.currentBackStackEntry?.arguments?.getString("id")) }
+        ui.onNodeWithTag("g9-source-pages").assertExists()
     }
 
     @Test fun corruptProgressShowsReadErrorWithoutInventingZeroProgress() {
@@ -117,20 +118,21 @@ class StudentLearningProgressHostTest {
         // A genuine source switch recomposes Home and re-reads the scoped document.
         ui.runOnIdle { repo.grade9Study.selectSubject(scope(), Grade9Subject.GEOMETRY) }
         ui.runOnIdle { nav.navigate(Routes.Progress) }
+        ui.onNodeWithTag("screen-progress-g9").performScrollToNode(hasTestTag("nature-progress-read-error"))
         ui.onNodeWithTag("nature-progress-read-error").assertExists()
         assertEquals("corrupt-preserved", files.getValue(key).prefs.getString("practice", null))
     }
 
-    @Test fun failedSubjectSaveShowsPreservedDataErrorAndKeepsOriginalDocument() {
-        mount(false, 1f)
-        val store = files.entries.single { it.key.startsWith("enmath_g9_study_v1_") }.value
-        val original = store.file.readBytes()
-        store.fail = true
-        ui.onNodeWithTag("switch-geometry").performScrollTo().performClick()
-        ui.onNodeWithText("تعذّرت قراءة بيانات دراستك المحفوظة.", substring = true).assertExists()
-        ui.onNodeWithTag("g9-learning-progress-card").assertDoesNotExist()
-        assertEquals(G9StudyRead.StorageError, repo.grade9Study.read(scope()))
-        assertArrayEquals(original, store.file.readBytes())
+    @Test fun failedViewportSaveShowsPreservedDataErrorAndKeepsOriginalDocument() {
+        mount(false,1f)
+        ui.runOnIdle { repo.studentExperience.selectAvatar(scope(),"muadh") }
+        val store=files.getValue("enmath_student_experience_v1_${scope().ownerId}")
+        val original=store.file.readBytes(); store.fail=true
+        homeScroll("station-G9-ALG-U01-L01")
+        homeScroll("g9-learning-progress-card")
+        ui.onNodeWithText("تحتاج البيانات المحفوظة مراجعة.",substring=true).assertExists()
+        assertEquals(ModernRead.StorageError,repo.studentExperience.read(scope()))
+        assertArrayEquals(original,store.file.readBytes())
     }
 
     @Test fun savedSessionOpensItsExactResultWithoutStartingAnotherDraft() {
@@ -143,7 +145,8 @@ class StudentLearningProgressHostTest {
         }
         val result = repo.naturePractice.finish(s).resultId!!
         ui.runOnIdle { nav.navigate(Routes.Progress) }
-        ui.onNodeWithTag("nature-saved-$result").performScrollTo().performClick()
+        ui.onNodeWithTag("screen-progress-g9").performScrollToNode(hasTestTag("nature-saved-$result"))
+        ui.onNodeWithTag("nature-saved-$result").performClick()
         ui.runOnIdle { assertEquals(result, nav.currentBackStackEntry?.arguments?.getString("id")) }
         ui.onNodeWithTag("screen-g9-nature-result").assertExists()
         assertNull((repo.naturePractice.read(s) as NatureRead.Ready).data.draft)
@@ -154,16 +157,18 @@ class StudentLearningProgressHostTest {
         mount(dark = false, scale = 1.0f)
 
         // 1. Progress card is displayed on Home
+        homeScroll("g9-learning-progress-card")
         ui.onNodeWithTag("g9-learning-progress-card").assertExists()
         ui.onNodeWithText("تقدمك في التعلم").assertExists()
-        ui.onNodeWithText("الجبر — الأعداد والكسور").assertExists()
+        ui.onNodeWithText("تدريب طبيعة الأعداد التفاعلي متاح (6 أنشطة)").assertExists()
 
         // 2. Action button has >= 48dp touch target and clicking navigates
-        val actionButton = ui.onNodeWithTag("g9-progress-action")
+        homeScroll("student-continue")
+        val actionButton = ui.onNodeWithTag("student-continue")
         actionButton.assertExists().assertHeightIsAtLeast(48.dp)
         actionButton.performClick()
         ui.runOnIdle {
-            assertEquals(NaturePracticeGrader.ROUTE, nav.currentDestination?.route)
+            assertEquals(Routes.Lesson, nav.currentDestination?.route)
         }
     }
 
@@ -190,10 +195,11 @@ class StudentLearningProgressHostTest {
 
         // Scroll back to top to inspect progress card
         ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("g9-learning-progress-card"))
+        homeScroll("g9-learning-progress-card")
         ui.onNodeWithTag("g9-learning-progress-card").assertExists()
         ui.onNodeWithTag("g9-home-progress-bar").assertExists()
         ui.onNodeWithText("أكملت تدريب طبيعة الأعداد (النشاط التفاعلي المتاح بالوحدة)").assertExists()
-        ui.onNodeWithText("تدرّب مجددًا أو راجع").assertExists()
+        assertEquals(1,(repo.naturePractice.read(scope()) as NatureRead.Ready).data.attempts.size)
 
         // Station circle updated accessibility description
         ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(station))
@@ -207,6 +213,7 @@ class StudentLearningProgressHostTest {
         val station = "station-G9-ALG-U01-L01"
 
         // Step 1: Student opens Home
+        homeScroll("g9-learning-progress-card")
         ui.onNodeWithTag("g9-learning-progress-card").assertExists()
         ui.onNodeWithText("تدريب طبيعة الأعداد التفاعلي متاح (6 أنشطة)").assertExists()
         ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag(station))
@@ -215,6 +222,7 @@ class StudentLearningProgressHostTest {
 
         // Step 2: Taps "طبيعة الأعداد" station circle
         ui.onNodeWithTag(station).performClick()
+        ui.onNodeWithTag("journey-qa-practice").performScrollTo().assertIsDisplayed().performSemanticsAction(SemanticsActions.OnClick) { it() }
         ui.runOnIdle { assertEquals(NaturePracticeGrader.ROUTE, nav.currentDestination?.route) }
 
         // Step 3: Answers 2 questions in practice session
@@ -239,7 +247,8 @@ class StudentLearningProgressHostTest {
 
         // Step 6: Returns to resume practice
         ui.onNodeWithTag("screen-home").performScrollToNode(hasTestTag("g9-learning-progress-card"))
-        ui.onNodeWithTag("g9-progress-action").performClick()
+        homeScroll("student-continue")
+        ui.onNodeWithTag("student-continue").performClick()
         ui.runOnIdle { assertEquals(NaturePracticeGrader.ROUTE, nav.currentDestination?.route) }
 
         // Step 7: Completes the 6 questions
@@ -290,57 +299,25 @@ class StudentLearningProgressHostTest {
         ui.runOnIdle { nav.navigate(Routes.Progress) }
         ui.waitForIdle()
 
+        ui.onNodeWithTag("screen-progress-g9").performScrollToNode(hasText("أدلة التدريب التفاعلي — طبيعة الأعداد"))
         ui.onNodeWithText("أدلة التدريب التفاعلي — طبيعة الأعداد").assertExists()
         ui.onNodeWithText("جلسات").assertExists()
         ui.onNodeWithText("دقة أول محاولة").assertExists()
         ui.onNodeWithText("100%").assertExists()
     }
 
-    @Test
-    fun lightModeFontScale100() {
-        mount(dark = false, scale = 1.0f)
-        ui.onNodeWithTag("g9-learning-progress-card").assertExists()
-        ui.onNodeWithTag("g9-progress-action").assertExists().assertHeightIsAtLeast(48.dp)
+    private fun verifyHomeType(dark:Boolean,scale:Float) {
+        mount(dark,scale)
+        homeScroll("student-continue")
+        ui.onNodeWithTag("student-continue").assertExists().assertHeightIsAtLeast(48.dp)
+        homeScroll("g9-learning-progress-card")
         ui.onNodeWithText("تقدمك في التعلم").assertExists()
+        ui.onNodeWithTag("g9-home-progress-bar").assertExists()
     }
-
-    @Test
-    fun lightModeFontScale150() {
-        mount(dark = false, scale = 1.5f)
-        ui.onNodeWithTag("g9-learning-progress-card").assertExists()
-        ui.onNodeWithTag("g9-progress-action").assertExists().assertHeightIsAtLeast(48.dp)
-        ui.onNodeWithText("تقدمك في التعلم").assertExists()
-    }
-
-    @Test
-    fun lightModeFontScale200() {
-        mount(dark = false, scale = 2.0f)
-        ui.onNodeWithTag("g9-learning-progress-card").assertExists()
-        ui.onNodeWithTag("g9-progress-action").assertExists().assertHeightIsAtLeast(48.dp)
-        ui.onNodeWithText("تقدمك في التعلم").assertExists()
-    }
-
-    @Test
-    fun darkModeFontScale100() {
-        mount(dark = true, scale = 1.0f)
-        ui.onNodeWithTag("g9-learning-progress-card").assertExists()
-        ui.onNodeWithTag("g9-progress-action").assertExists().assertHeightIsAtLeast(48.dp)
-        ui.onNodeWithText("تقدمك في التعلم").assertExists()
-    }
-
-    @Test
-    fun darkModeFontScale150() {
-        mount(dark = true, scale = 1.5f)
-        ui.onNodeWithTag("g9-learning-progress-card").assertExists()
-        ui.onNodeWithTag("g9-progress-action").assertExists().assertHeightIsAtLeast(48.dp)
-        ui.onNodeWithText("تقدمك في التعلم").assertExists()
-    }
-
-    @Test
-    fun darkModeFontScale200() {
-        mount(dark = true, scale = 2.0f)
-        ui.onNodeWithTag("g9-learning-progress-card").assertExists()
-        ui.onNodeWithTag("g9-progress-action").assertExists().assertHeightIsAtLeast(48.dp)
-        ui.onNodeWithText("تقدمك في التعلم").assertExists()
-    }
+    @Test fun lightModeFontScale100()=verifyHomeType(false,1f)
+    @Test fun lightModeFontScale150()=verifyHomeType(false,1.5f)
+    @Test fun lightModeFontScale200()=verifyHomeType(false,2f)
+    @Test fun darkModeFontScale100()=verifyHomeType(true,1f)
+    @Test fun darkModeFontScale150()=verifyHomeType(true,1.5f)
+    @Test fun darkModeFontScale200()=verifyHomeType(true,2f)
 }

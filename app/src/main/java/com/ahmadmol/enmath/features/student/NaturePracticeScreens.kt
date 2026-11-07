@@ -95,6 +95,7 @@ internal fun NaturePracticeContent(
     val isPassed = question?.id in (draft?.passed ?: emptySet())
 
     LearningPage(Modifier.testTag("screen-g9-nature-practice"), stateKey = draft?.position) {
+        com.ahmadmol.enmath.core.design.StudentAvatar(pose = AvatarPose.THINKING)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -464,6 +465,7 @@ fun NaturePracticeResultScreen(
     val attempt = (read as? NatureRead.Ready)?.data?.attempts?.firstOrNull { it.id == id }
 
     LearningPage(Modifier.testTag("screen-g9-nature-result")) {
+        com.ahmadmol.enmath.core.design.StudentAvatar(pose = AvatarPose.COMPLETED)
         Text(
             tr("Session complete", "اكتملت الجلسة"),
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),

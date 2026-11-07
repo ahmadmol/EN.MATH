@@ -65,17 +65,7 @@ fun StageHero(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Character Illustration (Boy at desk with laptop & books)
-                Image(
-                    painter = painterResource(
-                        if (stage == StudyStage.G9) R.drawable.student_g9_transparent
-                        else R.drawable.student_bac_transparent
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .width(if (stage == StudyStage.G9) 72.dp else 96.dp)
-                        .heightIn(max = 130.dp)
-                )
+                StudentAvatar(size = 72.dp)
 
                 // Text Content
                 Column(

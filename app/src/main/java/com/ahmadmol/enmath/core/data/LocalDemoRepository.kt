@@ -18,6 +18,23 @@ class LocalDemoRepository internal constructor(private val allowDemoAccounts: Bo
     val sourceWorkspace = SourceWorkspaceRepository(preferences) { state.value }
     val grade9Study = Grade9StudyRepository(preferences) { state.value }
     val naturePractice = NaturePracticeRepository(preferences) { state.value }
+    val studentExperience = ModernStudentRepository(preferences, { state.value }) {
+        val s = state.value
+        buildMap {
+            StudentCatalog.attempts(s).filter { it.answers.values.any(String::isNotBlank) }.forEach {
+                put("practice:${it.commandId}", it.timestamp)
+            }
+            StudentCatalog.scope(s)?.let { scope ->
+                (grade9Study.read(scope) as? G9StudyRead.Ready)?.data?.attempts?.forEach {
+                    if (it.record.answers.values.any(String::isNotBlank)) put("g9-pilot:${it.record.commandId}", it.record.timestamp)
+                }
+                // Finished Nature sessions only. Drafts, source visits and unapproved QA stay out.
+                (naturePractice.read(scope) as? NatureRead.Ready)?.data?.attempts?.forEach { attempt ->
+                    if (attempt.answers.values.any(String::isNotBlank)) put("nature:${attempt.id}", attempt.finishedAt)
+                }
+            }
+        }
+    }
     private val legacyProduct = runCatching { ProductCodec.load(prefs) }
     // New isolated guest scope; unscoped legacy progress is never assigned to it.
     private val guestId = prefs.getString("w1_guest_uuid", null) ?: java.util.UUID.randomUUID().toString().also {
